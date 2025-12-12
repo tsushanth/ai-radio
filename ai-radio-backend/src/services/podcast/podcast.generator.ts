@@ -48,6 +48,7 @@ export interface GenerationOptions {
   voice_speed?: number;
   parallel_tts?: boolean;
   tts_concurrency?: number;
+  date?: string;  // Client's local date in YYYY-MM-DD format
   onProgress?: ProgressCallback;
 }
 
@@ -119,12 +120,13 @@ export class PodcastGeneratorService {
       stats.script_segments = script.total_segments;
       stats.script_words = script.metadata?.total_words || 0;
 
-      // Estimate script cost
+      // Estimate script cost - use client date if provided
+      const dateForScript = options.date || new Date().toISOString().split('T')[0];
       const scriptCostEstimate = scriptGenerator.estimateTokenUsage({
         user_id: userId,
         emails,
         calendar_events: calendarEvents,
-        date: new Date().toISOString().split('T')[0],
+        date: dateForScript,
         preferences,
       });
       stats.script_cost_usd = scriptCostEstimate.estimated_cost_usd;
@@ -213,23 +215,65 @@ export class PodcastGeneratorService {
 
   /**
    * Step 1: Fetch emails and calendar events
+   * Includes fallback logic for users with few recent emails
    */
   private async fetchData(
     userId: string,
     preferences: UserPreferences,
     options: GenerationOptions
   ) {
-    const emails = options.skip_email || !preferences.include_email
-      ? []
-      : await gmailService.fetchEmails(userId, {
+    let emails: any[] = [];
+
+    if (!options.skip_email && preferences.include_email) {
+      // First try: last 24 hours, excluding promotional content
+      emails = await gmailService.fetchEmails(userId, {
+        max_results: 50,
+        since_hours: 24,
+        exclude_categories: ['promotions', 'social', 'updates'],
+      });
+
+      console.log(`First fetch: ${emails.length} emails from last 24 hours (excluding categories)`);
+
+      // Fallback 1: If too few emails, try last 48 hours
+      if (emails.length < 5) {
+        console.log('Few emails found, trying last 48 hours...');
+        emails = await gmailService.fetchEmails(userId, {
           max_results: 50,
-          since_hours: 24,
+          since_hours: 48,
           exclude_categories: ['promotions', 'social', 'updates'],
         });
+        console.log(`Second fetch: ${emails.length} emails from last 48 hours`);
+      }
 
-    const calendarEvents = options.skip_calendar || !preferences.include_calendar
-      ? []
-      : await googleCalendarService.fetchTodayAndTomorrowEvents(userId);
+      // Fallback 2: If still too few, try last 7 days with social/updates included
+      if (emails.length < 5) {
+        console.log('Still few emails, trying last 7 days with more categories...');
+        emails = await gmailService.fetchEmails(userId, {
+          max_results: 50,
+          since_hours: 168, // 7 days
+          exclude_categories: ['promotions'], // Only exclude promotions
+        });
+        console.log(`Third fetch: ${emails.length} emails from last 7 days`);
+      }
+
+      // Fallback 3: If still too few, include all inbox emails from last 30 days
+      if (emails.length < 3) {
+        console.log('Very few emails, trying last 30 days with all categories...');
+        emails = await gmailService.fetchEmails(userId, {
+          max_results: 30,
+          since_hours: 720, // 30 days
+          exclude_categories: [], // Include all categories
+        });
+        console.log(`Final fetch: ${emails.length} emails from last 30 days`);
+      }
+    }
+
+    // Calendar is currently disabled - skip fetching calendar events
+    // TODO: Re-enable when calendar OAuth scope is added back
+    const calendarEvents: any[] = [];
+    // const calendarEvents = options.skip_calendar || !preferences.include_calendar
+    //   ? []
+    //   : await googleCalendarService.fetchTodayAndTomorrowEvents(userId);
 
     return { emails, calendarEvents };
   }
@@ -244,11 +288,14 @@ export class PodcastGeneratorService {
     preferences: UserPreferences,
     options: GenerationOptions
   ) {
+    // Use client date if provided, otherwise fall back to server date
+    const dateForScript = options.date || new Date().toISOString().split('T')[0];
+
     const input: PodcastGenerationInput = {
       user_id: userId,
       emails,
       calendar_events: calendarEvents,
-      date: new Date().toISOString().split('T')[0],
+      date: dateForScript,
       preferences,
     };
 
@@ -348,14 +395,27 @@ export class PodcastGeneratorService {
     duration: number,
     options: GenerationOptions
   ): Promise<string> {
-    // Generate title and description
-    const date = new Date().toLocaleDateString('en-US', {
-      weekday: 'long',
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-    });
-    const title = `Daily Briefing - ${date}`;
+    // Generate title and description using client date if provided
+    let dateForTitle: string;
+    if (options.date) {
+      // Parse YYYY-MM-DD and format as readable date
+      const [year, month, day] = options.date.split('-').map(Number);
+      const dateObj = new Date(year, month - 1, day);
+      dateForTitle = dateObj.toLocaleDateString('en-US', {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+      });
+    } else {
+      dateForTitle = new Date().toLocaleDateString('en-US', {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+      });
+    }
+    const title = `Daily Briefing - ${dateForTitle}`;
     const description = this.generateDescription(script);
 
     const episode: PodcastEpisodeInsert = {

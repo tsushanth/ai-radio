@@ -1,92 +1,206 @@
 /**
  * OAuth Token Manager
  * Handles token storage, retrieval, and automatic refresh
+ * Uses Supabase database with in-memory fallback
  */
 
-import type { StoredOAuthToken, OAuthProvider } from '../../types/oauth';
-import type { OAuthToken, OAuthTokenInsert, OAuthTokenUpdate } from '../../types/database';
+import { createClient, SupabaseClient } from '@supabase/supabase-js';
+import type { StoredOAuthToken } from '../../types/oauth';
 import { gmailAuthService } from './gmail.auth';
 import { outlookAuthService } from './outlook.auth';
+import { env } from '../../config/environment';
 
-// TODO: Import actual Supabase client when implemented
-// import { supabase } from '../supabase';
+// In-memory token storage (fallback when Supabase unavailable)
+interface TokenRecord {
+  userId: string;
+  provider: string;
+  accessToken: string;
+  refreshToken: string | null;
+  email: string;
+  expiresAt: Date;
+  scopes: string[];
+  createdAt: Date;
+}
+
+// In-memory store - maps "userId:provider" to token record
+const tokenStore: Map<string, TokenRecord> = new Map();
 
 export class TokenManager {
   private providers: Map<string, any>;
+  private supabase: SupabaseClient | null = null;
 
   constructor() {
     this.providers = new Map([
       ['google', gmailAuthService],
       ['microsoft', outlookAuthService],
     ] as any);
-  }
 
-  /**
-   * Store OAuth token in database
-   */
-  async storeToken(userId: string, token: StoredOAuthToken): Promise<void> {
-    try {
-      const tokenData: OAuthTokenInsert = {
-        user_id: userId,
-        provider: token.provider,
-        access_token: token.accessToken,
-        refresh_token: token.refreshToken,
-        expires_at: token.expiresAt.toISOString(),
-        scopes: token.scopes,
-      };
-
-      // TODO: Implement actual database storage
-      // await supabase
-      //   .from('oauth_tokens')
-      //   .upsert(tokenData, {
-      //     onConflict: 'user_id,provider',
-      //   });
-
-      console.log(`Token stored for user ${userId} provider ${token.provider}`);
-    } catch (error) {
-      console.error('Failed to store token:', error);
-      throw new Error(`Failed to store OAuth token: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    // Initialize Supabase client
+    if (env.SUPABASE_URL && env.SUPABASE_SERVICE_KEY) {
+      this.supabase = createClient(env.SUPABASE_URL, env.SUPABASE_SERVICE_KEY);
+      console.log('✅ TokenManager: Supabase client initialized');
+    } else {
+      console.warn('⚠️ TokenManager: Supabase not configured, using in-memory storage only');
     }
   }
 
   /**
-   * Retrieve OAuth token from database
-   * Automatically refreshes if token is expired or near expiry
+   * Store token from linked-accounts route
+   * Stores in both database and memory for immediate use
+   */
+  async storeTokenFromLinkedAccount(
+    userId: string,
+    provider: string,
+    email: string,
+    accessToken: string,
+    refreshToken: string | null
+  ): Promise<void> {
+    const expiresAt = new Date(Date.now() + 3600 * 1000); // 1 hour from now
+    const scopes = provider === 'google'
+      ? ['https://www.googleapis.com/auth/gmail.readonly', 'https://www.googleapis.com/auth/calendar.readonly']
+      : ['Mail.Read', 'Calendars.Read'];
+
+    // Always store in memory for immediate access
+    const key = `${userId}:${provider}`;
+    const record: TokenRecord = {
+      userId,
+      provider,
+      email,
+      accessToken,
+      refreshToken,
+      expiresAt,
+      scopes,
+      createdAt: new Date(),
+    };
+    tokenStore.set(key, record);
+    console.log(`✅ Token stored in memory: ${key} (${email})`);
+
+    // Also store in Supabase if available
+    if (this.supabase) {
+      try {
+        const { error } = await this.supabase
+          .from('linked_accounts')
+          .upsert({
+            user_email: userId,
+            provider,
+            oauth_email: email,
+            access_token: accessToken,
+            refresh_token: refreshToken,
+            expires_at: expiresAt.toISOString(),
+            scopes,
+            email_enabled: true,
+            calendar_enabled: true,
+            updated_at: new Date().toISOString(),
+          }, {
+            onConflict: 'user_email,provider',
+          });
+
+        if (error) {
+          console.error('❌ Failed to store token in database:', error.message);
+        } else {
+          console.log(`✅ Token stored in database: ${userId} / ${provider}`);
+        }
+      } catch (dbError) {
+        console.error('❌ Database error storing token:', dbError);
+      }
+    }
+
+    console.log(`   Total tokens in memory: ${tokenStore.size}`);
+  }
+
+  /**
+   * Get stored token count (for debugging)
+   */
+  getStoredTokenCount(): number {
+    return tokenStore.size;
+  }
+
+  /**
+   * List all stored tokens (for debugging)
+   */
+  listStoredTokens(): string[] {
+    return Array.from(tokenStore.keys());
+  }
+
+  /**
+   * Retrieve OAuth token - checks memory first, then database
    */
   async getToken(userId: string, provider: 'google' | 'microsoft'): Promise<StoredOAuthToken | null> {
     try {
-      // TODO: Implement actual database retrieval
-      // const { data, error } = await supabase
-      //   .from('oauth_tokens')
-      //   .select('*')
-      //   .eq('user_id', userId)
-      //   .eq('provider', provider)
-      //   .single();
+      const key = `${userId}:${provider}`;
 
-      // if (error || !data) {
-      //   return null;
-      // }
-
-      // For now, return null (no token found)
-      // Replace with actual implementation
       console.log(`Retrieving token for user ${userId} provider ${provider}`);
-      return null;
+      console.log(`   Memory store has ${tokenStore.size} tokens: [${Array.from(tokenStore.keys()).join(', ')}]`);
 
-      // Convert database token to StoredOAuthToken
-      // const token: StoredOAuthToken = {
-      //   accessToken: data.access_token,
-      //   refreshToken: data.refresh_token,
-      //   expiresAt: new Date(data.expires_at),
-      //   scopes: data.scopes,
-      //   provider: data.provider,
-      // };
+      // First check in-memory cache
+      let record = tokenStore.get(key);
+
+      // If not in memory, check database
+      if (!record && this.supabase) {
+        console.log(`   Not in memory, checking database...`);
+
+        const { data, error } = await this.supabase
+          .from('linked_accounts')
+          .select('*')
+          .eq('user_email', userId)
+          .eq('provider', provider)
+          .single();
+
+        if (error) {
+          if (error.code !== 'PGRST116') { // PGRST116 = no rows returned
+            console.error(`   Database error: ${error.message}`);
+          } else {
+            console.log(`   No token found in database`);
+          }
+        } else if (data) {
+          console.log(`   Found token in database for ${data.oauth_email}`);
+
+          // Convert database record to TokenRecord
+          record = {
+            userId: data.user_email,
+            provider: data.provider,
+            email: data.oauth_email,
+            accessToken: data.access_token,
+            refreshToken: data.refresh_token,
+            expiresAt: new Date(data.expires_at),
+            scopes: data.scopes || [],
+            createdAt: new Date(data.created_at),
+          };
+
+          // Cache in memory for future requests
+          tokenStore.set(key, record);
+        }
+      }
+
+      if (!record) {
+        console.log(`   No token found for key: ${key}`);
+        return null;
+      }
+
+      console.log(`   Found token for ${record.email}, expires: ${record.expiresAt.toISOString()}`);
+
+      // Convert to StoredOAuthToken format
+      const token: StoredOAuthToken = {
+        accessToken: record.accessToken,
+        refreshToken: record.refreshToken,
+        expiresAt: record.expiresAt,
+        scopes: record.scopes,
+        provider: provider,
+      };
 
       // Check if token needs refresh
-      // if (this.isTokenExpired(token.expiresAt) || this.shouldRefreshToken(token.expiresAt)) {
-      //   return await this.refreshToken(userId, provider, token.refreshToken);
-      // }
+      if (this.isTokenExpired(token.expiresAt) && token.refreshToken) {
+        console.log(`   Token expired, attempting refresh...`);
+        try {
+          return await this.refreshToken(userId, provider, token.refreshToken);
+        } catch (refreshError) {
+          console.warn(`   Failed to refresh token: ${refreshError}`);
+          // Return the expired token anyway - let the caller handle the error
+          return token;
+        }
+      }
 
-      // return token;
+      return token;
     } catch (error) {
       console.error('Failed to get token:', error);
       throw new Error(`Failed to retrieve OAuth token: ${error instanceof Error ? error.message : 'Unknown error'}`);
@@ -121,7 +235,49 @@ export class TokenManager {
   }
 
   /**
-   * Revoke OAuth token and remove from database
+   * Store OAuth token (internal method)
+   */
+  async storeToken(userId: string, token: StoredOAuthToken): Promise<void> {
+    try {
+      // Update memory cache
+      const key = `${userId}:${token.provider}`;
+      const existingRecord = tokenStore.get(key);
+
+      if (existingRecord) {
+        existingRecord.accessToken = token.accessToken;
+        existingRecord.refreshToken = token.refreshToken;
+        existingRecord.expiresAt = token.expiresAt;
+        existingRecord.scopes = token.scopes;
+      }
+
+      // Update database if available
+      if (this.supabase) {
+        const { error } = await this.supabase
+          .from('linked_accounts')
+          .update({
+            access_token: token.accessToken,
+            refresh_token: token.refreshToken,
+            expires_at: token.expiresAt.toISOString(),
+            scopes: token.scopes,
+            updated_at: new Date().toISOString(),
+          })
+          .eq('user_email', userId)
+          .eq('provider', token.provider);
+
+        if (error) {
+          console.error('Failed to update token in database:', error.message);
+        }
+      }
+
+      console.log(`Token stored for user ${userId} provider ${token.provider}`);
+    } catch (error) {
+      console.error('Failed to store token:', error);
+      throw new Error(`Failed to store OAuth token: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    }
+  }
+
+  /**
+   * Revoke OAuth token and remove from storage
    */
   async revokeToken(userId: string, provider: 'google' | 'microsoft'): Promise<void> {
     try {
@@ -139,17 +295,26 @@ export class TokenManager {
           await authProvider.revokeToken(token.accessToken);
         } catch (error) {
           console.warn('Failed to revoke token with provider:', error);
-          // Continue to delete from database even if revocation fails
+          // Continue to delete from storage even if revocation fails
         }
       }
 
+      // Delete from memory
+      const key = `${userId}:${provider}`;
+      tokenStore.delete(key);
+
       // Delete from database
-      // TODO: Implement actual database deletion
-      // await supabase
-      //   .from('oauth_tokens')
-      //   .delete()
-      //   .eq('user_id', userId)
-      //   .eq('provider', provider);
+      if (this.supabase) {
+        const { error } = await this.supabase
+          .from('linked_accounts')
+          .delete()
+          .eq('user_email', userId)
+          .eq('provider', provider);
+
+        if (error) {
+          console.error('Failed to delete token from database:', error.message);
+        }
+      }
 
       console.log(`Token revoked for user ${userId} provider ${provider}`);
     } catch (error) {
@@ -191,7 +356,6 @@ export class TokenManager {
 
   /**
    * Get a valid access token, refreshing if necessary
-   * This is the main method to use when making API calls
    */
   async getValidAccessToken(
     userId: string,
@@ -232,28 +396,51 @@ export class TokenManager {
    */
   async getUserTokens(userId: string): Promise<Array<{
     provider: 'google' | 'microsoft';
+    email: string;
     scopes: string[];
     expiresAt: Date;
   }>> {
     try {
-      // TODO: Implement actual database query
-      // const { data, error } = await supabase
-      //   .from('oauth_tokens')
-      //   .select('provider, scopes, expires_at')
-      //   .eq('user_id', userId);
+      const results: Array<{
+        provider: 'google' | 'microsoft';
+        email: string;
+        scopes: string[];
+        expiresAt: Date;
+      }> = [];
 
-      // if (error || !data) {
-      //   return [];
-      // }
+      // Check database first
+      if (this.supabase) {
+        const { data, error } = await this.supabase
+          .from('linked_accounts')
+          .select('provider, oauth_email, scopes, expires_at')
+          .eq('user_email', userId);
 
-      // return data.map(token => ({
-      //   provider: token.provider,
-      //   scopes: token.scopes,
-      //   expiresAt: new Date(token.expires_at),
-      // }));
+        if (!error && data) {
+          for (const row of data) {
+            results.push({
+              provider: row.provider as 'google' | 'microsoft',
+              email: row.oauth_email,
+              scopes: row.scopes || [],
+              expiresAt: new Date(row.expires_at),
+            });
+          }
+          return results;
+        }
+      }
 
-      console.log(`Getting tokens for user ${userId}`);
-      return [];
+      // Fallback to memory
+      for (const [key, record] of tokenStore.entries()) {
+        if (record.userId === userId) {
+          results.push({
+            provider: record.provider as 'google' | 'microsoft',
+            email: record.email,
+            scopes: record.scopes,
+            expiresAt: record.expiresAt,
+          });
+        }
+      }
+
+      return results;
     } catch (error) {
       console.error('Failed to get user tokens:', error);
       return [];

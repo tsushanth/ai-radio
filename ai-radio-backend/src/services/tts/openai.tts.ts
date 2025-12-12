@@ -33,6 +33,65 @@ export interface VoiceConfig {
   speed: number; // 0.25 to 4.0
 }
 
+// Valid segment types for audio validation
+const VALID_SEGMENT_TYPES = ['intro', 'calendar', 'email', 'news', 'weather', 'outro'] as const;
+type ValidSegmentType = typeof VALID_SEGMENT_TYPES[number];
+
+/**
+ * Map any segment type to a valid one
+ * This handles cases where GPT-4 generates unexpected types
+ */
+function normalizeSegmentType(type: string): ValidSegmentType {
+  const normalized = type?.toLowerCase()?.trim() || 'news';
+
+  // Direct match
+  if (VALID_SEGMENT_TYPES.includes(normalized as ValidSegmentType)) {
+    return normalized as ValidSegmentType;
+  }
+
+  // Common mappings for unexpected types
+  const typeMapping: Record<string, ValidSegmentType> = {
+    'introduction': 'intro',
+    'opening': 'intro',
+    'greeting': 'intro',
+    'welcome': 'intro',
+    'emails': 'email',
+    'mail': 'email',
+    'message': 'email',
+    'messages': 'email',
+    'schedule': 'calendar',
+    'meeting': 'calendar',
+    'meetings': 'calendar',
+    'events': 'calendar',
+    'event': 'calendar',
+    'appointment': 'calendar',
+    'topic': 'news',
+    'topics': 'news',
+    'update': 'news',
+    'updates': 'news',
+    'discussion': 'news',
+    'content': 'news',
+    'general': 'news',
+    'summary': 'news',
+    'forecast': 'weather',
+    'closing': 'outro',
+    'goodbye': 'outro',
+    'farewell': 'outro',
+    'signoff': 'outro',
+    'sign-off': 'outro',
+    'conclusion': 'outro',
+  };
+
+  if (typeMapping[normalized]) {
+    console.log(`Mapped segment type "${type}" -> "${typeMapping[normalized]}"`);
+    return typeMapping[normalized];
+  }
+
+  // Default fallback
+  console.warn(`Unknown segment type "${type}", defaulting to "news"`);
+  return 'news';
+}
+
 export class OpenAITTSService {
   private openai: OpenAI;
   private readonly DEFAULT_MODEL: TTSModel = 'tts-1-hd';
@@ -130,7 +189,7 @@ export class OpenAITTSService {
         buffer: response.audio_buffer,
         duration_seconds: response.duration_seconds,
         speaker: segment.speaker,
-        segment_type: segment.type as AudioSegment['segment_type'],
+        segment_type: normalizeSegmentType(segment.type),
       };
     } catch (error) {
       throw this.createError(`Failed to synthesize segment ${segment.sequence}`, error);

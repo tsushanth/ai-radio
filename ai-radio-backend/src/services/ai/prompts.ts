@@ -80,6 +80,16 @@ FORMAT YOUR RESPONSE as a JSON array of segments:
   ...
 ]
 
+CRITICAL - Valid "type" values are ONLY these 6 options:
+- "intro" - Opening greetings and overview
+- "email" - Email summaries and discussion
+- "calendar" - Calendar events and scheduling
+- "news" - News topics discussion (use for general topics)
+- "weather" - Weather information
+- "outro" - Closing remarks and sign-off
+
+Do NOT use any other type values. If unsure, use "email" for email content or "news" for general content.
+
 Each segment should be a natural speaking turn, typically 1-3 sentences.`;
 
 /**

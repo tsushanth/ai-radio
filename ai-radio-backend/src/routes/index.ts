@@ -8,6 +8,8 @@ import authRoutes from './auth';
 import podcastRoutes from './podcast';
 import userRoutes from './user';
 import healthRoutes from './health';
+import linkedAccountsRoutes from './linked-accounts';
+import topicsRoutes from './topics';
 
 const router = express.Router();
 
@@ -16,6 +18,8 @@ router.use('/auth', authRoutes);
 router.use('/podcast', podcastRoutes);
 router.use('/user', userRoutes);
 router.use('/health', healthRoutes);
+router.use('/linked-accounts', linkedAccountsRoutes);
+router.use('/topics', topicsRoutes);
 
 // API root
 router.get('/', (req, res) => {
@@ -27,6 +31,8 @@ router.get('/', (req, res) => {
       podcast: '/api/podcast',
       user: '/api/user',
       health: '/api/health',
+      linked_accounts: '/api/linked-accounts',
+      topics: '/api/topics',
     },
     documentation: 'https://github.com/your-repo/ai-radio',
   });

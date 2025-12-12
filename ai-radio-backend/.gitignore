@@ -48,3 +48,5 @@ temp/
 
 # Cloud Run
 .gcloudignore
+
+*.plist

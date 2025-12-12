@@ -19,6 +19,9 @@ COPY src ./src
 # Build TypeScript to JavaScript
 RUN npm run build
 
+# Copy non-TypeScript JS files to dist (middleware, config, routes that are still .js)
+RUN find src -name "*.js" -type f -exec sh -c 'mkdir -p "dist/$(dirname "{}" | sed "s|^src/||")" && cp "{}" "dist/$(echo "{}" | sed "s|^src/||")"' \;
+
 # Production stage
 FROM node:20-alpine
 

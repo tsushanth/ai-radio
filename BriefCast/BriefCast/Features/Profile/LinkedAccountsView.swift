@@ -1,0 +1,571 @@
+//
+//  LinkedAccountsView.swift
+//  BriefCast
+//
+//  Gmail/Outlook linking view with OAuth flows
+//
+
+import SwiftUI
+
+struct LinkedAccountsView: View {
+    @StateObject private var viewModel = LinkedAccountsViewModel()
+    @Environment(\.dismiss) private var dismiss
+
+    var body: some View {
+        NavigationStack {
+            ScrollView {
+                VStack(spacing: 24) {
+                    // Header description
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("Connect your accounts to personalize your daily briefings with relevant information from your emails.")
+                            .font(.system(size: 15, weight: .regular))
+                            .foregroundColor(Theme.Colors.secondaryText)
+                            .fixedSize(horizontal: false, vertical: true)
+                    }
+                    .padding(.horizontal, 16)
+                    .padding(.top, 16)
+
+                    // Connected Accounts
+                    if !viewModel.connectedAccounts.isEmpty {
+                        VStack(alignment: .leading, spacing: 12) {
+                            Text("Connected Accounts")
+                                .font(.system(size: 20, weight: .bold))
+                                .foregroundColor(Theme.Colors.primaryText)
+                                .padding(.horizontal, 16)
+
+                            ForEach(viewModel.connectedAccounts) { account in
+                                UserConnectedAccountCard(
+                                    account: account,
+                                    onToggleEmail: { enabled in
+                                        viewModel.updatePermission(accountId: account.id, emailEnabled: enabled)
+                                    },
+                                    onDisconnect: {
+                                        viewModel.disconnectAccount(account)
+                                    }
+                                )
+                            }
+                        }
+                    }
+
+                    // Available Integrations
+                    VStack(alignment: .leading, spacing: 12) {
+                        Text(viewModel.connectedAccounts.isEmpty ? "Available Accounts" : "Add Another Account")
+                            .font(.system(size: 20, weight: .bold))
+                            .foregroundColor(Theme.Colors.primaryText)
+                            .padding(.horizontal, 16)
+
+                        ForEach(viewModel.availableProviders) { provider in
+                            ProviderCard(
+                                provider: provider,
+                                onConnect: {
+                                    Task {
+                                        await viewModel.connectAccount(provider: provider)
+                                    }
+                                }
+                            )
+                        }
+                    }
+
+                    // Info section
+                    VStack(alignment: .leading, spacing: 12) {
+                        HStack(spacing: 8) {
+                            Image(systemName: "lock.shield.fill")
+                                .font(.system(size: 16))
+                                .foregroundColor(Theme.Colors.accent)
+
+                            Text("Your data is secure")
+                                .font(.system(size: 14, weight: .semibold))
+                                .foregroundColor(Theme.Colors.primaryText)
+                        }
+
+                        Text("We only access the information you explicitly allow and use it solely to create your personalized briefings. You can revoke access at any time.")
+                            .font(.system(size: 13, weight: .regular))
+                            .foregroundColor(Theme.Colors.secondaryText)
+                            .fixedSize(horizontal: false, vertical: true)
+                    }
+                    .padding(16)
+                    .background(Theme.Colors.cardBackground)
+                    .cornerRadius(12)
+                    .padding(.horizontal, 16)
+                }
+                .padding(.bottom, 32)
+            }
+            .background(Theme.Colors.background)
+            .navigationTitle("Linked Accounts")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button("Done") {
+                        dismiss()
+                    }
+                    .foregroundColor(Theme.Colors.accent)
+                }
+            }
+            .alert("Connection Error", isPresented: $viewModel.showError) {
+                Button("OK", role: .cancel) { }
+            } message: {
+                Text(viewModel.errorMessage ?? "Failed to connect account")
+            }
+            .alert("Coming Soon", isPresented: $viewModel.showComingSoon) {
+                Button("OK", role: .cancel) { }
+            } message: {
+                Text("Microsoft account integration is coming soon. Stay tuned!")
+            }
+            .overlay {
+                if viewModel.isLoading {
+                    Color.black.opacity(0.5)
+                        .ignoresSafeArea()
+
+                    ProgressView()
+                        .progressViewStyle(CircularProgressViewStyle(tint: Theme.Colors.accent))
+                        .scaleEffect(1.5)
+                }
+            }
+        }
+    }
+}
+
+// MARK: - Supporting Views
+
+struct ProviderCard: View {
+    let provider: OAuthProvider
+    let onConnect: () -> Void
+
+    var body: some View {
+        Button(action: onConnect) {
+            VStack(alignment: .leading, spacing: 16) {
+                HStack(spacing: 12) {
+                    // Provider icon
+                    Circle()
+                        .fill(provider.color.opacity(0.15))
+                        .frame(width: 48, height: 48)
+                        .overlay(
+                            Image(systemName: provider.iconName)
+                                .font(.system(size: 24))
+                                .foregroundColor(provider.color)
+                        )
+
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text(provider.displayName)
+                            .font(.system(size: 17, weight: .semibold))
+                            .foregroundColor(Theme.Colors.primaryText)
+
+                        Text("Not connected")
+                            .font(.system(size: 14, weight: .regular))
+                            .foregroundColor(Theme.Colors.secondaryText)
+                    }
+
+                    Spacer()
+
+                    Image(systemName: "chevron.right")
+                        .font(.system(size: 14, weight: .semibold))
+                        .foregroundColor(Theme.Colors.secondaryText)
+                }
+
+                // What we'll access
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("We'll access:")
+                        .font(.system(size: 13, weight: .semibold))
+                        .foregroundColor(Theme.Colors.secondaryText)
+
+                    ForEach(provider.accessDescriptions, id: \.self) { description in
+                        HStack(spacing: 8) {
+                            Image(systemName: "checkmark.circle.fill")
+                                .font(.system(size: 12))
+                                .foregroundColor(Theme.Colors.accent)
+
+                            Text(description)
+                                .font(.system(size: 13, weight: .regular))
+                                .foregroundColor(Theme.Colors.secondaryText)
+                        }
+                    }
+                }
+            }
+            .padding(16)
+            .background(Theme.Colors.cardBackground)
+            .cornerRadius(12)
+            .overlay(
+                RoundedRectangle(cornerRadius: 12)
+                    .stroke(Color.white.opacity(0.05), lineWidth: 1)
+            )
+        }
+        .buttonStyle(ScaleButtonStyle())
+        .padding(.horizontal, 16)
+    }
+}
+
+struct UserConnectedAccountCard: View {
+    let account: UserConnectedAccount
+    let onToggleEmail: (Bool) -> Void
+    let onDisconnect: () -> Void
+
+    @State private var showDisconnectConfirmation = false
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 16) {
+            // Account header
+            HStack(spacing: 12) {
+                Circle()
+                    .fill(account.provider.color.opacity(0.15))
+                    .frame(width: 48, height: 48)
+                    .overlay(
+                        Image(systemName: account.provider.iconName)
+                            .font(.system(size: 24))
+                            .foregroundColor(account.provider.color)
+                    )
+
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(account.provider.displayName)
+                        .font(.system(size: 17, weight: .semibold))
+                        .foregroundColor(Theme.Colors.primaryText)
+
+                    Text(account.email)
+                        .font(.system(size: 14, weight: .regular))
+                        .foregroundColor(Theme.Colors.secondaryText)
+
+                    HStack(spacing: 6) {
+                        Circle()
+                            .fill(Color.green)
+                            .frame(width: 8, height: 8)
+
+                        Text("Connected")
+                            .font(.system(size: 12, weight: .medium))
+                            .foregroundColor(.green)
+                    }
+                }
+
+                Spacer()
+            }
+
+            Divider()
+                .background(Color.white.opacity(0.1))
+
+            // Permission toggles
+            VStack(spacing: 12) {
+                Text("Access Permissions")
+                    .font(.system(size: 13, weight: .semibold))
+                    .foregroundColor(Theme.Colors.secondaryText)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+
+                PermissionToggle(
+                    icon: "envelope.fill",
+                    title: "Email Access",
+                    description: "Read emails to include in briefings",
+                    isEnabled: account.emailEnabled,
+                    onToggle: onToggleEmail
+                )
+            }
+
+            Divider()
+                .background(Color.white.opacity(0.1))
+
+            // Disconnect button
+            Button(action: {
+                showDisconnectConfirmation = true
+            }) {
+                HStack {
+                    Image(systemName: "link.badge.minus")
+                        .font(.system(size: 14))
+
+                    Text("Disconnect Account")
+                        .font(.system(size: 14, weight: .semibold))
+                }
+                .foregroundColor(.red)
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 8)
+            }
+        }
+        .padding(16)
+        .background(Theme.Colors.cardBackground)
+        .cornerRadius(12)
+        .overlay(
+            RoundedRectangle(cornerRadius: 12)
+                .stroke(Color.white.opacity(0.05), lineWidth: 1)
+        )
+        .padding(.horizontal, 16)
+        .alert("Disconnect Account", isPresented: $showDisconnectConfirmation) {
+            Button("Cancel", role: .cancel) { }
+            Button("Disconnect", role: .destructive) {
+                onDisconnect()
+            }
+        } message: {
+            Text("Are you sure you want to disconnect \(account.email)? You'll stop receiving personalized content from this account.")
+        }
+    }
+}
+
+struct PermissionToggle: View {
+    let icon: String
+    let title: String
+    let description: String
+    let isEnabled: Bool
+    let onToggle: (Bool) -> Void
+
+    var body: some View {
+        HStack(spacing: 12) {
+            Image(systemName: icon)
+                .font(.system(size: 16))
+                .foregroundColor(Theme.Colors.accent)
+                .frame(width: 24)
+
+            VStack(alignment: .leading, spacing: 2) {
+                Text(title)
+                    .font(.system(size: 14, weight: .medium))
+                    .foregroundColor(Theme.Colors.primaryText)
+
+                Text(description)
+                    .font(.system(size: 12, weight: .regular))
+                    .foregroundColor(Theme.Colors.secondaryText)
+            }
+
+            Spacer()
+
+            Toggle("", isOn: Binding(
+                get: { isEnabled },
+                set: { onToggle($0) }
+            ))
+            .labelsHidden()
+            .tint(Theme.Colors.accent)
+        }
+        .padding(12)
+        .background(Color.white.opacity(0.03))
+        .cornerRadius(8)
+    }
+}
+
+// MARK: - View-Specific Models
+
+struct OAuthProvider: Identifiable {
+    let id: String
+    let displayName: String
+    let iconName: String
+    let color: Color
+    let accessDescriptions: [String]
+}
+
+struct UserConnectedAccount: Identifiable {
+    let id: String
+    let provider: OAuthProvider
+    let email: String
+    var emailEnabled: Bool
+    let connectedAt: Date
+}
+
+// MARK: - View Model
+
+@MainActor
+class LinkedAccountsViewModel: ObservableObject {
+    @Published var connectedAccounts: [UserConnectedAccount] = []
+    @Published var isLoading: Bool = false
+    @Published var showError: Bool = false
+    @Published var errorMessage: String?
+    @Published var showComingSoon: Bool = false
+
+    private let googleOAuthHelper = GoogleOAuthHelper()
+
+    let availableProviders: [OAuthProvider] = [
+        OAuthProvider(
+            id: "google",
+            displayName: "Google",
+            iconName: "g.circle.fill",
+            color: .red,
+            accessDescriptions: [
+                "Read your Gmail messages",
+                "Basic profile information"
+            ]
+        ),
+        OAuthProvider(
+            id: "microsoft",
+            displayName: "Microsoft",
+            iconName: "m.circle.fill",
+            color: .blue,
+            accessDescriptions: [
+                "Read your Outlook emails",
+                "Basic profile information"
+            ]
+        )
+    ]
+
+    init() {
+        // Load connected accounts from user profile
+        loadConnectedAccounts()
+    }
+
+    func connectAccount(provider: OAuthProvider) async {
+        // Show "Coming Soon" for Microsoft
+        if provider.id == "microsoft" {
+            showComingSoon = true
+            return
+        }
+
+        isLoading = true
+        errorMessage = nil
+
+        do {
+            switch provider.id {
+            case "google":
+                try await connectGoogleAccount(provider: provider)
+            default:
+                throw NSError(domain: "OAuth", code: -1, userInfo: [NSLocalizedDescriptionKey: "Unknown provider"])
+            }
+        } catch {
+            errorMessage = "Failed to connect \(provider.displayName): \(error.localizedDescription)"
+            showError = true
+            print("OAuth error: \(error)")
+        }
+
+        isLoading = false
+    }
+
+    private func connectGoogleAccount(provider: OAuthProvider) async throws {
+        // Request OAuth access with Gmail scope
+        let (email, accessToken, refreshToken) = try await googleOAuthHelper.requestAccess(
+            includeEmail: true,
+            includeCalendar: false
+        )
+
+        // Store tokens in backend
+        let accountId = try await storeLinkedAccount(
+            provider: "google",
+            email: email,
+            accessToken: accessToken,
+            refreshToken: refreshToken
+        )
+
+        // Create new connected account
+        let newAccount = UserConnectedAccount(
+            id: accountId,
+            provider: provider,
+            email: email,
+            emailEnabled: true,
+            connectedAt: Date()
+        )
+
+        // Add to local list
+        connectedAccounts.append(newAccount)
+
+        // Set flag for HomeViewModel to know we have a linked account
+        UserDefaults.standard.set(true, forKey: "hasLinkedGoogleAccount")
+        // Save the linked email for podcast generation
+        UserDefaults.standard.set(email, forKey: "linkedAccountEmail")
+        // Save the provider type
+        UserDefaults.standard.set("google", forKey: "linkedAccountProvider")
+
+        print("✅ Connected Google account: \(email)")
+    }
+
+    func disconnectAccount(_ account: UserConnectedAccount) {
+        Task {
+            do {
+                // Revoke OAuth access
+                switch account.provider.id {
+                case "google":
+                    try await googleOAuthHelper.revokeAccess()
+                default:
+                    break
+                }
+
+                // Remove from local list
+                connectedAccounts.removeAll { $0.id == account.id }
+
+                // Clear flag if no more connected accounts
+                if connectedAccounts.isEmpty {
+                    UserDefaults.standard.set(false, forKey: "hasLinkedGoogleAccount")
+                    UserDefaults.standard.removeObject(forKey: "linkedAccountEmail")
+                    UserDefaults.standard.removeObject(forKey: "linkedAccountProvider")
+                }
+
+                // TODO: Call backend to delete linked account
+                print("Disconnected \(account.email)")
+            } catch {
+                errorMessage = "Failed to disconnect account: \(error.localizedDescription)"
+                showError = true
+                print("Disconnect error: \(error)")
+            }
+        }
+    }
+
+    func updatePermission(accountId: String, emailEnabled: Bool) {
+        if let index = connectedAccounts.firstIndex(where: { $0.id == accountId }) {
+            connectedAccounts[index].emailEnabled = emailEnabled
+
+            // TODO: Update backend preferences via API
+            print("Updated permissions for account \(accountId): email=\(emailEnabled)")
+        }
+    }
+
+    private func loadConnectedAccounts() {
+        // Load connected accounts from UserDefaults
+        let hasLinkedAccount = UserDefaults.standard.bool(forKey: "hasLinkedGoogleAccount")
+        let linkedEmail = UserDefaults.standard.string(forKey: "linkedAccountEmail")
+        let linkedProvider = UserDefaults.standard.string(forKey: "linkedAccountProvider")
+
+        if hasLinkedAccount, let email = linkedEmail, !email.isEmpty {
+            // Get provider from stored value, or fall back to heuristic
+            let providerId = linkedProvider ?? (email.contains("gmail.com") || email.contains("googlemail.com") ? "google" : "microsoft")
+            guard let provider = availableProviders.first(where: { $0.id == providerId }) else {
+                connectedAccounts = []
+                return
+            }
+
+            let account = UserConnectedAccount(
+                id: "saved_\(email)",
+                provider: provider,
+                email: email,
+                emailEnabled: true,
+                connectedAt: Date() // We don't store this, so use current date
+            )
+            connectedAccounts = [account]
+            print("📧 Loaded saved linked account: \(email) (\(providerId))")
+        } else {
+            connectedAccounts = []
+        }
+    }
+
+    // MARK: - Backend API Methods
+
+    private func storeLinkedAccount(
+        provider: String,
+        email: String,
+        accessToken: String,
+        refreshToken: String?
+    ) async throws -> String {
+        // Get the linked account email as the user ID for backend
+        // This is the email being linked (e.g., t.sushanth@gmail.com)
+        let userId = email
+
+        let url = URL(string: "https://ai-radio-backend-917362189743.us-central1.run.app/api/linked-accounts/\(userId)")!
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+
+        let body: [String: Any] = [
+            "provider": provider,
+            "email": email,
+            "access_token": accessToken,
+            "refresh_token": refreshToken ?? "",
+            "email_enabled": true,
+            "calendar_enabled": false
+        ]
+
+        request.httpBody = try JSONSerialization.data(withJSONObject: body)
+
+        let (data, response) = try await URLSession.shared.data(for: request)
+
+        guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 201 else {
+            throw NSError(domain: "API", code: -1, userInfo: [NSLocalizedDescriptionKey: "Failed to store linked account"])
+        }
+
+        let json = try JSONSerialization.jsonObject(with: data) as? [String: Any]
+        guard let linkedAccount = json?["linked_account"] as? [String: Any],
+              let accountId = linkedAccount["id"] as? String else {
+            throw NSError(domain: "API", code: -2, userInfo: [NSLocalizedDescriptionKey: "Invalid response"])
+        }
+
+        return accountId
+    }
+}
+
+#Preview {
+    LinkedAccountsView()
+}

@@ -16,6 +16,7 @@ const router = express.Router();
 
 const generatePodcastSchema = z.object({
   user_id: z.string().email('Invalid email format'),
+  date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Date must be in YYYY-MM-DD format').optional(),
   preferences: z.object({
     briefing_time: z.string().regex(/^\d{2}:\d{2}$/, 'Time must be in HH:MM format'),
     topics: z.array(z.string()).optional().default([]),
@@ -75,12 +76,15 @@ router.post('/generate', async (req: Request, res: Response, next: NextFunction)
       validated.preferences
     );
 
-    // Generate episode
+    // Generate episode - use client date if provided, otherwise server date
+    const clientDate = validated.date || new Date().toISOString().split('T')[0];
+
     const result = await podcastGenerator.generateEpisode(
       validated.user_id,
       validated.preferences,
       {
         ...validated.options,
+        date: clientDate,
         onProgress: async (progress) => {
           // TODO: Send progress via WebSocket or SSE
           console.log(`[${validated.user_id}] ${progress.progress_percent}%: ${progress.message}`);

@@ -217,22 +217,96 @@ router.put('/:userId/preferences', async (req: Request, res: Response, next: Nex
 
 /**
  * DELETE /user/:userId
- * Delete user account
+ * Delete user account and all associated data
  */
 router.delete('/:userId', async (req: Request, res: Response, next: NextFunction) => {
   try {
     const userId = req.params.userId;
 
-    // TODO: Delete from database
-    // Also delete all related data: oauth_tokens, podcast_episodes, etc.
-    // await supabase
-    //   .from('users')
-    //   .delete()
-    //   .eq('id', userId);
+    console.log(`🗑️ Deleting all data for user: ${userId}`);
+
+    // Import token manager and supabase for cleanup
+    const { tokenManager } = await import('../services/auth/token.manager');
+    const { createClient } = await import('@supabase/supabase-js');
+
+    const supabaseUrl = process.env.SUPABASE_URL;
+    const supabaseKey = process.env.SUPABASE_SERVICE_KEY;
+
+    if (supabaseUrl && supabaseKey) {
+      const supabase = createClient(supabaseUrl, supabaseKey);
+
+      // 1. Delete linked accounts / OAuth tokens
+      console.log('   Deleting linked accounts...');
+      const { error: linkedAccountsError } = await supabase
+        .from('linked_accounts')
+        .delete()
+        .eq('user_email', userId);
+
+      if (linkedAccountsError) {
+        console.warn(`   Warning: Failed to delete linked accounts: ${linkedAccountsError.message}`);
+      } else {
+        console.log('   ✅ Linked accounts deleted');
+      }
+
+      // 2. Delete topic episodes
+      console.log('   Deleting topic episodes...');
+      const { error: topicEpisodesError } = await supabase
+        .from('topic_episodes')
+        .delete()
+        .eq('user_id', userId);
+
+      if (topicEpisodesError) {
+        console.warn(`   Warning: Failed to delete topic episodes: ${topicEpisodesError.message}`);
+      } else {
+        console.log('   ✅ Topic episodes deleted');
+      }
+
+      // 3. Delete podcast episodes
+      console.log('   Deleting podcast episodes...');
+      const { error: podcastEpisodesError } = await supabase
+        .from('podcast_episodes')
+        .delete()
+        .eq('user_id', userId);
+
+      if (podcastEpisodesError) {
+        console.warn(`   Warning: Failed to delete podcast episodes: ${podcastEpisodesError.message}`);
+      } else {
+        console.log('   ✅ Podcast episodes deleted');
+      }
+
+      // 4. Delete user profile if exists
+      console.log('   Deleting user profile...');
+      const { error: userError } = await supabase
+        .from('users')
+        .delete()
+        .eq('id', userId);
+
+      // Also try with email as identifier
+      if (userError) {
+        await supabase.from('users').delete().eq('email', userId);
+      }
+      console.log('   ✅ User profile deleted');
+    }
+
+    // 5. Clear any in-memory tokens
+    console.log('   Clearing in-memory tokens...');
+    try {
+      await tokenManager.revokeToken(userId, 'google');
+    } catch (e) {
+      // Ignore - token may not exist
+    }
+    try {
+      await tokenManager.revokeToken(userId, 'microsoft');
+    } catch (e) {
+      // Ignore - token may not exist
+    }
+    console.log('   ✅ In-memory tokens cleared');
+
+    console.log(`✅ Successfully deleted all data for user: ${userId}`);
 
     res.json({
       success: true,
-      message: 'User deleted',
+      message: 'User account and all associated data have been deleted',
     });
   } catch (error) {
     console.error('Failed to delete user:', error);

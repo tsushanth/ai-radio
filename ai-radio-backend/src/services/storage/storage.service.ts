@@ -33,13 +33,71 @@ export class StorageService {
   private readonly DEFAULT_BUCKET = 'podcasts';
   private readonly DEFAULT_CACHE_CONTROL = '3600'; // 1 hour
   private readonly DEFAULT_CONTENT_TYPE = 'audio/mpeg';
+  private bucketInitialized = false;
+  private initPromise: Promise<void> | null = null;
 
   constructor() {
     // Initialize Supabase client if configured
     if (env.SUPABASE_URL && env.SUPABASE_SERVICE_KEY) {
       this.supabase = createClient(env.SUPABASE_URL, env.SUPABASE_SERVICE_KEY);
+      // Initialize bucket asynchronously
+      this.initPromise = this.initializeBucket();
     } else {
       console.warn('Supabase not configured - storage operations will use mock mode');
+    }
+  }
+
+  /**
+   * Initialize storage bucket (create if doesn't exist)
+   */
+  private async initializeBucket(): Promise<void> {
+    if (!this.supabase || this.bucketInitialized) return;
+
+    try {
+      console.log(`📦 Checking if bucket '${this.DEFAULT_BUCKET}' exists...`);
+
+      // Check if bucket exists
+      const { data: buckets, error: listError } = await this.supabase.storage.listBuckets();
+
+      if (listError) {
+        console.error('Failed to list buckets:', listError.message);
+        return;
+      }
+
+      const bucketExists = buckets?.some(b => b.name === this.DEFAULT_BUCKET);
+
+      if (!bucketExists) {
+        console.log(`📦 Creating bucket '${this.DEFAULT_BUCKET}'...`);
+        const { error: createError } = await this.supabase.storage.createBucket(this.DEFAULT_BUCKET, {
+          public: true,
+          fileSizeLimit: 52428800, // 50MB
+          allowedMimeTypes: ['audio/mpeg', 'audio/mp3', 'audio/wav'],
+        });
+
+        if (createError) {
+          // Ignore if bucket already exists (race condition)
+          if (!createError.message.includes('already exists')) {
+            console.error('Failed to create bucket:', createError.message);
+            return;
+          }
+        }
+        console.log(`✅ Bucket '${this.DEFAULT_BUCKET}' created successfully`);
+      } else {
+        console.log(`✅ Bucket '${this.DEFAULT_BUCKET}' already exists`);
+      }
+
+      this.bucketInitialized = true;
+    } catch (error) {
+      console.error('Error initializing bucket:', error);
+    }
+  }
+
+  /**
+   * Wait for bucket initialization before upload
+   */
+  private async waitForInit(): Promise<void> {
+    if (this.initPromise) {
+      await this.initPromise;
     }
   }
 
@@ -73,10 +131,13 @@ export class StorageService {
     path: string,
     options: StorageOptions = {}
   ): Promise<UploadResult> {
+    // Wait for bucket to be initialized
+    await this.waitForInit();
+
     const bucket = options.bucket || this.DEFAULT_BUCKET;
     const contentType = options.content_type || this.DEFAULT_CONTENT_TYPE;
     const cacheControl = options.cache_control || this.DEFAULT_CACHE_CONTROL;
-    const upsert = options.upsert !== undefined ? options.upsert : false;
+    const upsert = options.upsert !== undefined ? options.upsert : true; // Default to upsert
 
     if (!this.supabase) {
       // Mock mode for development
@@ -84,6 +145,8 @@ export class StorageService {
     }
 
     try {
+      console.log(`📤 Uploading to ${bucket}/${path}...`);
+
       const { data, error } = await this.supabase.storage
         .from(bucket)
         .upload(path, buffer, {
@@ -93,16 +156,35 @@ export class StorageService {
         });
 
       if (error) {
+        console.error(`❌ Upload error: ${error.message}`);
         throw new Error(`Upload failed: ${error.message}`);
       }
 
-      // Get public URL
-      const { data: urlData } = this.supabase.storage
+      // Get signed URL (for private buckets with PII)
+      // Expires in 1 year (31536000 seconds) - podcasts should remain accessible
+      const { data: signedData, error: signedError } = await this.supabase.storage
         .from(bucket)
-        .getPublicUrl(path);
+        .createSignedUrl(path, 31536000); // 1 year expiry
+
+      if (signedError) {
+        console.error(`❌ Failed to create signed URL: ${signedError.message}`);
+        // Fallback to public URL if signed fails
+        const { data: urlData } = this.supabase.storage
+          .from(bucket)
+          .getPublicUrl(path);
+
+        return {
+          url: urlData.publicUrl,
+          path: data.path,
+          size_bytes: buffer.length,
+          bucket,
+        };
+      }
+
+      console.log(`✅ Upload successful with signed URL`);
 
       return {
-        url: urlData.publicUrl,
+        url: signedData.signedUrl,
         path: data.path,
         size_bytes: buffer.length,
         bucket,

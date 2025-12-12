@@ -1,0 +1,75 @@
+# Google Cloud Build configuration for Cloud Run deployment
+# Optimized for TypeScript Node.js application
+
+steps:
+  # Build the container image
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'build'
+      - '-t'
+      - '${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/ai-radio-backend:$COMMIT_SHA'
+      - '-t'
+      - '${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/ai-radio-backend:latest'
+      - '.'
+    timeout: '600s'
+
+  # Push the container image to Artifact Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', '--all-tags', '${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/ai-radio-backend']
+
+  # Deploy container image to Cloud Run
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args:
+      - 'run'
+      - 'deploy'
+      - 'ai-radio-backend'
+      - '--image'
+      - '${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/ai-radio-backend:$COMMIT_SHA'
+      - '--region'
+      - '${_REGION}'
+      - '--platform'
+      - 'managed'
+      - '--allow-unauthenticated'  # TODO: Configure based on security requirements
+      - '--min-instances'
+      - '0'
+      - '--max-instances'
+      - '10'
+      - '--memory'
+      - '512Mi'
+      - '--cpu'
+      - '1'
+      - '--timeout'
+      - '300s'
+      - '--concurrency'
+      - '80'
+      - '--service-account'
+      - '${_SERVICE_ACCOUNT}'
+      - '--set-env-vars'
+      - 'NODE_ENV=production,GCP_PROJECT_ID=$PROJECT_ID'
+      # Secrets from Secret Manager
+      - '--update-secrets'
+      - 'SUPABASE_URL=supabase-url:latest,SUPABASE_ANON_KEY=supabase-anon-key:latest,SUPABASE_SERVICE_KEY=supabase-service-key:latest,OPENAI_API_KEY=openai-api-key:latest,GOOGLE_CLIENT_ID=google-client-id:latest,GOOGLE_CLIENT_SECRET=google-client-secret:latest,MICROSOFT_CLIENT_ID=microsoft-client-id:latest,MICROSOFT_CLIENT_SECRET=microsoft-client-secret:latest,JWT_SECRET=jwt-secret:latest'
+
+images:
+  - '${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/ai-radio-backend:$COMMIT_SHA'
+  - '${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/ai-radio-backend:latest'
+
+substitutions:
+  _REGION: us-central1  # Change to your preferred region
+  _REPOSITORY: ai-radio  # Artifact Registry repository name
+  _SERVICE_ACCOUNT: ai-radio-backend@${PROJECT_ID}.iam.gserviceaccount.com
+
+options:
+  machineType: 'N1_HIGHCPU_8'
+  logging: CLOUD_LOGGING_ONLY
+
+timeout: '1200s'
+
+# TODO: Create service account: gcloud iam service-accounts create ai-radio-backend
+# TODO: Grant necessary permissions to service account
+# TODO: Create Artifact Registry repository: gcloud artifacts repositories create ai-radio --repository-format=docker --location=us-central1
+# TODO: Store secrets in Secret Manager using: gcloud secrets create SECRET_NAME --data-file=-
+# TODO: Grant secret access to service account: gcloud secrets add-iam-policy-binding SECRET_NAME --member="serviceAccount:SERVICE_ACCOUNT" --role="roles/secretmanager.secretAccessor"
+# TODO: Configure webhook security with OIDC tokens for Cloud Scheduler
+# TODO: Add build triggers for automated deployments

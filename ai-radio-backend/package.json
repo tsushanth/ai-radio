@@ -1,0 +1,49 @@
+{
+  "name": "ai-radio-backend",
+  "version": "1.0.0",
+  "description": "AI Radio backend service - TypeScript",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "tsx watch src/index.ts",
+    "dev:nodemon": "nodemon --watch src --ext ts --exec tsx src/index.ts",
+    "type-check": "tsc --noEmit",
+    "lint": "eslint src --ext .ts",
+    "format": "prettier --write \"src/**/*.ts\"",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "clean": "rm -rf dist"
+  },
+  "keywords": ["ai", "radio", "podcast", "typescript"],
+  "author": "",
+  "license": "ISC",
+  "engines": {
+    "node": ">=20.0.0",
+    "npm": ">=10.0.0"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "dotenv": "^16.4.5",
+    "zod": "^3.22.4",
+    "@supabase/supabase-js": "^2.39.3",
+    "openai": "^4.28.0",
+    "googleapis": "^132.0.0",
+    "@microsoft/microsoft-graph-client": "^3.0.7",
+    "axios": "^1.6.5",
+    "cors": "^2.8.5",
+    "helmet": "^7.1.0",
+    "express-rate-limit": "^7.1.5"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.16",
+    "@types/express": "^4.17.21",
+    "@types/cors": "^2.8.17",
+    "typescript": "^5.3.3",
+    "tsx": "^4.7.1",
+    "nodemon": "^3.0.3",
+    "@typescript-eslint/eslint-plugin": "^6.20.0",
+    "@typescript-eslint/parser": "^6.20.0",
+    "eslint": "^8.56.0",
+    "prettier": "^3.2.5"
+  }
+}

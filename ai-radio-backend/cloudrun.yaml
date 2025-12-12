@@ -1,0 +1,51 @@
+# Cloud Run service configuration
+# TODO: Update with your project-specific values
+
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: ai-radio-backend
+  labels:
+    cloud.googleapis.com/location: us-central1  # TODO: Change to your region
+spec:
+  template:
+    metadata:
+      annotations:
+        autoscaling.knative.dev/minScale: '0'
+        autoscaling.knative.dev/maxScale: '10'  # TODO: Adjust based on needs
+        run.googleapis.com/cpu-throttling: 'true'
+        run.googleapis.com/startup-cpu-boost: 'true'
+    spec:
+      containerConcurrency: 80
+      timeoutSeconds: 300  # 5 minutes
+      serviceAccountName: ai-radio-backend-sa  # TODO: Create service account
+      containers:
+        - image: gcr.io/PROJECT_ID/ai-radio-backend:latest  # TODO: Update PROJECT_ID
+          ports:
+            - name: http1
+              containerPort: 8080
+          env:
+            - name: NODE_ENV
+              value: production
+            # TODO: Add environment variables
+            # TODO: Reference secrets from Secret Manager
+          resources:
+            limits:
+              cpu: '1000m'
+              memory: '512Mi'
+          livenessProbe:
+            httpGet:
+              path: /health/live
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /health/ready
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 5
+
+# TODO: Configure VPC connector if needed
+# TODO: Configure Cloud SQL connection if needed
+# TODO: Add custom domain mapping

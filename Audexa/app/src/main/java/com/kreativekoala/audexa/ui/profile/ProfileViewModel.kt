@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.kreativekoala.audexa.data.local.PreferencesManager
 import com.kreativekoala.audexa.data.model.SupportedLanguage
 import com.kreativekoala.audexa.data.repository.AuthRepository
+import com.kreativekoala.audexa.service.AudioManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -24,7 +25,8 @@ data class ProfileUiState(
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
     private val authRepository: AuthRepository,
-    private val preferencesManager: PreferencesManager
+    private val preferencesManager: PreferencesManager,
+    private val audioManager: AudioManager
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(ProfileUiState())
@@ -58,6 +60,8 @@ class ProfileViewModel @Inject constructor(
 
     fun signOut() {
         viewModelScope.launch {
+            // Stop any playing audio before signing out
+            audioManager.stop()
             authRepository.signOut()
             _uiState.value = _uiState.value.copy(isSignedOut = true)
         }
@@ -66,7 +70,10 @@ class ProfileViewModel @Inject constructor(
     fun deleteAccount() {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isDeleting = true)
-            
+
+            // Stop any playing audio before deleting account
+            audioManager.stop()
+
             authRepository.deleteAccount()
                 .onSuccess {
                     _uiState.value = _uiState.value.copy(

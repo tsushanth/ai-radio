@@ -21,6 +21,7 @@ export interface UserPreferences {
   include_weather?: boolean;
   include_calendar?: boolean;
   include_email?: boolean;
+  language?: string; // Language code: en, es, fr, de, hi, etc.
 }
 
 export interface OAuthToken {

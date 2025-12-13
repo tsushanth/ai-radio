@@ -33,6 +33,7 @@ actor PodcastService {
             let includeWeather: Bool
             let includeCalendar: Bool
             let includeEmail: Bool
+            let language: String
 
             enum CodingKeys: String, CodingKey {
                 case briefingTime = "briefing_time"
@@ -42,6 +43,7 @@ actor PodcastService {
                 case includeWeather = "include_weather"
                 case includeCalendar = "include_calendar"
                 case includeEmail = "include_email"
+                case language
             }
         }
     }
@@ -112,7 +114,8 @@ actor PodcastService {
                 voiceHost2: preferences.voiceHost2 ?? "onyx",
                 includeWeather: preferences.includeWeather ?? false,
                 includeCalendar: preferences.includeCalendar ?? true,
-                includeEmail: preferences.includeEmail ?? true
+                includeEmail: preferences.includeEmail ?? true,
+                language: preferences.language ?? "en"
             )
         )
 

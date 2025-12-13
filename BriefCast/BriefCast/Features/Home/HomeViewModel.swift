@@ -286,6 +286,10 @@ class HomeViewModel {
             // Simulate progress updates
             dailyBriefState = .generating(10)
 
+            // Get user's preferred language from settings
+            let language = preferencesService.preferredLanguage
+            print("🌐 Daily Brief generation with language: \(language)")
+
             // Create preferences from selected topics
             let preferences = UserPreferences(
                 briefingTime: "07:00",
@@ -294,7 +298,8 @@ class HomeViewModel {
                 voiceHost2: "onyx",
                 includeWeather: false,
                 includeCalendar: true,
-                includeEmail: true
+                includeEmail: true,
+                language: language
             )
 
             dailyBriefState = .generating(20)

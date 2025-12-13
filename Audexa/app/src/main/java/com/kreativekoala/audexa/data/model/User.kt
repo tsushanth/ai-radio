@@ -45,5 +45,6 @@ data class UserPreferences(
     @SerialName("include_calendar")
     val includeCalendar: Boolean? = false,
     @SerialName("include_email")
-    val includeEmail: Boolean? = true
+    val includeEmail: Boolean? = true,
+    val language: String? = "en" // Language code: en, es, fr, de, hi, etc.
 )

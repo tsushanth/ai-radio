@@ -81,6 +81,17 @@ class HomeViewModel @Inject constructor(
         topics.filter { it.id in bookmarked && it.id !in hidden }
     }
 
+    // Currently playing topic ID (for showing "Playing" indicator on tiles)
+    val playingTopicId: Flow<String?> = combine(
+        audioManager.currentShowId,
+        audioManager.isPlaying
+    ) { showId, isPlaying ->
+        if (isPlaying) showId else null
+    }
+
+    // Store the Daily Brief audio URL when generated
+    private var dailyBriefAudioUrl: String? = null
+
     val dailyBriefDate: String
         get() {
             val dateFormat = SimpleDateFormat("EEEE, MMM d", Locale.getDefault())
@@ -91,6 +102,37 @@ class HomeViewModel @Inject constructor(
         loadUserInfo()
         checkLinkedAccounts()
         loadData()
+        observeAudioState()
+    }
+
+    /**
+     * Observe audio player state to sync Daily Brief UI with MiniPlayer
+     */
+    private fun observeAudioState() {
+        viewModelScope.launch {
+            // Combine isPlaying and currentEpisodeTitle to determine Daily Brief state
+            combine(
+                audioManager.isPlaying,
+                audioManager.currentEpisodeTitle
+            ) { isPlaying, currentTitle ->
+                Pair(isPlaying, currentTitle)
+            }.collect { (isPlaying, currentTitle) ->
+                val currentState = _dailyBriefState.value
+                val audioUrl = dailyBriefAudioUrl
+
+                // Only update if we have a Daily Brief loaded and it's the current playing item
+                if (audioUrl != null && currentTitle?.startsWith("Daily Brief") == true) {
+                    when {
+                        isPlaying && currentState !is DailyBriefState.Playing -> {
+                            _dailyBriefState.value = DailyBriefState.Playing(audioUrl)
+                        }
+                        !isPlaying && currentState is DailyBriefState.Playing -> {
+                            _dailyBriefState.value = DailyBriefState.Completed(audioUrl)
+                        }
+                    }
+                }
+            }
+        }
     }
 
     private fun loadUserInfo() {
@@ -126,8 +168,9 @@ class HomeViewModel @Inject constructor(
             // Load topics
             topicRepository.getTopics()
                 .onSuccess { response ->
-                    _topics.value = response.topics
-                    Log.d(TAG, "Loaded ${response.topics.size} topics")
+                    val topics = response.data?.topics ?: emptyList()
+                    _topics.value = topics
+                    Log.d(TAG, "Loaded ${topics.size} topics")
                 }
                 .onFailure { e ->
                     Log.e(TAG, "Failed to load topics: ${e.message}")
@@ -181,6 +224,10 @@ class HomeViewModel @Inject constructor(
 
             _dailyBriefState.value = DailyBriefState.Generating(0)
 
+            // Get user's preferred language from settings
+            val language = preferencesManager.preferredLanguage.first()
+            Log.d(TAG, "Playing Daily Brief with language: $language")
+
             val preferences = UserPreferences(
                 briefingTime = "07:00",
                 topics = listOf("Technology", "News", "Business"),
@@ -188,13 +235,16 @@ class HomeViewModel @Inject constructor(
                 voiceHost2 = "onyx",
                 includeWeather = false,
                 includeCalendar = false,
-                includeEmail = true
+                includeEmail = true,
+                language = language
             )
 
             podcastRepository.generatePodcast(email, preferences)
                 .onSuccess { response ->
+                    // Store the audio URL for state synchronization
+                    dailyBriefAudioUrl = response.episode.audioUrl
                     _dailyBriefState.value = DailyBriefState.Completed(response.episode.audioUrl)
-                    
+
                     // Auto-play
                     audioManager.play(
                         id = response.episode.id,
@@ -212,10 +262,14 @@ class HomeViewModel @Inject constructor(
     }
 
     fun pauseDailyBrief() {
-        audioManager.pause()
-        val currentState = _dailyBriefState.value
-        if (currentState is DailyBriefState.Playing) {
-            _dailyBriefState.value = DailyBriefState.Completed(currentState.audioUrl)
+        // Only pause if Daily Brief is actually the content currently playing
+        val currentTitle = audioManager.currentEpisodeTitle.value
+        if (currentTitle?.startsWith("Daily Brief") == true) {
+            audioManager.pause()
+            val currentState = _dailyBriefState.value
+            if (currentState is DailyBriefState.Playing) {
+                _dailyBriefState.value = DailyBriefState.Completed(currentState.audioUrl)
+            }
         }
     }
 
@@ -236,10 +290,6 @@ class HomeViewModel @Inject constructor(
             val current = hiddenTopicIds.first()
             preferencesManager.setHiddenTopics(current + topicId)
         }
-    }
-
-    fun isTopicBookmarked(topicId: String): Boolean {
-        return bookmarkedTopicIds.value.firstOrNull()?.contains(topicId) ?: false
     }
 
     fun playEpisode(episode: Episode) {

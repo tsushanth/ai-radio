@@ -76,6 +76,7 @@ struct UserPreferences: Codable {
     var includeWeather: Bool?
     var includeCalendar: Bool?
     var includeEmail: Bool?
+    var language: String? // e.g., "en", "es", "hi"
 
     enum CodingKeys: String, CodingKey {
         case briefingTime = "briefing_time"
@@ -85,6 +86,7 @@ struct UserPreferences: Codable {
         case includeWeather = "include_weather"
         case includeCalendar = "include_calendar"
         case includeEmail = "include_email"
+        case language
     }
 }
 

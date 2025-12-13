@@ -132,7 +132,7 @@ extension Show {
         imageColor: String,
         episodeCount: Int = 20,
         isSubscribed: Bool = false,
-        publisher: String = "BriefCast",
+        publisher: String = "Audexa",
         rating: Double = 4.5
     ) -> Show {
         Show(

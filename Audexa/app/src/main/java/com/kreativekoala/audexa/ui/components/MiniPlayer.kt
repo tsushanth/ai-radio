@@ -4,6 +4,7 @@ import androidx.compose.animation.*
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
@@ -36,6 +37,7 @@ fun MiniPlayer(
         Surface(
             modifier = Modifier
                 .fillMaxWidth()
+                .navigationBarsPadding()
                 .clickable(onClick = onClick),
             color = CardBackground,
             shadowElevation = 8.dp

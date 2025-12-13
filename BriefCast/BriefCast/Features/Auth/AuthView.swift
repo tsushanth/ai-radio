@@ -38,7 +38,7 @@ struct AuthView: View {
                         .shadow(color: Theme.Colors.accent.opacity(0.5), radius: 20, x: 0, y: 10)
 
                     // App name
-                    Text("BriefCast")
+                    Text("Audexa")
                         .font(.system(size: 42, weight: .bold))
                         .foregroundColor(.white)
 

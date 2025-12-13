@@ -1,5 +1,6 @@
 package com.kreativekoala.audexa.data.repository
 
+import android.util.Log
 import com.kreativekoala.audexa.data.model.*
 import com.kreativekoala.audexa.data.remote.*
 import javax.inject.Inject
@@ -25,7 +26,9 @@ class PodcastRepository @Inject constructor(
     ): Result<GeneratePodcastResponse> = runCatching {
         val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
         val today = dateFormat.format(Date())
-        
+
+        Log.d("PodcastRepository", "Generating podcast with language: ${preferences.language}")
+
         apiService.generatePodcast(
             GeneratePodcastRequest(
                 userId = userId,

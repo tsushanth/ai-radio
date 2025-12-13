@@ -44,17 +44,13 @@ data class Topic(
 @Serializable
 data class TopicEpisode(
     val id: String,
-    @SerialName("topic_id")
     val topicId: String,
     val date: String,
     val status: String = "not_generated", // not_generated, generating, completed, failed
     val title: String = "",
     val description: String = "",
-    @SerialName("audio_url")
     val audioUrl: String? = null,
-    @SerialName("duration_seconds")
     val durationSeconds: Int? = null,
-    @SerialName("play_count")
     val playCount: Int = 0,
     val error: String? = null,
     val language: String = "en"

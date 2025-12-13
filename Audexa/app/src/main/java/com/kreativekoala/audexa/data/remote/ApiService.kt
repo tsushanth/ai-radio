@@ -172,7 +172,20 @@ data class Pagination(
 @Serializable
 data class TopicsResponse(
     val success: Boolean,
-    val topics: List<Topic>
+    val data: TopicsData? = null
+)
+
+@Serializable
+data class TopicsData(
+    val topics: List<Topic>,
+    val categories: List<TopicCategory>? = null
+)
+
+@Serializable
+data class TopicCategory(
+    val id: String,
+    val name: String,
+    val count: Int
 )
 
 @Serializable
@@ -184,12 +197,26 @@ data class TopicResponse(
 @Serializable
 data class TopicEpisodeResponse(
     val success: Boolean,
-    val episode: TopicEpisode
+    val data: TopicEpisodeData? = null,
+    val message: String? = null,
+    val isNew: Boolean? = null
+)
+
+@Serializable
+data class TopicEpisodeData(
+    val episode: TopicEpisode,
+    val isNew: Boolean? = null,
+    val message: String? = null
 )
 
 @Serializable
 data class TopicEpisodesResponse(
     val success: Boolean,
+    val data: TopicEpisodesData? = null
+)
+
+@Serializable
+data class TopicEpisodesData(
     val episodes: List<TopicEpisode>
 )
 

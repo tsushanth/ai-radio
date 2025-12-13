@@ -98,7 +98,7 @@ struct WelcomePage: View {
 
             // Title and description
             VStack(spacing: 16) {
-                Text("Welcome to BriefCast")
+                Text("Welcome to Audexa")
                     .font(.system(size: 32, weight: .bold))
                     .foregroundColor(Theme.Colors.primaryText)
                     .multilineTextAlignment(.center)

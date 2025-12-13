@@ -46,6 +46,9 @@ class AudioManager @Inject constructor(
     private val _currentEpisodeTitle = MutableStateFlow<String?>(null)
     val currentEpisodeTitle: StateFlow<String?> = _currentEpisodeTitle.asStateFlow()
 
+    private val _currentShowId = MutableStateFlow<String?>(null)
+    val currentShowId: StateFlow<String?> = _currentShowId.asStateFlow()
+
     private val _isBuffering = MutableStateFlow(false)
     val isBuffering: StateFlow<Boolean> = _isBuffering.asStateFlow()
 
@@ -56,15 +59,16 @@ class AudioManager @Inject constructor(
 
         override fun onPlaybackStateChanged(playbackState: Int) {
             _isBuffering.value = playbackState == Player.STATE_BUFFERING
-            
+
             when (playbackState) {
                 Player.STATE_READY -> {
-                    mediaController?.duration?.let { 
-                        if (it > 0) _duration.value = it 
+                    mediaController?.duration?.let {
+                        if (it > 0) _duration.value = it
                     }
                 }
                 Player.STATE_ENDED -> {
                     _isPlaying.value = false
+                    _currentPosition.value = 0 // Reset position when playback completes
                 }
             }
         }
@@ -86,6 +90,7 @@ class AudioManager @Inject constructor(
 
     fun play(episode: Episode) {
         val audioUrl = episode.audioUrl ?: return
+        _currentShowId.value = episode.showId
         play(
             id = episode.id,
             title = episode.title,
@@ -96,6 +101,7 @@ class AudioManager @Inject constructor(
 
     fun play(topicEpisode: TopicEpisode) {
         val audioUrl = topicEpisode.audioUrl ?: return
+        _currentShowId.value = topicEpisode.topicId
         play(
             id = topicEpisode.id,
             title = topicEpisode.title,
@@ -106,10 +112,15 @@ class AudioManager @Inject constructor(
 
     fun play(id: String, title: String, description: String, audioUrl: String) {
         Log.d(TAG, "Playing: $title ($audioUrl)")
-        
+
+        if (mediaController == null) {
+            Log.e(TAG, "MediaController is null! Did you call initialize()?")
+            return
+        }
+
         _currentEpisodeId.value = id
         _currentEpisodeTitle.value = title
-        
+
         val mediaItem = MediaItem.Builder()
             .setUri(audioUrl)
             .setMediaMetadata(
@@ -119,11 +130,12 @@ class AudioManager @Inject constructor(
                     .build()
             )
             .build()
-        
+
         mediaController?.apply {
             setMediaItem(mediaItem)
             prepare()
             play()
+            Log.d(TAG, "MediaController: setMediaItem, prepare, play called")
         }
     }
 
@@ -168,6 +180,7 @@ class AudioManager @Inject constructor(
         mediaController?.stop()
         _currentEpisodeId.value = null
         _currentEpisodeTitle.value = null
+        _currentShowId.value = null
         _currentPosition.value = 0
         _duration.value = 0
     }

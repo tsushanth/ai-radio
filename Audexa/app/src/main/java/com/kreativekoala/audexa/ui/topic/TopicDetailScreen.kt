@@ -36,6 +36,14 @@ fun TopicDetailScreen(
         viewModel.loadTopic(topic)
     }
 
+    // Update playback position periodically while playing
+    LaunchedEffect(uiState.isPlaying) {
+        while (uiState.isPlaying) {
+            viewModel.updatePosition()
+            kotlinx.coroutines.delay(500L)
+        }
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -162,6 +170,7 @@ fun TopicDetailScreen(
                 isLoading = uiState.isLoading || uiState.isGenerating,
                 currentTime = uiState.currentTime,
                 duration = uiState.duration,
+                isSeekEnabled = uiState.isEpisodeActiveInPlayer,
                 onPlayPause = { viewModel.togglePlayPause() },
                 onSkipBack = { viewModel.skipBackward() },
                 onSkipForward = { viewModel.skipForward() },
@@ -291,6 +300,7 @@ private fun PlayerControls(
     isLoading: Boolean,
     currentTime: Long,
     duration: Long,
+    isSeekEnabled: Boolean,
     onPlayPause: () -> Unit,
     onSkipBack: () -> Unit,
     onSkipForward: () -> Unit,
@@ -304,15 +314,18 @@ private fun PlayerControls(
         if (duration > 0) {
             Slider(
                 value = currentTime.toFloat(),
-                onValueChange = { onSeek(it.toLong()) },
+                onValueChange = { if (isSeekEnabled) onSeek(it.toLong()) },
                 valueRange = 0f..duration.toFloat(),
+                enabled = isSeekEnabled,
                 modifier = Modifier.fillMaxWidth(),
                 colors = SliderDefaults.colors(
-                    thumbColor = AccentOrange,
-                    activeTrackColor = AccentOrange
+                    thumbColor = if (isSeekEnabled) AccentOrange else SecondaryText,
+                    activeTrackColor = if (isSeekEnabled) AccentOrange else SecondaryText,
+                    disabledThumbColor = SecondaryText,
+                    disabledActiveTrackColor = SecondaryText
                 )
             )
-            
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
@@ -338,11 +351,11 @@ private fun PlayerControls(
             horizontalArrangement = Arrangement.spacedBy(24.dp)
         ) {
             // Skip Back
-            IconButton(onClick = onSkipBack) {
+            IconButton(onClick = onSkipBack, enabled = isSeekEnabled) {
                 Icon(
                     Icons.Default.Replay10,
                     contentDescription = "Skip back 15 seconds",
-                    tint = PrimaryText,
+                    tint = if (isSeekEnabled) PrimaryText else SecondaryText,
                     modifier = Modifier.size(32.dp)
                 )
             }
@@ -373,11 +386,11 @@ private fun PlayerControls(
             }
 
             // Skip Forward
-            IconButton(onClick = onSkipForward) {
+            IconButton(onClick = onSkipForward, enabled = isSeekEnabled) {
                 Icon(
                     Icons.Default.Forward10,
                     contentDescription = "Skip forward 15 seconds",
-                    tint = PrimaryText,
+                    tint = if (isSeekEnabled) PrimaryText else SecondaryText,
                     modifier = Modifier.size(32.dp)
                 )
             }

@@ -15,7 +15,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import com.kreativekoala.audexa.data.model.Episode
 import com.kreativekoala.audexa.ui.theme.*
 
 enum class ShowCardSize {
@@ -181,19 +180,3 @@ private fun LargeShowCard(
     }
 }
 
-@Composable
-fun EpisodeShowCard(
-    episode: Episode,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    ShowCard(
-        title = episode.title,
-        description = episode.description,
-        imageColor = episode.imageColor,
-        episodeInfo = "${episode.durationMinutes} min",
-        size = ShowCardSize.SMALL,
-        onClick = onClick,
-        modifier = modifier
-    )
-}

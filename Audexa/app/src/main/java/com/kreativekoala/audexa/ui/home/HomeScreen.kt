@@ -32,6 +32,7 @@ fun HomeScreen(
     val bookmarkedTopics by viewModel.bookmarkedTopics.collectAsState(initial = emptyList())
     val visibleTopics by viewModel.visibleTopics.collectAsState(initial = emptyList())
     val bookmarkedIds by viewModel.bookmarkedTopicIds.collectAsState(initial = emptySet())
+    val playingTopicId by viewModel.playingTopicId.collectAsState(initial = null)
 
     Column(
         modifier = Modifier
@@ -52,7 +53,8 @@ fun HomeScreen(
                 briefState = dailyBriefState,
                 onPlayTapped = { viewModel.playDailyBrief() },
                 onPauseTapped = { viewModel.pauseDailyBrief() },
-                onProfileTapped = onNavigateToProfile
+                onProfileTapped = onNavigateToProfile,
+                onRetryTapped = { viewModel.playDailyBrief() }
             )
 
             Spacer(modifier = Modifier.height(24.dp))
@@ -75,6 +77,7 @@ fun HomeScreen(
                     forYouEpisodes = forYouEpisodes,
                     topics = topics,
                     bookmarkedIds = bookmarkedIds,
+                    playingTopicId = playingTopicId,
                     onTopicClick = onTopicClick,
                     onBookmarkToggle = { viewModel.toggleBookmark(it) },
                     onHideTopic = { viewModel.hideTopic(it) },
@@ -84,6 +87,7 @@ fun HomeScreen(
                 DiscoverTabContent(
                     visibleTopics = visibleTopics,
                     bookmarkedIds = bookmarkedIds,
+                    playingTopicId = playingTopicId,
                     onTopicClick = onTopicClick,
                     onBookmarkToggle = { viewModel.toggleBookmark(it) },
                     onHideTopic = { viewModel.hideTopic(it) }
@@ -104,6 +108,7 @@ private fun ForYouTabContent(
     forYouEpisodes: List<com.kreativekoala.audexa.data.model.Episode>,
     topics: List<Topic>,
     bookmarkedIds: Set<String>,
+    playingTopicId: String?,
     onTopicClick: (Topic) -> Unit,
     onBookmarkToggle: (String) -> Unit,
     onHideTopic: (String) -> Unit,
@@ -129,6 +134,7 @@ private fun ForYouTabContent(
                     TopicCard(
                         topic = topic,
                         isBookmarked = true,
+                        isPlaying = topic.id == playingTopicId,
                         onClick = { onTopicClick(topic) },
                         onBookmarkToggle = { onBookmarkToggle(topic.id) },
                         onHide = { onHideTopic(topic.id) }
@@ -162,6 +168,7 @@ private fun ForYouTabContent(
                         TopicCard(
                             topic = topic,
                             isBookmarked = topic.id in bookmarkedIds,
+                            isPlaying = topic.id == playingTopicId,
                             onClick = { onTopicClick(topic) },
                             onBookmarkToggle = { onBookmarkToggle(topic.id) },
                             onHide = { onHideTopic(topic.id) }
@@ -180,6 +187,7 @@ private fun ForYouTabContent(
                         TopicCard(
                             topic = topic,
                             isBookmarked = topic.id in bookmarkedIds,
+                            isPlaying = topic.id == playingTopicId,
                             onClick = { onTopicClick(topic) },
                             onBookmarkToggle = { onBookmarkToggle(topic.id) },
                             onHide = { onHideTopic(topic.id) }
@@ -198,6 +206,7 @@ private fun ForYouTabContent(
                         TopicCard(
                             topic = topic,
                             isBookmarked = topic.id in bookmarkedIds,
+                            isPlaying = topic.id == playingTopicId,
                             onClick = { onTopicClick(topic) },
                             onBookmarkToggle = { onBookmarkToggle(topic.id) },
                             onHide = { onHideTopic(topic.id) }
@@ -213,6 +222,7 @@ private fun ForYouTabContent(
 private fun DiscoverTabContent(
     visibleTopics: List<Topic>,
     bookmarkedIds: Set<String>,
+    playingTopicId: String?,
     onTopicClick: (Topic) -> Unit,
     onBookmarkToggle: (String) -> Unit,
     onHideTopic: (String) -> Unit
@@ -226,9 +236,9 @@ private fun DiscoverTabContent(
                 color = PrimaryText,
                 modifier = Modifier.padding(horizontal = Spacing.screenPadding.dp)
             )
-            
+
             Spacer(modifier = Modifier.height(16.dp))
-            
+
             LazyRow(
                 contentPadding = PaddingValues(horizontal = Spacing.screenPadding.dp),
                 horizontalArrangement = Arrangement.spacedBy(16.dp)
@@ -237,6 +247,7 @@ private fun DiscoverTabContent(
                     TopicCard(
                         topic = topic,
                         isBookmarked = topic.id in bookmarkedIds,
+                        isPlaying = topic.id == playingTopicId,
                         onClick = { onTopicClick(topic) },
                         onBookmarkToggle = { onBookmarkToggle(topic.id) },
                         onHide = { onHideTopic(topic.id) }

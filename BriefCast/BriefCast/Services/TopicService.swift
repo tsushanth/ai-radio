@@ -119,7 +119,7 @@ class TopicService {
             imageColor: topic.color,
             episodeCount: topic.targetDurationMinutes,
             isSubscribed: false,
-            publisher: "BriefCast",
+            publisher: "Audexa",
             rating: nil
         )
     }

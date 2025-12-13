@@ -1,9 +1,12 @@
 package com.kreativekoala.audexa.ui.navigation
 
+import android.content.Intent
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.kreativekoala.audexa.data.local.PreferencesManager
+import com.kreativekoala.audexa.data.repository.AuthRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -17,12 +20,14 @@ data class LinkedAccountsUiState(
     val isLinkingGoogle: Boolean = false,
     val isLinkingMicrosoft: Boolean = false,
     val showComingSoonDialog: Boolean = false,
-    val error: String? = null
+    val error: String? = null,
+    val successMessage: String? = null
 )
 
 @HiltViewModel
 class LinkedAccountsViewModel @Inject constructor(
-    private val preferencesManager: PreferencesManager
+    private val preferencesManager: PreferencesManager,
+    private val authRepository: AuthRepository
 ) : ViewModel() {
 
     companion object {
@@ -55,21 +60,40 @@ class LinkedAccountsViewModel @Inject constructor(
         }
     }
 
-    fun linkGoogle() {
+    fun getGmailLinkIntent(): Intent {
+        // Sign out first to ensure fresh consent screen with Gmail permissions
+        authRepository.googleSignInClientWithGmail.signOut()
+        return authRepository.googleSignInClientWithGmail.signInIntent
+    }
+
+    fun startGoogleLinking() {
+        _uiState.value = _uiState.value.copy(isLinkingGoogle = true, error = null, successMessage = null)
+    }
+
+    fun handleGmailLinkResult(account: GoogleSignInAccount) {
         viewModelScope.launch {
-            _uiState.value = _uiState.value.copy(isLinkingGoogle = true, error = null)
-
-            // TODO: Implement actual Google OAuth flow
-            // This would typically launch a Google Sign-In intent
-            // and handle the result via an ActivityResultContract
-
-            Log.d(TAG, "Google linking requested - implement OAuth flow")
-
-            _uiState.value = _uiState.value.copy(
-                isLinkingGoogle = false,
-                error = "Please use Google Sign-In from the Profile screen"
-            )
+            authRepository.linkGmailAccount(account)
+                .onSuccess {
+                    _uiState.value = _uiState.value.copy(
+                        isLinkingGoogle = false,
+                        successMessage = "Gmail connected successfully! Your Daily Brief will now include email summaries."
+                    )
+                }
+                .onFailure { e ->
+                    Log.e(TAG, "Failed to link Gmail", e)
+                    _uiState.value = _uiState.value.copy(
+                        isLinkingGoogle = false,
+                        error = e.message ?: "Failed to link Gmail account"
+                    )
+                }
         }
+    }
+
+    fun handleLinkError(message: String) {
+        _uiState.value = _uiState.value.copy(
+            isLinkingGoogle = false,
+            error = message
+        )
     }
 
     fun unlinkGoogle() {
@@ -82,7 +106,8 @@ class LinkedAccountsViewModel @Inject constructor(
                 )
                 _uiState.value = _uiState.value.copy(
                     hasLinkedGoogle = false,
-                    linkedGoogleEmail = null
+                    linkedGoogleEmail = null,
+                    successMessage = "Gmail account unlinked"
                 )
             } catch (e: Exception) {
                 Log.e(TAG, "Failed to unlink Google", e)
@@ -99,5 +124,9 @@ class LinkedAccountsViewModel @Inject constructor(
 
     fun dismissComingSoon() {
         _uiState.value = _uiState.value.copy(showComingSoonDialog = false)
+    }
+
+    fun clearMessages() {
+        _uiState.value = _uiState.value.copy(error = null, successMessage = null)
     }
 }

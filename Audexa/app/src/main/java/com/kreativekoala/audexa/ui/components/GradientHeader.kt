@@ -9,6 +9,7 @@ import androidx.compose.material.icons.filled.Link
 import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -38,6 +39,7 @@ fun GradientHeader(
     onPlayTapped: () -> Unit,
     onPauseTapped: () -> Unit,
     onProfileTapped: () -> Unit,
+    onRetryTapped: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     Box(
@@ -53,12 +55,15 @@ fun GradientHeader(
                     )
                 )
             )
+            .statusBarsPadding()
             .padding(horizontal = 16.dp, vertical = 24.dp)
     ) {
         // Profile icon in top right
         IconButton(
             onClick = onProfileTapped,
-            modifier = Modifier.align(Alignment.TopEnd)
+            modifier = Modifier
+                .align(Alignment.TopEnd)
+                .size(48.dp)
         ) {
             Box(
                 modifier = Modifier
@@ -130,7 +135,10 @@ fun GradientHeader(
                     )
                 }
                 is DailyBriefState.Error -> {
-                    ErrorBanner(message = briefState.message)
+                    ErrorBanner(
+                        message = briefState.message,
+                        onRetry = onRetryTapped
+                    )
                 }
             }
         }
@@ -224,18 +232,40 @@ private fun GeneratingIndicator(
 @Composable
 private fun ErrorBanner(
     message: String,
+    onRetry: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Surface(
-        modifier = modifier.fillMaxWidth(),
-        color = Error.copy(alpha = 0.2f),
-        shape = RoundedCornerShape(8.dp)
-    ) {
-        Text(
-            text = message,
-            style = MaterialTheme.typography.bodySmall,
-            color = PrimaryText,
-            modifier = Modifier.padding(12.dp)
-        )
+    Column(modifier = modifier) {
+        Surface(
+            modifier = Modifier.fillMaxWidth(),
+            color = Error.copy(alpha = 0.2f),
+            shape = RoundedCornerShape(8.dp)
+        ) {
+            Text(
+                text = message,
+                style = MaterialTheme.typography.bodySmall,
+                color = PrimaryText,
+                modifier = Modifier.padding(12.dp)
+            )
+        }
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        Button(
+            onClick = onRetry,
+            shape = RoundedCornerShape(12.dp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = PrimaryText,
+                contentColor = Background
+            )
+        ) {
+            Icon(
+                imageVector = Icons.Default.Refresh,
+                contentDescription = null,
+                modifier = Modifier.size(18.dp)
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            Text("Retry")
+        }
     }
 }

@@ -31,11 +31,19 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
+        // Initialize the audio manager to connect to the playback service
+        audioManager.initialize()
+
         setContent {
             AudexaTheme {
                 AudexaApp(audioManager = audioManager)
             }
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        audioManager.release()
     }
 }
 
@@ -48,9 +56,10 @@ fun AudexaApp(
     val navController = rememberNavController()
     val uiState by mainViewModel.uiState.collectAsState()
     val audioState by audioManager.isPlaying.collectAsState()
-    val currentEpisode by audioManager.currentEpisode.collectAsState()
+    val currentEpisodeTitle by audioManager.currentEpisodeTitle.collectAsState()
     val currentPosition by audioManager.currentPosition.collectAsState()
     val duration by audioManager.duration.collectAsState()
+    val isBuffering by audioManager.isBuffering.collectAsState()
 
     // Topic detail sheet state
     var selectedTopic by remember { mutableStateOf<Topic?>(null) }
@@ -66,17 +75,17 @@ fun AudexaApp(
         contentWindowInsets = WindowInsets(0),
         bottomBar = {
             // Mini player shown when audio is available
-            if (currentEpisode != null) {
+            if (currentEpisodeTitle != null) {
+                val progress = if (duration > 0) currentPosition.toFloat() / duration.toFloat() else 0f
                 MiniPlayer(
-                    episodeTitle = currentEpisode?.title ?: "",
-                    showName = currentEpisode?.topicId ?: "",
+                    title = currentEpisodeTitle,
                     isPlaying = audioState,
-                    currentTime = currentPosition,
-                    duration = duration,
+                    isBuffering = isBuffering,
+                    progress = progress,
                     onPlayPause = {
                         if (audioState) audioManager.pause() else audioManager.resume()
                     },
-                    onTap = {
+                    onClick = {
                         // Could navigate to full player or show topic detail
                     }
                 )
@@ -100,8 +109,10 @@ fun AudexaApp(
 
     // Topic Detail Bottom Sheet
     if (selectedTopic != null) {
+        val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
         ModalBottomSheet(
             onDismissRequest = { selectedTopic = null },
+            sheetState = sheetState,
             containerColor = Background,
             windowInsets = WindowInsets(0)
         ) {

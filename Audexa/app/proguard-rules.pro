@@ -62,6 +62,10 @@
 -keep class io.github.jan.supabase.** { *; }
 -dontwarn io.github.jan.supabase.**
 
+# Ktor
+-keep class io.ktor.** { *; }
+-dontwarn io.ktor.**
+
 # Hilt
 -keep class dagger.hilt.** { *; }
 -keep class * extends dagger.hilt.android.internal.lifecycle.HiltViewModelFactory
@@ -69,3 +73,6 @@
 # ExoPlayer / Media3
 -keep class androidx.media3.** { *; }
 -dontwarn androidx.media3.**
+
+# SLF4J
+-dontwarn org.slf4j.**

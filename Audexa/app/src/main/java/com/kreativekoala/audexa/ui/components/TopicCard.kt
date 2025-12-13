@@ -175,37 +175,6 @@ private fun SmallIconButton(
 }
 
 @Composable
-fun NowPlayingIndicator(modifier: Modifier = Modifier) {
-    val infiniteTransition = rememberInfiniteTransition(label = "equalizer")
-    
-    Row(
-        modifier = modifier,
-        horizontalArrangement = Arrangement.spacedBy(2.dp),
-        verticalAlignment = Alignment.Bottom
-    ) {
-        repeat(3) { index ->
-            val animatedHeight by infiniteTransition.animateFloat(
-                initialValue = 4f,
-                targetValue = 12f,
-                animationSpec = infiniteRepeatable(
-                    animation = tween(400, delayMillis = index * 100),
-                    repeatMode = RepeatMode.Reverse
-                ),
-                label = "bar_$index"
-            )
-            
-            Box(
-                modifier = Modifier
-                    .width(3.dp)
-                    .height(animatedHeight.dp)
-                    .clip(RoundedCornerShape(1.dp))
-                    .background(PrimaryText)
-            )
-        }
-    }
-}
-
-@Composable
 private fun getTopicIcon(icon: String): androidx.compose.ui.graphics.vector.ImageVector {
     return when (icon.lowercase()) {
         "laptopcomputer", "laptop", "computer" -> Icons.Default.Computer

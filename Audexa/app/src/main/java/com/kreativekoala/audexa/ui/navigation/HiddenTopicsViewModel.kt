@@ -42,7 +42,7 @@ class HiddenTopicsViewModel @Inject constructor(
             // First load all topics
             topicRepository.getTopics()
                 .onSuccess { response ->
-                    allTopics = response.topics
+                    allTopics = response.data?.topics ?: emptyList()
                 }
                 .onFailure { e ->
                     Log.e(TAG, "Failed to load topics", e)

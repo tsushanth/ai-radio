@@ -25,6 +25,7 @@ const generatePodcastSchema = z.object({
     include_weather: z.boolean().optional().default(false),
     include_calendar: z.boolean().optional().default(true),
     include_email: z.boolean().optional().default(true),
+    language: z.string().optional().default('en'), // Language code: en, es, fr, de, hi, etc.
   }),
   options: z.object({
     skip_email: z.boolean().optional(),
@@ -60,6 +61,9 @@ router.post('/generate', async (req: Request, res: Response, next: NextFunction)
   try {
     // Validate request body
     const validated = generatePodcastSchema.parse(req.body);
+
+    console.log(`[POST /podcast/generate] Raw request preferences:`, JSON.stringify(req.body.preferences));
+    console.log(`[POST /podcast/generate] Validated language: ${validated.preferences.language || 'NOT SET - will default to en'}`);
 
     // Check prerequisites
     const prereqs = await podcastGenerator.validatePrerequisites(validated.user_id);

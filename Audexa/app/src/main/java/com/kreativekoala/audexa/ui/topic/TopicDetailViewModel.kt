@@ -25,6 +25,7 @@ data class TopicDetailUiState(
     val isBookmarked: Boolean = false,
     val currentTime: Long = 0,
     val duration: Long = 0,
+    val isEpisodeActiveInPlayer: Boolean = false, // true when this episode is loaded in the audio player
     val error: String? = null
 )
 
@@ -43,24 +44,42 @@ class TopicDetailViewModel @Inject constructor(
     val uiState: StateFlow<TopicDetailUiState> = _uiState.asStateFlow()
 
     init {
-        // Observe audio state
+        // Observe audio state - only update position/duration when THIS episode is playing
         viewModelScope.launch {
             combine(
                 audioManager.isPlaying,
                 audioManager.currentPosition,
                 audioManager.duration,
-                audioManager.currentEpisodeId
-            ) { isPlaying, position, duration, episodeId ->
-                Triple(
-                    isPlaying && episodeId == _uiState.value.currentEpisode?.id,
-                    position,
-                    duration
-                )
-            }.collect { (isPlaying, position, duration) ->
+                audioManager.currentEpisodeId,
+                _uiState.map { it.currentEpisode?.id }.distinctUntilChanged()
+            ) { isPlaying, position, duration, playerEpisodeId, currentEpisodeId ->
+                // If our episode hasn't loaded yet, keep default state
+                if (currentEpisodeId == null) {
+                    return@combine arrayOf(false, 0L, 0L, false)
+                }
+
+                val isThisEpisodePlaying = isPlaying && playerEpisodeId == currentEpisodeId
+                val isThisEpisodeLoaded = playerEpisodeId == currentEpisodeId
+
+                // Return: isPlaying, position, duration, isActiveInPlayer
+                if (isThisEpisodeLoaded) {
+                    arrayOf(isThisEpisodePlaying, position, duration, true)
+                } else {
+                    // Different episode is playing - show 0 position and episode's expected duration
+                    val episodeDuration = (_uiState.value.currentEpisode?.durationSeconds ?: 0) * 1000L
+                    arrayOf(false, 0L, episodeDuration, false)
+                }
+            }.collect { result ->
+                val isPlaying = result[0] as Boolean
+                val position = result[1] as Long
+                val duration = result[2] as Long
+                val isActiveInPlayer = result[3] as Boolean
+
                 _uiState.value = _uiState.value.copy(
                     isPlaying = isPlaying,
                     currentTime = position,
-                    duration = duration
+                    duration = duration,
+                    isEpisodeActiveInPlayer = isActiveInPlayer
                 )
             }
         }
@@ -76,8 +95,14 @@ class TopicDetailViewModel @Inject constructor(
     }
 
     fun loadTopic(topic: Topic) {
-        _uiState.value = _uiState.value.copy(topic = topic)
-        
+        // Reset playback state when loading a new topic
+        _uiState.value = _uiState.value.copy(
+            topic = topic,
+            currentTime = 0,
+            duration = 0,
+            isPlaying = false
+        )
+
         viewModelScope.launch {
             // Check if bookmarked
             preferencesManager.bookmarkedTopics.collect { bookmarked ->
@@ -86,9 +111,15 @@ class TopicDetailViewModel @Inject constructor(
                 )
             }
         }
-        
-        loadEpisode()
-        loadEpisodeHistory()
+
+        // Wait for the preferred language to load first, then load episodes
+        viewModelScope.launch {
+            val langCode = preferencesManager.preferredLanguage.first()
+            val language = SupportedLanguage.fromCode(langCode)
+            _uiState.value = _uiState.value.copy(selectedLanguage = language)
+            loadEpisode()
+            loadEpisodeHistory()
+        }
     }
 
     private fun loadEpisode() {
@@ -100,11 +131,12 @@ class TopicDetailViewModel @Inject constructor(
             
             topicRepository.getTopicEpisode(topic.id, language)
                 .onSuccess { response ->
-                    if (response.episode.status == "completed") {
+                    val episode = response.data?.episode
+                    if (episode != null && episode.status == "completed") {
                         _uiState.value = _uiState.value.copy(
-                            currentEpisode = response.episode,
+                            currentEpisode = episode,
                             isLoading = false,
-                            duration = (response.episode.durationSeconds ?: 0) * 1000L
+                            duration = (episode.durationSeconds ?: 0) * 1000L
                         )
                     } else {
                         _uiState.value = _uiState.value.copy(
@@ -131,7 +163,7 @@ class TopicDetailViewModel @Inject constructor(
             topicRepository.getTopicEpisodes(topic.id, language)
                 .onSuccess { response ->
                     _uiState.value = _uiState.value.copy(
-                        episodeHistory = response.episodes
+                        episodeHistory = response.data?.episodes ?: emptyList()
                     )
                 }
                 .onFailure { e ->
@@ -149,15 +181,18 @@ class TopicDetailViewModel @Inject constructor(
             
             topicRepository.generateTopicEpisode(topic.id, language, forceRegenerate = false)
                 .onSuccess { response ->
-                    _uiState.value = _uiState.value.copy(
-                        currentEpisode = response.episode,
-                        isGenerating = false,
-                        duration = (response.episode.durationSeconds ?: 0) * 1000L
-                    )
-                    
-                    // Auto-play
-                    audioManager.play(response.episode)
-                    
+                    val episode = response.data?.episode
+                    if (episode != null) {
+                        _uiState.value = _uiState.value.copy(
+                            currentEpisode = episode,
+                            isGenerating = false,
+                            duration = (episode.durationSeconds ?: 0) * 1000L
+                        )
+
+                        // Auto-play
+                        audioManager.play(episode)
+                    }
+
                     loadEpisodeHistory()
                 }
                 .onFailure { e ->
@@ -179,13 +214,16 @@ class TopicDetailViewModel @Inject constructor(
             
             topicRepository.generateTopicEpisode(topic.id, language, forceRegenerate = true)
                 .onSuccess { response ->
-                    _uiState.value = _uiState.value.copy(
-                        currentEpisode = response.episode,
-                        isGenerating = false,
-                        duration = (response.episode.durationSeconds ?: 0) * 1000L
-                    )
-                    
-                    audioManager.play(response.episode)
+                    val episode = response.data?.episode
+                    if (episode != null) {
+                        _uiState.value = _uiState.value.copy(
+                            currentEpisode = episode,
+                            isGenerating = false,
+                            duration = (episode.durationSeconds ?: 0) * 1000L
+                        )
+
+                        audioManager.play(episode)
+                    }
                     loadEpisodeHistory()
                 }
                 .onFailure { e ->
@@ -226,15 +264,27 @@ class TopicDetailViewModel @Inject constructor(
     }
 
     fun seekTo(positionMs: Long) {
-        audioManager.seekTo(positionMs)
+        // Only seek if this episode is currently loaded in the player
+        val currentEpisodeId = _uiState.value.currentEpisode?.id
+        if (currentEpisodeId != null && audioManager.currentEpisodeId.value == currentEpisodeId) {
+            audioManager.seekTo(positionMs)
+        }
     }
 
     fun skipForward() {
-        audioManager.skipForward(15)
+        // Only skip if this episode is currently loaded in the player
+        val currentEpisodeId = _uiState.value.currentEpisode?.id
+        if (currentEpisodeId != null && audioManager.currentEpisodeId.value == currentEpisodeId) {
+            audioManager.skipForward(15)
+        }
     }
 
     fun skipBackward() {
-        audioManager.skipBackward(15)
+        // Only skip if this episode is currently loaded in the player
+        val currentEpisodeId = _uiState.value.currentEpisode?.id
+        if (currentEpisodeId != null && audioManager.currentEpisodeId.value == currentEpisodeId) {
+            audioManager.skipBackward(15)
+        }
     }
 
     fun toggleBookmark() {
@@ -255,5 +305,9 @@ class TopicDetailViewModel @Inject constructor(
     fun playEpisode(episode: TopicEpisode) {
         _uiState.value = _uiState.value.copy(currentEpisode = episode)
         audioManager.play(episode)
+    }
+
+    fun updatePosition() {
+        audioManager.updatePosition()
     }
 }

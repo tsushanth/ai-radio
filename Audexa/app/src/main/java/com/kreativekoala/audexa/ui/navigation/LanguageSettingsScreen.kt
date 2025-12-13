@@ -106,7 +106,7 @@ private fun LanguageRow(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = language.flag,
+                text = language.flagEmoji,
                 style = MaterialTheme.typography.headlineSmall
             )
 

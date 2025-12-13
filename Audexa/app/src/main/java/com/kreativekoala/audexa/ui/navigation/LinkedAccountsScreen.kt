@@ -1,5 +1,8 @@
 package com.kreativekoala.audexa.ui.navigation
 
+import android.app.Activity
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -15,6 +18,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.common.api.ApiException
 import com.kreativekoala.audexa.ui.theme.*
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -24,6 +29,23 @@ fun LinkedAccountsScreen(
     viewModel: LinkedAccountsViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
+
+    // Gmail OAuth launcher
+    val gmailLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
+            try {
+                val account = task.getResult(ApiException::class.java)
+                viewModel.handleGmailLinkResult(account)
+            } catch (e: ApiException) {
+                viewModel.handleLinkError("Gmail linking failed: ${e.message}")
+            }
+        } else {
+            viewModel.handleLinkError("Gmail linking was cancelled")
+        }
+    }
 
     Scaffold(
         topBar = {
@@ -59,22 +81,40 @@ fun LinkedAccountsScreen(
         ) {
             Spacer(modifier = Modifier.height(16.dp))
 
-            Text(
-                text = "Connect your email accounts to receive personalized daily briefings.",
-                style = MaterialTheme.typography.bodyMedium,
-                color = SecondaryText
-            )
+            // Explanation card
+            Surface(
+                color = AccentOrange.copy(alpha = 0.1f),
+                shape = RoundedCornerShape(12.dp)
+            ) {
+                Column(modifier = Modifier.padding(16.dp)) {
+                    Text(
+                        text = "Enable Daily Brief",
+                        style = MaterialTheme.typography.titleMedium,
+                        color = PrimaryText,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(
+                        text = "Connect your Gmail to get personalized daily briefings based on your emails. We'll summarize important updates so you can start your day informed.",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = SecondaryText
+                    )
+                }
+            }
 
             Spacer(modifier = Modifier.height(24.dp))
 
             // Google Account
             AccountRow(
                 icon = { GoogleIcon() },
-                title = "Google",
+                title = "Gmail",
                 subtitle = uiState.linkedGoogleEmail ?: "Not connected",
                 isConnected = uiState.hasLinkedGoogle,
                 isLoading = uiState.isLinkingGoogle,
-                onConnect = { viewModel.linkGoogle() },
+                onConnect = {
+                    viewModel.startGoogleLinking()
+                    gmailLauncher.launch(viewModel.getGmailLinkIntent())
+                },
                 onDisconnect = { viewModel.unlinkGoogle() }
             )
 
@@ -83,7 +123,7 @@ fun LinkedAccountsScreen(
             // Microsoft Account
             AccountRow(
                 icon = { MicrosoftIcon() },
-                title = "Microsoft",
+                title = "Outlook",
                 subtitle = uiState.linkedMicrosoftEmail ?: "Coming Soon",
                 isConnected = uiState.hasLinkedMicrosoft,
                 isLoading = uiState.isLinkingMicrosoft,
@@ -94,6 +134,23 @@ fun LinkedAccountsScreen(
 
             Spacer(modifier = Modifier.height(24.dp))
 
+            // Success message
+            if (uiState.successMessage != null) {
+                Surface(
+                    color = Color(0xFF4CAF50).copy(alpha = 0.1f),
+                    shape = RoundedCornerShape(8.dp)
+                ) {
+                    Text(
+                        text = uiState.successMessage!!,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = Color(0xFF4CAF50),
+                        modifier = Modifier.padding(12.dp)
+                    )
+                }
+                Spacer(modifier = Modifier.height(12.dp))
+            }
+
+            // Error message
             if (uiState.error != null) {
                 Surface(
                     color = Error.copy(alpha = 0.1f),
@@ -110,12 +167,28 @@ fun LinkedAccountsScreen(
 
             Spacer(modifier = Modifier.weight(1f))
 
-            Text(
-                text = "We only access your emails to create personalized briefings. Your data is never shared.",
-                style = MaterialTheme.typography.bodySmall,
-                color = SecondaryText.copy(alpha = 0.7f),
-                modifier = Modifier.padding(bottom = 24.dp)
-            )
+            // Privacy note
+            Surface(
+                color = CardBackground,
+                shape = RoundedCornerShape(8.dp)
+            ) {
+                Column(modifier = Modifier.padding(12.dp)) {
+                    Text(
+                        text = "🔒 Your Privacy",
+                        style = MaterialTheme.typography.labelLarge,
+                        color = PrimaryText,
+                        fontWeight = FontWeight.Medium
+                    )
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(
+                        text = "We only read email subjects and senders to create summaries. We never store your email content or share your data with third parties.",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = SecondaryText.copy(alpha = 0.7f)
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(24.dp))
         }
     }
 
@@ -126,7 +199,7 @@ fun LinkedAccountsScreen(
             title = { Text("Coming Soon", color = PrimaryText) },
             text = {
                 Text(
-                    "Microsoft account linking will be available in a future update.",
+                    "Microsoft Outlook linking will be available in a future update.",
                     color = SecondaryText
                 )
             },

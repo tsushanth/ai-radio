@@ -1,5 +1,7 @@
 package com.kreativekoala.audexa.ui.profile
 
+import android.content.Intent
+import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -15,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -31,6 +34,7 @@ fun ProfileScreen(
     viewModel: ProfileViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    val context = LocalContext.current
     var showSignOutDialog by remember { mutableStateOf(false) }
     var showDeleteDialog by remember { mutableStateOf(false) }
 
@@ -125,13 +129,19 @@ fun ProfileScreen(
                 SettingsRow(
                     icon = Icons.Default.Description,
                     title = "Terms of Service",
-                    onClick = { /* TODO: Open URL */ }
+                    onClick = {
+                        val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://www.sendsmiles.biz/terms-of-service"))
+                        context.startActivity(intent)
+                    }
                 )
                 HorizontalDivider(color = CardBackgroundLight)
                 SettingsRow(
                     icon = Icons.Default.Security,
                     title = "Privacy Policy",
-                    onClick = { /* TODO: Open URL */ }
+                    onClick = {
+                        val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://www.sendsmiles.biz/privacy-policy"))
+                        context.startActivity(intent)
+                    }
                 )
             }
 

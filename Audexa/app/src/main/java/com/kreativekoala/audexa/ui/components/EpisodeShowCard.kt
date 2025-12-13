@@ -73,7 +73,7 @@ fun EpisodeShowCard(
                 Spacer(modifier = Modifier.height(4.dp))
 
                 Text(
-                    text = episode.showName,
+                    text = episode.showName ?: "",
                     style = MaterialTheme.typography.bodySmall,
                     color = SecondaryText,
                     maxLines = 1,

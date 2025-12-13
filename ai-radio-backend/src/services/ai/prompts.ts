@@ -95,6 +95,37 @@ Each segment should be a natural speaking turn, typically 1-3 sentences.`;
 /**
  * Generate user-specific prompt with context
  */
+// Map language codes to full names for the prompt
+const LANGUAGE_NAMES: Record<string, string> = {
+  en: 'English',
+  es: 'Spanish',
+  fr: 'French',
+  de: 'German',
+  it: 'Italian',
+  pt: 'Portuguese',
+  hi: 'Hindi',
+  ja: 'Japanese',
+  ko: 'Korean',
+  zh: 'Chinese',
+  ar: 'Arabic',
+  ru: 'Russian',
+  nl: 'Dutch',
+  pl: 'Polish',
+  tr: 'Turkish',
+  vi: 'Vietnamese',
+  th: 'Thai',
+  id: 'Indonesian',
+  ms: 'Malay',
+  ta: 'Tamil',
+  te: 'Telugu',
+  bn: 'Bengali',
+  mr: 'Marathi',
+  gu: 'Gujarati',
+  kn: 'Kannada',
+  ml: 'Malayalam',
+  pa: 'Punjabi',
+};
+
 export function generatePodcastPrompt(context: ScriptGenerationContext): string {
   const { user_name, date, time_of_day, content, preferences } = context;
 
@@ -104,7 +135,17 @@ export function generatePodcastPrompt(context: ScriptGenerationContext): string 
     ? 'Good afternoon'
     : 'Good evening';
 
-  let prompt = `Create a ${preferences.briefing_time} podcast script for ${user_name || 'the listener'} on ${date}.
+  // Get language name from code, default to English
+  const languageCode = preferences.language || 'en';
+  const languageName = LANGUAGE_NAMES[languageCode] || 'English';
+
+  console.log(`[generatePodcastPrompt] Language code: ${languageCode}, Language name: ${languageName}`);
+
+  const languageInstruction = languageCode !== 'en'
+    ? `\n\nIMPORTANT: Generate the ENTIRE script in ${languageName}. All dialogue, greetings, and content must be in ${languageName}. Do NOT use English except for proper nouns (names, places, etc.).\n`
+    : '';
+
+  let prompt = `Create a ${preferences.briefing_time} podcast script for ${user_name || 'the listener'} on ${date}.${languageInstruction}
 
 CONTENT TO COVER:
 `;

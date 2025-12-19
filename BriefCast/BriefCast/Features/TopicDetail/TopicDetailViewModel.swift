@@ -37,6 +37,9 @@ class TopicDetailViewModel {
     private let audioService = AudioService.shared
     private let preferencesService = PreferencesService.shared
 
+    // Track the last known episode ID to detect changes
+    private var lastKnownAudioEpisodeId: String?
+
     // MARK: - Computed Properties
 
     var isBookmarked: Bool {
@@ -161,6 +164,8 @@ class TopicDetailViewModel {
     // MARK: - Episode Generation
 
     func regenerateEpisode() async {
+        print("🔄 regenerateEpisode() called for topic: \(topic.name)")
+
         // Stop current playback if playing
         if audioService.isPlaying {
             audioService.stop()
@@ -174,31 +179,42 @@ class TopicDetailViewModel {
         isPlaying = false
 
         do {
+            print("🔄 Calling topicService.generateEpisode with forceRegenerate...")
             let episodeData = try await topicService.generateEpisode(
                 topicId: topic.id,
                 language: selectedLanguage.rawValue
             )
+            print("🔄 Episode generated successfully: \(episodeData.episode.title)")
             currentEpisode = episodeData.episode
 
             if let seconds = episodeData.episode.durationSeconds {
                 duration = TimeInterval(seconds)
+                print("🔄 Episode duration: \(seconds) seconds")
             }
 
             // Refresh history
             try await loadEpisodeHistory()
+            print("🔄 Episode history refreshed")
         } catch {
+            print("❌ Failed to regenerate episode: \(error)")
             loadError = "Failed to generate episode: \(error.localizedDescription)"
         }
 
         isGenerating = false
+        print("🔄 regenerateEpisode() completed, isGenerating: \(isGenerating)")
     }
 
     // MARK: - Playback Controls
 
     func play() {
+        print("🎵 TopicDetailViewModel.play() called")
         guard let episode = currentEpisode,
               let audioUrlString = episode.audioUrl,
-              URL(string: audioUrlString) != nil else { return }
+              URL(string: audioUrlString) != nil else {
+            print("🎵 TopicDetailViewModel.play() - no episode or audio URL")
+            return
+        }
+        print("🎵 TopicDetailViewModel.play() - playing: \(episode.title)")
 
         // Convert TopicEpisode to Episode for AudioService
         let playableEpisode = Episode(
@@ -222,7 +238,14 @@ class TopicDetailViewModel {
 
         audioService.play(episode: playableEpisode)
         isPlaying = true
+
+        // Track the episode we're playing
+        lastKnownAudioEpisodeId = episode.id
+
         syncPlaybackState()
+
+        // Queue episode history for auto-play
+        queueEpisodeHistory(excludingEpisodeId: episode.id)
     }
 
     func pause() {
@@ -231,6 +254,7 @@ class TopicDetailViewModel {
     }
 
     func togglePlayPause() {
+        print("🎵 TopicDetailViewModel.togglePlayPause() called, isPlaying: \(isPlaying)")
         if isPlaying {
             pause()
         } else {
@@ -279,11 +303,62 @@ class TopicDetailViewModel {
         currentEpisode = episode
         isPlaying = true
 
+        // Track the episode we're playing
+        lastKnownAudioEpisodeId = episode.id
+
         if let seconds = episode.durationSeconds {
             duration = TimeInterval(seconds)
         }
 
         syncPlaybackState()
+
+        // Queue remaining episode history for auto-play
+        queueEpisodeHistory(excludingEpisodeId: episode.id)
+    }
+
+    /// Queue episode history for auto-play (excluding the currently playing episode)
+    private func queueEpisodeHistory(excludingEpisodeId: String) {
+        print("🎵 queueEpisodeHistory called, episodeHistory count: \(episodeHistory.count)")
+
+        // Clear existing queue first
+        audioService.clearQueue()
+
+        // Add all completed episodes from history to the queue
+        for episode in episodeHistory {
+            // Skip the currently playing episode
+            if episode.id == excludingEpisodeId {
+                print("🎵 Skipping current episode: \(episode.title)")
+                continue
+            }
+
+            // Only add episodes that are completed with audio
+            if episode.status == .completed, let audioUrl = episode.audioUrl {
+                let queueEpisode = Episode(
+                    id: episode.id,
+                    userId: "",
+                    title: episode.title,
+                    description: episode.description,
+                    audioUrl: audioUrl,
+                    durationSeconds: episode.durationSeconds ?? topic.targetDurationMinutes * 60,
+                    status: .completed,
+                    errorMessage: nil,
+                    generatedAt: Date(),
+                    createdAt: Date(),
+                    showId: topic.id,
+                    showName: topic.name,
+                    imageColor: topic.color,
+                    progress: 0,
+                    isCompleted: false,
+                    lastPlayedAt: nil
+                )
+                audioService.addToQueue(queueEpisode)
+                print("🎵 Added to queue: \(episode.title)")
+            } else {
+                print("🎵 Skipping episode (not completed or no audio): \(episode.title), status: \(episode.status)")
+            }
+        }
+
+        print("🎵 Queue now has \(audioService.queue.count) episodes")
     }
 
     // MARK: - Playback State Sync
@@ -292,15 +367,46 @@ class TopicDetailViewModel {
         // Only sync playing state if AudioService is playing THIS topic's episode
         if let currentAudioEpisode = audioService.currentEpisode,
            currentAudioEpisode.showId == topic.id {
+
+            // Detect episode change (auto-play switched to next episode)
+            let episodeChanged = lastKnownAudioEpisodeId != nil && lastKnownAudioEpisodeId != currentAudioEpisode.id
+
+            if episodeChanged {
+                print("🎵 Episode changed detected! From \(lastKnownAudioEpisodeId ?? "nil") to \(currentAudioEpisode.id)")
+
+                // Reset playback state for the new episode
+                currentTime = 0
+
+                // Find the matching episode in history to update the UI
+                if let matchingEpisode = episodeHistory.first(where: { $0.id == currentAudioEpisode.id }) {
+                    currentEpisode = matchingEpisode
+                    print("🎵 Updated currentEpisode to: \(matchingEpisode.title)")
+
+                    // Update duration from the new episode
+                    if let seconds = matchingEpisode.durationSeconds {
+                        duration = TimeInterval(seconds)
+                        print("🎵 Updated duration to: \(duration)")
+                    }
+                }
+            }
+
+            // Update tracking
+            lastKnownAudioEpisodeId = currentAudioEpisode.id
+
+            // Sync playback state
             isPlaying = audioService.isPlaying
             currentTime = audioService.currentTime
+
+            // Only update duration from AudioService if it's valid
             if audioService.duration > 0 {
                 duration = audioService.duration
             }
+
         } else {
             // Different topic is playing (or nothing), show as not playing
             isPlaying = false
             currentTime = 0
+            lastKnownAudioEpisodeId = nil
         }
     }
 

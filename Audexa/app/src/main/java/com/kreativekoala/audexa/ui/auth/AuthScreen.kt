@@ -120,7 +120,7 @@ fun AuthScreen(
             
             // Google Sign-In button
             Button(
-                onClick = { 
+                onClick = {
                     launcher.launch(viewModel.getGoogleSignInIntent())
                 },
                 modifier = Modifier
@@ -147,12 +147,37 @@ fun AuthScreen(
                     )
                 }
             }
-            
-            Spacer(modifier = Modifier.height(32.dp))
-            
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // Continue without sign in button
+            TextButton(
+                onClick = { viewModel.continueWithoutSignIn() },
+                modifier = Modifier.fillMaxWidth(),
+                enabled = !uiState.isLoading
+            ) {
+                Text(
+                    text = "Continue without sign in",
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = SecondaryText
+                )
+            }
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            // Info text about linking later
+            Text(
+                text = "You can link your email later to enable personalized Daily Brief",
+                style = MaterialTheme.typography.bodySmall,
+                color = SecondaryText.copy(alpha = 0.7f),
+                textAlign = TextAlign.Center
+            )
+
+            Spacer(modifier = Modifier.height(24.dp))
+
             // Terms
             Text(
-                text = "By signing in, you agree to our Terms of Service and Privacy Policy",
+                text = "By continuing, you agree to our Terms of Service and Privacy Policy",
                 style = MaterialTheme.typography.bodySmall,
                 color = SecondaryText,
                 textAlign = TextAlign.Center

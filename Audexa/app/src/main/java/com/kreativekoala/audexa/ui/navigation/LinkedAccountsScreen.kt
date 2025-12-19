@@ -47,6 +47,14 @@ fun LinkedAccountsScreen(
         }
     }
 
+    // Launch Gmail sign-in when intent is ready
+    LaunchedEffect(uiState.gmailLinkIntent) {
+        uiState.gmailLinkIntent?.let { intent ->
+            gmailLauncher.launch(intent)
+            viewModel.clearGmailLinkIntent()
+        }
+    }
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -112,8 +120,8 @@ fun LinkedAccountsScreen(
                 isConnected = uiState.hasLinkedGoogle,
                 isLoading = uiState.isLinkingGoogle,
                 onConnect = {
-                    viewModel.startGoogleLinking()
-                    gmailLauncher.launch(viewModel.getGmailLinkIntent())
+                    // This triggers async revoke then sets the intent to launch
+                    viewModel.prepareGmailLinking()
                 },
                 onDisconnect = { viewModel.unlinkGoogle() }
             )

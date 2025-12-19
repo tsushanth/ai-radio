@@ -18,7 +18,9 @@ import routes from './routes';
 const app = express();
 
 // Trust proxy (required for Cloud Run behind load balancer)
-app.set('trust proxy', true);
+// Use 1 to trust only the first proxy hop (Cloud Run's load balancer)
+// This fixes the express-rate-limit security warning about permissive trust proxy
+app.set('trust proxy', 1);
 
 // Security middleware
 app.use(helmet());

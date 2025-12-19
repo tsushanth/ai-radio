@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import GoogleSignIn
 
 struct LinkedAccountsView: View {
     @StateObject private var viewModel = LinkedAccountsViewModel()
@@ -106,11 +107,6 @@ struct LinkedAccountsView: View {
             } message: {
                 Text(viewModel.errorMessage ?? "Failed to connect account")
             }
-            .alert("Coming Soon", isPresented: $viewModel.showComingSoon) {
-                Button("OK", role: .cancel) { }
-            } message: {
-                Text("Microsoft account integration is coming soon. Stay tuned!")
-            }
             .overlay {
                 if viewModel.isLoading {
                     Color.black.opacity(0.5)
@@ -120,6 +116,11 @@ struct LinkedAccountsView: View {
                         .progressViewStyle(CircularProgressViewStyle(tint: Theme.Colors.accent))
                         .scaleEffect(1.5)
                 }
+            }
+            .onOpenURL { url in
+                // Handle Google OAuth callback when this sheet is presented
+                print("📱 Received URL in LinkedAccountsView: \(url)")
+                GIDSignIn.sharedInstance.handle(url)
             }
         }
     }
@@ -359,7 +360,6 @@ class LinkedAccountsViewModel: ObservableObject {
     @Published var isLoading: Bool = false
     @Published var showError: Bool = false
     @Published var errorMessage: String?
-    @Published var showComingSoon: Bool = false
 
     private let googleOAuthHelper = GoogleOAuthHelper()
 
@@ -373,16 +373,6 @@ class LinkedAccountsViewModel: ObservableObject {
                 "Read your Gmail messages",
                 "Basic profile information"
             ]
-        ),
-        OAuthProvider(
-            id: "microsoft",
-            displayName: "Microsoft",
-            iconName: "m.circle.fill",
-            color: .blue,
-            accessDescriptions: [
-                "Read your Outlook emails",
-                "Basic profile information"
-            ]
         )
     ]
 
@@ -392,12 +382,6 @@ class LinkedAccountsViewModel: ObservableObject {
     }
 
     func connectAccount(provider: OAuthProvider) async {
-        // Show "Coming Soon" for Microsoft
-        if provider.id == "microsoft" {
-            showComingSoon = true
-            return
-        }
-
         isLoading = true
         errorMessage = nil
 
@@ -408,10 +392,24 @@ class LinkedAccountsViewModel: ObservableObject {
             default:
                 throw NSError(domain: "OAuth", code: -1, userInfo: [NSLocalizedDescriptionKey: "Unknown provider"])
             }
-        } catch {
-            errorMessage = "Failed to connect \(provider.displayName): \(error.localizedDescription)"
+        } catch let error as GoogleOAuthError {
+            // Handle permission denied specifically with a clear message
+            errorMessage = error.localizedDescription
             showError = true
-            print("OAuth error: \(error)")
+            print("OAuth permission error: \(error)")
+        } catch let error as NSError {
+            // Check for user cancellation (code -5)
+            if error.code == -5 || error.localizedDescription.contains("canceled") || error.localizedDescription.contains("cancelled") {
+                // User cancelled - don't show error, just reset state
+                print("ℹ️ User cancelled Google sign-in")
+                errorMessage = nil
+                showError = false
+            } else {
+                // Actual error - show to user
+                errorMessage = "Failed to connect \(provider.displayName): \(error.localizedDescription)"
+                showError = true
+                print("OAuth error: \(error)")
+            }
         }
 
         isLoading = false
@@ -450,6 +448,16 @@ class LinkedAccountsViewModel: ObservableObject {
         UserDefaults.standard.set(email, forKey: "linkedAccountEmail")
         // Save the provider type
         UserDefaults.standard.set("google", forKey: "linkedAccountProvider")
+
+        // Also update main user email if it was empty (guest user linking Gmail)
+        // This ensures HomeViewModel.userEmail gets updated for Daily Brief generation
+        let isGuest = UserDefaults.standard.bool(forKey: "isGuestUser")
+        if isGuest {
+            // Clear guest status now that they have a linked account
+            UserDefaults.standard.set(false, forKey: "isGuestUser")
+            UserDefaults.standard.removeObject(forKey: "guestUserId")
+            print("👤 Guest user upgraded with Gmail: \(email)")
+        }
 
         print("✅ Connected Google account: \(email)")
     }

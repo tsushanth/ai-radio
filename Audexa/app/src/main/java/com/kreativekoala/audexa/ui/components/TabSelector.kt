@@ -25,12 +25,13 @@ fun TabSelector(
     onTabSelected: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val surfaceColor = MaterialTheme.colorScheme.surface
     Surface(
         modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp),
         shape = RoundedCornerShape(12.dp),
-        color = CardBackground
+        color = surfaceColor
     ) {
         Row(
             modifier = Modifier.padding(4.dp),
@@ -39,10 +40,10 @@ fun TabSelector(
             tabs.forEachIndexed { index, tab ->
                 val isSelected = index == selectedIndex
                 val backgroundColor by animateColorAsState(
-                    targetValue = if (isSelected) AccentOrange else CardBackground,
+                    targetValue = if (isSelected) AccentOrange else surfaceColor,
                     label = "tab_bg"
                 )
-                
+
                 Box(
                     modifier = Modifier
                         .weight(1f)
@@ -55,7 +56,7 @@ fun TabSelector(
                     Text(
                         text = tab,
                         style = MaterialTheme.typography.titleSmall,
-                        color = if (isSelected) PrimaryText else SecondaryText,
+                        color = if (isSelected) PrimaryTextDark else MaterialTheme.colorScheme.onSurfaceVariant,
                         fontWeight = if (isSelected) FontWeight.SemiBold else FontWeight.Normal
                     )
                 }

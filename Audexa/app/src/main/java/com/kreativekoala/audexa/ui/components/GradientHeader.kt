@@ -28,6 +28,7 @@ sealed class DailyBriefState {
     data class Completed(val audioUrl: String) : DailyBriefState()
     data class Playing(val audioUrl: String) : DailyBriefState()
     data class Error(val message: String) : DailyBriefState()
+    data class NeedsRelink(val message: String) : DailyBriefState()
 }
 
 @Composable
@@ -36,10 +37,13 @@ fun GradientHeader(
     userName: String,
     subtitle: String,
     briefState: DailyBriefState,
+    hasCachedEpisode: Boolean = false,
     onPlayTapped: () -> Unit,
     onPauseTapped: () -> Unit,
     onProfileTapped: () -> Unit,
     onRetryTapped: () -> Unit = {},
+    onRegenerateTapped: () -> Unit = {},
+    onRelinkTapped: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     Box(
@@ -123,21 +127,31 @@ fun GradientHeader(
                     GeneratingIndicator(progress = briefState.progress)
                 }
                 is DailyBriefState.Completed -> {
-                    PlayButton(
+                    PlayButtonWithRegenerate(
                         isPlaying = false,
-                        onClick = onPlayTapped
+                        showRegenerate = hasCachedEpisode,
+                        onPlayClick = onPlayTapped,
+                        onRegenerateClick = onRegenerateTapped
                     )
                 }
                 is DailyBriefState.Playing -> {
-                    PlayButton(
+                    PlayButtonWithRegenerate(
                         isPlaying = true,
-                        onClick = onPauseTapped
+                        showRegenerate = hasCachedEpisode,
+                        onPlayClick = onPauseTapped,
+                        onRegenerateClick = onRegenerateTapped
                     )
                 }
                 is DailyBriefState.Error -> {
                     ErrorBanner(
                         message = briefState.message,
                         onRetry = onRetryTapped
+                    )
+                }
+                is DailyBriefState.NeedsRelink -> {
+                    RelinkBanner(
+                        message = briefState.message,
+                        onRelink = onRelinkTapped
                     )
                 }
             }
@@ -171,6 +185,62 @@ private fun PlayButton(
             style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.SemiBold
         )
+    }
+}
+
+@Composable
+private fun PlayButtonWithRegenerate(
+    isPlaying: Boolean,
+    showRegenerate: Boolean,
+    onPlayClick: () -> Unit,
+    onRegenerateClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Row(
+        modifier = modifier,
+        horizontalArrangement = Arrangement.spacedBy(12.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        // Main play/pause button
+        Button(
+            onClick = onPlayClick,
+            modifier = Modifier.height(56.dp),
+            shape = RoundedCornerShape(28.dp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = PrimaryText,
+                contentColor = Background
+            )
+        ) {
+            Icon(
+                imageVector = if (isPlaying) Icons.Default.Pause else Icons.Default.PlayArrow,
+                contentDescription = if (isPlaying) "Pause" else "Play",
+                modifier = Modifier.size(24.dp)
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            Text(
+                text = if (isPlaying) "Pause" else "Play",
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.SemiBold
+            )
+        }
+
+        // Regenerate button (only shown when there's a cached episode)
+        if (showRegenerate) {
+            IconButton(
+                onClick = onRegenerateClick,
+                modifier = Modifier
+                    .size(56.dp)
+                    .clip(CircleShape)
+                    .background(PrimaryText.copy(alpha = 0.2f))
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Refresh,
+                    contentDescription = "Regenerate",
+                    tint = PrimaryText,
+                    modifier = Modifier.size(24.dp)
+                )
+            }
+        }
     }
 }
 
@@ -266,6 +336,47 @@ private fun ErrorBanner(
             )
             Spacer(modifier = Modifier.width(8.dp))
             Text("Retry")
+        }
+    }
+}
+
+@Composable
+private fun RelinkBanner(
+    message: String,
+    onRelink: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Column(modifier = modifier) {
+        Surface(
+            modifier = Modifier.fillMaxWidth(),
+            color = Warning.copy(alpha = 0.2f),
+            shape = RoundedCornerShape(8.dp)
+        ) {
+            Text(
+                text = message,
+                style = MaterialTheme.typography.bodySmall,
+                color = PrimaryText,
+                modifier = Modifier.padding(12.dp)
+            )
+        }
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        Button(
+            onClick = onRelink,
+            shape = RoundedCornerShape(12.dp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = PrimaryText,
+                contentColor = Background
+            )
+        ) {
+            Icon(
+                imageVector = Icons.Default.Link,
+                contentDescription = null,
+                modifier = Modifier.size(18.dp)
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            Text("Reconnect")
         }
     }
 }

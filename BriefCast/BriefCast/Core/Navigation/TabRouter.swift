@@ -46,8 +46,8 @@ struct TabRouter: View {
         .padding(.vertical, 16)
         .background(
             ZStack {
-                // Dark background with blur
-                Color.black.opacity(0.8)
+                // Theme-aware background with blur
+                Theme.Colors.cardBackground
 
                 // Blur effect
                 Rectangle()
@@ -58,9 +58,9 @@ struct TabRouter: View {
         .clipShape(Capsule())
         .overlay(
             Capsule()
-                .stroke(Color.white.opacity(0.1), lineWidth: 1)
+                .stroke(Theme.Colors.secondaryText.opacity(0.2), lineWidth: 1)
         )
-        .shadow(color: Color.black.opacity(0.3), radius: 20, x: 0, y: 10)
+        .shadow(color: Color.black.opacity(0.2), radius: 20, x: 0, y: 10)
         .padding(.horizontal, 24)
         .padding(.bottom, 16)
     }

@@ -11,6 +11,7 @@ export interface EmailMessage {
   body_preview: string;
   received_at: string;
   is_important: boolean;
+  is_unread: boolean;
   labels: string[];
   source: 'gmail' | 'outlook';
 }
@@ -20,6 +21,7 @@ export interface EmailFetchOptions {
   since_hours: number;
   labels?: string[];
   exclude_categories?: string[];
+  include_read?: boolean; // Include read emails (default: true for fallback scenarios)
 }
 
 // Gmail-specific types

@@ -2,7 +2,7 @@
 //  PlayerViewModel.swift
 //  BriefCast
 //
-//  Player view model with transcript support
+//  Player view model with transcript support - syncs with shared AudioService
 //
 
 import Foundation
@@ -23,64 +23,57 @@ struct TranscriptSegment: Identifiable {
 @Observable
 @MainActor
 class PlayerViewModel {
-    var currentEpisode: Episode?
-    var isPlaying: Bool = false
-    var currentTime: TimeInterval = 0
-    var duration: TimeInterval = 0
-    var playbackSpeed: Float = 1.0
     var transcript: [TranscriptSegment] = []
     var currentSegmentIndex: Int = 0
 
-    private let audioService = AudioService()
+    // Use shared AudioService singleton for app-wide playback sync
+    private let audioService = AudioService.shared
+
+    // Computed properties that reflect AudioService state
+    var currentEpisode: Episode? { audioService.currentEpisode }
+    var isPlaying: Bool { audioService.isPlaying }
+    var currentTime: TimeInterval { audioService.currentTime }
+    var duration: TimeInterval { audioService.duration }
+    var playbackSpeed: Float { audioService.playbackRate }
 
     // MARK: - Playback Control
 
     func play() {
-        guard let episode = currentEpisode else { return }
-        audioService.play(episode: episode)
-        isPlaying = true
+        audioService.resume()
     }
 
     func pause() {
         audioService.pause()
-        isPlaying = false
     }
 
     func togglePlayPause() {
-        if isPlaying {
-            pause()
-        } else {
-            play()
-        }
+        audioService.togglePlayPause()
     }
 
     func seek(to time: TimeInterval) {
         audioService.seek(to: time)
-        currentTime = time
         updateCurrentSegment()
     }
 
     func skipForward(_ seconds: TimeInterval = 15) {
-        let newTime = min(currentTime + seconds, duration)
-        seek(to: newTime)
+        audioService.skipForward(by: seconds)
     }
 
     func skipBackward(_ seconds: TimeInterval = 15) {
-        let newTime = max(currentTime - seconds, 0)
-        seek(to: newTime)
+        audioService.skipBackward(by: seconds)
     }
 
     func setPlaybackSpeed(_ speed: Float) {
-        playbackSpeed = speed
-        // TODO: Implement actual playback speed change in AudioService
-        print("Playback speed set to \(speed)x")
+        audioService.setRate(speed)
     }
 
     // MARK: - Episode Management
 
     func loadEpisode(_ episode: Episode) {
-        currentEpisode = episode
-        duration = TimeInterval(episode.durationSeconds ?? 0)
+        // If this is a different episode, load it
+        if audioService.currentEpisode?.id != episode.id {
+            audioService.play(episode: episode)
+        }
         loadMockTranscript()
     }
 

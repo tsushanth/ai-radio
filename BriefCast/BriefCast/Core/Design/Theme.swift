@@ -12,11 +12,12 @@ struct Theme {
     // MARK: - Colors
 
     struct Colors {
-        static let background = Color.black
-        static let cardBackground = Color(hex: "#1C1C1E")
-        static let primaryText = Color.white
-        static let secondaryText = Color(hex: "#8E8E93")
-        static let accent = Color(hex: "#FF6B35") // warm orange
+        // Adaptive colors that work in both light and dark mode
+        static let background = Color("Background")
+        static let cardBackground = Color("CardBackground")
+        static let primaryText = Color("PrimaryText")
+        static let secondaryText = Color("SecondaryText")
+        static let accent = Color(hex: "#FF6B35") // warm orange (same in both themes)
 
         // Gradient for hero header
         static let heroGradient = LinearGradient(
@@ -29,6 +30,16 @@ struct Theme {
             startPoint: .topLeading,
             endPoint: .bottomTrailing
         )
+
+        // Fallback colors for when Color Assets aren't available
+        static let backgroundDark = Color.black
+        static let backgroundLight = Color(hex: "#F2F2F7")
+        static let cardBackgroundDark = Color(hex: "#1C1C1E")
+        static let cardBackgroundLight = Color.white
+        static let primaryTextDark = Color.white
+        static let primaryTextLight = Color.black
+        static let secondaryTextDark = Color(hex: "#8E8E93")
+        static let secondaryTextLight = Color(hex: "#6C6C70")
     }
 
     // MARK: - Typography

@@ -12,38 +12,45 @@ struct GradientHeader: View {
     let userName: String
     let subtitle: String
     let briefState: DailyBriefState
+    let hasCachedEpisode: Bool
     let onPlayTapped: () -> Void
     let onPauseTapped: () -> Void
     let onLinkAccountTapped: () -> Void
+    let onRegenerateTapped: () -> Void
+
+    @Environment(\.colorScheme) private var colorScheme
 
     init(
         greeting: String,
         userName: String,
         subtitle: String,
         briefState: DailyBriefState = .ready,
+        hasCachedEpisode: Bool = false,
         onPlayTapped: @escaping () -> Void = {},
         onPauseTapped: @escaping () -> Void = {},
-        onLinkAccountTapped: @escaping () -> Void = {}
+        onLinkAccountTapped: @escaping () -> Void = {},
+        onRegenerateTapped: @escaping () -> Void = {}
     ) {
         self.greeting = greeting
         self.userName = userName
         self.subtitle = subtitle
         self.briefState = briefState
+        self.hasCachedEpisode = hasCachedEpisode
         self.onPlayTapped = onPlayTapped
         self.onPauseTapped = onPauseTapped
         self.onLinkAccountTapped = onLinkAccountTapped
+        self.onRegenerateTapped = onRegenerateTapped
     }
 
     var body: some View {
         ZStack(alignment: .bottom) {
-            // Gradient background with fade to black
+            // Gradient background - solid warm gradient that works in both modes
             LinearGradient(
                 colors: [
                     Color(hex: "#8B4513"),  // saddle brown
                     Color(hex: "#D2691E"),  // chocolate
                     Color(hex: "#FF8C00"),  // dark orange
-                    Color(hex: "#FFD700").opacity(0.3),  // gold fade
-                    Color.black.opacity(0.0)  // fade to transparent
+                    Color(hex: "#CC7000")   // darker orange at bottom for text contrast
                 ],
                 startPoint: .topLeading,
                 endPoint: .bottom
@@ -98,8 +105,12 @@ struct GradientHeader: View {
             GeneratingProgressView(progress: progress)
 
         case .completed(_):
-            // Show play button
-            PlayButton(onTap: onPlayTapped)
+            // Show play button with optional regenerate
+            PlayButton(
+                onTap: onPlayTapped,
+                showRegenerateOption: hasCachedEpisode,
+                onRegenerateTap: onRegenerateTapped
+            )
 
         case .playing(_):
             // Show now playing indicator with pause action
@@ -108,6 +119,14 @@ struct GradientHeader: View {
         case .error(let message):
             // Show error with retry
             ErrorRetryView(message: message, onRetry: onPlayTapped)
+
+        case .needsRelink(let message):
+            // Show relink account prompt
+            RelinkAccountPromptView(message: message, onRelink: onLinkAccountTapped)
+
+        case .noContent(let message):
+            // Show no content message
+            NoContentView(message: message, onRetry: onPlayTapped)
         }
     }
 }
@@ -339,6 +358,104 @@ struct ErrorRetryView: View {
             )
         }
         .buttonStyle(ScaleButtonStyle())
+    }
+}
+
+// MARK: - Relink Account Prompt View
+
+struct RelinkAccountPromptView: View {
+    let message: String
+    let onRelink: () -> Void
+
+    var body: some View {
+        Button(action: onRelink) {
+            HStack(spacing: 12) {
+                Image(systemName: "arrow.triangle.2.circlepath")
+                    .font(.system(size: 20, weight: .semibold))
+                    .foregroundColor(.yellow)
+
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("Reconnect your email")
+                        .font(.system(size: 16, weight: .semibold))
+                        .foregroundColor(.white)
+
+                    Text(message)
+                        .font(.system(size: 12, weight: .regular))
+                        .foregroundColor(.white.opacity(0.7))
+                        .lineLimit(2)
+                }
+
+                Spacer()
+
+                Text("Reconnect")
+                    .font(.system(size: 14, weight: .semibold))
+                    .foregroundColor(Theme.Colors.accent)
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 6)
+                    .background(
+                        RoundedRectangle(cornerRadius: 8)
+                            .fill(Theme.Colors.accent.opacity(0.2))
+                    )
+            }
+            .padding(.horizontal, 20)
+            .padding(.vertical, 16)
+            .background(
+                RoundedRectangle(cornerRadius: 16)
+                    .fill(Color.white.opacity(0.1))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 16)
+                            .stroke(Color.yellow.opacity(0.5), lineWidth: 1)
+                    )
+            )
+        }
+        .buttonStyle(ScaleButtonStyle())
+    }
+}
+
+// MARK: - No Content View
+
+struct NoContentView: View {
+    let message: String
+    let onRetry: () -> Void
+
+    var body: some View {
+        VStack(spacing: 12) {
+            HStack(spacing: 12) {
+                Image(systemName: "tray")
+                    .font(.system(size: 20))
+                    .foregroundColor(.blue)
+
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("No new emails")
+                        .font(.system(size: 16, weight: .semibold))
+                        .foregroundColor(.white)
+
+                    Text(message)
+                        .font(.system(size: 12, weight: .regular))
+                        .foregroundColor(.white.opacity(0.7))
+                        .lineLimit(2)
+                }
+
+                Spacer()
+            }
+            .padding(.horizontal, 20)
+            .padding(.vertical, 16)
+            .background(
+                RoundedRectangle(cornerRadius: 16)
+                    .fill(Color.white.opacity(0.1))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 16)
+                            .stroke(Color.blue.opacity(0.3), lineWidth: 1)
+                    )
+            )
+
+            // Retry button below
+            Button(action: onRetry) {
+                Text("Try Again Later")
+                    .font(.system(size: 14, weight: .medium))
+                    .foregroundColor(.white.opacity(0.7))
+            }
+        }
     }
 }
 

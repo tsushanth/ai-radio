@@ -6,12 +6,17 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.kreativekoala.audexa.data.model.DiscoverCategory
 import com.kreativekoala.audexa.data.model.Topic
 import com.kreativekoala.audexa.ui.components.*
 import com.kreativekoala.audexa.ui.theme.*
@@ -20,24 +25,28 @@ import java.util.*
 @Composable
 fun HomeScreen(
     onNavigateToProfile: () -> Unit,
+    onNavigateToLinkedAccounts: () -> Unit,
     onTopicClick: (Topic) -> Unit,
     viewModel: HomeViewModel = hiltViewModel()
 ) {
     val selectedTab by viewModel.selectedTab.collectAsState()
     val userName by viewModel.userName.collectAsState()
     val dailyBriefState by viewModel.dailyBriefState.collectAsState()
-    val topics by viewModel.topics.collectAsState()
-    val forYouEpisodes by viewModel.forYouEpisodes.collectAsState()
+    val hasCachedEpisode by viewModel.hasCachedEpisodeForToday.collectAsState()
     val keepListening by viewModel.keepListening.collectAsState()
     val bookmarkedTopics by viewModel.bookmarkedTopics.collectAsState(initial = emptyList())
     val visibleTopics by viewModel.visibleTopics.collectAsState(initial = emptyList())
     val bookmarkedIds by viewModel.bookmarkedTopicIds.collectAsState(initial = emptySet())
     val playingTopicId by viewModel.playingTopicId.collectAsState(initial = null)
+    val discoverCategories by viewModel.discoverCategories.collectAsState()
+
+    // Search state for Discover tab
+    var searchText by remember { mutableStateOf("") }
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Background)
+            .background(MaterialTheme.colorScheme.background)
     ) {
         // Scrollable content
         Column(
@@ -51,10 +60,13 @@ fun HomeScreen(
                 userName = userName,
                 subtitle = "Daily Brief • ${viewModel.dailyBriefDate}",
                 briefState = dailyBriefState,
+                hasCachedEpisode = hasCachedEpisode,
                 onPlayTapped = { viewModel.playDailyBrief() },
                 onPauseTapped = { viewModel.pauseDailyBrief() },
                 onProfileTapped = onNavigateToProfile,
-                onRetryTapped = { viewModel.playDailyBrief() }
+                onRetryTapped = { viewModel.playDailyBrief() },
+                onRegenerateTapped = { viewModel.regenerateDailyBrief() },
+                onRelinkTapped = onNavigateToLinkedAccounts  // Navigate directly to linked accounts
             )
 
             Spacer(modifier = Modifier.height(24.dp))
@@ -74,8 +86,6 @@ fun HomeScreen(
                     keepListening = keepListening,
                     bookmarkedTopics = bookmarkedTopics,
                     visibleTopics = visibleTopics,
-                    forYouEpisodes = forYouEpisodes,
-                    topics = topics,
                     bookmarkedIds = bookmarkedIds,
                     playingTopicId = playingTopicId,
                     onTopicClick = onTopicClick,
@@ -85,6 +95,9 @@ fun HomeScreen(
                 )
             } else {
                 DiscoverTabContent(
+                    searchText = searchText,
+                    onSearchTextChange = { searchText = it },
+                    discoverCategories = discoverCategories,
                     visibleTopics = visibleTopics,
                     bookmarkedIds = bookmarkedIds,
                     playingTopicId = playingTopicId,
@@ -105,8 +118,6 @@ private fun ForYouTabContent(
     keepListening: List<com.kreativekoala.audexa.data.model.Episode>,
     bookmarkedTopics: List<Topic>,
     visibleTopics: List<Topic>,
-    forYouEpisodes: List<com.kreativekoala.audexa.data.model.Episode>,
-    topics: List<Topic>,
     bookmarkedIds: Set<String>,
     playingTopicId: String?,
     onTopicClick: (Topic) -> Unit,
@@ -117,28 +128,52 @@ private fun ForYouTabContent(
     Column(verticalArrangement = Arrangement.spacedBy(32.dp)) {
         // Keep Listening
         if (keepListening.isNotEmpty()) {
-            SectionWithHorizontalScroll(title = "Keep listening") {
-                keepListening.forEach { episode ->
-                    EpisodeShowCard(
-                        episode = episode,
-                        onClick = { onEpisodeClick(episode) }
-                    )
+            Column {
+                Text(
+                    text = "Keep listening",
+                    style = MaterialTheme.typography.headlineLarge,
+                    color = MaterialTheme.colorScheme.onBackground,
+                    modifier = Modifier.padding(horizontal = Spacing.screenPadding.dp)
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+                LazyRow(
+                    contentPadding = PaddingValues(horizontal = Spacing.screenPadding.dp),
+                    horizontalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    items(keepListening) { episode ->
+                        EpisodeShowCard(
+                            episode = episode,
+                            onClick = { onEpisodeClick(episode) }
+                        )
+                    }
                 }
             }
         }
 
         // Bookmarked Topics (Your Topics)
         if (bookmarkedTopics.isNotEmpty()) {
-            SectionWithHorizontalScroll(title = "Your Topics") {
-                bookmarkedTopics.forEach { topic ->
-                    TopicCard(
-                        topic = topic,
-                        isBookmarked = true,
-                        isPlaying = topic.id == playingTopicId,
-                        onClick = { onTopicClick(topic) },
-                        onBookmarkToggle = { onBookmarkToggle(topic.id) },
-                        onHide = { onHideTopic(topic.id) }
-                    )
+            Column {
+                Text(
+                    text = "Your Topics",
+                    style = MaterialTheme.typography.headlineLarge,
+                    color = MaterialTheme.colorScheme.onBackground,
+                    modifier = Modifier.padding(horizontal = Spacing.screenPadding.dp)
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+                LazyRow(
+                    contentPadding = PaddingValues(horizontal = Spacing.screenPadding.dp),
+                    horizontalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    items(bookmarkedTopics, key = { it.id }) { topic ->
+                        TopicCard(
+                            topic = topic,
+                            isBookmarked = true,
+                            isPlaying = topic.id == playingTopicId,
+                            onClick = { onTopicClick(topic) },
+                            onBookmarkToggle = { onBookmarkToggle(topic.id) },
+                            onHide = { onHideTopic(topic.id) }
+                        )
+                    }
                 }
             }
         }
@@ -149,22 +184,22 @@ private fun ForYouTabContent(
                 Text(
                     text = "Topic Podcasts",
                     style = MaterialTheme.typography.headlineLarge,
-                    color = PrimaryText,
+                    color = MaterialTheme.colorScheme.onBackground,
                     modifier = Modifier.padding(horizontal = Spacing.screenPadding.dp)
                 )
                 Text(
                     text = "Tap to explore and play",
                     style = MaterialTheme.typography.bodyMedium,
-                    color = SecondaryText,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.padding(horizontal = Spacing.screenPadding.dp)
                 )
                 Spacer(modifier = Modifier.height(16.dp))
-                
+
                 LazyRow(
                     contentPadding = PaddingValues(horizontal = Spacing.screenPadding.dp),
                     horizontalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
-                    items(visibleTopics.take(6)) { topic ->
+                    items(visibleTopics.take(6), key = { it.id }) { topic ->
                         TopicCard(
                             topic = topic,
                             isBookmarked = topic.id in bookmarkedIds,
@@ -178,12 +213,22 @@ private fun ForYouTabContent(
             }
         }
 
-        // Recommended for you
-        if (forYouEpisodes.isNotEmpty()) {
-            SectionWithHorizontalScroll(title = "Recommended for you") {
-                forYouEpisodes.take(3).forEach { episode ->
-                    val topic = topics.find { it.id == episode.showId }
-                    if (topic != null) {
+        // Recommended for you - show topics 7-10 from visible topics
+        val recommendedTopics = visibleTopics.drop(6).take(4)
+        if (recommendedTopics.isNotEmpty()) {
+            Column {
+                Text(
+                    text = "Recommended for you",
+                    style = MaterialTheme.typography.headlineLarge,
+                    color = MaterialTheme.colorScheme.onBackground,
+                    modifier = Modifier.padding(horizontal = Spacing.screenPadding.dp)
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+                LazyRow(
+                    contentPadding = PaddingValues(horizontal = Spacing.screenPadding.dp),
+                    horizontalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    items(recommendedTopics, key = { it.id }) { topic ->
                         TopicCard(
                             topic = topic,
                             isBookmarked = topic.id in bookmarkedIds,
@@ -197,12 +242,22 @@ private fun ForYouTabContent(
             }
         }
 
-        // More for you
-        if (forYouEpisodes.size > 3) {
-            SectionWithHorizontalScroll(title = "More for you") {
-                forYouEpisodes.drop(3).forEach { episode ->
-                    val topic = topics.find { it.id == episode.showId }
-                    if (topic != null) {
+        // More for you - show topics 11+ from visible topics
+        val moreForYouTopics = visibleTopics.drop(10)
+        if (moreForYouTopics.isNotEmpty()) {
+            Column {
+                Text(
+                    text = "More for you",
+                    style = MaterialTheme.typography.headlineLarge,
+                    color = MaterialTheme.colorScheme.onBackground,
+                    modifier = Modifier.padding(horizontal = Spacing.screenPadding.dp)
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+                LazyRow(
+                    contentPadding = PaddingValues(horizontal = Spacing.screenPadding.dp),
+                    horizontalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    items(moreForYouTopics, key = { it.id }) { topic ->
                         TopicCard(
                             topic = topic,
                             isBookmarked = topic.id in bookmarkedIds,
@@ -220,6 +275,9 @@ private fun ForYouTabContent(
 
 @Composable
 private fun DiscoverTabContent(
+    searchText: String,
+    onSearchTextChange: (String) -> Unit,
+    discoverCategories: List<DiscoverCategory>,
     visibleTopics: List<Topic>,
     bookmarkedIds: Set<String>,
     playingTopicId: String?,
@@ -227,31 +285,111 @@ private fun DiscoverTabContent(
     onBookmarkToggle: (String) -> Unit,
     onHideTopic: (String) -> Unit
 ) {
-    Column {
-        // All Topics
-        if (visibleTopics.isNotEmpty()) {
-            Text(
-                text = "All Topics",
-                style = MaterialTheme.typography.headlineLarge,
-                color = PrimaryText,
-                modifier = Modifier.padding(horizontal = Spacing.screenPadding.dp)
-            )
+    // Filter categories and topics based on search
+    val filteredCategories = remember(searchText, discoverCategories) {
+        if (searchText.isEmpty()) {
+            discoverCategories
+        } else {
+            val lowercasedSearch = searchText.lowercase()
+            discoverCategories.mapNotNull { category ->
+                val filteredShows = category.shows.filter { show ->
+                    show.title.lowercase().contains(lowercasedSearch) ||
+                    show.description.lowercase().contains(lowercasedSearch) ||
+                    category.title.lowercase().contains(lowercasedSearch)
+                }
+                if (filteredShows.isNotEmpty()) {
+                    DiscoverCategory(title = category.title, shows = filteredShows)
+                } else {
+                    null
+                }
+            }
+        }
+    }
 
-            Spacer(modifier = Modifier.height(16.dp))
+    val filteredTopics = remember(searchText, visibleTopics) {
+        if (searchText.isEmpty()) {
+            visibleTopics
+        } else {
+            val lowercasedSearch = searchText.lowercase()
+            visibleTopics.filter { topic ->
+                topic.name.lowercase().contains(lowercasedSearch) ||
+                topic.description.lowercase().contains(lowercasedSearch) ||
+                topic.category.lowercase().contains(lowercasedSearch)
+            }
+        }
+    }
 
-            LazyRow(
-                contentPadding = PaddingValues(horizontal = Spacing.screenPadding.dp),
-                horizontalArrangement = Arrangement.spacedBy(16.dp)
+    Column(verticalArrangement = Arrangement.spacedBy(24.dp)) {
+        // Search Bar
+        SearchBar(
+            searchText = searchText,
+            onSearchTextChange = onSearchTextChange,
+            modifier = Modifier.padding(horizontal = Spacing.screenPadding.dp)
+        )
+
+        // Show "No results" if search returns empty
+        if (searchText.isNotEmpty() && filteredCategories.isEmpty() && filteredTopics.isEmpty()) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 40.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                items(visibleTopics) { topic ->
-                    TopicCard(
-                        topic = topic,
-                        isBookmarked = topic.id in bookmarkedIds,
-                        isPlaying = topic.id == playingTopicId,
-                        onClick = { onTopicClick(topic) },
-                        onBookmarkToggle = { onBookmarkToggle(topic.id) },
-                        onHide = { onHideTopic(topic.id) }
+                Icon(
+                    imageVector = Icons.Default.Search,
+                    contentDescription = null,
+                    modifier = Modifier.size(40.dp),
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                Spacer(modifier = Modifier.height(12.dp))
+                Text(
+                    text = "No results for \"$searchText\"",
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+        } else {
+            // Category sections - use visibleTopics so hidden topics are filtered out
+            filteredCategories.forEach { category ->
+                CategorySection(
+                    title = category.title,
+                    shows = category.shows,
+                    topics = visibleTopics,
+                    bookmarkedIds = bookmarkedIds,
+                    playingTopicId = playingTopicId,
+                    onTopicClick = onTopicClick,
+                    onBookmarkToggle = onBookmarkToggle,
+                    onHideTopic = onHideTopic
+                )
+            }
+
+            // All Topics section
+            if (filteredTopics.isNotEmpty()) {
+                Column {
+                    Text(
+                        text = if (searchText.isEmpty()) "All Topics" else "Matching Topics",
+                        style = MaterialTheme.typography.headlineLarge,
+                        color = MaterialTheme.colorScheme.onBackground,
+                        modifier = Modifier.padding(horizontal = Spacing.screenPadding.dp)
                     )
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    LazyRow(
+                        contentPadding = PaddingValues(horizontal = Spacing.screenPadding.dp),
+                        horizontalArrangement = Arrangement.spacedBy(16.dp)
+                    ) {
+                        items(filteredTopics, key = { it.id }) { topic ->
+                            TopicCard(
+                                topic = topic,
+                                isBookmarked = topic.id in bookmarkedIds,
+                                isPlaying = topic.id == playingTopicId,
+                                onClick = { onTopicClick(topic) },
+                                onBookmarkToggle = { onBookmarkToggle(topic.id) },
+                                onHide = { onHideTopic(topic.id) }
+                            )
+                        }
+                    }
                 }
             }
         }
@@ -259,25 +397,96 @@ private fun DiscoverTabContent(
 }
 
 @Composable
-private fun SectionWithHorizontalScroll(
-    title: String,
-    content: @Composable () -> Unit
+private fun SearchBar(
+    searchText: String,
+    onSearchTextChange: (String) -> Unit,
+    modifier: Modifier = Modifier
 ) {
+    OutlinedTextField(
+        value = searchText,
+        onValueChange = onSearchTextChange,
+        modifier = modifier.fillMaxWidth(),
+        placeholder = {
+            Text(
+                "Find new shows",
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        },
+        leadingIcon = {
+            Icon(
+                imageVector = Icons.Default.Search,
+                contentDescription = "Search",
+                tint = if (searchText.isNotEmpty()) AccentOrange else MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        },
+        trailingIcon = {
+            if (searchText.isNotEmpty()) {
+                IconButton(onClick = { onSearchTextChange("") }) {
+                    Icon(
+                        imageVector = Icons.Default.Close,
+                        contentDescription = "Clear",
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+            }
+        },
+        singleLine = true,
+        shape = androidx.compose.foundation.shape.RoundedCornerShape(12.dp),
+        colors = OutlinedTextFieldDefaults.colors(
+            focusedContainerColor = MaterialTheme.colorScheme.surface,
+            unfocusedContainerColor = MaterialTheme.colorScheme.surface,
+            focusedBorderColor = AccentOrange.copy(alpha = 0.5f),
+            unfocusedBorderColor = MaterialTheme.colorScheme.surface,
+            cursorColor = AccentOrange
+        )
+    )
+}
+
+@Composable
+private fun CategorySection(
+    title: String,
+    shows: List<com.kreativekoala.audexa.data.model.Show>,
+    topics: List<Topic>,
+    bookmarkedIds: Set<String>,
+    playingTopicId: String?,
+    onTopicClick: (Topic) -> Unit,
+    onBookmarkToggle: (String) -> Unit,
+    onHideTopic: (String) -> Unit
+) {
+    // Pre-compute the list of shows with matching topics
+    val showsWithTopics = remember(shows, topics) {
+        shows.mapNotNull { show ->
+            topics.find { it.id == show.id }?.let { topic -> show to topic }
+        }
+    }
+
+    // Don't render section if no matching topics
+    if (showsWithTopics.isEmpty()) return
+
     Column {
         Text(
             text = title,
             style = MaterialTheme.typography.headlineLarge,
-            color = PrimaryText,
+            color = MaterialTheme.colorScheme.onBackground,
             modifier = Modifier.padding(horizontal = Spacing.screenPadding.dp)
         )
-        
+
         Spacer(modifier = Modifier.height(16.dp))
-        
+
         LazyRow(
             contentPadding = PaddingValues(horizontal = Spacing.screenPadding.dp),
             horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            item { content() }
+            items(showsWithTopics, key = { it.first.id }) { (_, topic) ->
+                TopicCard(
+                    topic = topic,
+                    isBookmarked = topic.id in bookmarkedIds,
+                    isPlaying = topic.id == playingTopicId,
+                    onClick = { onTopicClick(topic) },
+                    onBookmarkToggle = { onBookmarkToggle(topic.id) },
+                    onHide = { onHideTopic(topic.id) }
+                )
+            }
         }
     }
 }

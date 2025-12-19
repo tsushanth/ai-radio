@@ -47,7 +47,7 @@ fun TopicCard(
             if (isLoading) {
                 CircularProgressIndicator(
                     modifier = Modifier.size(32.dp),
-                    color = PrimaryText,
+                    color = PrimaryTextDark, // Always white on colored background
                     strokeWidth = 3.dp
                 )
             } else {
@@ -55,7 +55,7 @@ fun TopicCard(
                     imageVector = getTopicIcon(topic.icon),
                     contentDescription = topic.name,
                     modifier = Modifier.size(32.dp),
-                    tint = PrimaryText.copy(alpha = 0.9f)
+                    tint = PrimaryTextDark.copy(alpha = 0.9f) // Always white on colored background
                 )
             }
             
@@ -70,18 +70,18 @@ fun TopicCard(
                 if (onBookmarkToggle != null) {
                     SmallIconButton(
                         icon = if (isBookmarked) Icons.Default.Bookmark else Icons.Default.BookmarkBorder,
-                        tint = if (isBookmarked) AccentOrange else PrimaryText,
+                        tint = if (isBookmarked) AccentOrange else PrimaryTextDark, // Always white on colored background
                         onClick = onBookmarkToggle
                     )
                 }
-                
+
                 // Menu button
                 if (onHide != null) {
                     var expanded by remember { mutableStateOf(false) }
                     Box {
                         SmallIconButton(
                             icon = Icons.Default.MoreVert,
-                            tint = PrimaryText,
+                            tint = PrimaryTextDark, // Always white on colored background
                             onClick = { expanded = true }
                         )
                         DropdownMenu(
@@ -121,30 +121,30 @@ fun TopicCard(
                         Text(
                             text = "Playing",
                             style = MaterialTheme.typography.labelSmall,
-                            color = PrimaryText,
+                            color = PrimaryTextDark, // Always white on orange background
                             fontWeight = FontWeight.SemiBold
                         )
                     }
                 }
             }
         }
-        
+
         Spacer(modifier = Modifier.height(8.dp))
-        
+
         // Title
         Text(
             text = topic.name,
             style = MaterialTheme.typography.titleSmall,
-            color = PrimaryText,
+            color = MaterialTheme.colorScheme.onBackground,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis
         )
-        
+
         // Duration
         Text(
             text = "${topic.targetDurationMinutes} min daily",
             style = MaterialTheme.typography.bodySmall,
-            color = SecondaryText
+            color = MaterialTheme.colorScheme.onSurfaceVariant
         )
     }
 }

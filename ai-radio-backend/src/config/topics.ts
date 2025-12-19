@@ -393,15 +393,21 @@ export const TOPICS: TopicDefinition[] = [
     sources: [
       {
         type: 'rss',
-        name: 'WebMD Health',
-        url: 'https://rssfeeds.webmd.com/rss/rss.aspx?RSSSource=RSS_PUBLIC',
+        name: 'Medical News Today',
+        url: 'https://www.medicalnewstoday.com/newsfeeds/rss/medical_news.xml',
         maxItems: 12,
       },
       {
         type: 'rss',
-        name: 'Healthline',
-        url: 'https://www.healthline.com/rss/health-news',
-        maxItems: 12,
+        name: 'NIH News',
+        url: 'https://www.nih.gov/news-events/news-releases/feed',
+        maxItems: 10,
+      },
+      {
+        type: 'reddit',
+        name: 'r/health',
+        subreddit: 'health',
+        maxItems: 10,
       },
       {
         type: 'hackernews',

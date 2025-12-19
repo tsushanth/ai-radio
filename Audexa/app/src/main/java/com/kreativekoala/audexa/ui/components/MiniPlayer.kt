@@ -39,7 +39,7 @@ fun MiniPlayer(
                 .fillMaxWidth()
                 .navigationBarsPadding()
                 .clickable(onClick = onClick),
-            color = CardBackground,
+            color = MaterialTheme.colorScheme.surface,
             shadowElevation = 8.dp
         ) {
             Column {
@@ -50,9 +50,9 @@ fun MiniPlayer(
                         .fillMaxWidth()
                         .height(2.dp),
                     color = AccentOrange,
-                    trackColor = CardBackgroundLight
+                    trackColor = MaterialTheme.colorScheme.surfaceVariant
                 )
-                
+
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -74,31 +74,31 @@ fun MiniPlayer(
                             tint = AccentOrange
                         )
                     }
-                    
+
                     Spacer(modifier = Modifier.width(12.dp))
-                    
+
                     // Title
                     Column(modifier = Modifier.weight(1f)) {
                         Text(
                             text = title ?: "",
                             style = MaterialTheme.typography.titleSmall,
-                            color = PrimaryText,
+                            color = MaterialTheme.colorScheme.onSurface,
                             fontWeight = FontWeight.SemiBold,
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis
                         )
-                        
+
                         if (isBuffering) {
                             Text(
                                 text = "Buffering...",
                                 style = MaterialTheme.typography.bodySmall,
-                                color = SecondaryText
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         }
                     }
-                    
+
                     Spacer(modifier = Modifier.width(8.dp))
-                    
+
                     // Play/Pause button
                     IconButton(onClick = onPlayPause) {
                         if (isBuffering) {
@@ -111,7 +111,7 @@ fun MiniPlayer(
                             Icon(
                                 imageVector = if (isPlaying) Icons.Default.Pause else Icons.Default.PlayArrow,
                                 contentDescription = if (isPlaying) "Pause" else "Play",
-                                tint = PrimaryText,
+                                tint = MaterialTheme.colorScheme.onSurface,
                                 modifier = Modifier.size(28.dp)
                             )
                         }

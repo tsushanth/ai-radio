@@ -33,8 +33,10 @@ struct TopicDetailView: View {
                     // Language selector
                     languageSelector
 
-                    // Player controls (if episode available)
-                    if viewModel.hasEpisodeForCurrentLanguage {
+                    // Player controls (if episode available and not regenerating)
+                    if viewModel.isGenerating {
+                        generatingView
+                    } else if viewModel.hasEpisodeForCurrentLanguage {
                         TopicPlayerControls(
                             isPlaying: viewModel.isPlaying,
                             currentTime: viewModel.currentTime,
@@ -46,13 +48,11 @@ struct TopicDetailView: View {
                         )
                     } else if viewModel.isLoading {
                         loadingView
-                    } else if viewModel.isGenerating {
-                        generatingView
                     } else {
                         generateButton
                     }
 
-                    // Regenerate button (when episode exists)
+                    // Regenerate button (when episode exists and not generating)
                     if viewModel.hasEpisodeForCurrentLanguage && !viewModel.isGenerating {
                         regenerateButton
                     }
@@ -117,18 +117,11 @@ struct TopicDetailView: View {
             await viewModel.loadInitialData()
         }
         .onAppear {
+            // Always keep timer running while view is visible to catch auto-play transitions
             startPlaybackTimer()
         }
         .onDisappear {
             stopPlaybackTimer()
-        }
-        .onChange(of: viewModel.isPlaying) { _, isPlaying in
-            // Start/stop timer based on playback state
-            if isPlaying {
-                startPlaybackTimer()
-            } else {
-                stopPlaybackTimer()
-            }
         }
         .onChange(of: viewModel.selectedLanguage) { _, _ in
             // Sync playback state when language changes
@@ -269,24 +262,31 @@ struct TopicDetailView: View {
     // MARK: - Regenerate Button
 
     private var regenerateButton: some View {
-        Button(action: {
-            Task {
-                await viewModel.regenerateEpisode()
-            }
-        }) {
-            HStack(spacing: 6) {
-                Image(systemName: "arrow.clockwise")
-                    .font(.system(size: 14, weight: .medium))
+        VStack(spacing: 8) {
+            Button(action: {
+                Task {
+                    await viewModel.regenerateEpisode()
+                }
+            }) {
+                HStack(spacing: 6) {
+                    Image(systemName: "arrow.clockwise")
+                        .font(.system(size: 14, weight: .medium))
 
-                Text("Regenerate")
-                    .font(.system(size: 14, weight: .medium))
+                    Text("Generate New Episode")
+                        .font(.system(size: 14, weight: .medium))
+                }
+                .foregroundColor(Theme.Colors.secondaryText)
+                .padding(.horizontal, 16)
+                .padding(.vertical, 10)
+                .background(Theme.Colors.cardBackground)
+                .cornerRadius(20)
             }
-            .foregroundColor(Theme.Colors.secondaryText)
-            .padding(.horizontal, 16)
-            .padding(.vertical, 8)
-            .background(Theme.Colors.cardBackground)
-            .cornerRadius(16)
+
+            Text("Creates a fresh episode with the latest content")
+                .font(.system(size: 12))
+                .foregroundColor(Theme.Colors.secondaryText.opacity(0.7))
         }
+        .padding(.top, 8)
     }
 
     // MARK: - Loading View

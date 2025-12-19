@@ -13,6 +13,7 @@ class TopicService {
 
     private let baseURL = "https://ai-radio-backend-917362189743.us-central1.run.app/api"
     private let jsonDecoder: JSONDecoder
+    private let jsonEncoder: JSONEncoder
 
     /// Standard session for quick requests (60s timeout)
     private let standardSession: URLSession
@@ -20,8 +21,17 @@ class TopicService {
     /// Long-running session for generation requests (3 min timeout)
     private let generationSession: URLSession
 
+    // Cache keys
+    private static let cachedTopicsKey = "cachedTopics"
+    private static let cachedCategoriesKey = "cachedCategories"
+    private static let cacheTimestampKey = "topicsCacheTimestamp"
+
+    // In-memory cache for instant access
+    private var cachedTopicsData: TopicsData?
+
     private init() {
         jsonDecoder = JSONDecoder()
+        jsonEncoder = JSONEncoder()
 
         // Standard session with default timeout
         let standardConfig = URLSessionConfiguration.default
@@ -34,17 +44,85 @@ class TopicService {
         generationConfig.timeoutIntervalForRequest = 180 // 3 minutes
         generationConfig.timeoutIntervalForResource = 180
         generationSession = URLSession(configuration: generationConfig)
+
+        // Load cached topics into memory immediately
+        loadCachedTopicsIntoMemory()
+    }
+
+    // MARK: - Topic Caching
+
+    /// Load cached topics from UserDefaults into memory for instant access
+    private func loadCachedTopicsIntoMemory() {
+        if let topicsData = UserDefaults.standard.data(forKey: Self.cachedTopicsKey),
+           let categoriesData = UserDefaults.standard.data(forKey: Self.cachedCategoriesKey),
+           let topics = try? jsonDecoder.decode([Topic].self, from: topicsData),
+           let categories = try? jsonDecoder.decode([CategoryInfo].self, from: categoriesData) {
+            cachedTopicsData = TopicsData(topics: topics, categories: categories)
+            print("📦 Loaded \(topics.count) cached topics into memory")
+        }
+    }
+
+    /// Save topics to cache (UserDefaults + memory)
+    private func cacheTopics(_ data: TopicsData) {
+        cachedTopicsData = data
+
+        if let topicsData = try? jsonEncoder.encode(data.topics),
+           let categoriesData = try? jsonEncoder.encode(data.categories) {
+            UserDefaults.standard.set(topicsData, forKey: Self.cachedTopicsKey)
+            UserDefaults.standard.set(categoriesData, forKey: Self.cachedCategoriesKey)
+            UserDefaults.standard.set(Date().timeIntervalSince1970, forKey: Self.cacheTimestampKey)
+            print("💾 Cached \(data.topics.count) topics")
+        }
+    }
+
+    /// Get cached topics (returns immediately from memory if available)
+    func getCachedTopics() -> TopicsData? {
+        return cachedTopicsData
+    }
+
+    /// Check if cache exists
+    var hasCachedTopics: Bool {
+        return cachedTopicsData != nil
     }
 
     // MARK: - Topics
 
-    /// Fetch all available topics
+    /// Fetch all available topics - returns cached data immediately, then updates from server
+    /// Use this for initial load to show content instantly
     func fetchTopics() async throws -> TopicsData {
+        // Try to fetch from server
         let endpoint = "\(baseURL)/topics"
-        let data = try await performRequest(endpoint: endpoint)
 
-        let response = try jsonDecoder.decode(TopicsResponse.self, from: data)
-        return response.data
+        do {
+            let data = try await performRequest(endpoint: endpoint)
+            let response = try jsonDecoder.decode(TopicsResponse.self, from: data)
+
+            // Cache the fresh data (server takes precedence)
+            cacheTopics(response.data)
+
+            return response.data
+        } catch {
+            // If network fails and we have cache, return cache
+            if let cached = cachedTopicsData {
+                print("⚠️ Network failed, using cached topics: \(error.localizedDescription)")
+                return cached
+            }
+            // No cache, propagate error
+            throw error
+        }
+    }
+
+    /// Fetch topics with callback for immediate cached data
+    /// - Parameter onCachedData: Called immediately with cached data if available
+    /// - Returns: Fresh data from server (also updates cache)
+    func fetchTopicsWithCache(onCachedData: ((TopicsData) -> Void)? = nil) async throws -> TopicsData {
+        // Immediately return cached data if available
+        if let cached = cachedTopicsData {
+            onCachedData?(cached)
+        }
+
+        // Then fetch fresh data from server
+        return try await fetchTopics()
     }
 
     /// Fetch a single topic with recent episodes

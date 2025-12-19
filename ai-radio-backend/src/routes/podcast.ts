@@ -7,8 +7,58 @@ import express, { Request, Response, NextFunction } from 'express';
 import { z } from 'zod';
 import { podcastGenerator } from '../services/podcast/podcast.generator';
 import type { UserPreferences } from '../types/database';
+import {
+  PodcastErrorAction,
+  classifyError,
+  isAuthError,
+  isContentError,
+  createPodcastError,
+} from '../types/podcast-errors';
 
 const router = express.Router();
+
+// ================================================
+// IN-MEMORY JOB STORE (for async generation)
+// In production, use Redis or database
+// ================================================
+
+interface GenerationJob {
+  id: string;
+  userId: string;
+  status: 'queued' | 'processing' | 'completed' | 'failed';
+  progress: number;
+  message: string;
+  result?: {
+    episodeId: string;
+    audioUrl: string;
+    durationSeconds: number;
+    scriptSegments: number;
+  };
+  error?: {
+    code: string;
+    message: string;
+    action: string;
+    retryable: boolean;
+  };
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+const jobStore = new Map<string, GenerationJob>();
+
+// Clean up old jobs every 10 minutes (keep jobs for 1 hour)
+setInterval(() => {
+  const oneHourAgo = Date.now() - 60 * 60 * 1000;
+  for (const [jobId, job] of jobStore.entries()) {
+    if (job.createdAt.getTime() < oneHourAgo) {
+      jobStore.delete(jobId);
+    }
+  }
+}, 10 * 60 * 1000);
+
+function generateJobId(): string {
+  return `job_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
+}
 
 // ================================================
 // VALIDATION SCHEMAS
@@ -54,8 +104,166 @@ const validatePrerequisitesSchema = z.object({
 // ================================================
 
 /**
+ * POST /podcast/generate-async
+ * Start async podcast generation - returns job_id immediately
+ * Client should poll /podcast/job/:jobId for status
+ */
+router.post('/generate-async', async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    // Validate request body
+    const validated = generatePodcastSchema.parse(req.body);
+
+    console.log(`[POST /podcast/generate-async] Starting async generation for: ${validated.user_id}`);
+
+    // Check prerequisites first (this is fast)
+    const prereqs = await podcastGenerator.validatePrerequisites(validated.user_id);
+    if (!prereqs.valid) {
+      return res.status(400).json({
+        error: 'Prerequisites not met',
+        issues: prereqs.issues,
+      });
+    }
+
+    // Create job with initial progress of 5% (job accepted)
+    const jobId = generateJobId();
+    const job: GenerationJob = {
+      id: jobId,
+      userId: validated.user_id,
+      status: 'processing',
+      progress: 5,
+      message: 'Starting generation...',
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+    jobStore.set(jobId, job);
+
+    // Return immediately with job ID
+    res.status(202).json({
+      success: true,
+      jobId,
+      status: 'processing',
+      message: 'Generation started. Poll /podcast/job/:jobId for status.',
+    });
+
+    // Start generation in background (don't await)
+    const clientDate = validated.date || new Date().toISOString().split('T')[0];
+
+    podcastGenerator.generateEpisode(
+      validated.user_id,
+      validated.preferences,
+      {
+        ...validated.options,
+        date: clientDate,
+        onProgress: async (progress) => {
+          // Update job progress
+          job.progress = progress.progress_percent;
+          job.message = progress.message;
+          job.updatedAt = new Date();
+          console.log(`[Job ${jobId}] ${progress.progress_percent}%: ${progress.message}`);
+        },
+      }
+    ).then((result) => {
+      // Success - update job with result
+      job.status = 'completed';
+      job.progress = 100;
+      job.message = 'Generation complete';
+      job.result = {
+        episodeId: result.episode_id,
+        audioUrl: result.audio_url,
+        durationSeconds: result.duration_seconds,
+        scriptSegments: result.script.segments.length,
+      };
+      job.updatedAt = new Date();
+      console.log(`[Job ${jobId}] Completed successfully`);
+    }).catch((error) => {
+      // Failed - update job with error
+      const errorInstance = error instanceof Error ? error : new Error(String(error));
+      const errorCode = classifyError(errorInstance);
+      const podcastError = createPodcastError(errorCode, errorInstance);
+
+      job.status = 'failed';
+      job.message = podcastError.userMessage;
+      job.error = {
+        code: podcastError.code,
+        message: podcastError.userMessage,
+        action: podcastError.action,
+        retryable: podcastError.retryable,
+      };
+      job.updatedAt = new Date();
+      console.error(`[Job ${jobId}] Failed:`, error);
+    });
+
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      return res.status(400).json({
+        error: 'Validation failed',
+        issues: error.errors,
+      });
+    }
+
+    console.error('Async generation setup failed:', error);
+    res.status(500).json({
+      error: 'Failed to start generation',
+      message: error instanceof Error ? error.message : 'Unknown error',
+    });
+  }
+});
+
+/**
+ * GET /podcast/job/:jobId
+ * Get job status and result
+ */
+router.get('/job/:jobId', async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const jobId = req.params.jobId;
+    const job = jobStore.get(jobId);
+
+    if (!job) {
+      return res.status(404).json({
+        error: 'Job not found',
+        message: 'Job may have expired or does not exist',
+      });
+    }
+
+    // Return job status
+    const response: any = {
+      success: true,
+      jobId: job.id,
+      status: job.status,
+      progress: job.progress,
+      message: job.message,
+      createdAt: job.createdAt.toISOString(),
+      updatedAt: job.updatedAt.toISOString(),
+    };
+
+    // Include result if completed
+    if (job.status === 'completed' && job.result) {
+      response.episode = {
+        id: job.result.episodeId,
+        audio_url: job.result.audioUrl,
+        duration_seconds: job.result.durationSeconds,
+        script_segments: job.result.scriptSegments,
+      };
+    }
+
+    // Include error if failed
+    if (job.status === 'failed' && job.error) {
+      response.error = job.error;
+    }
+
+    res.json(response);
+  } catch (error) {
+    console.error('Job status retrieval failed:', error);
+    res.status(500).json({
+      error: 'Failed to get job status',
+      message: error instanceof Error ? error.message : 'Unknown error',
+    });
+  }
+});
+
+/**
  * POST /podcast/generate
- * Generate a new podcast episode
+ * Generate a new podcast episode (synchronous - kept for backwards compatibility)
  */
 router.post('/generate', async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -115,9 +323,50 @@ router.post('/generate', async (req: Request, res: Response, next: NextFunction)
     }
 
     console.error('Podcast generation failed:', error);
-    res.status(500).json({
-      error: 'Generation failed',
-      message: error instanceof Error ? error.message : 'Unknown error',
+
+    // Classify the error and provide actionable response to the UI
+    const errorInstance = error instanceof Error ? error : new Error(String(error));
+    const errorCode = classifyError(errorInstance);
+    const podcastError = createPodcastError(errorCode, errorInstance);
+
+    // For auth errors, return 401 with relink action
+    if (isAuthError(errorInstance)) {
+      return res.status(401).json({
+        success: false,
+        error: {
+          code: podcastError.code,
+          message: podcastError.userMessage,
+          action: podcastError.action,
+          retryable: podcastError.retryable,
+        },
+      });
+    }
+
+    // For content errors (no emails), return success with empty state
+    if (isContentError(errorInstance)) {
+      return res.status(200).json({
+        success: false,
+        error: {
+          code: podcastError.code,
+          message: podcastError.userMessage,
+          action: PodcastErrorAction.NONE,
+          retryable: false,
+        },
+        // Provide a hint that there's no content
+        noContent: true,
+      });
+    }
+
+    // For all other errors, return with appropriate status and retry info
+    res.status(podcastError.statusCode).json({
+      success: false,
+      error: {
+        code: podcastError.code,
+        message: podcastError.userMessage,
+        action: podcastError.action,
+        retryable: podcastError.retryable,
+        details: podcastError.details?.originalMessage,
+      },
     });
   }
 });

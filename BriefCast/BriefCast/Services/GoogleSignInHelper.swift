@@ -11,11 +11,27 @@ import GoogleSignIn
 @MainActor
 class GoogleSignInHelper {
 
-    /// Start Google Sign-In flow
-    func signIn() async throws -> (idToken: String, accessToken: String) {
+    /// Get the topmost view controller to present from
+    /// This handles cases where sheets/modals are presented
+    private func getTopViewController() -> UIViewController? {
         guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
               let rootViewController = windowScene.windows.first?.rootViewController else {
-            throw NSError(domain: "GoogleSignIn", code: -1, userInfo: [NSLocalizedDescriptionKey: "No root view controller"])
+            return nil
+        }
+
+        // Traverse to find the topmost presented view controller
+        var topController = rootViewController
+        while let presentedController = topController.presentedViewController {
+            topController = presentedController
+        }
+
+        return topController
+    }
+
+    /// Start Google Sign-In flow
+    func signIn() async throws -> (idToken: String, accessToken: String) {
+        guard let presentingViewController = getTopViewController() else {
+            throw NSError(domain: "GoogleSignIn", code: -1, userInfo: [NSLocalizedDescriptionKey: "No view controller available"])
         }
 
         // Configure Google Sign-In
@@ -24,7 +40,7 @@ class GoogleSignInHelper {
         )
 
         let result = try await GIDSignIn.sharedInstance.signIn(
-            withPresenting: rootViewController,
+            withPresenting: presentingViewController,
             hint: nil,
             additionalScopes: []
         )

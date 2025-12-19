@@ -6,6 +6,41 @@
 //
 
 import Foundation
+import SwiftUI
+
+// MARK: - App Theme
+
+enum AppTheme: String, CaseIterable, Identifiable {
+    case system = "system"
+    case dark = "dark"
+    case light = "light"
+
+    var id: String { rawValue }
+
+    var displayName: String {
+        switch self {
+        case .system: return "System"
+        case .dark: return "Dark"
+        case .light: return "Light"
+        }
+    }
+
+    var iconName: String {
+        switch self {
+        case .system: return "circle.lefthalf.filled"
+        case .dark: return "moon.fill"
+        case .light: return "sun.max.fill"
+        }
+    }
+
+    var colorScheme: ColorScheme? {
+        switch self {
+        case .system: return nil
+        case .dark: return .dark
+        case .light: return .light
+        }
+    }
+}
 
 @MainActor
 class PreferencesService: ObservableObject {
@@ -19,6 +54,7 @@ class PreferencesService: ObservableObject {
         static let preferredLanguage = "preferredLanguage"
         static let selectedTopics = "selectedTopics"
         static let hasCompletedOnboarding = "hasCompletedOnboarding"
+        static let appTheme = "appTheme"
     }
 
     private let defaults = UserDefaults.standard
@@ -140,6 +176,19 @@ class PreferencesService: ObservableObject {
         }
     }
 
+    // MARK: - App Theme
+
+    var appTheme: AppTheme {
+        get {
+            let rawValue = defaults.string(forKey: Keys.appTheme) ?? "system"
+            return AppTheme(rawValue: rawValue) ?? .system
+        }
+        set {
+            defaults.set(newValue.rawValue, forKey: Keys.appTheme)
+            objectWillChange.send()
+        }
+    }
+
     // MARK: - Reset
 
     func resetAllPreferences() {
@@ -147,5 +196,6 @@ class PreferencesService: ObservableObject {
         hiddenTopicIds = []
         preferredLanguage = "en"
         selectedTopics = ["Technology", "AI", "Business", "News"]
+        appTheme = .system
     }
 }

@@ -39,19 +39,9 @@ class AuthService: ObservableObject {
     }
 
     func signInWithGoogle() async throws {
-        // Request full OAuth access with Gmail scope
-        // This combines sign-in + data access in a single flow
-        let (email, accessToken, refreshToken) = try await googleOAuthHelper.requestAccess(
-            includeEmail: true,
-            includeCalendar: false
-        )
-
-        // Get ID token for Supabase authentication
-        // GoogleOAuthHelper already signed in, so we can get the current user
-        guard let gidUser = GIDSignIn.sharedInstance.currentUser,
-              let idToken = gidUser.idToken?.tokenString else {
-            throw NSError(domain: "GoogleSignIn", code: -1, userInfo: [NSLocalizedDescriptionKey: "Failed to get ID token after OAuth"])
-        }
+        // Use basic Google Sign-In for authentication only (no Gmail permissions)
+        // Gmail permissions will be requested separately during onboarding
+        let (idToken, accessToken) = try await googleSignInHelper.signIn()
 
         // Sign in with Supabase using the ID token
         let session = try await supabaseClient.signInWithGoogle(idToken: idToken, accessToken: accessToken)
@@ -63,20 +53,7 @@ class AuthService: ObservableObject {
         // Save auth token
         await saveAuthToken(session.accessToken)
 
-        // Store the linked account on the backend for data access
-        try await storeLinkedAccount(
-            provider: "google",
-            email: email,
-            accessToken: accessToken,
-            refreshToken: refreshToken
-        )
-
-        // Save linked account info to UserDefaults for the app to use
-        UserDefaults.standard.set(true, forKey: "hasLinkedGoogleAccount")
-        UserDefaults.standard.set(email, forKey: "linkedAccountEmail")
-        UserDefaults.standard.set("google", forKey: "linkedAccountProvider")
-
-        print("✅ Signed in and linked Google account: \(email)")
+        print("✅ Signed in with Google (Gmail permissions will be requested in onboarding)")
     }
 
     // MARK: - Sign Out
@@ -102,26 +79,32 @@ class AuthService: ObservableObject {
         }
 
         let userId = user.email
+        let isGuestUser = userId.isEmpty || user.id.hasPrefix("guest_")
 
-        // 1. Call backend to delete all user data
-        guard let encodedUserId = userId.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed),
-              let url = URL(string: "https://ai-radio-backend-917362189743.us-central1.run.app/api/user/\(encodedUserId)") else {
-            throw NSError(domain: "AuthService", code: -1, userInfo: [NSLocalizedDescriptionKey: "Invalid URL"])
-        }
+        // 1. Call backend to delete all user data (skip for guest users who have no server data)
+        if !isGuestUser {
+            guard let encodedUserId = userId.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed),
+                  !encodedUserId.isEmpty,
+                  let url = URL(string: "https://ai-radio-backend-917362189743.us-central1.run.app/api/user/\(encodedUserId)") else {
+                throw NSError(domain: "AuthService", code: -1, userInfo: [NSLocalizedDescriptionKey: "Invalid URL"])
+            }
 
-        var request = URLRequest(url: url)
-        request.httpMethod = "DELETE"
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+            var request = URLRequest(url: url)
+            request.httpMethod = "DELETE"
+            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
 
-        let (data, response) = try await URLSession.shared.data(for: request)
+            let (data, response) = try await URLSession.shared.data(for: request)
 
-        guard let httpResponse = response as? HTTPURLResponse else {
-            throw NSError(domain: "AuthService", code: -2, userInfo: [NSLocalizedDescriptionKey: "Invalid response"])
-        }
+            guard let httpResponse = response as? HTTPURLResponse else {
+                throw NSError(domain: "AuthService", code: -2, userInfo: [NSLocalizedDescriptionKey: "Invalid response"])
+            }
 
-        guard httpResponse.statusCode == 200 else {
-            let errorBody = String(data: data, encoding: .utf8) ?? "Unknown error"
-            throw NSError(domain: "AuthService", code: httpResponse.statusCode, userInfo: [NSLocalizedDescriptionKey: "Failed to delete account: \(errorBody)"])
+            guard httpResponse.statusCode == 200 else {
+                let errorBody = String(data: data, encoding: .utf8) ?? "Unknown error"
+                throw NSError(domain: "AuthService", code: httpResponse.statusCode, userInfo: [NSLocalizedDescriptionKey: "Failed to delete account: \(errorBody)"])
+            }
+        } else {
+            print("👤 Guest user - skipping backend delete (no server data)")
         }
 
         // 2. Revoke Google OAuth if connected
@@ -153,7 +136,10 @@ class AuthService: ObservableObject {
             "hasCompletedOnboarding",
             "bookmarkedTopicIds",
             "hiddenTopicIds",
-            "preferredLanguage"
+            "preferredLanguage",
+            "isGuestUser",
+            "guestUserId",
+            "cachedDailyBriefEpisode"
         ]
 
         for key in keysToRemove {
@@ -222,6 +208,38 @@ class AuthService: ObservableObject {
             createdAt: supabaseUser.createdAt,
             updatedAt: supabaseUser.updatedAt
         )
+    }
+
+    // MARK: - Guest Mode
+
+    func continueAsGuest() async {
+        let guestId = "guest_\(Int(Date().timeIntervalSince1970 * 1000))"
+        print("👤 Continuing as guest: \(guestId)")
+
+        // Create a guest user
+        currentUser = User(
+            id: guestId,
+            email: "",
+            name: "Guest",
+            timezone: TimeZone.current.identifier,
+            linkedAccounts: [],
+            preferences: UserPreferences(
+                briefingTime: "07:00",
+                topics: ["News", "Tech"],
+                voiceHost1: "en-US-Neural2-J",
+                voiceHost2: "en-US-Neural2-D",
+                includeWeather: false,
+                includeCalendar: false,
+                includeEmail: false
+            ),
+            createdAt: Date(),
+            updatedAt: Date()
+        )
+        isAuthenticated = true
+
+        // Store guest state
+        UserDefaults.standard.set(true, forKey: "isGuestUser")
+        UserDefaults.standard.set(guestId, forKey: "guestUserId")
     }
 
     // MARK: - OAuth Account Linking

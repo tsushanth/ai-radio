@@ -2,6 +2,7 @@ package com.kreativekoala.audexa.ui.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -10,7 +11,9 @@ import androidx.navigation.navArgument
 import com.kreativekoala.audexa.data.model.Topic
 import com.kreativekoala.audexa.ui.auth.AuthScreen
 import com.kreativekoala.audexa.ui.home.HomeScreen
+import com.kreativekoala.audexa.ui.home.HomeViewModel
 import com.kreativekoala.audexa.ui.profile.ProfileScreen
+import com.kreativekoala.audexa.ui.profile.ThemeSettingsScreen
 import kotlinx.serialization.json.Json
 
 sealed class Screen(val route: String) {
@@ -26,6 +29,7 @@ sealed class Screen(val route: String) {
     data object LinkedAccounts : Screen("linked_accounts")
     data object HiddenTopics : Screen("hidden_topics")
     data object LanguageSettings : Screen("language_settings")
+    data object ThemeSettings : Screen("theme_settings")
 }
 
 @Composable
@@ -35,6 +39,10 @@ fun AudexaNavGraph(
     modifier: Modifier = Modifier,
     onShowTopicDetail: (Topic) -> Unit
 ) {
+    // Create HomeViewModel at NavGraph level so it survives navigation
+    // This ensures generation progress is preserved when navigating to Profile and back
+    val homeViewModel: HomeViewModel = hiltViewModel()
+
     NavHost(
         navController = navController,
         startDestination = startDestination,
@@ -55,9 +63,13 @@ fun AudexaNavGraph(
                 onNavigateToProfile = {
                     navController.navigate(Screen.Profile.route)
                 },
+                onNavigateToLinkedAccounts = {
+                    navController.navigate(Screen.LinkedAccounts.route)
+                },
                 onTopicClick = { topic ->
                     onShowTopicDetail(topic)
-                }
+                },
+                viewModel = homeViewModel  // Pass the shared ViewModel
             )
         }
 
@@ -74,6 +86,9 @@ fun AudexaNavGraph(
                 },
                 onNavigateToLanguageSettings = {
                     navController.navigate(Screen.LanguageSettings.route)
+                },
+                onNavigateToThemeSettings = {
+                    navController.navigate(Screen.ThemeSettings.route)
                 },
                 onSignOut = {
                     navController.navigate(Screen.Auth.route) {
@@ -101,6 +116,14 @@ fun AudexaNavGraph(
 
         composable(Screen.LanguageSettings.route) {
             LanguageSettingsScreen(
+                onNavigateBack = {
+                    navController.popBackStack()
+                }
+            )
+        }
+
+        composable(Screen.ThemeSettings.route) {
+            ThemeSettingsScreen(
                 onNavigateBack = {
                     navController.popBackStack()
                 }

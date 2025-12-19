@@ -206,10 +206,16 @@ export class ScriptGeneratorService {
         throw new Error('No response from GPT-4');
       }
 
-      // Parse JSON response
-      const parsed = JSON.parse(response);
+      // Parse JSON response with better error handling
+      let parsed: any;
+      try {
+        parsed = JSON.parse(response);
+      } catch (parseError) {
+        console.error('Failed to parse GPT-4 response as JSON:', response.substring(0, 500));
+        throw new Error('GPT-4 returned invalid JSON');
+      }
 
-      // Handle both array and object with array property
+      // Handle multiple possible response formats from GPT-4
       let segments: ScriptSegment[];
       if (Array.isArray(parsed)) {
         segments = parsed;
@@ -217,8 +223,49 @@ export class ScriptGeneratorService {
         segments = parsed.segments;
       } else if (parsed.script && Array.isArray(parsed.script)) {
         segments = parsed.script;
+      } else if (parsed.dialogue && Array.isArray(parsed.dialogue)) {
+        segments = parsed.dialogue;
+      } else if (parsed.conversation && Array.isArray(parsed.conversation)) {
+        segments = parsed.conversation;
+      } else if (parsed.podcast && Array.isArray(parsed.podcast)) {
+        segments = parsed.podcast;
+      } else if (parsed.content && Array.isArray(parsed.content)) {
+        segments = parsed.content;
       } else {
-        throw new Error('Invalid response format from GPT-4');
+        // Try to find any array property in the response
+        const arrayProps = Object.keys(parsed).filter(key => Array.isArray(parsed[key]));
+        if (arrayProps.length > 0) {
+          console.log(`Found array property '${arrayProps[0]}' in GPT-4 response, using it`);
+          segments = parsed[arrayProps[0]];
+        } else if (parsed.speaker && parsed.text) {
+          // GPT-4 returned a single segment object instead of an array
+          // This happens sometimes - wrap it in an array
+          console.log('GPT-4 returned single segment object, wrapping in array');
+          segments = [parsed];
+        } else if (typeof parsed === 'object' && Object.keys(parsed).length > 0) {
+          // Check if it's an object with numeric keys (pseudo-array)
+          const keys = Object.keys(parsed);
+          const isNumericKeys = keys.every(k => !isNaN(parseInt(k)));
+          if (isNumericKeys) {
+            console.log('GPT-4 returned object with numeric keys, converting to array');
+            segments = keys.sort((a, b) => parseInt(a) - parseInt(b)).map(k => parsed[k]);
+          } else {
+            // Last resort: check if any nested object looks like a segment
+            const potentialSegments = Object.values(parsed).filter(
+              (v: any) => v && typeof v === 'object' && v.text && (v.speaker || v.host)
+            );
+            if (potentialSegments.length > 0) {
+              console.log(`Found ${potentialSegments.length} potential segments in nested objects`);
+              segments = potentialSegments as ScriptSegment[];
+            } else {
+              console.error('Invalid GPT-4 response structure:', JSON.stringify(parsed).substring(0, 500));
+              throw new Error('Invalid response format from GPT-4 - no valid segment array found');
+            }
+          }
+        } else {
+          console.error('Invalid GPT-4 response structure:', JSON.stringify(parsed).substring(0, 500));
+          throw new Error('Invalid response format from GPT-4 - no valid segment array found');
+        }
       }
 
       // Validate segments
@@ -226,12 +273,85 @@ export class ScriptGeneratorService {
         throw new Error('Generated script has no segments');
       }
 
-      // Validate each segment
-      segments.forEach((segment, index) => {
-        if (!segment.speaker || !segment.text || !segment.type) {
-          throw new Error(`Invalid segment at index ${index}`);
+      // If we got too few segments, log a warning but continue
+      // The fallback will be triggered later if script validation fails
+      if (segments.length < 5) {
+        console.warn(`GPT-4 returned only ${segments.length} segments (expected at least 5), will use fallback if needed`);
+      }
+
+      // Normalize and validate each segment with flexible field mapping
+      // Cast to any[] since GPT-4 may return various field names
+      const validTypes = ['intro', 'email', 'calendar', 'news', 'weather', 'outro', 'pause'];
+      const rawSegments = segments as any[];
+      segments = rawSegments.map((segment, index) => {
+        // Handle various speaker field names
+        const speaker = segment.speaker || segment.host || segment.voice || segment.character;
+        // Handle various text field names
+        const text = segment.text || segment.content || segment.dialogue || segment.line || segment.message;
+        // Handle various type field names
+        let type = segment.type || segment.segment_type || segment.category || segment.section || 'email';
+
+        // Normalize type to valid values
+        if (!validTypes.includes(type)) {
+          // Map common variations
+          const typeMap: Record<string, string> = {
+            'introduction': 'intro',
+            'opening': 'intro',
+            'greeting': 'intro',
+            'emails': 'email',
+            'mail': 'email',
+            'message': 'email',
+            'messages': 'email',
+            'events': 'calendar',
+            'schedule': 'calendar',
+            'meeting': 'calendar',
+            'meetings': 'calendar',
+            'closing': 'outro',
+            'goodbye': 'outro',
+            'farewell': 'outro',
+            'end': 'outro',
+            'topic': 'news',
+            'discussion': 'news',
+            'general': 'news',
+            'forecast': 'weather',
+          };
+          type = typeMap[type.toLowerCase()] || 'email'; // Default to 'email' for unknown types
         }
+
+        // Normalize speaker values
+        let normalizedSpeaker = speaker;
+        if (speaker) {
+          const speakerLower = speaker.toString().toLowerCase();
+          if (speakerLower.includes('alex') || speakerLower === 'host1' || speakerLower === '1' || speakerLower === 'a') {
+            normalizedSpeaker = 'host1';
+          } else if (speakerLower.includes('jordan') || speakerLower === 'host2' || speakerLower === '2' || speakerLower === 'b') {
+            normalizedSpeaker = 'host2';
+          }
+        }
+
+        if (!normalizedSpeaker || !text) {
+          console.warn(`Segment ${index} missing required fields, speaker: ${speaker}, text length: ${text?.length || 0}`);
+          // Try to salvage the segment
+          if (text) {
+            normalizedSpeaker = index % 2 === 0 ? 'host1' : 'host2'; // Alternate hosts
+          } else {
+            throw new Error(`Invalid segment at index ${index}: missing speaker or text`);
+          }
+        }
+
+        return {
+          speaker: normalizedSpeaker as 'host1' | 'host2',
+          text: text.toString().trim(),
+          type: type as ScriptSegment['type'],
+        };
       });
+
+      // Filter out any segments with empty text
+      segments = segments.filter(s => s.text && s.text.length > 0);
+
+      if (segments.length === 0) {
+        throw new Error('Generated script has no valid segments after normalization');
+      }
 
       return segments;
     } catch (error) {
@@ -274,7 +394,7 @@ export class ScriptGeneratorService {
   }
 
   /**
-   * Generate script with retry logic
+   * Generate script with retry logic and fallback
    */
   async generateScriptWithRetry(
     input: PodcastGenerationInput,
@@ -291,7 +411,9 @@ export class ScriptGeneratorService {
 
         // Don't retry on client errors (4xx)
         if (error instanceof OpenAI.APIError && error.status && error.status >= 400 && error.status < 500) {
-          throw lastError;
+          // For 4xx errors, try fallback instead of throwing
+          console.warn('OpenAI client error, attempting fallback script generation');
+          break;
         }
 
         // Wait before retry (exponential backoff)
@@ -302,7 +424,140 @@ export class ScriptGeneratorService {
       }
     }
 
-    throw lastError || new Error('Script generation failed after retries');
+    // All retries failed - generate a fallback script
+    console.warn('All script generation attempts failed, using fallback script');
+    return this.generateFallbackScript(input);
+  }
+
+  /**
+   * Generate a fallback script when AI generation fails
+   * Creates a simple but functional podcast script from available content
+   */
+  private generateFallbackScript(input: PodcastGenerationInput): PodcastScript {
+    const { emails, calendar_events, user_id, date, preferences } = input;
+    const userName = user_id.split('@')[0];
+
+    // Determine time of day for greeting
+    const hour = new Date().getHours();
+    const greeting = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening';
+
+    const segments: ScriptSegment[] = [];
+
+    // Intro segment
+    segments.push({
+      speaker: 'host1',
+      text: `${greeting}! Welcome to your daily briefing for ${date}. I'm Alex, and I'm here with Jordan to catch you up on what's happening.`,
+      type: 'intro',
+    });
+
+    segments.push({
+      speaker: 'host2',
+      text: `Hey there, ${userName}! Let's dive into what you need to know today.`,
+      type: 'intro',
+    });
+
+    // Process emails if available
+    if (preferences.include_email && emails.length > 0) {
+      // Get top emails (prioritize unread)
+      const topEmails = emails
+        .sort((a, b) => {
+          if (a.is_unread && !b.is_unread) return -1;
+          if (!a.is_unread && b.is_unread) return 1;
+          if (a.is_important && !b.is_important) return -1;
+          if (!a.is_important && b.is_important) return 1;
+          return new Date(b.received_at).getTime() - new Date(a.received_at).getTime();
+        })
+        .slice(0, 5);
+
+      const unreadCount = emails.filter(e => e.is_unread).length;
+      const readCount = emails.length - unreadCount;
+
+      segments.push({
+        speaker: 'host1',
+        text: `Alright, let's look at your inbox. You've got ${emails.length} emails to catch up on - ${unreadCount} unread and ${readCount} that you've already seen.`,
+        type: 'email',
+      });
+
+      // Add email highlights
+      topEmails.forEach((email, index) => {
+        const speaker = index % 2 === 0 ? 'host2' : 'host1';
+        const unreadTag = email.is_unread ? '' : 'From your read emails, ';
+        const importantTag = email.is_important ? "and it looks important - " : '';
+
+        segments.push({
+          speaker: speaker as 'host1' | 'host2',
+          text: `${unreadTag}You have an email from ${email.from.split('@')[0]} about "${email.subject}". ${importantTag}${email.snippet.substring(0, 100)}...`,
+          type: 'email',
+        });
+      });
+
+      segments.push({
+        speaker: 'host1',
+        text: `That covers the key emails. Make sure to check the ${unreadCount > 0 ? 'unread ones' : 'important ones'} when you get a chance!`,
+        type: 'email',
+      });
+    } else {
+      segments.push({
+        speaker: 'host2',
+        text: `Your inbox is looking pretty clear today - no major emails to report.`,
+        type: 'email',
+      });
+    }
+
+    // Process calendar if available
+    if (preferences.include_calendar && calendar_events.length > 0) {
+      segments.push({
+        speaker: 'host2',
+        text: `Now let's look at your calendar. You've got ${calendar_events.length} events lined up.`,
+        type: 'calendar',
+      });
+
+      calendar_events.slice(0, 3).forEach((event, index) => {
+        const speaker = index % 2 === 0 ? 'host1' : 'host2';
+        segments.push({
+          speaker: speaker as 'host1' | 'host2',
+          text: `Coming up: ${event.title}${event.location ? ` at ${event.location}` : ''}.`,
+          type: 'calendar',
+        });
+      });
+    }
+
+    // Outro
+    segments.push({
+      speaker: 'host2',
+      text: `That's your briefing for today! Stay productive and have a great day ahead.`,
+      type: 'outro',
+    });
+
+    segments.push({
+      speaker: 'host1',
+      text: `Thanks for listening! We'll catch you next time. Take care!`,
+      type: 'outro',
+    });
+
+    // Calculate duration
+    const totalWords = segments.reduce((sum, segment) => {
+      return sum + segment.text.split(/\s+/).length;
+    }, 0);
+    const estimatedDuration = Math.ceil((totalWords / 150) * 60);
+
+    return {
+      segments: segments.map((segment, index) => ({
+        ...segment,
+        sequence: index + 1,
+      })),
+      generated_at: new Date().toISOString(),
+      total_segments: segments.length,
+      estimated_duration_seconds: estimatedDuration,
+      metadata: {
+        model: 'fallback',
+        temperature: 0,
+        total_words: totalWords,
+        email_count: emails.length,
+        calendar_event_count: calendar_events.length,
+        fallback: true,
+      },
+    };
   }
 
   /**

@@ -31,7 +31,7 @@ export interface StorageOptions {
 export class StorageService {
   private supabase: SupabaseClient | null = null;
   private readonly DEFAULT_BUCKET = 'podcasts';
-  private readonly DEFAULT_CACHE_CONTROL = '3600'; // 1 hour
+  private readonly DEFAULT_CACHE_CONTROL = '31536000'; // 1 year - audio files don't change
   private readonly DEFAULT_CONTENT_TYPE = 'audio/mpeg';
   private bucketInitialized = false;
   private initPromise: Promise<void> | null = null;

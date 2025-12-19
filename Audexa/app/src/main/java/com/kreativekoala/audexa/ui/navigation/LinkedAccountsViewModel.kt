@@ -10,7 +10,10 @@ import com.kreativekoala.audexa.data.repository.AuthRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.suspendCancellableCoroutine
 import javax.inject.Inject
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
 
 data class LinkedAccountsUiState(
     val hasLinkedGoogle: Boolean = false,
@@ -21,7 +24,8 @@ data class LinkedAccountsUiState(
     val isLinkingMicrosoft: Boolean = false,
     val showComingSoonDialog: Boolean = false,
     val error: String? = null,
-    val successMessage: String? = null
+    val successMessage: String? = null,
+    val gmailLinkIntent: Intent? = null  // Intent ready to launch
 )
 
 @HiltViewModel
@@ -60,14 +64,51 @@ class LinkedAccountsViewModel @Inject constructor(
         }
     }
 
-    fun getGmailLinkIntent(): Intent {
-        // Sign out first to ensure fresh consent screen with Gmail permissions
-        authRepository.googleSignInClientWithGmail.signOut()
-        return authRepository.googleSignInClientWithGmail.signInIntent
+    /**
+     * Prepare Gmail linking - revokes existing access and prepares the intent
+     * This must be called BEFORE launching the sign-in flow
+     */
+    fun prepareGmailLinking() {
+        _uiState.value = _uiState.value.copy(
+            isLinkingGoogle = true,
+            error = null,
+            successMessage = null,
+            gmailLinkIntent = null
+        )
+
+        viewModelScope.launch {
+            try {
+                // Revoke access completely to force fresh consent screen with Gmail permissions
+                // signOut() alone doesn't clear the granted scopes, revokeAccess() does
+                // We must await this to complete before showing sign-in
+                suspendCancellableCoroutine<Unit> { continuation ->
+                    authRepository.googleSignInClientWithGmail.revokeAccess()
+                        .addOnSuccessListener {
+                            Log.d(TAG, "Revoked previous Google access")
+                            continuation.resume(Unit)
+                        }
+                        .addOnFailureListener { e ->
+                            // Ignore errors - might not have been signed in before
+                            Log.d(TAG, "Revoke access failed (expected if not signed in): ${e.message}")
+                            continuation.resume(Unit)
+                        }
+                }
+            } catch (e: Exception) {
+                Log.d(TAG, "Revoke access completed with exception: ${e.message}")
+            }
+
+            // Now set the intent - screen will launch it
+            _uiState.value = _uiState.value.copy(
+                gmailLinkIntent = authRepository.googleSignInClientWithGmail.signInIntent
+            )
+        }
     }
 
-    fun startGoogleLinking() {
-        _uiState.value = _uiState.value.copy(isLinkingGoogle = true, error = null, successMessage = null)
+    /**
+     * Clear the intent after it's been launched
+     */
+    fun clearGmailLinkIntent() {
+        _uiState.value = _uiState.value.copy(gmailLinkIntent = null)
     }
 
     fun handleGmailLinkResult(account: GoogleSignInAccount) {

@@ -30,7 +30,14 @@ interface ApiService {
     
     @POST("podcast/generate")
     suspend fun generatePodcast(@Body request: GeneratePodcastRequest): GeneratePodcastResponse
-    
+
+    // Async generation endpoints (recommended for production)
+    @POST("podcast/generate-async")
+    suspend fun startAsyncGeneration(@Body request: GeneratePodcastRequest): AsyncGenerateResponse
+
+    @GET("podcast/job/{jobId}")
+    suspend fun getJobStatus(@Path("jobId") jobId: String): JobStatusResponse
+
     @POST("podcast/estimate")
     suspend fun estimateCost(@Body request: CostEstimateRequest): CostEstimateResponse
     
@@ -271,4 +278,34 @@ data class DiscoverResponse(
 data class ForYouResponse(
     val success: Boolean,
     val episodes: List<Episode>
+)
+
+// Async generation models
+@Serializable
+data class AsyncGenerateResponse(
+    val success: Boolean,
+    val jobId: String,
+    val status: String,
+    val message: String
+)
+
+@Serializable
+data class JobStatusResponse(
+    val success: Boolean,
+    val jobId: String,
+    val status: String,  // "queued", "processing", "completed", "failed"
+    val progress: Int,
+    val message: String,
+    val createdAt: String,
+    val updatedAt: String,
+    val episode: EpisodeInfo? = null,
+    val error: JobError? = null
+)
+
+@Serializable
+data class JobError(
+    val code: String,
+    val message: String,
+    val action: String,
+    val retryable: Boolean
 )

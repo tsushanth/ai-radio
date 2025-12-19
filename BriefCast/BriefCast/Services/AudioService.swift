@@ -30,6 +30,15 @@ class AudioService {
     var currentEpisode: Episode?
     var playbackRate: Float = 1.0
     var isBuffering: Bool = false
+    var isDownloading: Bool = false
+    var downloadProgress: Double = 0
+
+    // Queue for auto-play next episode
+    var queue: [Episode] = []
+    var autoPlayEnabled: Bool = true
+
+    // Download manager for local caching
+    private let downloadManager = AudioDownloadManager.shared
 
     // MARK: - Private Properties
 
@@ -55,12 +64,12 @@ class AudioService {
         print("🎵 Episode audioUrl: \(episode.audioUrl ?? "nil")")
 
         guard let urlString = episode.audioUrl,
-              let url = URL(string: urlString) else {
+              let remoteUrl = URL(string: urlString) else {
             print("❌ AudioService: Invalid audio URL for episode \(episode.id)")
             return
         }
 
-        print("🎵 Parsed URL: \(url)")
+        print("🎵 Parsed URL: \(remoteUrl)")
 
         // If same episode, just resume
         if currentEpisode?.id == episode.id, player != nil {
@@ -69,13 +78,54 @@ class AudioService {
             return
         }
 
-        // Load new episode
+        // Load new episode - download first, then play locally
         print("🎵 Loading new episode...")
         currentEpisode = episode
-        loadAudio(from: url)
 
-        // Update Now Playing info
-        updateNowPlayingInfo()
+        // Start download and playback task
+        Task {
+            await downloadAndPlay(episode: episode, remoteUrl: remoteUrl)
+        }
+    }
+
+    /// Download audio file and play from local storage
+    private func downloadAndPlay(episode: Episode, remoteUrl: URL) async {
+        isDownloading = true
+        isBuffering = true
+        downloadProgress = 0
+
+        do {
+            // Download to local cache (or use existing cached file)
+            let localUrl = try await downloadManager.getLocalAudioURL(
+                for: remoteUrl,
+                episodeId: episode.id
+            ) { [weak self] progress in
+                Task { @MainActor in
+                    self?.downloadProgress = progress
+                }
+            }
+
+            print("🎵 AudioService: Playing from local file: \(localUrl.lastPathComponent)")
+
+            isDownloading = false
+            downloadProgress = 1.0
+
+            // Play from local file
+            loadAudio(from: localUrl)
+
+            // Update Now Playing info
+            updateNowPlayingInfo()
+
+        } catch {
+            print("❌ AudioService: Download failed: \(error.localizedDescription)")
+            isDownloading = false
+            isBuffering = false
+
+            // Fallback to streaming if download fails
+            print("🎵 AudioService: Falling back to streaming...")
+            loadAudio(from: remoteUrl)
+            updateNowPlayingInfo()
+        }
     }
 
     /// Resume playback
@@ -157,6 +207,109 @@ class AudioService {
         clearNowPlayingInfo()
     }
 
+    // MARK: - Queue Management
+
+    /// Set the playback queue (replacing any existing queue)
+    func setQueue(_ episodes: [Episode]) {
+        queue = episodes.filter { $0.id != currentEpisode?.id && $0.isAvailable }
+        print("🎵 Queue set with \(queue.count) episodes")
+    }
+
+    /// Add an episode to the end of the queue
+    func addToQueue(_ episode: Episode) {
+        guard episode.isAvailable, !queue.contains(where: { $0.id == episode.id }) else { return }
+        queue.append(episode)
+        print("🎵 Added to queue: \(episode.title). Queue size: \(queue.count)")
+    }
+
+    /// Add multiple episodes to the queue
+    func addToQueue(_ episodes: [Episode]) {
+        let newEpisodes = episodes.filter { ep in
+            ep.isAvailable &&
+            ep.id != currentEpisode?.id &&
+            !queue.contains(where: { $0.id == ep.id })
+        }
+        queue.append(contentsOf: newEpisodes)
+        print("🎵 Added \(newEpisodes.count) episodes to queue. Queue size: \(queue.count)")
+    }
+
+    /// Clear the queue
+    func clearQueue() {
+        queue.removeAll()
+        print("🎵 Queue cleared")
+    }
+
+    /// Play the next episode in the queue
+    func playNext() {
+        guard !queue.isEmpty else {
+            print("🎵 Queue is empty, nothing to play next")
+            return
+        }
+
+        let nextEpisode = queue.removeFirst()
+        print("🎵 Playing next in queue: \(nextEpisode.title)")
+        play(episode: nextEpisode)
+    }
+
+    /// Skip to next episode (manual skip)
+    func skipToNext() {
+        if !queue.isEmpty {
+            playNext()
+        } else {
+            print("🎵 No next episode to skip to")
+        }
+    }
+
+    // MARK: - Download & Cache Management
+
+    /// Preload an episode's audio for faster playback later
+    func preloadEpisode(_ episode: Episode) {
+        guard let urlString = episode.audioUrl,
+              let remoteUrl = URL(string: urlString) else {
+            return
+        }
+
+        Task {
+            do {
+                _ = try await downloadManager.getLocalAudioURL(
+                    for: remoteUrl,
+                    episodeId: episode.id,
+                    onProgress: nil
+                )
+                print("🎵 AudioService: Preloaded episode \(episode.id)")
+            } catch {
+                print("⚠️ AudioService: Failed to preload episode \(episode.id): \(error.localizedDescription)")
+            }
+        }
+    }
+
+    /// Preload multiple episodes (e.g., queue items)
+    func preloadEpisodes(_ episodes: [Episode]) {
+        for episode in episodes {
+            preloadEpisode(episode)
+        }
+    }
+
+    /// Check if an episode's audio is already downloaded
+    func isEpisodeDownloaded(_ episode: Episode) async -> Bool {
+        return await downloadManager.isDownloaded(episodeId: episode.id)
+    }
+
+    /// Delete cached audio for an episode
+    func deleteCachedAudio(for episode: Episode) async {
+        await downloadManager.deleteCachedAudio(for: episode.id)
+    }
+
+    /// Clear all cached audio files
+    func clearAudioCache() async {
+        await downloadManager.clearAllCache()
+    }
+
+    /// Get formatted cache size string
+    func getAudioCacheSize() async -> String {
+        return await downloadManager.formattedCacheSize()
+    }
+
     // MARK: - Private Setup Methods
 
     private func setupAudioSession() {
@@ -219,6 +372,25 @@ class AudioService {
             }
             return .success
         }
+
+        // Next track command (for auto-play queue)
+        commandCenter.nextTrackCommand.addTarget { [weak self] _ in
+            Task { @MainActor in
+                guard let self = self, !self.queue.isEmpty else {
+                    return
+                }
+                self.skipToNext()
+            }
+            return .success
+        }
+
+        // Previous track command (restart current episode)
+        commandCenter.previousTrackCommand.addTarget { [weak self] _ in
+            Task { @MainActor in
+                self?.seek(to: 0)
+            }
+            return .success
+        }
     }
 
     private func setupNotifications() {
@@ -230,6 +402,47 @@ class AudioService {
             Task { @MainActor in
                 self?.handlePlaybackEnded()
             }
+        }
+
+        // Handle audio interruptions (phone calls, Siri, etc.)
+        NotificationCenter.default.addObserver(
+            forName: AVAudioSession.interruptionNotification,
+            object: audioSession,
+            queue: .main
+        ) { [weak self] notification in
+            Task { @MainActor in
+                self?.handleInterruption(notification)
+            }
+        }
+    }
+
+    private func handleInterruption(_ notification: Notification) {
+        guard let userInfo = notification.userInfo,
+              let typeValue = userInfo[AVAudioSessionInterruptionTypeKey] as? UInt,
+              let type = AVAudioSession.InterruptionType(rawValue: typeValue) else {
+            return
+        }
+
+        switch type {
+        case .began:
+            // Interruption began (phone call, Siri, etc.) - pause playback
+            print("🎵 Audio interruption began - pausing playback")
+            pause()
+
+        case .ended:
+            // Interruption ended - check if we should resume
+            if let optionsValue = userInfo[AVAudioSessionInterruptionOptionKey] as? UInt {
+                let options = AVAudioSession.InterruptionOptions(rawValue: optionsValue)
+                if options.contains(.shouldResume) {
+                    print("🎵 Audio interruption ended - resuming playback")
+                    resume()
+                } else {
+                    print("🎵 Audio interruption ended - not resuming (shouldResume not set)")
+                }
+            }
+
+        @unknown default:
+            break
         }
     }
 
@@ -340,6 +553,19 @@ class AudioService {
         )
 
         print("🎵 Playback ended for episode: \(endedEpisode?.title ?? "unknown")")
+        print("🎵 Auto-play enabled: \(autoPlayEnabled), Queue count: \(queue.count)")
+
+        // Auto-play next episode if enabled and queue has items
+        if autoPlayEnabled && !queue.isEmpty {
+            print("🎵 Auto-playing next episode: \(queue.first?.title ?? "unknown")")
+            // Small delay to allow UI to update
+            Task { @MainActor in
+                try? await Task.sleep(nanoseconds: 500_000_000) // 0.5 second delay
+                self.playNext()
+            }
+        } else {
+            print("🎵 Not auto-playing. autoPlayEnabled=\(autoPlayEnabled), queue.isEmpty=\(queue.isEmpty)")
+        }
     }
 
     private func cleanupPlayer() {

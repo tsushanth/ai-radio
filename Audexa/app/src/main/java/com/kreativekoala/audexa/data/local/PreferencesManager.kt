@@ -6,6 +6,7 @@ import androidx.datastore.preferences.core.*
 import androidx.datastore.preferences.preferencesDataStore
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -33,7 +34,24 @@ class PreferencesManager @Inject constructor(
         val HIDDEN_TOPICS = stringSetPreferencesKey("hidden_topics")
         val PREFERRED_LANGUAGE = stringPreferencesKey("preferred_language")
         val SELECTED_TOPICS = stringSetPreferencesKey("selected_topics")
+        val APP_THEME = stringPreferencesKey("app_theme")
+
+        // Cached episode for today (to avoid regeneration)
+        val CACHED_EPISODE_ID = stringPreferencesKey("cached_episode_id")
+        val CACHED_EPISODE_AUDIO_URL = stringPreferencesKey("cached_episode_audio_url")
+        val CACHED_EPISODE_DURATION = intPreferencesKey("cached_episode_duration")
+        val CACHED_EPISODE_DATE = stringPreferencesKey("cached_episode_date")
     }
+
+    /**
+     * Cached episode data for persistence
+     */
+    data class CachedEpisode(
+        val id: String,
+        val audioUrl: String,
+        val durationSeconds: Int,
+        val date: String  // YYYY-MM-DD format
+    )
 
     // Auth state
     val isLoggedIn: Flow<Boolean> = dataStore.data.map { it[Keys.IS_LOGGED_IN] ?: false }
@@ -64,8 +82,13 @@ class PreferencesManager @Inject constructor(
     }
 
     // Language
-    val preferredLanguage: Flow<String> = dataStore.data.map { 
-        it[Keys.PREFERRED_LANGUAGE] ?: "en" 
+    val preferredLanguage: Flow<String> = dataStore.data.map {
+        it[Keys.PREFERRED_LANGUAGE] ?: "en"
+    }
+
+    // Theme (system, dark, light)
+    val appTheme: Flow<String> = dataStore.data.map {
+        it[Keys.APP_THEME] ?: "system"
     }
 
     // Setters
@@ -127,7 +150,52 @@ class PreferencesManager @Inject constructor(
         }
     }
 
+    suspend fun setAppTheme(theme: String) {
+        dataStore.edit { prefs ->
+            prefs[Keys.APP_THEME] = theme
+        }
+    }
+
     suspend fun clearAll() {
         dataStore.edit { it.clear() }
+    }
+
+    // Episode caching for today (to avoid regeneration)
+    suspend fun getCachedEpisode(): CachedEpisode? {
+        return dataStore.data.map { preferences ->
+            val id = preferences[Keys.CACHED_EPISODE_ID]
+            val audioUrl = preferences[Keys.CACHED_EPISODE_AUDIO_URL]
+            val duration = preferences[Keys.CACHED_EPISODE_DURATION]
+            val date = preferences[Keys.CACHED_EPISODE_DATE]
+
+            if (id != null && audioUrl != null && duration != null && date != null) {
+                CachedEpisode(id, audioUrl, duration, date)
+            } else {
+                null
+            }
+        }.first()
+    }
+
+    suspend fun setCachedEpisode(
+        id: String,
+        audioUrl: String,
+        durationSeconds: Int,
+        date: String
+    ) {
+        dataStore.edit { prefs ->
+            prefs[Keys.CACHED_EPISODE_ID] = id
+            prefs[Keys.CACHED_EPISODE_AUDIO_URL] = audioUrl
+            prefs[Keys.CACHED_EPISODE_DURATION] = durationSeconds
+            prefs[Keys.CACHED_EPISODE_DATE] = date
+        }
+    }
+
+    suspend fun clearCachedEpisode() {
+        dataStore.edit { prefs ->
+            prefs.remove(Keys.CACHED_EPISODE_ID)
+            prefs.remove(Keys.CACHED_EPISODE_AUDIO_URL)
+            prefs.remove(Keys.CACHED_EPISODE_DURATION)
+            prefs.remove(Keys.CACHED_EPISODE_DATE)
+        }
     }
 }

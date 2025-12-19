@@ -6,6 +6,7 @@ import com.kreativekoala.audexa.data.local.PreferencesManager
 import com.kreativekoala.audexa.data.model.SupportedLanguage
 import com.kreativekoala.audexa.data.repository.AuthRepository
 import com.kreativekoala.audexa.service.AudioManager
+import com.kreativekoala.audexa.ui.theme.AppTheme
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -15,6 +16,7 @@ data class ProfileUiState(
     val userName: String = "",
     val userEmail: String = "",
     val hasLinkedGoogle: Boolean = false,
+    val appTheme: String = "System",
     val preferredLanguage: String = "English",
     val hiddenTopicsCount: Int = 0,
     val isSignedOut: Boolean = false,
@@ -43,12 +45,22 @@ class ProfileViewModel @Inject constructor(
                 preferencesManager.userEmail,
                 preferencesManager.hasLinkedGoogle,
                 preferencesManager.preferredLanguage,
-                preferencesManager.hiddenTopics
-            ) { name, email, hasGoogle, language, hidden ->
+                preferencesManager.hiddenTopics,
+                preferencesManager.appTheme
+            ) { values ->
+                val name = values[0] as? String
+                val email = values[1] as? String
+                val hasGoogle = values[2] as? Boolean ?: false
+                val language = values[3] as? String ?: "en"
+                @Suppress("UNCHECKED_CAST")
+                val hidden = values[4] as? Set<String> ?: emptySet()
+                val theme = values[5] as? String ?: "system"
+
                 ProfileUiState(
                     userName = name ?: "User",
                     userEmail = email ?: "",
                     hasLinkedGoogle = hasGoogle,
+                    appTheme = AppTheme.fromValue(theme).displayName,
                     preferredLanguage = SupportedLanguage.fromCode(language).displayName,
                     hiddenTopicsCount = hidden.size
                 )

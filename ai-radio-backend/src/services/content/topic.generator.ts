@@ -169,7 +169,13 @@ export class TopicPodcastGenerator {
     episode.stories = content.stories;
 
     if (content.stories.length === 0) {
-      throw new Error('No content found for this topic');
+      // Provide more helpful error message based on source failures
+      const failedSources = content.totalSources - content.successfulSources;
+      if (failedSources === content.totalSources) {
+        throw new Error(`All ${content.totalSources} content sources are temporarily unavailable. Please try again later.`);
+      } else {
+        throw new Error('No content found for this topic. Please try again later.');
+      }
     }
 
     // Step 2: Generate script (with language)

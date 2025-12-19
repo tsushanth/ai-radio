@@ -112,7 +112,18 @@ class AuthRepository @Inject constructor(
                 GoogleAuthUtil.getToken(context, googleAccount, scope)
             } catch (e: Exception) {
                 Log.e(TAG, "Failed to get access token: ${e.message}")
-                throw Exception("Failed to get Gmail access token: ${e.message}")
+                // Provide user-friendly error messages
+                val userMessage = when {
+                    e.message?.contains("NeedRemoteConsent", ignoreCase = true) == true ||
+                    e.message?.contains("remote consent", ignoreCase = true) == true ->
+                        "Gmail access was not granted. Please tap Connect again and make sure to allow Gmail access when prompted."
+                    e.message?.contains("UserRecoverableAuthException", ignoreCase = true) == true ->
+                        "Additional permissions required. Please try again."
+                    e.message?.contains("network", ignoreCase = true) == true ->
+                        "Network error. Please check your connection and try again."
+                    else -> "Failed to connect Gmail. Please try again."
+                }
+                throw Exception(userMessage)
             }
         }
 
@@ -140,7 +151,43 @@ class AuthRepository @Inject constructor(
             provider = "google"
         )
 
+        // Also update main user email if it was empty (guest user linking Gmail)
+        val currentEmail = preferencesManager.userEmail.first()
+        if (currentEmail.isNullOrEmpty()) {
+            preferencesManager.setLoggedIn(
+                isLoggedIn = true,
+                userId = email,
+                email = email,
+                name = null  // Keep existing name
+            )
+            Log.d(TAG, "Updated guest user email to: $email")
+        }
+
         Log.d(TAG, "Successfully linked Gmail account")
+    }
+
+    /**
+     * Continue without signing in - creates a guest session
+     * User can explore topic podcasts but won't have Daily Brief until they link email
+     */
+    suspend fun continueAsGuest(): Result<User> = runCatching {
+        val guestId = "guest_${System.currentTimeMillis()}"
+
+        Log.d(TAG, "Continuing as guest: $guestId")
+
+        // Save guest session to preferences
+        preferencesManager.setLoggedIn(
+            isLoggedIn = true,
+            userId = guestId,
+            email = "", // No email for guest
+            name = "Guest"
+        )
+
+        User(
+            id = guestId,
+            email = "",
+            name = "Guest"
+        )
     }
 
     suspend fun signOut() {

@@ -1,15 +1,21 @@
 package com.kreativekoala.audexa.ui.home
 
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.kreativekoala.audexa.data.local.PreferencesManager
 import com.kreativekoala.audexa.data.model.*
+import com.kreativekoala.audexa.data.remote.JobError
+import com.kreativekoala.audexa.data.repository.AsyncGenerationResult
 import com.kreativekoala.audexa.data.repository.PodcastRepository
 import com.kreativekoala.audexa.data.repository.TopicRepository
 import com.kreativekoala.audexa.service.AudioManager
 import com.kreativekoala.audexa.ui.components.DailyBriefState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
@@ -18,6 +24,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
+    @ApplicationContext private val context: Context,
     private val podcastRepository: PodcastRepository,
     private val topicRepository: TopicRepository,
     private val preferencesManager: PreferencesManager,
@@ -44,9 +51,6 @@ class HomeViewModel @Inject constructor(
     private val _topics = MutableStateFlow<List<Topic>>(emptyList())
     val topics = _topics.asStateFlow()
 
-    private val _forYouEpisodes = MutableStateFlow<List<Episode>>(emptyList())
-    val forYouEpisodes = _forYouEpisodes.asStateFlow()
-
     private val _keepListening = MutableStateFlow<List<Episode>>(emptyList())
     val keepListening = _keepListening.asStateFlow()
 
@@ -58,6 +62,10 @@ class HomeViewModel @Inject constructor(
 
     private val _error = MutableStateFlow<String?>(null)
     val error = _error.asStateFlow()
+
+    // Whether we have a cached episode for today (enables regenerate button)
+    private val _hasCachedEpisodeForToday = MutableStateFlow(false)
+    val hasCachedEpisodeForToday = _hasCachedEpisodeForToday.asStateFlow()
 
     // Bookmarked and hidden topics from preferences
     val bookmarkedTopicIds = preferencesManager.bookmarkedTopics
@@ -91,6 +99,8 @@ class HomeViewModel @Inject constructor(
 
     // Store the Daily Brief audio URL when generated
     private var dailyBriefAudioUrl: String? = null
+    private var dailyBriefEpisodeId: String? = null
+    private var dailyBriefDurationSeconds: Int = 0
 
     val dailyBriefDate: String
         get() {
@@ -98,11 +108,118 @@ class HomeViewModel @Inject constructor(
             return dateFormat.format(Date())
         }
 
+    private val todayDateString: String
+        get() {
+            val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+            return dateFormat.format(Date())
+        }
+
     init {
+        // Load cached topics immediately for instant UI display
+        loadCachedTopics()
         loadUserInfo()
         checkLinkedAccounts()
+        loadCachedEpisode()
         loadData()
         observeAudioState()
+    }
+
+    /**
+     * Load cached topics from repository for instant UI display
+     */
+    private fun loadCachedTopics() {
+        val cached = topicRepository.getCachedTopics()
+        if (cached != null && cached.isNotEmpty()) {
+            _topics.value = cached
+            updateDiscoverCategories(cached)
+            Log.d(TAG, "📦 Loaded ${cached.size} cached topics for instant display")
+        }
+    }
+
+    /**
+     * Update discover categories from topics
+     */
+    private fun updateDiscoverCategories(topics: List<Topic>) {
+        val grouped = topics.groupBy { it.category }
+        _discoverCategories.value = grouped.map { (category, categoryTopics) ->
+            DiscoverCategory(
+                title = category.replaceFirstChar { it.uppercase() },
+                shows = categoryTopics.map { topic ->
+                    Show(
+                        id = topic.id,
+                        title = topic.name,
+                        description = topic.description,
+                        category = topic.category,
+                        imageColor = topic.color,
+                        episodeCount = topic.targetDurationMinutes
+                    )
+                }
+            )
+        }.sortedBy { it.title }
+    }
+
+    /**
+     * Load cached episode from preferences if available for today
+     */
+    private fun loadCachedEpisode() {
+        viewModelScope.launch {
+            val cached = preferencesManager.getCachedEpisode()
+            if (cached != null && cached.date == todayDateString) {
+                // We have a cached episode for today
+                dailyBriefAudioUrl = cached.audioUrl
+                dailyBriefEpisodeId = cached.id
+                dailyBriefDurationSeconds = cached.durationSeconds
+                _hasCachedEpisodeForToday.value = true
+
+                // Check if currently linked
+                val hasLinked = preferencesManager.hasLinkedGoogle.first()
+                if (hasLinked) {
+                    _dailyBriefState.value = DailyBriefState.Completed(cached.audioUrl)
+                }
+                Log.d(TAG, "Loaded cached episode for today: ${cached.id}")
+            }
+        }
+    }
+
+    /**
+     * Cache the episode for today to avoid regeneration
+     */
+    private fun cacheEpisode(id: String, audioUrl: String, durationSeconds: Int) {
+        viewModelScope.launch {
+            preferencesManager.setCachedEpisode(
+                id = id,
+                audioUrl = audioUrl,
+                durationSeconds = durationSeconds,
+                date = todayDateString
+            )
+            _hasCachedEpisodeForToday.value = true
+            Log.d(TAG, "Cached episode for $todayDateString")
+        }
+    }
+
+    /**
+     * Clear cached episode (for regeneration)
+     */
+    fun clearCachedEpisode() {
+        viewModelScope.launch {
+            preferencesManager.clearCachedEpisode()
+            _hasCachedEpisodeForToday.value = false
+            dailyBriefAudioUrl = null
+            dailyBriefEpisodeId = null
+            dailyBriefDurationSeconds = 0
+
+            val hasLinked = preferencesManager.hasLinkedGoogle.first()
+            _dailyBriefState.value = if (hasLinked) DailyBriefState.Ready else DailyBriefState.NotLinked
+            Log.d(TAG, "Cleared cached episode")
+        }
+    }
+
+    /**
+     * Force regenerate today's episode
+     */
+    fun regenerateDailyBrief() {
+        clearCachedEpisode()
+        playDailyBrief()
     }
 
     /**
@@ -151,10 +268,22 @@ class HomeViewModel @Inject constructor(
     private fun checkLinkedAccounts() {
         viewModelScope.launch {
             preferencesManager.hasLinkedGoogle.collect { hasLinked ->
-                _dailyBriefState.value = if (hasLinked) {
-                    DailyBriefState.Ready
-                } else {
-                    DailyBriefState.NotLinked
+                // Only update state if not currently in an active state (generating, playing, etc.)
+                // This preserves progress when navigating away and back
+                val currentState = _dailyBriefState.value
+                when (currentState) {
+                    is DailyBriefState.Generating,
+                    is DailyBriefState.Playing,
+                    is DailyBriefState.Completed -> {
+                        // Keep current state - don't reset during active operations
+                    }
+                    else -> {
+                        _dailyBriefState.value = if (hasLinked) {
+                            DailyBriefState.Ready
+                        } else {
+                            DailyBriefState.NotLinked
+                        }
+                    }
                 }
             }
         }
@@ -165,19 +294,32 @@ class HomeViewModel @Inject constructor(
             _isLoading.value = true
             _error.value = null
 
-            // Load topics
+            // Fetch topics from server (will update cache automatically)
+            // Topics are already loaded from cache in init, so this updates in background
             topicRepository.getTopics()
                 .onSuccess { response ->
-                    val topics = response.data?.topics ?: emptyList()
-                    _topics.value = topics
-                    Log.d(TAG, "Loaded ${topics.size} topics")
+                    val serverTopics = response.data?.topics ?: emptyList()
+                    val currentTopicIds = _topics.value.map { it.id }.toSet()
+                    val newTopicIds = serverTopics.map { it.id }.toSet()
+
+                    // Only update UI if topics changed (server takes precedence)
+                    if (newTopicIds != currentTopicIds || _topics.value.isEmpty()) {
+                        _topics.value = serverTopics
+                        updateDiscoverCategories(serverTopics)
+                        Log.d(TAG, "✅ Updated topics from server: ${serverTopics.size} topics")
+                    } else {
+                        Log.d(TAG, "✅ Topics unchanged from server")
+                    }
                 }
                 .onFailure { e ->
-                    Log.e(TAG, "Failed to load topics: ${e.message}")
-                    _error.value = e.message
+                    Log.e(TAG, "❌ Failed to load topics from server: ${e.message}")
+                    // If we already have cached topics, we're fine
+                    if (_topics.value.isEmpty()) {
+                        _error.value = e.message
+                    }
                 }
 
-            // Load episodes
+            // Load episodes for "Keep Listening" section
             val email = _userEmail.value
             if (email.isNotEmpty()) {
                 podcastRepository.getEpisodes(email)
@@ -187,24 +329,10 @@ class HomeViewModel @Inject constructor(
                     .onFailure { e ->
                         Log.e(TAG, "Failed to load episodes: ${e.message}")
                     }
-
-                podcastRepository.getForYou(email)
-                    .onSuccess { response ->
-                        _forYouEpisodes.value = response.episodes
-                    }
-                    .onFailure { e ->
-                        Log.e(TAG, "Failed to load for you: ${e.message}")
-                    }
             }
 
-            // Load discover categories
-            podcastRepository.getDiscover()
-                .onSuccess { response ->
-                    _discoverCategories.value = response.categories
-                }
-                .onFailure { e ->
-                    Log.e(TAG, "Failed to load discover: ${e.message}")
-                }
+            // Note: Discover categories are generated from topics in updateDiscoverCategories()
+            // This ensures show IDs match topic IDs for proper functionality (bookmarks, hide, etc.)
 
             _isLoading.value = false
         }
@@ -214,11 +342,41 @@ class HomeViewModel @Inject constructor(
         _selectedTab.value = index
     }
 
+    /**
+     * Check if device has active internet connection
+     */
+    private fun isNetworkAvailable(): Boolean {
+        val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val network = connectivityManager.activeNetwork ?: return false
+        val capabilities = connectivityManager.getNetworkCapabilities(network) ?: return false
+        return capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) &&
+               capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED)
+    }
+
     fun playDailyBrief() {
         viewModelScope.launch {
             val email = _userEmail.value
             if (email.isEmpty()) {
                 _dailyBriefState.value = DailyBriefState.NotLinked
+                return@launch
+            }
+
+            // If we have a cached episode, just play it
+            if (_hasCachedEpisodeForToday.value && dailyBriefAudioUrl != null) {
+                val audioUrl = dailyBriefAudioUrl!!
+                audioManager.play(
+                    id = dailyBriefEpisodeId ?: "daily-brief",
+                    title = "Daily Brief - $dailyBriefDate",
+                    description = "Your personalized morning briefing",
+                    audioUrl = audioUrl
+                )
+                _dailyBriefState.value = DailyBriefState.Playing(audioUrl)
+                return@launch
+            }
+
+            // Check network connectivity before attempting generation
+            if (!isNetworkAvailable()) {
+                _dailyBriefState.value = DailyBriefState.Error("No internet connection. Please check your network and try again.")
                 return@launch
             }
 
@@ -239,25 +397,79 @@ class HomeViewModel @Inject constructor(
                 language = language
             )
 
-            podcastRepository.generatePodcast(email, preferences)
-                .onSuccess { response ->
-                    // Store the audio URL for state synchronization
-                    dailyBriefAudioUrl = response.episode.audioUrl
-                    _dailyBriefState.value = DailyBriefState.Completed(response.episode.audioUrl)
+            // Use async generation with polling for real-time progress
+            try {
+                podcastRepository.generatePodcastAsync(email, preferences)
+                    .collect { (progress, result) ->
+                        // Update progress
+                        _dailyBriefState.value = DailyBriefState.Generating(progress.progress)
+                        Log.d(TAG, "Progress: ${progress.progress}% - ${progress.message}")
 
-                    // Auto-play
-                    audioManager.play(
-                        id = response.episode.id,
-                        title = "Daily Brief - $dailyBriefDate",
-                        description = "Your personalized morning briefing",
-                        audioUrl = response.episode.audioUrl
+                        // Handle result if available
+                        when (result) {
+                            is AsyncGenerationResult.Success -> {
+                                val episode = result.response.episode
+                                dailyBriefAudioUrl = episode.audioUrl
+                                dailyBriefEpisodeId = episode.id
+                                dailyBriefDurationSeconds = episode.durationSeconds
+
+                                // Cache for today
+                                cacheEpisode(episode.id, episode.audioUrl, episode.durationSeconds)
+
+                                _dailyBriefState.value = DailyBriefState.Completed(episode.audioUrl)
+
+                                // Auto-play
+                                audioManager.play(
+                                    id = episode.id,
+                                    title = "Daily Brief - $dailyBriefDate",
+                                    description = "Your personalized morning briefing",
+                                    audioUrl = episode.audioUrl
+                                )
+                                _dailyBriefState.value = DailyBriefState.Playing(episode.audioUrl)
+                            }
+
+                            is AsyncGenerationResult.Failed -> {
+                                handleJobError(result.error)
+                            }
+
+                            is AsyncGenerationResult.Error -> {
+                                _dailyBriefState.value = DailyBriefState.Error(result.message)
+                            }
+
+                            null -> {
+                                // Just a progress update, no final result yet
+                            }
+                        }
+                    }
+            } catch (e: Exception) {
+                Log.e(TAG, "Failed to generate podcast: ${e.message}")
+                _dailyBriefState.value = DailyBriefState.Error(e.message ?: "Generation failed")
+            }
+        }
+    }
+
+    /**
+     * Handle structured error from job failure
+     */
+    private fun handleJobError(error: JobError) {
+        Log.e(TAG, "Job error: ${error.code} - ${error.message}")
+
+        when (error.action) {
+            "RELINK_GMAIL", "RELINK_OUTLOOK" -> {
+                // Token expired - need to relink
+                // Clear local linked status so UI shows account needs reconnection
+                viewModelScope.launch {
+                    preferencesManager.setLinkedAccount(
+                        hasLinked = false,
+                        email = null,
+                        provider = null
                     )
-                    _dailyBriefState.value = DailyBriefState.Playing(response.episode.audioUrl)
                 }
-                .onFailure { e ->
-                    Log.e(TAG, "Failed to generate podcast: ${e.message}")
-                    _dailyBriefState.value = DailyBriefState.Error(e.message ?: "Generation failed")
-                }
+                _dailyBriefState.value = DailyBriefState.NeedsRelink(error.message)
+            }
+            else -> {
+                _dailyBriefState.value = DailyBriefState.Error(error.message)
+            }
         }
     }
 

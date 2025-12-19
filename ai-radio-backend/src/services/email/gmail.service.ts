@@ -221,6 +221,9 @@ export class GmailService {
       // Parse received date
       const receivedAt = date ? new Date(date).toISOString() : new Date().toISOString();
 
+      // Check if email is unread
+      const isUnread = labels.includes('UNREAD');
+
       return {
         id: message.id,
         from: this.parseEmailAddress(from),
@@ -229,6 +232,7 @@ export class GmailService {
         body_preview: bodyPreview,
         received_at: receivedAt,
         is_important: isImportant,
+        is_unread: isUnread,
         labels,
         source: 'gmail',
       };

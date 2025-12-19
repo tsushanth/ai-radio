@@ -30,6 +30,7 @@ fun ProfileScreen(
     onNavigateToLinkedAccounts: () -> Unit,
     onNavigateToHiddenTopics: () -> Unit,
     onNavigateToLanguageSettings: () -> Unit,
+    onNavigateToThemeSettings: () -> Unit,
     onSignOut: () -> Unit,
     viewModel: ProfileViewModel = hiltViewModel()
 ) {
@@ -50,7 +51,7 @@ fun ProfileScreen(
                 title = {
                     Text(
                         "Profile",
-                        color = PrimaryText,
+                        color = MaterialTheme.colorScheme.onBackground,
                         fontWeight = FontWeight.Bold
                     )
                 },
@@ -59,16 +60,16 @@ fun ProfileScreen(
                         Icon(
                             Icons.Default.ArrowBack,
                             contentDescription = "Back",
-                            tint = PrimaryText
+                            tint = MaterialTheme.colorScheme.onBackground
                         )
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Background
+                    containerColor = MaterialTheme.colorScheme.background
                 )
             )
         },
-        containerColor = Background
+        containerColor = MaterialTheme.colorScheme.background
     ) { padding ->
         Column(
             modifier = Modifier
@@ -100,12 +101,19 @@ fun ProfileScreen(
             // Preferences Section
             SettingsSection(title = "Preferences") {
                 SettingsRow(
+                    icon = Icons.Default.Palette,
+                    title = "App Theme",
+                    subtitle = uiState.appTheme,
+                    onClick = onNavigateToThemeSettings
+                )
+                HorizontalDivider(color = MaterialTheme.colorScheme.surfaceVariant)
+                SettingsRow(
                     icon = Icons.Default.Language,
                     title = "Podcast Language",
                     subtitle = uiState.preferredLanguage,
                     onClick = onNavigateToLanguageSettings
                 )
-                HorizontalDivider(color = CardBackgroundLight)
+                HorizontalDivider(color = MaterialTheme.colorScheme.surfaceVariant)
                 SettingsRow(
                     icon = Icons.Default.VisibilityOff,
                     title = "Hidden Topics",
@@ -125,7 +133,7 @@ fun ProfileScreen(
                     showChevron = false,
                     onClick = { }
                 )
-                HorizontalDivider(color = CardBackgroundLight)
+                HorizontalDivider(color = MaterialTheme.colorScheme.surfaceVariant)
                 SettingsRow(
                     icon = Icons.Default.Description,
                     title = "Terms of Service",
@@ -134,7 +142,7 @@ fun ProfileScreen(
                         context.startActivity(intent)
                     }
                 )
-                HorizontalDivider(color = CardBackgroundLight)
+                HorizontalDivider(color = MaterialTheme.colorScheme.surfaceVariant)
                 SettingsRow(
                     icon = Icons.Default.Security,
                     title = "Privacy Policy",
@@ -194,8 +202,8 @@ fun ProfileScreen(
     if (showSignOutDialog) {
         AlertDialog(
             onDismissRequest = { showSignOutDialog = false },
-            title = { Text("Sign Out", color = PrimaryText) },
-            text = { Text("Are you sure you want to sign out?", color = SecondaryText) },
+            title = { Text("Sign Out", color = MaterialTheme.colorScheme.onBackground) },
+            text = { Text("Are you sure you want to sign out?", color = MaterialTheme.colorScheme.onSurfaceVariant) },
             confirmButton = {
                 TextButton(onClick = {
                     showSignOutDialog = false
@@ -206,10 +214,10 @@ fun ProfileScreen(
             },
             dismissButton = {
                 TextButton(onClick = { showSignOutDialog = false }) {
-                    Text("Cancel", color = SecondaryText)
+                    Text("Cancel", color = MaterialTheme.colorScheme.onSurfaceVariant)
                 }
             },
-            containerColor = CardBackground
+            containerColor = MaterialTheme.colorScheme.surface
         )
     }
 
@@ -217,11 +225,11 @@ fun ProfileScreen(
     if (showDeleteDialog) {
         AlertDialog(
             onDismissRequest = { showDeleteDialog = false },
-            title = { Text("Delete Account", color = PrimaryText) },
+            title = { Text("Delete Account", color = MaterialTheme.colorScheme.onBackground) },
             text = {
                 Text(
                     "Are you sure you want to delete your account? This will permanently delete all your data including podcasts, preferences, and linked accounts. This action cannot be undone.",
-                    color = SecondaryText
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             },
             confirmButton = {
@@ -234,10 +242,10 @@ fun ProfileScreen(
             },
             dismissButton = {
                 TextButton(onClick = { showDeleteDialog = false }) {
-                    Text("Cancel", color = SecondaryText)
+                    Text("Cancel", color = MaterialTheme.colorScheme.onSurfaceVariant)
                 }
             },
-            containerColor = CardBackground
+            containerColor = MaterialTheme.colorScheme.surface
         )
     }
 }
@@ -266,7 +274,7 @@ private fun ProfileHeader(
             Text(
                 text = getInitials(name),
                 style = MaterialTheme.typography.headlineMedium,
-                color = PrimaryText,
+                color = PrimaryTextDark, // Always white on orange gradient
                 fontWeight = FontWeight.Bold
             )
         }
@@ -276,14 +284,14 @@ private fun ProfileHeader(
         Text(
             text = name,
             style = MaterialTheme.typography.headlineSmall,
-            color = PrimaryText,
+            color = MaterialTheme.colorScheme.onBackground,
             fontWeight = FontWeight.Bold
         )
 
         Text(
             text = email,
             style = MaterialTheme.typography.bodyMedium,
-            color = SecondaryText
+            color = MaterialTheme.colorScheme.onSurfaceVariant
         )
     }
 }
@@ -297,7 +305,7 @@ private fun SettingsSection(
         Text(
             text = title,
             style = MaterialTheme.typography.titleMedium,
-            color = PrimaryText,
+            color = MaterialTheme.colorScheme.onBackground,
             fontWeight = FontWeight.Bold
         )
 
@@ -305,7 +313,7 @@ private fun SettingsSection(
 
         Surface(
             shape = RoundedCornerShape(12.dp),
-            color = CardBackground
+            color = MaterialTheme.colorScheme.surface
         ) {
             Column(
                 modifier = Modifier.padding(4.dp),
@@ -325,7 +333,7 @@ private fun SettingsRow(
 ) {
     Surface(
         onClick = onClick,
-        color = CardBackground
+        color = MaterialTheme.colorScheme.surface
     ) {
         Row(
             modifier = Modifier
@@ -346,13 +354,13 @@ private fun SettingsRow(
                 Text(
                     text = title,
                     style = MaterialTheme.typography.bodyLarge,
-                    color = PrimaryText
+                    color = MaterialTheme.colorScheme.onSurface
                 )
                 if (subtitle != null) {
                     Text(
                         text = subtitle,
                         style = MaterialTheme.typography.bodySmall,
-                        color = SecondaryText
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
             }
@@ -361,7 +369,7 @@ private fun SettingsRow(
                 Icon(
                     imageVector = Icons.Default.ChevronRight,
                     contentDescription = null,
-                    tint = SecondaryText
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
         }

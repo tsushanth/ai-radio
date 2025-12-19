@@ -101,6 +101,25 @@ struct AuthView: View {
                             .multilineTextAlignment(.center)
                             .padding(.top, 8)
                     }
+
+                    // Continue without sign in
+                    Button(action: {
+                        Task {
+                            await continueWithoutSignIn()
+                        }
+                    }) {
+                        Text("Continue without sign in")
+                            .font(.system(size: 16, weight: .medium))
+                            .foregroundColor(.white.opacity(0.7))
+                    }
+                    .padding(.top, 8)
+
+                    // Info text about linking later
+                    Text("You can link your email later to enable personalized Daily Brief")
+                        .font(.system(size: 13, weight: .regular))
+                        .foregroundColor(.white.opacity(0.5))
+                        .multilineTextAlignment(.center)
+                        .padding(.top, 4)
                 }
                 .padding(.horizontal, 32)
 
@@ -184,10 +203,27 @@ struct AuthView: View {
 
         do {
             try await authService.signInWithGoogle()
-        } catch {
-            errorMessage = "Google Sign-In failed: \(error.localizedDescription)"
-            print("Google Sign-In error: \(error)")
+        } catch let error as NSError {
+            // Check for user cancellation (code -5)
+            if error.code == -5 || error.localizedDescription.contains("canceled") || error.localizedDescription.contains("cancelled") {
+                // User cancelled - don't show error, just reset state
+                print("ℹ️ User cancelled Google sign-in")
+                errorMessage = nil
+            } else {
+                // Actual error - show to user
+                errorMessage = "Google Sign-In failed: \(error.localizedDescription)"
+                print("Google Sign-In error: \(error)")
+            }
         }
+
+        isLoading = false
+    }
+
+    private func continueWithoutSignIn() async {
+        isLoading = true
+        errorMessage = nil
+
+        await authService.continueAsGuest()
 
         isLoading = false
     }

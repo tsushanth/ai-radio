@@ -52,7 +52,7 @@ struct SearchBar: View {
         .padding(.vertical, 12)
         .background(
             RoundedRectangle(cornerRadius: 12)
-                .fill(Color(hex: "#2C2C2E"))  // Slightly lighter than card background
+                .fill(Theme.Colors.cardBackground)
                 .overlay(
                     RoundedRectangle(cornerRadius: 12)
                         .stroke(

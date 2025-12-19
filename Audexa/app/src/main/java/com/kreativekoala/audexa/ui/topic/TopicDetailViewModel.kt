@@ -247,17 +247,25 @@ class TopicDetailViewModel @Inject constructor(
 
     fun togglePlayPause() {
         val episode = _uiState.value.currentEpisode
-        if (episode == null) {
-            generateEpisode()
+
+        // If no episode or episode doesn't have audio URL, try to generate one
+        if (episode == null || episode.audioUrl == null) {
+            // Don't generate if already generating or loading
+            if (!_uiState.value.isGenerating && !_uiState.value.isLoading) {
+                generateEpisode()
+            }
             return
         }
-        
+
         if (_uiState.value.isPlaying) {
             audioManager.pause()
         } else {
+            // If this episode is already loaded in the player, just resume
             if (audioManager.currentEpisodeId.value == episode.id) {
                 audioManager.resume()
             } else {
+                // Play the episode
+                Log.d(TAG, "Playing episode: ${episode.title} with URL: ${episode.audioUrl}")
                 audioManager.play(episode)
             }
         }

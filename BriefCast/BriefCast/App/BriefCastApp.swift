@@ -11,18 +11,38 @@ import GoogleSignIn
 @main
 struct BriefCastApp: App {
     @StateObject private var authService = AuthService()
+    @StateObject private var preferencesService = PreferencesService.shared
+    @State private var showSplash = true
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
-                .environmentObject(authService)
-                .onOpenURL { url in
-                    print("📱 Received URL: \(url)")
-                    GIDSignIn.sharedInstance.handle(url)
+            ZStack {
+                ContentView()
+                    .environmentObject(authService)
+                    .onOpenURL { url in
+                        print("📱 Received URL: \(url)")
+                        GIDSignIn.sharedInstance.handle(url)
+                    }
+                    .task {
+                        await authService.restoreSession()
+                    }
+
+                // Splash screen overlay
+                if showSplash {
+                    SplashScreenView()
+                        .transition(.opacity)
+                        .zIndex(1)
                 }
-                .task {
-                    await authService.restoreSession()
+            }
+            .preferredColorScheme(preferencesService.appTheme.colorScheme)
+            .onAppear {
+                // Dismiss splash screen after a delay
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1.8) {
+                    withAnimation(.easeOut(duration: 0.4)) {
+                        showSplash = false
+                    }
                 }
+            }
         }
     }
 }

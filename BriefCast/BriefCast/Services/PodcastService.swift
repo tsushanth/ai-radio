@@ -7,10 +7,84 @@
 
 import Foundation
 
+// MARK: - Podcast Error Types
+
+/// Error codes returned from the backend
+enum PodcastErrorCode: String, Codable {
+    case tokenExpired = "TOKEN_EXPIRED"
+    case tokenRevoked = "TOKEN_REVOKED"
+    case tokenInvalid = "TOKEN_INVALID"
+    case reauthRequired = "REAUTH_REQUIRED"
+    case noEmails = "NO_EMAILS"
+    case insufficientContent = "INSUFFICIENT_CONTENT"
+    case scriptGenerationFailed = "SCRIPT_GENERATION_FAILED"
+    case invalidScriptFormat = "INVALID_SCRIPT_FORMAT"
+    case ttsFailed = "TTS_FAILED"
+    case storageError = "STORAGE_ERROR"
+    case databaseError = "DATABASE_ERROR"
+    case unknownError = "UNKNOWN_ERROR"
+}
+
+/// Actions the UI should take based on error
+enum PodcastErrorAction: String, Codable {
+    case relinkGmail = "RELINK_GMAIL"
+    case relinkOutlook = "RELINK_OUTLOOK"
+    case retry = "RETRY"
+    case contactSupport = "CONTACT_SUPPORT"
+    case none = "NONE"
+}
+
+/// Structured error from backend
+struct PodcastAPIError: Error, Codable {
+    let code: PodcastErrorCode
+    let message: String
+    let action: PodcastErrorAction
+    let retryable: Bool
+    let details: String?
+
+    enum CodingKeys: String, CodingKey {
+        case code, message, action, retryable, details
+    }
+
+    var localizedDescription: String {
+        return message
+    }
+
+    var requiresRelink: Bool {
+        return action == .relinkGmail || action == .relinkOutlook
+    }
+
+    var isAuthError: Bool {
+        return code == .tokenExpired || code == .tokenRevoked ||
+               code == .tokenInvalid || code == .reauthRequired
+    }
+
+    var isContentError: Bool {
+        return code == .noEmails || code == .insufficientContent
+    }
+}
+
+/// Response wrapper when API returns an error
+struct PodcastErrorResponse: Codable {
+    let success: Bool
+    let error: PodcastAPIError?
+    let noContent: Bool?
+}
+
 actor PodcastService {
     static let shared = PodcastService()
 
     private let baseURL = "https://ai-radio-backend-917362189743.us-central1.run.app/api"
+
+    /// Custom URLSession with extended timeout for long-running generation requests
+    /// Podcast generation can take 3-5 minutes due to GPT-4 script generation and TTS
+    private let longRunningSession: URLSession = {
+        let config = URLSessionConfiguration.default
+        config.timeoutIntervalForRequest = 300  // 5 minutes for request timeout
+        config.timeoutIntervalForResource = 360 // 6 minutes total resource timeout
+        config.waitsForConnectivity = true
+        return URLSession(configuration: config)
+    }()
 
     // MARK: - Generate Podcast
 
@@ -96,9 +170,6 @@ actor PodcastService {
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
 
-        // Set generous timeout for podcast generation (can take 1-2 minutes)
-        request.timeoutInterval = 180 // 3 minutes
-
         // Use client's local date to ensure consistency with UI
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd"
@@ -121,22 +192,34 @@ actor PodcastService {
 
         request.httpBody = try JSONEncoder().encode(requestBody)
 
-        let (data, response) = try await URLSession.shared.data(for: request)
+        // Use the long-running session with extended timeout (5+ minutes)
+        // Podcast generation involves GPT-4 script generation + TTS which can take 3-5 minutes
+        let (data, response) = try await longRunningSession.data(for: request)
 
         guard let httpResponse = response as? HTTPURLResponse else {
             throw NSError(domain: "PodcastService", code: -1, userInfo: [NSLocalizedDescriptionKey: "Invalid response"])
         }
 
-        guard httpResponse.statusCode == 201 else {
-            // Try to parse error message
-            if let errorJson = try? JSONDecoder().decode([String: String].self, from: data),
-               let errorMessage = errorJson["error"] {
-                throw NSError(domain: "PodcastService", code: httpResponse.statusCode, userInfo: [NSLocalizedDescriptionKey: errorMessage])
-            }
-            throw NSError(domain: "PodcastService", code: httpResponse.statusCode, userInfo: [NSLocalizedDescriptionKey: "Failed to generate podcast"])
+        // Success case - 201 Created
+        if httpResponse.statusCode == 201 {
+            return try JSONDecoder().decode(GeneratePodcastResponse.self, from: data)
         }
 
-        return try JSONDecoder().decode(GeneratePodcastResponse.self, from: data)
+        // Try to parse structured error response from backend
+        if let errorResponse = try? JSONDecoder().decode(PodcastErrorResponse.self, from: data),
+           let apiError = errorResponse.error {
+            // Throw the structured error so HomeViewModel can handle it
+            throw apiError
+        }
+
+        // Fallback: Try old error format for backwards compatibility
+        if let errorJson = try? JSONDecoder().decode([String: String].self, from: data),
+           let errorMessage = errorJson["error"] {
+            throw NSError(domain: "PodcastService", code: httpResponse.statusCode, userInfo: [NSLocalizedDescriptionKey: errorMessage])
+        }
+
+        // Generic error if we can't parse anything
+        throw NSError(domain: "PodcastService", code: httpResponse.statusCode, userInfo: [NSLocalizedDescriptionKey: "Failed to generate podcast"])
     }
 
     // MARK: - Fetch Episodes
@@ -262,5 +345,212 @@ actor PodcastService {
         }
 
         return try JSONDecoder().decode(CostEstimationResponse.self, from: data)
+    }
+
+    // MARK: - Async Generation with Polling
+
+    /// Response from starting async generation
+    struct AsyncGenerateResponse: Codable {
+        let success: Bool
+        let jobId: String
+        let status: String
+        let message: String
+    }
+
+    /// Job status response from polling
+    struct JobStatusResponse: Codable {
+        let success: Bool
+        let jobId: String
+        let status: String  // "queued", "processing", "completed", "failed"
+        let progress: Int
+        let message: String
+        let createdAt: String
+        let updatedAt: String
+        let episode: EpisodeResult?
+        let error: JobError?
+
+        struct EpisodeResult: Codable {
+            let id: String
+            let audioUrl: String
+            let durationSeconds: Int
+            let scriptSegments: Int
+
+            enum CodingKeys: String, CodingKey {
+                case id
+                case audioUrl = "audio_url"
+                case durationSeconds = "duration_seconds"
+                case scriptSegments = "script_segments"
+            }
+        }
+
+        struct JobError: Codable {
+            let code: String
+            let message: String
+            let action: String
+            let retryable: Bool
+        }
+    }
+
+    /// Start async podcast generation - returns job ID immediately
+    func startAsyncGeneration(
+        for userEmail: String,
+        preferences: UserPreferences
+    ) async throws -> String {
+        let url = URL(string: "\(baseURL)/podcast/generate-async")!
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+
+        // Use client's local date
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        let localDate = dateFormatter.string(from: Date())
+
+        let requestBody = GeneratePodcastRequest(
+            userId: userEmail,
+            date: localDate,
+            preferences: GeneratePodcastRequest.Preferences(
+                briefingTime: preferences.briefingTime ?? "07:00",
+                topics: preferences.topics ?? [],
+                voiceHost1: preferences.voiceHost1 ?? "nova",
+                voiceHost2: preferences.voiceHost2 ?? "onyx",
+                includeWeather: preferences.includeWeather ?? false,
+                includeCalendar: preferences.includeCalendar ?? true,
+                includeEmail: preferences.includeEmail ?? true,
+                language: preferences.language ?? "en"
+            )
+        )
+
+        request.httpBody = try JSONEncoder().encode(requestBody)
+
+        let (data, response) = try await URLSession.shared.data(for: request)
+
+        guard let httpResponse = response as? HTTPURLResponse else {
+            throw NSError(domain: "PodcastService", code: -1, userInfo: [NSLocalizedDescriptionKey: "Invalid response"])
+        }
+
+        // 202 Accepted - job started
+        if httpResponse.statusCode == 202 {
+            let asyncResponse = try JSONDecoder().decode(AsyncGenerateResponse.self, from: data)
+            return asyncResponse.jobId
+        }
+
+        // Error case
+        if let errorResponse = try? JSONDecoder().decode(PodcastErrorResponse.self, from: data),
+           let apiError = errorResponse.error {
+            throw apiError
+        }
+
+        throw NSError(domain: "PodcastService", code: httpResponse.statusCode, userInfo: [NSLocalizedDescriptionKey: "Failed to start generation"])
+    }
+
+    /// Poll job status
+    func getJobStatus(jobId: String) async throws -> JobStatusResponse {
+        let url = URL(string: "\(baseURL)/podcast/job/\(jobId)")!
+
+        let (data, response) = try await URLSession.shared.data(from: url)
+
+        guard let httpResponse = response as? HTTPURLResponse else {
+            throw NSError(domain: "PodcastService", code: -1, userInfo: [NSLocalizedDescriptionKey: "Invalid response"])
+        }
+
+        if httpResponse.statusCode == 200 {
+            return try JSONDecoder().decode(JobStatusResponse.self, from: data)
+        }
+
+        if httpResponse.statusCode == 404 {
+            throw NSError(domain: "PodcastService", code: 404, userInfo: [NSLocalizedDescriptionKey: "Job not found or expired"])
+        }
+
+        throw NSError(domain: "PodcastService", code: httpResponse.statusCode, userInfo: [NSLocalizedDescriptionKey: "Failed to get job status"])
+    }
+
+    /// Generate podcast with async polling - returns progress updates via callback
+    /// This is the recommended method for production use
+    func generatePodcastAsync(
+        for userEmail: String,
+        preferences: UserPreferences,
+        onProgress: @escaping (Int, String) -> Void
+    ) async throws -> GeneratePodcastResponse {
+        // Start async job
+        let jobId = try await startAsyncGeneration(for: userEmail, preferences: preferences)
+        onProgress(5, "Starting generation...")
+
+        // Poll for completion with exponential backoff
+        var pollInterval: TimeInterval = 2.0  // Start with 2 seconds
+        let maxPollInterval: TimeInterval = 10.0  // Cap at 10 seconds
+        let maxWaitTime: TimeInterval = 360  // 6 minutes max
+        let startTime = Date()
+        var lastReportedProgress = 5  // Track last progress to avoid flickering
+
+        while true {
+            // Check if we've exceeded max wait time
+            if Date().timeIntervalSince(startTime) > maxWaitTime {
+                throw NSError(domain: "PodcastService", code: -4, userInfo: [
+                    NSLocalizedDescriptionKey: "Generation timed out. Please try again."
+                ])
+            }
+
+            // Wait before polling
+            try await Task.sleep(nanoseconds: UInt64(pollInterval * 1_000_000_000))
+
+            // Poll job status
+            let status = try await getJobStatus(jobId: jobId)
+
+            // Only update progress if it increased (prevents flickering back to 0)
+            let effectiveProgress = max(status.progress, lastReportedProgress)
+            if effectiveProgress > lastReportedProgress || status.status == "completed" || status.status == "failed" {
+                lastReportedProgress = effectiveProgress
+                onProgress(effectiveProgress, status.message)
+            }
+
+            switch status.status {
+            case "completed":
+                // Success - return the result
+                guard let episode = status.episode else {
+                    throw NSError(domain: "PodcastService", code: -5, userInfo: [NSLocalizedDescriptionKey: "No episode data in response"])
+                }
+
+                return GeneratePodcastResponse(
+                    success: true,
+                    episode: GeneratePodcastResponse.EpisodeInfo(
+                        id: episode.id,
+                        audioUrl: episode.audioUrl,
+                        durationSeconds: episode.durationSeconds,
+                        scriptSegments: episode.scriptSegments
+                    ),
+                    costEstimate: GeneratePodcastResponse.CostEstimate(
+                        scriptCostUsd: 0,
+                        ttsCostUsd: 0,
+                        totalCostUsd: 0
+                    )
+                )
+
+            case "failed":
+                // Failed - throw appropriate error
+                if let jobError = status.error {
+                    // Map to PodcastAPIError
+                    let errorCode = PodcastErrorCode(rawValue: jobError.code) ?? .unknownError
+                    let errorAction = PodcastErrorAction(rawValue: jobError.action) ?? .retry
+                    throw PodcastAPIError(
+                        code: errorCode,
+                        message: jobError.message,
+                        action: errorAction,
+                        retryable: jobError.retryable,
+                        details: nil
+                    )
+                }
+                throw NSError(domain: "PodcastService", code: -6, userInfo: [NSLocalizedDescriptionKey: status.message])
+
+            case "queued", "processing":
+                // Still running - increase poll interval with exponential backoff
+                pollInterval = min(pollInterval * 1.5, maxPollInterval)
+                continue
+
+            default:
+                // Unknown status - keep polling
+                continue
+            }
+        }
     }
 }

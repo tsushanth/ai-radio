@@ -216,6 +216,7 @@ export class PodcastGeneratorService {
   /**
    * Step 1: Fetch emails and calendar events
    * Includes fallback logic for users with few recent emails
+   * Now fetches both read and unread emails with proper labeling
    */
   private async fetchData(
     userId: string,
@@ -225,14 +226,18 @@ export class PodcastGeneratorService {
     let emails: any[] = [];
 
     if (!options.skip_email && preferences.include_email) {
-      // First try: last 24 hours, excluding promotional content
+      // First try: last 24 hours, excluding promotional content (both read and unread)
       emails = await gmailService.fetchEmails(userId, {
         max_results: 50,
         since_hours: 24,
         exclude_categories: ['promotions', 'social', 'updates'],
+        include_read: true, // Include both read and unread emails
       });
 
-      console.log(`First fetch: ${emails.length} emails from last 24 hours (excluding categories)`);
+      // Count unread vs read for logging
+      const unreadCount = emails.filter((e: any) => e.is_unread).length;
+      const readCount = emails.length - unreadCount;
+      console.log(`First fetch: ${emails.length} emails from last 24 hours (${unreadCount} unread, ${readCount} read)`);
 
       // Fallback 1: If too few emails, try last 48 hours
       if (emails.length < 5) {
@@ -241,8 +246,10 @@ export class PodcastGeneratorService {
           max_results: 50,
           since_hours: 48,
           exclude_categories: ['promotions', 'social', 'updates'],
+          include_read: true,
         });
-        console.log(`Second fetch: ${emails.length} emails from last 48 hours`);
+        const unread48 = emails.filter((e: any) => e.is_unread).length;
+        console.log(`Second fetch: ${emails.length} emails from last 48 hours (${unread48} unread)`);
       }
 
       // Fallback 2: If still too few, try last 7 days with social/updates included
@@ -252,8 +259,10 @@ export class PodcastGeneratorService {
           max_results: 50,
           since_hours: 168, // 7 days
           exclude_categories: ['promotions'], // Only exclude promotions
+          include_read: true,
         });
-        console.log(`Third fetch: ${emails.length} emails from last 7 days`);
+        const unread7d = emails.filter((e: any) => e.is_unread).length;
+        console.log(`Third fetch: ${emails.length} emails from last 7 days (${unread7d} unread)`);
       }
 
       // Fallback 3: If still too few, include all inbox emails from last 30 days
@@ -263,9 +272,20 @@ export class PodcastGeneratorService {
           max_results: 30,
           since_hours: 720, // 30 days
           exclude_categories: [], // Include all categories
+          include_read: true,
         });
-        console.log(`Final fetch: ${emails.length} emails from last 30 days`);
+        const unread30d = emails.filter((e: any) => e.is_unread).length;
+        console.log(`Final fetch: ${emails.length} emails from last 30 days (${unread30d} unread)`);
       }
+
+      // Sort emails: unread first, then by date
+      emails.sort((a: any, b: any) => {
+        // Unread emails come first
+        if (a.is_unread && !b.is_unread) return -1;
+        if (!a.is_unread && b.is_unread) return 1;
+        // Then sort by date (newest first)
+        return new Date(b.received_at).getTime() - new Date(a.received_at).getTime();
+      });
     }
 
     // Calendar is currently disabled - skip fetching calendar events

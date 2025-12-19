@@ -69,4 +69,28 @@ class AuthViewModel @Inject constructor(
             error = message
         )
     }
+
+    /**
+     * Continue without signing in - allows users to explore the app
+     * They can link their email later from Home or Profile
+     */
+    fun continueWithoutSignIn() {
+        viewModelScope.launch {
+            _uiState.value = _uiState.value.copy(isLoading = true, error = null)
+
+            authRepository.continueAsGuest()
+                .onSuccess {
+                    _uiState.value = _uiState.value.copy(
+                        isLoading = false,
+                        isSignedIn = true
+                    )
+                }
+                .onFailure { e ->
+                    _uiState.value = _uiState.value.copy(
+                        isLoading = false,
+                        error = e.message ?: "Failed to continue"
+                    )
+                }
+        }
+    }
 }

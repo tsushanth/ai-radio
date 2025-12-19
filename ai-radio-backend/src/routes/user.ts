@@ -248,30 +248,32 @@ router.delete('/:userId', async (req: Request, res: Response, next: NextFunction
         console.log('   ✅ Linked accounts deleted');
       }
 
-      // 2. Delete topic episodes
-      console.log('   Deleting topic episodes...');
-      const { error: topicEpisodesError } = await supabase
-        .from('topic_episodes')
-        .delete()
-        .eq('user_id', userId);
+      // 2. Topic episodes are global (per topic per day), not user-specific
+      // No need to delete them for a specific user
+      console.log('   ℹ️ Topic episodes are global, skipping...');
 
-      if (topicEpisodesError) {
-        console.warn(`   Warning: Failed to delete topic episodes: ${topicEpisodesError.message}`);
-      } else {
-        console.log('   ✅ Topic episodes deleted');
-      }
-
-      // 3. Delete podcast episodes
+      // 3. Delete podcast episodes - need to find user by UUID first
       console.log('   Deleting podcast episodes...');
-      const { error: podcastEpisodesError } = await supabase
-        .from('podcast_episodes')
-        .delete()
-        .eq('user_id', userId);
+      // First, try to get the user's UUID from the users table by email
+      const { data: userData } = await supabase
+        .from('users')
+        .select('id')
+        .eq('email', userId)
+        .single();
 
-      if (podcastEpisodesError) {
-        console.warn(`   Warning: Failed to delete podcast episodes: ${podcastEpisodesError.message}`);
+      if (userData?.id) {
+        const { error: podcastEpisodesError } = await supabase
+          .from('podcast_episodes')
+          .delete()
+          .eq('user_id', userData.id);
+
+        if (podcastEpisodesError) {
+          console.warn(`   Warning: Failed to delete podcast episodes: ${podcastEpisodesError.message}`);
+        } else {
+          console.log('   ✅ Podcast episodes deleted');
+        }
       } else {
-        console.log('   ✅ Podcast episodes deleted');
+        console.log('   ℹ️ No user UUID found, skipping podcast episodes deletion');
       }
 
       // 4. Delete user profile if exists

@@ -6,10 +6,11 @@
 //
 
 import SwiftUI
+import GoogleSignIn
 
 struct HomeView: View {
     @EnvironmentObject var authService: AuthService
-    @State private var viewModel = HomeViewModel()
+    @Bindable var viewModel: HomeViewModel
     @State private var searchText = ""
     @State private var showLinkedAccounts = false
     @State private var selectedTopicForDetail: Topic?
@@ -30,6 +31,7 @@ struct HomeView: View {
                         userName: viewModel.userName,
                         subtitle: "Daily Brief • \(viewModel.dailyBriefDate)",
                         briefState: viewModel.dailyBriefState,
+                        hasCachedEpisode: viewModel.hasCachedEpisodeForToday,
                         onPlayTapped: {
                             viewModel.playDailyBrief()
                         },
@@ -38,6 +40,11 @@ struct HomeView: View {
                         },
                         onLinkAccountTapped: {
                             showLinkedAccounts = true
+                        },
+                        onRegenerateTapped: {
+                            Task {
+                                await viewModel.regenerateDailyBrief()
+                            }
                         }
                     )
 
@@ -83,6 +90,11 @@ struct HomeView: View {
         .sheet(isPresented: $showLinkedAccounts) {
             NavigationStack {
                 LinkedAccountsView()
+            }
+            .onOpenURL { url in
+                // Handle Google OAuth callback when sheet is presented
+                print("📱 Received URL in HomeView sheet: \(url)")
+                GIDSignIn.sharedInstance.handle(url)
             }
         }
         .onChange(of: showLinkedAccounts) { _, isShowing in
@@ -493,6 +505,32 @@ struct DiscoverTabContent: View {
     // Observe AudioService for now playing indicator
     private let audioService = AudioService.shared
 
+    // Filtered categories based on search text
+    private var filteredCategories: [DiscoverCategory] {
+        guard !searchText.isEmpty else { return viewModel.discoverCategories }
+        let lowercasedSearch = searchText.lowercased()
+        return viewModel.discoverCategories.compactMap { category in
+            let filteredShows = category.shows.filter { show in
+                show.title.lowercased().contains(lowercasedSearch) ||
+                show.description.lowercased().contains(lowercasedSearch) ||
+                category.title.lowercased().contains(lowercasedSearch)
+            }
+            guard !filteredShows.isEmpty else { return nil }
+            return DiscoverCategory(title: category.title, shows: filteredShows)
+        }
+    }
+
+    // Filtered topics based on search text
+    private var filteredTopics: [Topic] {
+        guard !searchText.isEmpty else { return viewModel.visibleTopics }
+        let lowercasedSearch = searchText.lowercased()
+        return viewModel.visibleTopics.filter { topic in
+            topic.name.lowercased().contains(lowercasedSearch) ||
+            topic.description.lowercased().contains(lowercasedSearch) ||
+            topic.category.displayName.lowercased().contains(lowercasedSearch)
+        }
+    }
+
     var body: some View {
         VStack(spacing: 32) {
             // Search bar
@@ -500,62 +538,81 @@ struct DiscoverTabContent: View {
                 .padding(.horizontal, Theme.Spacing.screenPadding)
                 .padding(.top, 16)
 
-            // Category rows with tappable shows
-            ForEach(viewModel.discoverCategories) { category in
-                CategoryRow(
-                    title: category.title,
-                    shows: category.shows,
-                    onShowTap: { show in
-                        // Find the topic and open detail view
-                        if let topic = viewModel.topics.first(where: { $0.id == show.id }) {
-                            onTopicTapped(topic)
+            // Show "No results" if search returns empty
+            if !searchText.isEmpty && filteredCategories.isEmpty && filteredTopics.isEmpty {
+                VStack(spacing: 12) {
+                    Image(systemName: "magnifyingglass")
+                        .font(.system(size: 40))
+                        .foregroundColor(Theme.Colors.secondaryText)
+                    Text("No results for \"\(searchText)\"")
+                        .font(.system(size: 16, weight: .medium))
+                        .foregroundColor(Theme.Colors.secondaryText)
+                }
+                .frame(maxWidth: .infinity)
+                .padding(.top, 40)
+            } else {
+                // Category rows with tappable shows
+                ForEach(filteredCategories) { category in
+                    CategoryRow(
+                        title: category.title,
+                        shows: category.shows,
+                        onShowTap: { show in
+                            // Find the topic and open detail view
+                            if let topic = viewModel.topics.first(where: { $0.id == show.id }) {
+                                onTopicTapped(topic)
+                            }
+                        },
+                        isShowBookmarked: { show in
+                            viewModel.isTopicBookmarked(show.id)
+                        },
+                        onBookmarkToggle: { show in
+                            // Find the topic, toggle bookmark, and notify
+                            if let topic = viewModel.topics.first(where: { $0.id == show.id }) {
+                                let wasBookmarked = viewModel.isTopicBookmarked(topic.id)
+                                viewModel.toggleBookmark(for: topic.id)
+                                onBookmarkToggled?(topic, !wasBookmarked)
+                            }
+                        },
+                        onHide: { show in
+                            // Hide the topic
+                            viewModel.hideTopic(show.id)
                         }
-                    },
-                    isShowBookmarked: { show in
-                        viewModel.isTopicBookmarked(show.id)
-                    },
-                    onBookmarkToggle: { show in
-                        // Find the topic, toggle bookmark, and notify
-                        if let topic = viewModel.topics.first(where: { $0.id == show.id }) {
-                            let wasBookmarked = viewModel.isTopicBookmarked(topic.id)
-                            viewModel.toggleBookmark(for: topic.id)
-                            onBookmarkToggled?(topic, !wasBookmarked)
-                        }
-                    }
-                )
-            }
+                    )
+                }
 
-            // All Topics section
-            if !viewModel.visibleTopics.isEmpty {
-                VStack(alignment: .leading, spacing: 16) {
-                    Text("All Topics")
-                        .font(.system(size: 22, weight: .bold))
-                        .foregroundColor(Theme.Colors.primaryText)
-                        .padding(.horizontal, Theme.Spacing.screenPadding)
+                // All Topics section
+                if !filteredTopics.isEmpty {
+                    VStack(alignment: .leading, spacing: 16) {
+                        Text(searchText.isEmpty ? "All Topics" : "Matching Topics")
+                            .font(.system(size: 22, weight: .bold))
+                            .foregroundColor(Theme.Colors.primaryText)
+                            .padding(.horizontal, Theme.Spacing.screenPadding)
 
-                    LazyVGrid(columns: [
-                        GridItem(.flexible()),
-                        GridItem(.flexible())
-                    ], spacing: 16) {
-                        ForEach(viewModel.visibleTopics) { topic in
-                            let wasBookmarked = viewModel.isTopicBookmarked(topic.id)
-                            TopicGridCard(
-                                topic: topic,
-                                isLoading: isLoadingTopic(topic.id),
-                                isBookmarked: wasBookmarked,
-                                isPlaying: isPlayingTopic(topic.id),
-                                onTap: { onTopicTapped(topic) },
-                                onBookmarkToggle: {
-                                    viewModel.toggleBookmark(for: topic.id)
-                                    onBookmarkToggled?(topic, !wasBookmarked)
-                                },
-                                onHide: {
-                                    viewModel.hideTopic(topic.id)
+                        ScrollView(.horizontal, showsIndicators: false) {
+                            HStack(spacing: 16) {
+                                ForEach(filteredTopics) { topic in
+                                    let wasBookmarked = viewModel.isTopicBookmarked(topic.id)
+                                    ShowCard(
+                                        title: topic.name,
+                                        description: topic.description,
+                                        imageColor: topic.swiftUIColor,
+                                        episodeInfo: "\(topic.targetDurationMinutes) min daily",
+                                        size: .small,
+                                        isBookmarked: wasBookmarked,
+                                        onTap: { onTopicTapped(topic) },
+                                        onBookmarkTap: {
+                                            viewModel.toggleBookmark(for: topic.id)
+                                            onBookmarkToggled?(topic, !wasBookmarked)
+                                        },
+                                        onHide: {
+                                            viewModel.hideTopic(topic.id)
+                                        }
+                                    )
                                 }
-                            )
+                            }
+                            .padding(.horizontal, Theme.Spacing.screenPadding)
                         }
                     }
-                    .padding(.horizontal, Theme.Spacing.screenPadding)
                 }
             }
         }
@@ -705,5 +762,5 @@ struct BookmarkToast: View {
 }
 
 #Preview {
-    HomeView()
+    HomeView(viewModel: HomeViewModel())
 }

@@ -35,7 +35,7 @@ struct ShowCard: View {
     let isBookmarked: Bool
     let onTap: () -> Void
     let onBookmarkTap: () -> Void
-    let onMenuTap: () -> Void
+    var onHide: (() -> Void)? = nil
 
     @State private var isPressed = false
 
@@ -48,7 +48,7 @@ struct ShowCard: View {
         isBookmarked: Bool = false,
         onTap: @escaping () -> Void = {},
         onBookmarkTap: @escaping () -> Void = {},
-        onMenuTap: @escaping () -> Void = {}
+        onHide: (() -> Void)? = nil
     ) {
         self.title = title
         self.description = description
@@ -58,93 +58,83 @@ struct ShowCard: View {
         self.isBookmarked = isBookmarked
         self.onTap = onTap
         self.onBookmarkTap = onBookmarkTap
-        self.onMenuTap = onMenuTap
+        self.onHide = onHide
     }
 
     var body: some View {
-        Button(action: {
-            HapticManager.shared.light()
-            onTap()
-        }) {
-            cardContent
-        }
-        .buttonStyle(PlainButtonStyle())
-        .scaleEffect(isPressed ? 0.97 : 1.0)
-        .brightness(isPressed ? -0.05 : 0)
-        .animation(.spring(response: 0.3, dampingFraction: 0.7), value: isPressed)
-        .simultaneousGesture(
-            DragGesture(minimumDistance: 0)
-                .onChanged { _ in
-                    if !isPressed {
-                        isPressed = true
-                    }
-                }
-                .onEnded { _ in
-                    isPressed = false
-                }
-        )
-        .accessibilityElement(children: .combine)
-        .accessibilityLabel("\(title). \(description)")
-        .accessibilityHint("Double tap to view details")
-    }
-
-    private var cardContent: some View {
         VStack(alignment: .leading, spacing: 0) {
-            // Image/color area (4:3 aspect ratio)
-            ZStack(alignment: .topTrailing) {
-                imageColor
-                    .frame(height: size.imageHeight)
+            // Tappable area (image + text content)
+            Button(action: {
+                HapticManager.shared.light()
+                onTap()
+            }) {
+                VStack(alignment: .leading, spacing: 0) {
+                    // Image/color area (4:3 aspect ratio)
+                    ZStack(alignment: .topTrailing) {
+                        imageColor
+                            .frame(height: size.imageHeight)
 
-                // Waveform icon overlay
-                Image(systemName: "waveform")
-                    .font(.system(size: 40, weight: .light))
-                    .foregroundColor(.white.opacity(0.3))
-            }
-            .cornerRadius(16, corners: [.topLeft, .topRight])
-
-            // Content area
-            VStack(alignment: .leading, spacing: 8) {
-                // Title
-                Text(title)
-                    .font(.system(size: size == .large ? 18 : 16, weight: .semibold))
-                    .foregroundColor(Theme.Colors.primaryText)
-                    .lineLimit(2)
-
-                // Description
-                Text(description)
-                    .font(.system(size: size == .large ? 14 : 12, weight: .regular))
-                    .foregroundColor(Theme.Colors.secondaryText)
-                    .lineLimit(2)
-
-                // Episode info (if provided)
-                if let episodeInfo = episodeInfo {
-                    Text(episodeInfo)
-                        .font(.system(size: 12, weight: .regular))
-                        .foregroundColor(Theme.Colors.secondaryText.opacity(0.7))
-                }
-
-                // Bottom row with bookmark and menu
-                HStack {
-                    Spacer()
-
-                    // Bookmark button
-                    Button(action: {
-                        HapticManager.shared.light()
-                        onBookmarkTap()
-                    }) {
-                        Image(systemName: isBookmarked ? "bookmark.fill" : "bookmark")
-                            .font(.system(size: 16))
-                            .foregroundColor(isBookmarked ? Theme.Colors.accent : Theme.Colors.secondaryText)
-                            .contentTransition(.symbolEffect(.replace))
-                            .frame(width: 44, height: 44)
+                        // Waveform icon overlay
+                        Image(systemName: "waveform")
+                            .font(.system(size: 40, weight: .light))
+                            .foregroundColor(.white.opacity(0.3))
                     }
-                    .accessibilityLabel(isBookmarked ? "Remove bookmark" : "Add bookmark")
+                    .cornerRadius(16, corners: [.topLeft, .topRight])
 
-                    // Menu button
-                    Button(action: {
-                        HapticManager.shared.light()
-                        onMenuTap()
-                    }) {
+                    // Content area (text only)
+                    VStack(alignment: .leading, spacing: 8) {
+                        // Title
+                        Text(title)
+                            .font(.system(size: size == .large ? 18 : 16, weight: .semibold))
+                            .foregroundColor(Theme.Colors.primaryText)
+                            .lineLimit(2)
+
+                        // Description
+                        Text(description)
+                            .font(.system(size: size == .large ? 14 : 12, weight: .regular))
+                            .foregroundColor(Theme.Colors.secondaryText)
+                            .lineLimit(2)
+
+                        // Episode info (if provided)
+                        if let episodeInfo = episodeInfo {
+                            Text(episodeInfo)
+                                .font(.system(size: 12, weight: .regular))
+                                .foregroundColor(Theme.Colors.secondaryText.opacity(0.7))
+                        }
+                    }
+                    .padding(.horizontal, 12)
+                    .padding(.top, 12)
+                }
+            }
+            .buttonStyle(PlainButtonStyle())
+
+            // Bottom row with bookmark and menu (separate from tappable area)
+            HStack {
+                Spacer()
+
+                // Bookmark button
+                Button(action: {
+                    HapticManager.shared.light()
+                    onBookmarkTap()
+                }) {
+                    Image(systemName: isBookmarked ? "bookmark.fill" : "bookmark")
+                        .font(.system(size: 16))
+                        .foregroundColor(isBookmarked ? Theme.Colors.accent : Theme.Colors.secondaryText)
+                        .contentTransition(.symbolEffect(.replace))
+                        .frame(width: 44, height: 44)
+                }
+                .accessibilityLabel(isBookmarked ? "Remove bookmark" : "Add bookmark")
+
+                // Menu button (only show if onHide is provided)
+                if let onHide = onHide {
+                    Menu {
+                        Button(role: .destructive, action: {
+                            HapticManager.shared.light()
+                            onHide()
+                        }) {
+                            Label("Hide", systemImage: "eye.slash")
+                        }
+                    } label: {
                         Image(systemName: "ellipsis")
                             .font(.system(size: 16, weight: .bold))
                             .foregroundColor(Theme.Colors.secondaryText)
@@ -152,13 +142,16 @@ struct ShowCard: View {
                     }
                     .accessibilityLabel("Show more options")
                 }
-                .padding(.top, 4)
             }
-            .padding(12)
+            .padding(.horizontal, 12)
+            .padding(.bottom, 8)
         }
         .frame(width: size.width)
         .background(Theme.Colors.cardBackground)
         .cornerRadius(16)
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel("\(title). \(description)")
+        .accessibilityHint("Double tap to view details")
     }
 }
 

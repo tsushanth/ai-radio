@@ -6,14 +6,31 @@ import androidx.compose.ui.graphics.Color
 val AccentOrange = Color(0xFFFF6B35)
 val AccentOrangeLight = Color(0xFFFF8C5A)
 
-// Background Colors
-val Background = Color(0xFF000000)
-val CardBackground = Color(0xFF1C1C1E)
-val CardBackgroundLight = Color(0xFF2C2C2E)
+// ============ DARK THEME COLORS ============
+// Background Colors (Dark)
+val BackgroundDark = Color(0xFF000000)
+val CardBackgroundDark = Color(0xFF1C1C1E)
+val SurfaceVariantDark = Color(0xFF2C2C2E)
 
-// Text Colors
-val PrimaryText = Color(0xFFFFFFFF)
-val SecondaryText = Color(0xFF8E8E93)
+// Text Colors (Dark)
+val PrimaryTextDark = Color(0xFFFFFFFF)
+val SecondaryTextDark = Color(0xFF8E8E93)
+
+// ============ LIGHT THEME COLORS ============
+// Background Colors (Light)
+val BackgroundLight = Color(0xFFF2F2F7)
+val CardBackgroundLight = Color(0xFFFFFFFF)
+val SurfaceVariantLight = Color(0xFFE5E5EA)
+
+// Text Colors (Light)
+val PrimaryTextLight = Color(0xFF000000)
+val SecondaryTextLight = Color(0xFF6C6C70)
+
+// Legacy aliases for backward compatibility (point to dark theme defaults)
+val Background = BackgroundDark
+val CardBackground = CardBackgroundDark
+val PrimaryText = PrimaryTextDark
+val SecondaryText = SecondaryTextDark
 
 // Gradient Colors
 val GradientSaddleBrown = Color(0xFF8B4513)

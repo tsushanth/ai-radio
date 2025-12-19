@@ -10,10 +10,11 @@ import SwiftUI
 struct ProfileView: View {
     @EnvironmentObject var authService: AuthService
     @State private var showLinkedAccounts = false
-    @State private var showPreferences = false
     @State private var showLanguagePicker = false
+    @State private var showThemePicker = false
     @State private var showHiddenTopics = false
     @State private var showDeleteConfirmation = false
+    @State private var showSignOutConfirmation = false
     @State private var isDeleting = false
     @State private var deleteError: String?
     @State private var showDeleteError = false
@@ -103,38 +104,20 @@ struct ProfileView: View {
 
                         VStack(spacing: 12) {
                             SettingsRow(
+                                icon: preferencesService.appTheme.iconName,
+                                title: "App Theme",
+                                subtitle: preferencesService.appTheme.displayName,
+                                action: {
+                                    showThemePicker = true
+                                }
+                            )
+
+                            SettingsRow(
                                 icon: "globe",
                                 title: "Podcast Language",
                                 subtitle: preferencesService.preferredSupportedLanguage.displayWithFlag,
                                 action: {
                                     showLanguagePicker = true
-                                }
-                            )
-
-                            SettingsRow(
-                                icon: "clock.fill",
-                                title: "Briefing Time",
-                                subtitle: authService.currentUser?.preferences.briefingTime ?? "7:00 AM",
-                                action: {
-                                    showPreferences = true
-                                }
-                            )
-
-                            SettingsRow(
-                                icon: "tag.fill",
-                                title: "Topics",
-                                subtitle: (authService.currentUser?.preferences.topics ?? []).joined(separator: ", "),
-                                action: {
-                                    showPreferences = true
-                                }
-                            )
-
-                            SettingsRow(
-                                icon: "waveform",
-                                title: "Voice Preference",
-                                subtitle: "Neural voices",
-                                action: {
-                                    showPreferences = true
                                 }
                             )
 
@@ -157,11 +140,10 @@ struct ProfileView: View {
                         SectionHeader(title: "About")
 
                         VStack(spacing: 12) {
-                            SettingsRow(
+                            InfoRow(
                                 icon: "info.circle.fill",
                                 title: "Version",
-                                subtitle: "1.0.0",
-                                action: {}
+                                value: Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0.0"
                             )
 
                             SettingsRow(
@@ -185,6 +167,16 @@ struct ProfileView: View {
                                     }
                                 }
                             )
+
+                            // Share App
+                            SettingsRow(
+                                icon: "square.and.arrow.up.fill",
+                                title: "Share Audexa",
+                                subtitle: "Tell your friends",
+                                action: {
+                                    shareApp()
+                                }
+                            )
                         }
                     }
                     .padding(.horizontal, 16)
@@ -193,9 +185,7 @@ struct ProfileView: View {
                     VStack(spacing: 12) {
                         // Sign Out Button
                         Button(action: {
-                            Task {
-                                await authService.signOut()
-                            }
+                            showSignOutConfirmation = true
                         }) {
                             HStack(spacing: 8) {
                                 Image(systemName: "rectangle.portrait.and.arrow.right")
@@ -242,9 +232,6 @@ struct ProfileView: View {
             .sheet(isPresented: $showLinkedAccounts) {
                 LinkedAccountsView()
             }
-            .sheet(isPresented: $showPreferences) {
-                PreferencesView()
-            }
             .sheet(isPresented: $showLanguagePicker) {
                 LanguagePickerView(
                     selectedLanguage: preferencesService.preferredSupportedLanguage,
@@ -257,6 +244,26 @@ struct ProfileView: View {
             }
             .sheet(isPresented: $showHiddenTopics) {
                 HiddenTopicsView()
+            }
+            .sheet(isPresented: $showThemePicker) {
+                ThemePickerView(
+                    selectedTheme: preferencesService.appTheme,
+                    onSelect: { theme in
+                        preferencesService.appTheme = theme
+                        showThemePicker = false
+                    }
+                )
+                .presentationDetents([.height(280)])
+            }
+            .alert("Sign Out", isPresented: $showSignOutConfirmation) {
+                Button("Cancel", role: .cancel) { }
+                Button("Sign Out", role: .destructive) {
+                    Task {
+                        await authService.signOut()
+                    }
+                }
+            } message: {
+                Text("Are you sure you want to sign out?")
             }
             .alert("Delete Account", isPresented: $showDeleteConfirmation) {
                 Button("Cancel", role: .cancel) { }
@@ -315,6 +322,26 @@ struct ProfileView: View {
         }
         return String(name.prefix(1)).uppercased()
     }
+
+    private func shareApp() {
+        let appStoreURL = "https://apps.apple.com/app/audexa" // Update with actual App Store URL when available
+        let shareText = "Check out Audexa - Your personalized AI-powered daily briefing podcast! 🎙️"
+        let items: [Any] = [shareText, URL(string: appStoreURL)!]
+
+        let activityVC = UIActivityViewController(activityItems: items, applicationActivities: nil)
+
+        // Get the key window scene
+        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+           let rootViewController = windowScene.windows.first?.rootViewController {
+            // Handle iPad popover
+            if let popover = activityVC.popoverPresentationController {
+                popover.sourceView = rootViewController.view
+                popover.sourceRect = CGRect(x: UIScreen.main.bounds.midX, y: UIScreen.main.bounds.midY, width: 0, height: 0)
+                popover.permittedArrowDirections = []
+            }
+            rootViewController.present(activityVC, animated: true)
+        }
+    }
 }
 
 // MARK: - Supporting Views
@@ -370,6 +397,34 @@ struct SettingsRow: View {
     }
 }
 
+struct InfoRow: View {
+    let icon: String
+    let title: String
+    let value: String
+
+    var body: some View {
+        HStack(spacing: 12) {
+            Image(systemName: icon)
+                .font(.system(size: 20))
+                .foregroundColor(Theme.Colors.accent)
+                .frame(width: 32)
+
+            Text(title)
+                .font(.system(size: 16, weight: .semibold))
+                .foregroundColor(Theme.Colors.primaryText)
+
+            Spacer()
+
+            Text(value)
+                .font(.system(size: 14, weight: .regular))
+                .foregroundColor(Theme.Colors.secondaryText)
+        }
+        .padding(16)
+        .background(Theme.Colors.cardBackground)
+        .cornerRadius(12)
+    }
+}
+
 struct LinkedAccountRow: View {
     let account: LinkedAccount
 
@@ -418,30 +473,6 @@ struct LinkedAccountRow: View {
         .padding(16)
         .background(Theme.Colors.cardBackground)
         .cornerRadius(12)
-    }
-}
-
-// MARK: - Preferences View (Placeholder)
-
-struct PreferencesView: View {
-    @Environment(\.dismiss) private var dismiss
-
-    var body: some View {
-        NavigationStack {
-            Text("Preferences - Coming Soon")
-                .foregroundColor(Theme.Colors.primaryText)
-                .background(Theme.Colors.background)
-                .navigationTitle("Preferences")
-                .navigationBarTitleDisplayMode(.inline)
-                .toolbar {
-                    ToolbarItem(placement: .navigationBarTrailing) {
-                        Button("Done") {
-                            dismiss()
-                        }
-                        .foregroundColor(Theme.Colors.accent)
-                    }
-                }
-        }
     }
 }
 
@@ -587,6 +618,60 @@ struct HiddenTopicsView: View {
             topics = topicsData.topics
         } catch {
             print("Failed to load topics: \(error)")
+        }
+    }
+}
+
+// MARK: - Theme Picker View
+
+struct ThemePickerView: View {
+    let selectedTheme: AppTheme
+    let onSelect: (AppTheme) -> Void
+
+    var body: some View {
+        NavigationStack {
+            List {
+                ForEach(AppTheme.allCases) { theme in
+                    Button(action: { onSelect(theme) }) {
+                        HStack {
+                            Image(systemName: theme.iconName)
+                                .font(.system(size: 20))
+                                .foregroundColor(Theme.Colors.accent)
+                                .frame(width: 32)
+
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text(theme.displayName)
+                                    .font(.system(size: 16, weight: .medium))
+                                    .foregroundColor(Theme.Colors.primaryText)
+
+                                Text(themeDescription(for: theme))
+                                    .font(.system(size: 13))
+                                    .foregroundColor(Theme.Colors.secondaryText)
+                            }
+
+                            Spacer()
+
+                            if theme == selectedTheme {
+                                Image(systemName: "checkmark")
+                                    .font(.system(size: 16, weight: .semibold))
+                                    .foregroundColor(Theme.Colors.accent)
+                            }
+                        }
+                        .padding(.vertical, 4)
+                    }
+                }
+            }
+            .listStyle(.insetGrouped)
+            .navigationTitle("App Theme")
+            .navigationBarTitleDisplayMode(.inline)
+        }
+    }
+
+    private func themeDescription(for theme: AppTheme) -> String {
+        switch theme {
+        case .system: return "Match device settings"
+        case .dark: return "Always dark mode"
+        case .light: return "Always light mode"
         }
     }
 }

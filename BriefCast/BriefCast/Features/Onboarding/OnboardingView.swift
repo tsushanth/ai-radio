@@ -76,54 +76,53 @@ struct WelcomePage: View {
     let onContinue: () -> Void
 
     var body: some View {
-        VStack(spacing: 32) {
-            Spacer()
-
-            // Icon
-            ZStack {
-                Circle()
-                    .fill(
-                        LinearGradient(
-                            colors: [Theme.Colors.accent, Theme.Colors.accent.opacity(0.5)],
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
+        ScrollView(showsIndicators: false) {
+            VStack(spacing: 32) {
+                // Icon
+                ZStack {
+                    Circle()
+                        .fill(
+                            LinearGradient(
+                                colors: [Theme.Colors.accent, Theme.Colors.accent.opacity(0.5)],
+                                startPoint: .topLeading,
+                                endPoint: .bottomTrailing
+                            )
                         )
-                    )
-                    .frame(width: 120, height: 120)
+                        .frame(width: 120, height: 120)
 
-                Image(systemName: "waveform.circle.fill")
-                    .font(.system(size: 60))
-                    .foregroundColor(.white)
+                    Image(systemName: "waveform.circle.fill")
+                        .font(.system(size: 60))
+                        .foregroundColor(.white)
+                }
+
+                // Title and description
+                VStack(spacing: 16) {
+                    Text("Welcome to Audexa")
+                        .font(.system(size: 32, weight: .bold))
+                        .foregroundColor(Theme.Colors.primaryText)
+                        .multilineTextAlignment(.center)
+
+                    Text("Your personalized morning briefing, powered by AI. Get caught up on your emails, calendar, and news in just a few minutes.")
+                        .font(.system(size: 17, weight: .regular))
+                        .foregroundColor(Theme.Colors.secondaryText)
+                        .multilineTextAlignment(.center)
+                        .padding(.horizontal, 32)
+                }
+
+                // Continue button
+                Button(action: onContinue) {
+                    Text("Get Started")
+                        .font(.system(size: 18, weight: .semibold))
+                        .foregroundColor(.white)
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 16)
+                        .background(Theme.Colors.accent)
+                        .cornerRadius(12)
+                }
+                .padding(.horizontal, 24)
             }
-
-            // Title and description
-            VStack(spacing: 16) {
-                Text("Welcome to Audexa")
-                    .font(.system(size: 32, weight: .bold))
-                    .foregroundColor(Theme.Colors.primaryText)
-                    .multilineTextAlignment(.center)
-
-                Text("Your personalized morning briefing, powered by AI. Get caught up on your emails, calendar, and news in just a few minutes.")
-                    .font(.system(size: 17, weight: .regular))
-                    .foregroundColor(Theme.Colors.secondaryText)
-                    .multilineTextAlignment(.center)
-                    .padding(.horizontal, 32)
-            }
-
-            Spacer()
-
-            // Continue button
-            Button(action: onContinue) {
-                Text("Get Started")
-                    .font(.system(size: 18, weight: .semibold))
-                    .foregroundColor(.white)
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 16)
-                    .background(Theme.Colors.accent)
-                    .cornerRadius(12)
-            }
-            .padding(.horizontal, 24)
-            .padding(.bottom, 60)
+            .padding(.top, 60)
+            .padding(.bottom, 80)
         }
     }
 }
@@ -177,15 +176,12 @@ struct LinkAccountPage: View {
                     Task { await viewModel.linkGoogle() }
                 }
 
-                AccountLinkButton(
-                    icon: "m.circle.fill",
-                    title: "Connect Microsoft",
-                    subtitle: viewModel.microsoftLinked ? "Connected" : "Outlook",
-                    color: .blue,
-                    isConnected: viewModel.microsoftLinked,
-                    isLoading: viewModel.isLinkingMicrosoft
-                ) {
-                    Task { await viewModel.linkMicrosoft() }
+                // Permission denied warning
+                if viewModel.permissionDenied {
+                    PermissionDeniedWarning {
+                        // Try again
+                        Task { await viewModel.linkGoogle() }
+                    }
                 }
             }
             .padding(.horizontal, 24)
@@ -208,7 +204,7 @@ struct LinkAccountPage: View {
                 }
 
                 Button(action: onSkip) {
-                    Text("Skip for now")
+                    Text(viewModel.permissionDenied ? "Continue without email" : "Skip for now")
                         .font(.system(size: 16, weight: .medium))
                         .foregroundColor(Theme.Colors.secondaryText)
                 }
@@ -221,11 +217,51 @@ struct LinkAccountPage: View {
         } message: {
             Text(viewModel.errorMessage ?? "Failed to connect account")
         }
-        .alert("Coming Soon", isPresented: $viewModel.showComingSoon) {
-            Button("OK", role: .cancel) { }
-        } message: {
-            Text("Microsoft account integration is coming soon. Stay tuned!")
+    }
+}
+
+// MARK: - Permission Denied Warning
+
+struct PermissionDeniedWarning: View {
+    let onTryAgain: () -> Void
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack(spacing: 10) {
+                Image(systemName: "exclamationmark.triangle.fill")
+                    .font(.system(size: 18))
+                    .foregroundColor(.orange)
+
+                Text("Email access not granted")
+                    .font(.system(size: 16, weight: .semibold))
+                    .foregroundColor(.white)
+            }
+
+            Text("Without email access, we can only create general topic briefings. To get personalized briefings based on your emails, please try again and check the box that allows email access.")
+                .font(.system(size: 14, weight: .regular))
+                .foregroundColor(.white.opacity(0.7))
+                .fixedSize(horizontal: false, vertical: true)
+
+            Button(action: onTryAgain) {
+                HStack(spacing: 6) {
+                    Image(systemName: "arrow.clockwise")
+                        .font(.system(size: 14, weight: .semibold))
+                    Text("Try Again")
+                        .font(.system(size: 14, weight: .semibold))
+                }
+                .foregroundColor(Theme.Colors.accent)
+            }
+            .padding(.top, 4)
         }
+        .padding(16)
+        .background(
+            RoundedRectangle(cornerRadius: 12)
+                .fill(Color.orange.opacity(0.1))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 12)
+                        .stroke(Color.orange.opacity(0.3), lineWidth: 1)
+                )
+        )
     }
 }
 
@@ -405,13 +441,11 @@ struct TopicChip: View {
 class OnboardingViewModel: ObservableObject {
     @Published var currentPage: Int = 0
     @Published var googleLinked: Bool = false
-    @Published var microsoftLinked: Bool = false
     @Published var isLinkingGoogle: Bool = false
-    @Published var isLinkingMicrosoft: Bool = false
     @Published var showError: Bool = false
     @Published var errorMessage: String?
-    @Published var showComingSoon: Bool = false
     @Published var selectedTopics: [String] = ["Technology", "News", "Business"]
+    @Published var permissionDenied: Bool = false  // True if user didn't grant Gmail permission
 
     private let googleOAuthHelper = GoogleOAuthHelper()
 
@@ -427,7 +461,7 @@ class OnboardingViewModel: ObservableObject {
     }
 
     var hasLinkedAccount: Bool {
-        googleLinked || microsoftLinked
+        googleLinked
     }
 
     func nextPage() {
@@ -468,18 +502,29 @@ class OnboardingViewModel: ObservableObject {
             UserDefaults.standard.set("google", forKey: "linkedAccountProvider")
 
             print("✅ Google linked in onboarding: \(email)")
-        } catch {
-            errorMessage = "Failed to connect Google: \(error.localizedDescription)"
-            showError = true
-            print("Google OAuth error: \(error)")
+            permissionDenied = false
+        } catch let error as GoogleOAuthError {
+            // Handle permission denied - show inline message instead of alert
+            permissionDenied = true
+            errorMessage = nil
+            showError = false
+            print("Google OAuth permission denied: \(error)")
+        } catch let error as NSError {
+            // Check for user cancellation (code -5)
+            if error.code == -5 || error.localizedDescription.contains("canceled") || error.localizedDescription.contains("cancelled") {
+                // User cancelled - don't show error, just reset state
+                print("ℹ️ User cancelled Google sign-in")
+                errorMessage = nil
+                showError = false
+            } else {
+                // Actual error - show to user
+                errorMessage = "Failed to connect Google: \(error.localizedDescription)"
+                showError = true
+                print("Google OAuth error: \(error)")
+            }
         }
 
         isLinkingGoogle = false
-    }
-
-    func linkMicrosoft() async {
-        // Show "Coming Soon" dialog for Microsoft
-        showComingSoon = true
     }
 
     private func storeLinkedAccount(

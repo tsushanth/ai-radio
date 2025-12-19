@@ -13,19 +13,22 @@ struct CategoryRow: View {
     var onShowTap: ((Show) -> Void)?
     var isShowBookmarked: ((Show) -> Bool)?
     var onBookmarkToggle: ((Show) -> Void)?
+    var onHide: ((Show) -> Void)?
 
     init(
         title: String,
         shows: [Show],
         onShowTap: ((Show) -> Void)? = nil,
         isShowBookmarked: ((Show) -> Bool)? = nil,
-        onBookmarkToggle: ((Show) -> Void)? = nil
+        onBookmarkToggle: ((Show) -> Void)? = nil,
+        onHide: ((Show) -> Void)? = nil
     ) {
         self.title = title
         self.shows = shows
         self.onShowTap = onShowTap
         self.isShowBookmarked = isShowBookmarked
         self.onBookmarkToggle = onBookmarkToggle
+        self.onHide = onHide
     }
 
     var body: some View {
@@ -58,7 +61,8 @@ struct CategoryRow: View {
                             },
                             onBookmarkTap: {
                                 onBookmarkToggle?(show)
-                            }
+                            },
+                            onHide: onHide != nil ? { onHide?(show) } : nil
                         )
                     }
                 }

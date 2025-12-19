@@ -6,13 +6,20 @@
 //
 
 import SwiftUI
+import GoogleSignIn
 
 struct ContentView: View {
     @EnvironmentObject var authService: AuthService
     @State private var selectedTab: Tab = .home
-    @State private var showMiniPlayer: Bool = false
     @State private var showOnboarding: Bool = false
-    @State private var currentEpisode: Episode?
+    @State private var showFullPlayer: Bool = false
+
+    // HomeViewModel is owned here so it survives tab navigation
+    // This preserves generation progress when switching between Home and Profile tabs
+    @State private var homeViewModel = HomeViewModel()
+
+    // Audio service for global playback state
+    private let audioService = AudioService.shared
 
     private var hasCompletedOnboarding: Bool {
         UserDefaults.standard.bool(forKey: "hasCompletedOnboarding")
@@ -26,7 +33,6 @@ struct ContentView: View {
                 AuthView()
             }
         }
-        .preferredColorScheme(.dark)
         .task {
             await authService.restoreSession()
             // Check onboarding after session restore
@@ -40,8 +46,16 @@ struct ContentView: View {
                 showOnboarding = true
             }
         }
-        .fullScreenCover(isPresented: $showOnboarding) {
+        .fullScreenCover(isPresented: $showOnboarding, onDismiss: {
+            // Ensure user lands on Home screen after completing onboarding
+            selectedTab = .home
+        }) {
             OnboardingView()
+                .onOpenURL { url in
+                    // Handle Google OAuth callback even when fullScreenCover is presented
+                    print("📱 Received URL in OnboardingView: \(url)")
+                    GIDSignIn.sharedInstance.handle(url)
+                }
         }
     }
 
@@ -49,13 +63,13 @@ struct ContentView: View {
 
     private var mainAppView: some View {
         ZStack {
-            // Background
-            Color.black.ignoresSafeArea()
+            // Background - use theme-aware color
+            Theme.Colors.background.ignoresSafeArea()
 
             // Main content based on selected tab
             switch selectedTab {
             case .home:
-                HomeView()
+                HomeView(viewModel: homeViewModel)
             case .profile:
                 ProfileView()
             }
@@ -64,27 +78,36 @@ struct ContentView: View {
             VStack {
                 Spacer()
 
-                // Mini player overlay (when audio is playing)
-                if showMiniPlayer, let episode = currentEpisode {
-                    MiniPlayer(
+                // Mini player overlay (when audio is playing or paused with content)
+                if let episode = audioService.currentEpisode {
+                    MiniPlayerEnhanced(
                         episode: episode,
-                        isPlaying: true,
+                        isPlaying: audioService.isPlaying,
+                        currentTime: audioService.currentTime,
+                        duration: audioService.duration,
                         onPlayPause: {
-                            // TODO: Toggle playback
-                            print("Toggle playback")
+                            audioService.togglePlayPause()
                         },
                         onTap: {
-                            // TODO: Show full player
-                            print("Show full player")
+                            showFullPlayer = true
+                        },
+                        onSeek: { time in
+                            audioService.seek(to: time)
                         }
                     )
                     .padding(.horizontal, 16)
                     .padding(.bottom, 90) // Above tab bar
                     .transition(.move(edge: .bottom).combined(with: .opacity))
+                    .animation(.spring(response: 0.3), value: audioService.currentEpisode?.id)
                 }
 
                 // Floating tab bar
                 TabRouter(selectedTab: $selectedTab)
+            }
+        }
+        .sheet(isPresented: $showFullPlayer) {
+            if let episode = audioService.currentEpisode {
+                PlayerView(episode: episode)
             }
         }
     }

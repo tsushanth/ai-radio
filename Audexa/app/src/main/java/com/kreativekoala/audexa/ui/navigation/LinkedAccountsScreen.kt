@@ -31,19 +31,40 @@ fun LinkedAccountsScreen(
     val uiState by viewModel.uiState.collectAsState()
 
     // Gmail OAuth launcher
+    // Note: Google Sign-In with sensitive scopes may not return RESULT_OK
+    // We need to try parsing the intent regardless of result code
     val gmailLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartActivityForResult()
     ) { result ->
-        if (result.resultCode == Activity.RESULT_OK) {
-            val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
-            try {
-                val account = task.getResult(ApiException::class.java)
-                viewModel.handleGmailLinkResult(account)
-            } catch (e: ApiException) {
-                viewModel.handleLinkError("Gmail linking failed: ${e.message}")
+        val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
+        try {
+            val account = task.getResult(ApiException::class.java)
+            viewModel.handleGmailLinkResult(account)
+        } catch (e: ApiException) {
+            // ApiException code 12501 means user cancelled
+            // ApiException code 12500 means sign-in failed
+            if (e.statusCode == 12501) {
+                viewModel.handleLinkError("Gmail linking was cancelled")
+            } else {
+                viewModel.handleLinkError("Gmail linking failed: ${e.statusCode} - ${e.message}")
             }
-        } else {
-            viewModel.handleLinkError("Gmail linking was cancelled")
+        }
+    }
+
+    // Calendar OAuth launcher (separate from Gmail)
+    val calendarLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
+        try {
+            val account = task.getResult(ApiException::class.java)
+            viewModel.handleCalendarLinkResult(account)
+        } catch (e: ApiException) {
+            if (e.statusCode == 12501) {
+                viewModel.handleLinkError("Calendar linking was cancelled")
+            } else {
+                viewModel.handleLinkError("Calendar linking failed: ${e.statusCode} - ${e.message}")
+            }
         }
     }
 
@@ -52,6 +73,14 @@ fun LinkedAccountsScreen(
         uiState.gmailLinkIntent?.let { intent ->
             gmailLauncher.launch(intent)
             viewModel.clearGmailLinkIntent()
+        }
+    }
+
+    // Launch Calendar sign-in when intent is ready
+    LaunchedEffect(uiState.calendarLinkIntent) {
+        uiState.calendarLinkIntent?.let { intent ->
+            calendarLauncher.launch(intent)
+            viewModel.clearCalendarLinkIntent()
         }
     }
 
@@ -112,7 +141,7 @@ fun LinkedAccountsScreen(
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            // Google Account
+            // Gmail Account
             AccountRow(
                 icon = { GoogleIcon() },
                 title = "Gmail",
@@ -120,10 +149,24 @@ fun LinkedAccountsScreen(
                 isConnected = uiState.hasLinkedGoogle,
                 isLoading = uiState.isLinkingGoogle,
                 onConnect = {
-                    // This triggers async revoke then sets the intent to launch
                     viewModel.prepareGmailLinking()
                 },
                 onDisconnect = { viewModel.unlinkGoogle() }
+            )
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            // Google Calendar (separate permission)
+            AccountRow(
+                icon = { CalendarIcon() },
+                title = "Google Calendar",
+                subtitle = if (uiState.hasLinkedCalendar) "Connected" else "Not connected",
+                isConnected = uiState.hasLinkedCalendar,
+                isLoading = uiState.isLinkingCalendar,
+                onConnect = {
+                    viewModel.prepareCalendarLinking()
+                },
+                onDisconnect = { viewModel.unlinkCalendar() }
             )
 
             Spacer(modifier = Modifier.height(12.dp))
@@ -139,6 +182,40 @@ fun LinkedAccountsScreen(
                 onDisconnect = { },
                 isComingSoon = true
             )
+
+            // Email toggle (shown when Gmail is linked)
+            if (uiState.hasLinkedGoogle) {
+                Spacer(modifier = Modifier.height(24.dp))
+
+                Text(
+                    text = "Daily Brief Sources",
+                    style = MaterialTheme.typography.titleMedium,
+                    color = PrimaryText,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.padding(bottom = 12.dp)
+                )
+
+                IntegrationToggleRow(
+                    icon = Icons.Default.Email,
+                    title = "Email Summaries",
+                    subtitle = "Include email summaries in Daily Brief",
+                    isEnabled = uiState.emailEnabled,
+                    onToggle = { viewModel.setEmailEnabled(it) }
+                )
+
+                // Calendar toggle (only shown if calendar is connected)
+                if (uiState.hasLinkedCalendar) {
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    IntegrationToggleRow(
+                        iconText = "📅",
+                        title = "Calendar Events",
+                        subtitle = "Include upcoming events in Daily Brief",
+                        isEnabled = uiState.calendarEnabled,
+                        onToggle = { viewModel.setCalendarEnabled(it) }
+                    )
+                }
+            }
 
             Spacer(modifier = Modifier.height(24.dp))
 
@@ -323,4 +400,85 @@ private fun MicrosoftIcon() {
         style = MaterialTheme.typography.titleLarge,
         color = Color(0xFF00A4EF)
     )
+}
+
+@Composable
+private fun CalendarIcon() {
+    Text(
+        text = "📅",
+        style = MaterialTheme.typography.titleLarge
+    )
+}
+
+@Composable
+private fun IntegrationToggleRow(
+    icon: androidx.compose.ui.graphics.vector.ImageVector? = null,
+    iconText: String? = null,
+    title: String,
+    subtitle: String,
+    isEnabled: Boolean,
+    onToggle: (Boolean) -> Unit
+) {
+    Surface(
+        shape = RoundedCornerShape(12.dp),
+        color = CardBackground
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Box(
+                modifier = Modifier
+                    .size(40.dp)
+                    .background(
+                        color = if (isEnabled) AccentOrange.copy(alpha = 0.1f) else Color.White.copy(alpha = 0.05f),
+                        shape = RoundedCornerShape(8.dp)
+                    ),
+                contentAlignment = Alignment.Center
+            ) {
+                if (iconText != null) {
+                    Text(
+                        text = iconText,
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                } else if (icon != null) {
+                    Icon(
+                        imageVector = icon,
+                        contentDescription = null,
+                        tint = if (isEnabled) AccentOrange else SecondaryText,
+                        modifier = Modifier.size(20.dp)
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.width(12.dp))
+
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = title,
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = PrimaryText,
+                    fontWeight = FontWeight.Medium
+                )
+                Text(
+                    text = subtitle,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = SecondaryText
+                )
+            }
+
+            Switch(
+                checked = isEnabled,
+                onCheckedChange = onToggle,
+                colors = SwitchDefaults.colors(
+                    checkedThumbColor = PrimaryText,
+                    checkedTrackColor = AccentOrange,
+                    uncheckedThumbColor = SecondaryText,
+                    uncheckedTrackColor = CardBackground
+                )
+            )
+        }
+    }
 }

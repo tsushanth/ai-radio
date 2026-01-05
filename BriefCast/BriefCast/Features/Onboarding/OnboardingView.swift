@@ -24,7 +24,7 @@ struct OnboardingView: View {
                 WelcomePage(onContinue: viewModel.nextPage)
                     .tag(0)
 
-                // Page 2: Link Account
+                // Page 2: Link Account (with email/calendar options)
                 LinkAccountPage(
                     viewModel: viewModel,
                     onSkip: viewModel.nextPage,
@@ -66,6 +66,10 @@ struct OnboardingView: View {
         // Save selected topics
         UserDefaults.standard.set(viewModel.selectedTopics, forKey: "selectedTopics")
 
+        // Save email/calendar preferences
+        UserDefaults.standard.set(viewModel.emailEnabled, forKey: "emailEnabled")
+        UserDefaults.standard.set(viewModel.calendarEnabled, forKey: "calendarEnabled")
+
         dismiss()
     }
 }
@@ -102,14 +106,14 @@ struct WelcomePage: View {
                         .foregroundColor(Theme.Colors.primaryText)
                         .multilineTextAlignment(.center)
 
-                    Text("Your personalized morning briefing, powered by AI. Get caught up on your emails, calendar, and news in just a few minutes.")
+                    Text("Your personalized AI radio. Get caught up on your emails, calendar, and favorite topics in just a few minutes.")
                         .font(.system(size: 17, weight: .regular))
                         .foregroundColor(Theme.Colors.secondaryText)
                         .multilineTextAlignment(.center)
                         .padding(.horizontal, 32)
                 }
 
-                // Continue button
+                // Get Started button
                 Button(action: onContinue) {
                     Text("Get Started")
                         .font(.system(size: 18, weight: .semibold))
@@ -151,24 +155,24 @@ struct LinkAccountPage: View {
 
             // Title and description
             VStack(spacing: 12) {
-                Text("Connect Your Email")
+                Text("Connect Your Account")
                     .font(.system(size: 28, weight: .bold))
                     .foregroundColor(Theme.Colors.primaryText)
                     .multilineTextAlignment(.center)
 
-                Text("Link your email to get personalized briefings based on your important messages.")
+                Text("Link your Google account to get personalized briefings from your email and calendar.")
                     .font(.system(size: 16, weight: .regular))
                     .foregroundColor(Theme.Colors.secondaryText)
                     .multilineTextAlignment(.center)
                     .padding(.horizontal, 32)
             }
 
-            // Account options
+            // Account connection
             VStack(spacing: 12) {
                 AccountLinkButton(
                     icon: "g.circle.fill",
                     title: "Connect Google",
-                    subtitle: viewModel.googleLinked ? "Connected" : "Gmail",
+                    subtitle: viewModel.googleLinked ? "Connected" : "Sign in with Google",
                     color: .red,
                     isConnected: viewModel.googleLinked,
                     isLoading: viewModel.isLinkingGoogle
@@ -176,10 +180,29 @@ struct LinkAccountPage: View {
                     Task { await viewModel.linkGoogle() }
                 }
 
+                // Email/Calendar toggle options (shown after connecting)
+                if viewModel.googleLinked {
+                    VStack(spacing: 8) {
+                        IntegrationToggle(
+                            icon: "envelope.fill",
+                            title: "Email",
+                            subtitle: "Include email summaries in briefings",
+                            isEnabled: $viewModel.emailEnabled
+                        )
+
+                        IntegrationToggle(
+                            icon: "calendar",
+                            title: "Calendar",
+                            subtitle: "Include upcoming events in briefings",
+                            isEnabled: $viewModel.calendarEnabled
+                        )
+                    }
+                    .padding(.top, 8)
+                }
+
                 // Permission denied warning
                 if viewModel.permissionDenied {
                     PermissionDeniedWarning {
-                        // Try again
                         Task { await viewModel.linkGoogle() }
                     }
                 }
@@ -204,7 +227,7 @@ struct LinkAccountPage: View {
                 }
 
                 Button(action: onSkip) {
-                    Text(viewModel.permissionDenied ? "Continue without email" : "Skip for now")
+                    Text("Skip for now")
                         .font(.system(size: 16, weight: .medium))
                         .foregroundColor(Theme.Colors.secondaryText)
                 }
@@ -220,6 +243,43 @@ struct LinkAccountPage: View {
     }
 }
 
+// MARK: - Integration Toggle
+
+struct IntegrationToggle: View {
+    let icon: String
+    let title: String
+    let subtitle: String
+    @Binding var isEnabled: Bool
+
+    var body: some View {
+        HStack(spacing: 12) {
+            Image(systemName: icon)
+                .font(.system(size: 20))
+                .foregroundColor(isEnabled ? Theme.Colors.accent : Theme.Colors.secondaryText)
+                .frame(width: 32)
+
+            VStack(alignment: .leading, spacing: 2) {
+                Text(title)
+                    .font(.system(size: 16, weight: .medium))
+                    .foregroundColor(Theme.Colors.primaryText)
+
+                Text(subtitle)
+                    .font(.system(size: 13, weight: .regular))
+                    .foregroundColor(Theme.Colors.secondaryText)
+            }
+
+            Spacer()
+
+            Toggle("", isOn: $isEnabled)
+                .labelsHidden()
+                .tint(Theme.Colors.accent)
+        }
+        .padding(12)
+        .background(Theme.Colors.cardBackground)
+        .cornerRadius(10)
+    }
+}
+
 // MARK: - Permission Denied Warning
 
 struct PermissionDeniedWarning: View {
@@ -232,12 +292,12 @@ struct PermissionDeniedWarning: View {
                     .font(.system(size: 18))
                     .foregroundColor(.orange)
 
-                Text("Email access not granted")
+                Text("Access not granted")
                     .font(.system(size: 16, weight: .semibold))
                     .foregroundColor(.white)
             }
 
-            Text("Without email access, we can only create general topic briefings. To get personalized briefings based on your emails, please try again and check the box that allows email access.")
+            Text("Without access, we can only create general topic briefings. To get personalized briefings, please try again and grant the requested permissions.")
                 .font(.system(size: 14, weight: .regular))
                 .foregroundColor(.white.opacity(0.7))
                 .fixedSize(horizontal: false, vertical: true)
@@ -353,7 +413,7 @@ struct TopicSelectionPage: View {
                     .foregroundColor(Theme.Colors.primaryText)
                     .multilineTextAlignment(.center)
 
-                Text("Select topics to personalize your briefings. We'll include relevant news and updates in your daily brief.")
+                Text("Select at least one topic to personalize your briefings. We'll include relevant news and updates.")
                     .font(.system(size: 16, weight: .regular))
                     .foregroundColor(Theme.Colors.secondaryText)
                     .multilineTextAlignment(.center)
@@ -382,9 +442,15 @@ struct TopicSelectionPage: View {
 
             // Complete button
             VStack(spacing: 8) {
-                Text("\(viewModel.selectedTopics.count) topics selected")
-                    .font(.system(size: 14, weight: .medium))
-                    .foregroundColor(Theme.Colors.secondaryText)
+                if viewModel.selectedTopics.isEmpty {
+                    Text("Select at least one topic")
+                        .font(.system(size: 14, weight: .medium))
+                        .foregroundColor(.orange)
+                } else {
+                    Text("\(viewModel.selectedTopics.count) topic\(viewModel.selectedTopics.count == 1 ? "" : "s") selected")
+                        .font(.system(size: 14, weight: .medium))
+                        .foregroundColor(Theme.Colors.secondaryText)
+                }
 
                 Button(action: onComplete) {
                     Text("Complete Setup")
@@ -444,13 +510,15 @@ class OnboardingViewModel: ObservableObject {
     @Published var isLinkingGoogle: Bool = false
     @Published var showError: Bool = false
     @Published var errorMessage: String?
-    @Published var selectedTopics: [String] = ["Technology", "News", "Business"]
-    @Published var permissionDenied: Bool = false  // True if user didn't grant Gmail permission
+    @Published var selectedTopics: [String] = []  // Start with empty selection
+    @Published var permissionDenied: Bool = false
+    @Published var emailEnabled: Bool = true
+    @Published var calendarEnabled: Bool = true
 
     private let googleOAuthHelper = GoogleOAuthHelper()
 
     init() {
-        // Check if user already has linked accounts (e.g., from profile)
+        // Check if user already has linked accounts
         if UserDefaults.standard.bool(forKey: "hasLinkedGoogleAccount") {
             googleLinked = true
         }
@@ -458,6 +526,9 @@ class OnboardingViewModel: ObservableObject {
         if let savedTopics = UserDefaults.standard.stringArray(forKey: "selectedTopics"), !savedTopics.isEmpty {
             selectedTopics = savedTopics
         }
+        // Load email/calendar preferences
+        emailEnabled = UserDefaults.standard.object(forKey: "emailEnabled") as? Bool ?? true
+        calendarEnabled = UserDefaults.standard.object(forKey: "calendarEnabled") as? Bool ?? true
     }
 
     var hasLinkedAccount: Bool {
@@ -483,12 +554,13 @@ class OnboardingViewModel: ObservableObject {
         errorMessage = nil
 
         do {
+            // Request both email and calendar access
             let (email, accessToken, refreshToken) = try await googleOAuthHelper.requestAccess(
                 includeEmail: true,
-                includeCalendar: false
+                includeCalendar: true
             )
 
-            // Store in backend (reuse LinkedAccountsViewModel logic)
+            // Store in backend
             try await storeLinkedAccount(
                 provider: "google",
                 email: email,
@@ -501,23 +573,19 @@ class OnboardingViewModel: ObservableObject {
             UserDefaults.standard.set(email, forKey: "linkedAccountEmail")
             UserDefaults.standard.set("google", forKey: "linkedAccountProvider")
 
-            print("✅ Google linked in onboarding: \(email)")
+            print("Google linked in onboarding: \(email)")
             permissionDenied = false
         } catch let error as GoogleOAuthError {
-            // Handle permission denied - show inline message instead of alert
             permissionDenied = true
             errorMessage = nil
             showError = false
             print("Google OAuth permission denied: \(error)")
         } catch let error as NSError {
-            // Check for user cancellation (code -5)
             if error.code == -5 || error.localizedDescription.contains("canceled") || error.localizedDescription.contains("cancelled") {
-                // User cancelled - don't show error, just reset state
-                print("ℹ️ User cancelled Google sign-in")
+                print("User cancelled Google sign-in")
                 errorMessage = nil
                 showError = false
             } else {
-                // Actual error - show to user
                 errorMessage = "Failed to connect Google: \(error.localizedDescription)"
                 showError = true
                 print("Google OAuth error: \(error)")
@@ -533,7 +601,6 @@ class OnboardingViewModel: ObservableObject {
         accessToken: String,
         refreshToken: String?
     ) async throws {
-        // Use the OAuth email as the user ID (the email being linked)
         let userId = email
 
         let url = URL(string: "https://ai-radio-backend-917362189743.us-central1.run.app/api/linked-accounts/\(userId)")!
@@ -546,8 +613,8 @@ class OnboardingViewModel: ObservableObject {
             "email": email,
             "access_token": accessToken,
             "refresh_token": refreshToken ?? "",
-            "email_enabled": true,
-            "calendar_enabled": false
+            "email_enabled": emailEnabled,
+            "calendar_enabled": calendarEnabled
         ]
 
         request.httpBody = try JSONSerialization.data(withJSONObject: body)

@@ -45,7 +45,12 @@ CONTENT STRUCTURE:
    - Practical advice (umbrella, jacket, etc.)
    - Keep it brief and relevant
 
-5. OUTRO (15-20 seconds):
+5. TOPIC TEASERS (20-30 seconds, if topic previews provided):
+   - Brief mentions of trending stories in user's followed topics
+   - Encourage listener to explore topics for more details
+   - Keep it engaging and leave them curious
+
+6. OUTRO (15-20 seconds):
    - Quick recap or motivational note
    - Warm sign-off
    - Encourage a great day
@@ -80,12 +85,13 @@ FORMAT YOUR RESPONSE as a JSON array of segments:
   ...
 ]
 
-CRITICAL - Valid "type" values are ONLY these 6 options:
+CRITICAL - Valid "type" values are ONLY these 7 options:
 - "intro" - Opening greetings and overview
 - "email" - Email summaries and discussion
 - "calendar" - Calendar events and scheduling
 - "news" - News topics discussion (use for general topics)
 - "weather" - Weather information
+- "teaser" - Topic teasers and previews for user's followed topics
 - "outro" - Closing remarks and sign-off
 
 Do NOT use any other type values. If unsure, use "email" for email content or "news" for general content.
@@ -188,6 +194,17 @@ WEATHER for ${weather.location}:
 Current: ${weather.current.temperature}°F, ${weather.current.condition}
 Forecast: High ${weather.forecast.high}°F, Low ${weather.forecast.low}°F - ${weather.forecast.condition}
 `;
+  }
+
+  // Topic teasers section (for user's followed topics)
+  if (content.topicTeasers && content.topicTeasers.length > 0) {
+    prompt += `
+TOPIC TEASERS (brief previews of user's followed topics - include near the end before outro):
+`;
+    content.topicTeasers.forEach((teaser, i) => {
+      prompt += `${i + 1}. ${teaser.topicName}: "${teaser.headlines[0] || 'Latest updates available'}"\n`;
+    });
+    prompt += `\nMention these briefly (1-2 sentences each) to tease upcoming content and encourage the listener to explore these topics.\n`;
   }
 
   prompt += `

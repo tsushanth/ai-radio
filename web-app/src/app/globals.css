@@ -1,0 +1,26 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-primary: #f97316;
+  --color-ring: #f97316;
+}
+
+* {
+  box-sizing: border-box;
+  border-color: #e5e7eb;
+}
+
+body {
+  background-color: #f9fafb;
+  color: #111827;
+}
+
+/* Hide scrollbar for horizontal scrolls */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}

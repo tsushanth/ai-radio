@@ -134,7 +134,7 @@ router.get('/oauth/google/callback', async (req: Request, res: Response, next: N
 
     // Redirect to frontend or return success
     const redirectUrl = stateData.redirectUrl || '/dashboard';
-    res.redirect(`${redirectUrl}?success=true&provider=google`);
+    res.redirect(`${redirectUrl}?success=true&provider=google&email=${encodeURIComponent(userInfo.email)}`);
   } catch (error) {
     logOAuthEvent('auth_error', {
       provider: 'google',

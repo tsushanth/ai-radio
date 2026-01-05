@@ -20,7 +20,7 @@ struct BriefCastApp: App {
                 ContentView()
                     .environmentObject(authService)
                     .onOpenURL { url in
-                        print("📱 Received URL: \(url)")
+                        // Handle Google OAuth callback when linking account from Settings
                         GIDSignIn.sharedInstance.handle(url)
                     }
                     .task {

@@ -13,6 +13,7 @@ export interface PodcastGenerationInput {
   calendar_events: CalendarEvent[];
   date: string;
   preferences: UserPreferences;
+  topic_teasers?: TopicTeaser[];  // Previews from user's followed topics
 }
 
 export interface PodcastGenerationResult {
@@ -41,7 +42,7 @@ export interface AudioSegment {
   buffer: Buffer;
   duration_seconds: number;
   speaker: 'host1' | 'host2';
-  segment_type: 'intro' | 'calendar' | 'email' | 'news' | 'weather' | 'outro';
+  segment_type: 'intro' | 'calendar' | 'email' | 'news' | 'weather' | 'teaser' | 'outro';
 }
 
 export interface AudioMixingOptions {
@@ -60,12 +61,20 @@ export interface MixedAudioResult {
   bitrate: number;
 }
 
+// Topic teaser for user's followed topics
+export interface TopicTeaser {
+  topicId: string;
+  topicName: string;
+  headlines: string[];
+}
+
 // Content generation types
 export interface ContentSummary {
   emails: EmailSummary;
   calendar: CalendarSummary;
   weather?: WeatherSummary;
   news?: NewsSummary;
+  topicTeasers?: TopicTeaser[];
 }
 
 export interface EmailSummary {

@@ -40,17 +40,24 @@ router.get('/:userId', async (req: Request, res: Response, next: NextFunction) =
   try {
     const userId = req.params.userId;
 
-    // TODO: Fetch from database
-    // const { data: accounts, error } = await supabase
-    //   .from('oauth_tokens')
-    //   .select('id, provider, email, created_at, email_enabled, calendar_enabled')
-    //   .eq('user_id', userId)
-    //   .order('created_at', { ascending: false });
+    // Get tokens from token manager (checks database and memory)
+    const tokens = await tokenManager.getUserTokens(userId);
 
-    // Mock response
+    // Map to linked account format
+    const linkedAccounts = tokens.map((token, index) => ({
+      id: `${token.provider}_${index}`,
+      provider: token.provider,
+      email: token.email,
+      emailEnabled: true,
+      calendarEnabled: true,
+      createdAt: new Date().toISOString(),
+    }));
+
+    console.log(`Found ${linkedAccounts.length} linked accounts for user ${userId}`);
+
     res.json({
       success: true,
-      linked_accounts: [],
+      linkedAccounts: linkedAccounts,
     });
   } catch (error) {
     console.error('Failed to fetch linked accounts:', error);

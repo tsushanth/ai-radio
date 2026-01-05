@@ -86,9 +86,23 @@ interface ApiService {
     // Discover
     @GET("discover")
     suspend fun getDiscover(): DiscoverResponse
-    
+
     @GET("for-you/{userId}")
     suspend fun getForYou(@Path("userId") userId: String): ForYouResponse
+
+    // Voice endpoints
+    @GET("voices")
+    suspend fun getVoices(
+        @Query("provider") provider: String? = null
+    ): VoicesResponse
+
+    @GET("voices/providers")
+    suspend fun getVoiceProviders(): ProvidersResponse
+
+    @GET("voices/pairs")
+    suspend fun getVoicePairs(
+        @Query("provider") provider: String? = null
+    ): VoicePairsResponse
 }
 
 // Request/Response models

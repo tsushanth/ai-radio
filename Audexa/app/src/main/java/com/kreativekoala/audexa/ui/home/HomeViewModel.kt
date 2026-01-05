@@ -223,6 +223,17 @@ class HomeViewModel @Inject constructor(
     }
 
     /**
+     * Cancel ongoing generation and reset to ready state
+     */
+    fun cancelGeneration() {
+        viewModelScope.launch {
+            Log.d(TAG, "Cancelling generation")
+            val hasLinked = preferencesManager.hasLinkedGoogle.first()
+            _dailyBriefState.value = if (hasLinked) DailyBriefState.Ready else DailyBriefState.NotLinked
+        }
+    }
+
+    /**
      * Observe audio player state to sync Daily Brief UI with MiniPlayer
      */
     private fun observeAudioState() {

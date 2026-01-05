@@ -31,6 +31,7 @@ fun ProfileScreen(
     onNavigateToHiddenTopics: () -> Unit,
     onNavigateToLanguageSettings: () -> Unit,
     onNavigateToThemeSettings: () -> Unit,
+    onNavigateToVoiceSettings: () -> Unit = {},
     onSignOut: () -> Unit,
     viewModel: ProfileViewModel = hiltViewModel()
 ) {
@@ -112,6 +113,13 @@ fun ProfileScreen(
                     title = "Podcast Language",
                     subtitle = uiState.preferredLanguage,
                     onClick = onNavigateToLanguageSettings
+                )
+                HorizontalDivider(color = MaterialTheme.colorScheme.surfaceVariant)
+                SettingsRow(
+                    icon = Icons.Default.RecordVoiceOver,
+                    title = "Voice Settings",
+                    subtitle = "Choose podcast voices",
+                    onClick = onNavigateToVoiceSettings
                 )
                 HorizontalDivider(color = MaterialTheme.colorScheme.surfaceVariant)
                 SettingsRow(

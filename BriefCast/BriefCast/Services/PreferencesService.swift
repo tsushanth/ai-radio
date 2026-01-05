@@ -55,6 +55,8 @@ class PreferencesService: ObservableObject {
         static let selectedTopics = "selectedTopics"
         static let hasCompletedOnboarding = "hasCompletedOnboarding"
         static let appTheme = "appTheme"
+        static let emailEnabled = "emailEnabled"
+        static let calendarEnabled = "calendarEnabled"
     }
 
     private let defaults = UserDefaults.standard
@@ -189,6 +191,36 @@ class PreferencesService: ObservableObject {
         }
     }
 
+    // MARK: - Email/Calendar Integration
+
+    var emailEnabled: Bool {
+        get {
+            // Default to true if not set
+            if defaults.object(forKey: Keys.emailEnabled) == nil {
+                return true
+            }
+            return defaults.bool(forKey: Keys.emailEnabled)
+        }
+        set {
+            defaults.set(newValue, forKey: Keys.emailEnabled)
+            objectWillChange.send()
+        }
+    }
+
+    var calendarEnabled: Bool {
+        get {
+            // Default to true if not set
+            if defaults.object(forKey: Keys.calendarEnabled) == nil {
+                return true
+            }
+            return defaults.bool(forKey: Keys.calendarEnabled)
+        }
+        set {
+            defaults.set(newValue, forKey: Keys.calendarEnabled)
+            objectWillChange.send()
+        }
+    }
+
     // MARK: - Reset
 
     func resetAllPreferences() {
@@ -197,5 +229,7 @@ class PreferencesService: ObservableObject {
         preferredLanguage = "en"
         selectedTopics = ["Technology", "AI", "Business", "News"]
         appTheme = .system
+        emailEnabled = true
+        calendarEnabled = true
     }
 }

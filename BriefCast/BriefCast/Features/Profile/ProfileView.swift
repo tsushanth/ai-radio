@@ -98,6 +98,36 @@ struct ProfileView: View {
                     }
                     .padding(.horizontal, 16)
 
+                    // Integration Settings Section (shown when account is linked)
+                    if let linkedAccounts = authService.currentUser?.linkedAccounts, !linkedAccounts.isEmpty {
+                        VStack(alignment: .leading, spacing: 16) {
+                            SectionHeader(title: "Daily Brief Sources")
+
+                            VStack(spacing: 12) {
+                                IntegrationSettingsToggle(
+                                    icon: "envelope.fill",
+                                    title: "Email",
+                                    subtitle: "Include email summaries in Daily Brief",
+                                    isEnabled: Binding(
+                                        get: { preferencesService.emailEnabled },
+                                        set: { preferencesService.emailEnabled = $0 }
+                                    )
+                                )
+
+                                IntegrationSettingsToggle(
+                                    icon: "calendar",
+                                    title: "Calendar",
+                                    subtitle: "Include upcoming events in Daily Brief",
+                                    isEnabled: Binding(
+                                        get: { preferencesService.calendarEnabled },
+                                        set: { preferencesService.calendarEnabled = $0 }
+                                    )
+                                )
+                            }
+                        }
+                        .padding(.horizontal, 16)
+                    }
+
                     // Preferences Section
                     VStack(alignment: .leading, spacing: 16) {
                         SectionHeader(title: "Preferences")
@@ -418,6 +448,41 @@ struct InfoRow: View {
             Text(value)
                 .font(.system(size: 14, weight: .regular))
                 .foregroundColor(Theme.Colors.secondaryText)
+        }
+        .padding(16)
+        .background(Theme.Colors.cardBackground)
+        .cornerRadius(12)
+    }
+}
+
+struct IntegrationSettingsToggle: View {
+    let icon: String
+    let title: String
+    let subtitle: String
+    @Binding var isEnabled: Bool
+
+    var body: some View {
+        HStack(spacing: 12) {
+            Image(systemName: icon)
+                .font(.system(size: 20))
+                .foregroundColor(isEnabled ? Theme.Colors.accent : Theme.Colors.secondaryText)
+                .frame(width: 32)
+
+            VStack(alignment: .leading, spacing: 2) {
+                Text(title)
+                    .font(.system(size: 16, weight: .semibold))
+                    .foregroundColor(Theme.Colors.primaryText)
+
+                Text(subtitle)
+                    .font(.system(size: 13, weight: .regular))
+                    .foregroundColor(Theme.Colors.secondaryText)
+            }
+
+            Spacer()
+
+            Toggle("", isOn: $isEnabled)
+                .labelsHidden()
+                .tint(Theme.Colors.accent)
         }
         .padding(16)
         .background(Theme.Colors.cardBackground)

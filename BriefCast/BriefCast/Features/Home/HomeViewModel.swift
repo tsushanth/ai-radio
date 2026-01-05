@@ -582,6 +582,12 @@ class HomeViewModel {
         }
     }
 
+    func cancelGeneration() {
+        print("❌ Cancelling generation")
+        // Reset to ready state so user can try again
+        dailyBriefState = hasLinkedAccount ? .ready : .notLinked
+    }
+
     // MARK: - Network Connectivity
 
     /// Check if network is available using NWPathMonitor

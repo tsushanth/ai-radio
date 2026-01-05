@@ -18,14 +18,19 @@ import kotlin.coroutines.resumeWithException
 data class LinkedAccountsUiState(
     val hasLinkedGoogle: Boolean = false,
     val linkedGoogleEmail: String? = null,
+    val hasLinkedCalendar: Boolean = false,  // Separate calendar connection status
     val hasLinkedMicrosoft: Boolean = false,
     val linkedMicrosoftEmail: String? = null,
     val isLinkingGoogle: Boolean = false,
+    val isLinkingCalendar: Boolean = false,  // Separate calendar linking state
     val isLinkingMicrosoft: Boolean = false,
     val showComingSoonDialog: Boolean = false,
     val error: String? = null,
     val successMessage: String? = null,
-    val gmailLinkIntent: Intent? = null  // Intent ready to launch
+    val gmailLinkIntent: Intent? = null,  // Intent ready to launch for Gmail
+    val calendarLinkIntent: Intent? = null,  // Intent ready to launch for Calendar
+    val emailEnabled: Boolean = true,
+    val calendarEnabled: Boolean = false  // Default to false until connected
 )
 
 @HiltViewModel
@@ -50,19 +55,32 @@ class LinkedAccountsViewModel @Inject constructor(
             combine(
                 preferencesManager.hasLinkedGoogle,
                 preferencesManager.linkedEmail,
-                preferencesManager.linkedProvider
-            ) { hasGoogle, email, provider ->
-                Triple(hasGoogle, email, provider)
-            }.collect { (hasGoogle, email, provider) ->
+                preferencesManager.linkedProvider,
+                preferencesManager.emailEnabled,
+                preferencesManager.calendarEnabled
+            ) { hasGoogle, email, provider, emailEnabled, calendarEnabled ->
+                LinkedAccountData(hasGoogle, email, provider, emailEnabled, calendarEnabled)
+            }.collect { data ->
                 _uiState.value = _uiState.value.copy(
-                    hasLinkedGoogle = hasGoogle && provider == "google",
-                    linkedGoogleEmail = if (provider == "google") email else null,
-                    hasLinkedMicrosoft = provider == "microsoft",
-                    linkedMicrosoftEmail = if (provider == "microsoft") email else null
+                    hasLinkedGoogle = data.hasGoogle && data.provider == "google",
+                    linkedGoogleEmail = if (data.provider == "google") data.email else null,
+                    hasLinkedCalendar = data.calendarEnabled,  // Calendar is linked if enabled
+                    hasLinkedMicrosoft = data.provider == "microsoft",
+                    linkedMicrosoftEmail = if (data.provider == "microsoft") data.email else null,
+                    emailEnabled = data.emailEnabled,
+                    calendarEnabled = data.calendarEnabled
                 )
             }
         }
     }
+
+    private data class LinkedAccountData(
+        val hasGoogle: Boolean,
+        val email: String?,
+        val provider: String?,
+        val emailEnabled: Boolean,
+        val calendarEnabled: Boolean
+    )
 
     /**
      * Prepare Gmail linking - revokes existing access and prepares the intent
@@ -133,8 +151,89 @@ class LinkedAccountsViewModel @Inject constructor(
     fun handleLinkError(message: String) {
         _uiState.value = _uiState.value.copy(
             isLinkingGoogle = false,
+            isLinkingCalendar = false,
             error = message
         )
+    }
+
+    /**
+     * Prepare Calendar linking - revokes existing access and prepares the intent
+     */
+    fun prepareCalendarLinking() {
+        _uiState.value = _uiState.value.copy(
+            isLinkingCalendar = true,
+            error = null,
+            successMessage = null,
+            calendarLinkIntent = null
+        )
+
+        viewModelScope.launch {
+            try {
+                suspendCancellableCoroutine<Unit> { continuation ->
+                    authRepository.googleSignInClientWithCalendar.revokeAccess()
+                        .addOnSuccessListener {
+                            Log.d(TAG, "Revoked previous Calendar access")
+                            continuation.resume(Unit)
+                        }
+                        .addOnFailureListener { e ->
+                            Log.d(TAG, "Revoke calendar access failed (expected if not signed in): ${e.message}")
+                            continuation.resume(Unit)
+                        }
+                }
+            } catch (e: Exception) {
+                Log.d(TAG, "Revoke calendar access completed with exception: ${e.message}")
+            }
+
+            // Now set the intent - screen will launch it
+            _uiState.value = _uiState.value.copy(
+                calendarLinkIntent = authRepository.googleSignInClientWithCalendar.signInIntent
+            )
+        }
+    }
+
+    /**
+     * Clear the calendar intent after it's been launched
+     */
+    fun clearCalendarLinkIntent() {
+        _uiState.value = _uiState.value.copy(calendarLinkIntent = null)
+    }
+
+    fun handleCalendarLinkResult(account: GoogleSignInAccount) {
+        viewModelScope.launch {
+            authRepository.linkCalendarAccount(account)
+                .onSuccess {
+                    _uiState.value = _uiState.value.copy(
+                        isLinkingCalendar = false,
+                        hasLinkedCalendar = true,
+                        successMessage = "Calendar connected successfully! Your Daily Brief will now include upcoming events."
+                    )
+                }
+                .onFailure { e ->
+                    Log.e(TAG, "Failed to link Calendar", e)
+                    _uiState.value = _uiState.value.copy(
+                        isLinkingCalendar = false,
+                        error = e.message ?: "Failed to link Calendar"
+                    )
+                }
+        }
+    }
+
+    fun unlinkCalendar() {
+        viewModelScope.launch {
+            try {
+                preferencesManager.setCalendarEnabled(false)
+                _uiState.value = _uiState.value.copy(
+                    hasLinkedCalendar = false,
+                    calendarEnabled = false,
+                    successMessage = "Calendar disconnected"
+                )
+            } catch (e: Exception) {
+                Log.e(TAG, "Failed to unlink Calendar", e)
+                _uiState.value = _uiState.value.copy(
+                    error = "Failed to disconnect calendar: ${e.message}"
+                )
+            }
+        }
     }
 
     fun unlinkGoogle() {
@@ -169,5 +268,17 @@ class LinkedAccountsViewModel @Inject constructor(
 
     fun clearMessages() {
         _uiState.value = _uiState.value.copy(error = null, successMessage = null)
+    }
+
+    fun setEmailEnabled(enabled: Boolean) {
+        viewModelScope.launch {
+            preferencesManager.setEmailEnabled(enabled)
+        }
+    }
+
+    fun setCalendarEnabled(enabled: Boolean) {
+        viewModelScope.launch {
+            preferencesManager.setCalendarEnabled(enabled)
+        }
     }
 }

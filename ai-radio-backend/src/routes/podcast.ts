@@ -22,6 +22,12 @@ const router = express.Router();
 // In production, use Redis or database
 // ================================================
 
+interface ScriptSegment {
+  speaker: 'host1' | 'host2';
+  text: string;
+  type: string;
+}
+
 interface GenerationJob {
   id: string;
   userId: string;
@@ -32,7 +38,7 @@ interface GenerationJob {
     episodeId: string;
     audioUrl: string;
     durationSeconds: number;
-    scriptSegments: number;
+    scriptSegments: ScriptSegment[];
   };
   error?: {
     code: string;
@@ -167,11 +173,20 @@ router.post('/generate-async', async (req: Request, res: Response, next: NextFun
       job.status = 'completed';
       job.progress = 100;
       job.message = 'Generation complete';
+
+      const scriptSegments = result.script.segments.map((seg: any) => ({
+        speaker: seg.speaker,
+        text: seg.text,
+        type: seg.type,
+      }));
+
+      console.log(`[Job ${jobId}] Script has ${result.script.segments.length} segments, mapped ${scriptSegments.length} segments`);
+
       job.result = {
         episodeId: result.episode_id,
         audioUrl: result.audio_url,
         durationSeconds: result.duration_seconds,
-        scriptSegments: result.script.segments.length,
+        scriptSegments,
       };
       job.updatedAt = new Date();
       console.log(`[Job ${jobId}] Completed successfully`);
@@ -238,11 +253,18 @@ router.get('/job/:jobId', async (req: Request, res: Response, next: NextFunction
 
     // Include result if completed
     if (job.status === 'completed' && job.result) {
+      console.log(`[Job ${jobId}] Returning ${job.result.scriptSegments.length} script segments`);
       response.episode = {
         id: job.result.episodeId,
-        audio_url: job.result.audioUrl,
-        duration_seconds: job.result.durationSeconds,
-        script_segments: job.result.scriptSegments,
+        audioUrl: job.result.audioUrl,
+        durationSeconds: job.result.durationSeconds,
+        title: 'Daily Brief',
+        status: 'completed',
+        script: {
+          segments: job.result.scriptSegments,
+          totalSegments: job.result.scriptSegments.length,
+          estimatedDurationSeconds: job.result.durationSeconds,
+        },
       };
     }
 

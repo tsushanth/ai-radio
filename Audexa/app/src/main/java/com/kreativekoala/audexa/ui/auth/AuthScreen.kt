@@ -1,8 +1,5 @@
 package com.kreativekoala.audexa.ui.auth
 
-import android.app.Activity
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -19,8 +16,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.common.api.ApiException
 import com.kreativekoala.audexa.ui.theme.*
 
 @Composable
@@ -29,20 +24,6 @@ fun AuthScreen(
     viewModel: AuthViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
-
-    val launcher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.StartActivityForResult()
-    ) { result ->
-        if (result.resultCode == Activity.RESULT_OK) {
-            val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
-            try {
-                val account = task.getResult(ApiException::class.java)
-                viewModel.handleGoogleSignInResult(account)
-            } catch (e: ApiException) {
-                viewModel.handleSignInError(e.message ?: "Sign in failed")
-            }
-        }
-    }
 
     LaunchedEffect(uiState.isSignedIn) {
         if (uiState.isSignedIn) {
@@ -81,9 +62,9 @@ fun AuthScreen(
                     tint = PrimaryText
                 )
             }
-            
+
             Spacer(modifier = Modifier.height(24.dp))
-            
+
             // App name
             Text(
                 text = "Audexa",
@@ -91,87 +72,53 @@ fun AuthScreen(
                 color = PrimaryText,
                 fontWeight = FontWeight.Bold
             )
-            
+
             Text(
                 text = "Your personal AI radio",
                 style = MaterialTheme.typography.bodyLarge,
                 color = SecondaryText
             )
-            
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // Description
+            Text(
+                text = "Listen to AI-generated podcasts on topics you care about. Link your email in settings to get personalized daily briefings.",
+                style = MaterialTheme.typography.bodyMedium,
+                color = SecondaryText.copy(alpha = 0.8f),
+                textAlign = TextAlign.Center,
+                modifier = Modifier.padding(horizontal = 16.dp)
+            )
+
             Spacer(modifier = Modifier.height(48.dp))
-            
-            // Error message
-            if (uiState.error != null) {
-                Surface(
-                    modifier = Modifier.fillMaxWidth(),
-                    color = Error.copy(alpha = 0.1f),
-                    shape = RoundedCornerShape(8.dp)
-                ) {
-                    Text(
-                        text = uiState.error!!,
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = Error,
-                        modifier = Modifier.padding(12.dp),
-                        textAlign = TextAlign.Center
-                    )
-                }
-                Spacer(modifier = Modifier.height(16.dp))
-            }
-            
-            // Google Sign-In button
+
+            // Start button
             Button(
-                onClick = {
-                    launcher.launch(viewModel.getGoogleSignInIntent())
-                },
+                onClick = { viewModel.continueWithoutSignIn() },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(56.dp),
                 shape = RoundedCornerShape(12.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = PrimaryText,
-                    contentColor = Background
+                    containerColor = AccentOrange,
+                    contentColor = PrimaryText
                 ),
                 enabled = !uiState.isLoading
             ) {
                 if (uiState.isLoading) {
                     CircularProgressIndicator(
                         modifier = Modifier.size(24.dp),
-                        color = Background,
+                        color = PrimaryText,
                         strokeWidth = 2.dp
                     )
                 } else {
                     Text(
-                        text = "Sign in with Google",
+                        text = "Start",
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.SemiBold
                     )
                 }
             }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // Continue without sign in button
-            TextButton(
-                onClick = { viewModel.continueWithoutSignIn() },
-                modifier = Modifier.fillMaxWidth(),
-                enabled = !uiState.isLoading
-            ) {
-                Text(
-                    text = "Continue without sign in",
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = SecondaryText
-                )
-            }
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            // Info text about linking later
-            Text(
-                text = "You can link your email later to enable personalized Daily Brief",
-                style = MaterialTheme.typography.bodySmall,
-                color = SecondaryText.copy(alpha = 0.7f),
-                textAlign = TextAlign.Center
-            )
 
             Spacer(modifier = Modifier.height(24.dp))
 

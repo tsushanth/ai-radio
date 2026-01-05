@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Link
 import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.Person
@@ -44,6 +45,7 @@ fun GradientHeader(
     onRetryTapped: () -> Unit = {},
     onRegenerateTapped: () -> Unit = {},
     onRelinkTapped: () -> Unit = {},
+    onCancelTapped: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     Box(
@@ -124,7 +126,10 @@ fun GradientHeader(
                     )
                 }
                 is DailyBriefState.Generating -> {
-                    GeneratingIndicator(progress = briefState.progress)
+                    GeneratingIndicator(
+                        progress = briefState.progress,
+                        onCancel = onCancelTapped
+                    )
                 }
                 is DailyBriefState.Completed -> {
                     PlayButtonWithRegenerate(
@@ -279,6 +284,7 @@ private fun LinkAccountButton(
 @Composable
 private fun GeneratingIndicator(
     progress: Int,
+    onCancel: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     Row(
@@ -294,8 +300,24 @@ private fun GeneratingIndicator(
         Text(
             text = "Generating... $progress%",
             style = MaterialTheme.typography.bodyMedium,
-            color = PrimaryText
+            color = PrimaryText,
+            modifier = Modifier.weight(1f)
         )
+        // Cancel button
+        IconButton(
+            onClick = onCancel,
+            modifier = Modifier
+                .size(40.dp)
+                .clip(CircleShape)
+                .background(PrimaryText.copy(alpha = 0.2f))
+        ) {
+            Icon(
+                imageVector = Icons.Default.Close,
+                contentDescription = "Cancel",
+                tint = PrimaryText,
+                modifier = Modifier.size(20.dp)
+            )
+        }
     }
 }
 

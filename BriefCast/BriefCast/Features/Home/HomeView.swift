@@ -45,6 +45,9 @@ struct HomeView: View {
                             Task {
                                 await viewModel.regenerateDailyBrief()
                             }
+                        },
+                        onCancelTapped: {
+                            viewModel.cancelGeneration()
                         }
                     )
 

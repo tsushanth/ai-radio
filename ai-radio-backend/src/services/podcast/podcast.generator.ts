@@ -8,10 +8,13 @@ import { googleCalendarService } from '../calendar/calendar.service';
 import { scriptGenerator } from '../ai/script.generator';
 import { openaiTTS } from '../tts/openai.tts';
 import { storageService } from '../storage/storage.service';
+import { musicService, type PodcastMusicConfig } from '../audio/music.service';
+import { topicPreviewService, type TopicPreviewCollection } from '../content/topic.preview';
 import type {
   PodcastGenerationInput,
   PodcastGenerationResult,
   AudioSegment,
+  TopicTeaser,
 } from '../../types/podcast';
 import type {
   PodcastEpisode,
@@ -50,6 +53,9 @@ export interface GenerationOptions {
   tts_concurrency?: number;
   date?: string;  // Client's local date in YYYY-MM-DD format
   onProgress?: ProgressCallback;
+  // Music options
+  include_music?: boolean;  // Enable intro/transition/outro music
+  include_topic_teasers?: boolean;  // Include previews of user's followed topics
 }
 
 /**
@@ -94,6 +100,33 @@ export class PodcastGeneratorService {
         message: 'Starting podcast generation...',
       });
 
+      // Initialize music service if music is enabled
+      let podcastMusicConfig: PodcastMusicConfig | null = null;
+      if (options.include_music !== false) {
+        await musicService.initialize();
+        if (musicService.isMusicAvailable()) {
+          podcastMusicConfig = musicService.generatePodcastMusicConfig({
+            includeIntro: true,
+            includeTransitions: true,
+            includeOutro: true,
+            transitionCount: 2, // transitions between major sections
+          });
+          console.log('🎵 Music enabled for podcast');
+        }
+      }
+
+      // Fetch topic previews if enabled
+      let topicPreviews: TopicPreviewCollection | null = null;
+      if (options.include_topic_teasers !== false && preferences.topics && preferences.topics.length > 0) {
+        try {
+          topicPreviews = await topicPreviewService.getTopicPreviews(preferences);
+          console.log(`📰 Fetched ${topicPreviews.previews.length} topic previews`);
+        } catch (error) {
+          console.warn('Failed to fetch topic previews:', error);
+          // Continue without topic previews
+        }
+      }
+
       // Step 1: Fetch data
       const { emails, calendarEvents } = await this.fetchData(
         userId,
@@ -109,13 +142,14 @@ export class PodcastGeneratorService {
         message: `Fetched ${emails.length} emails and ${calendarEvents.length} events`,
       });
 
-      // Step 2: Generate script
+      // Step 2: Generate script (with topic teasers if available)
       const script = await this.generateScript(
         userId,
         emails,
         calendarEvents,
         preferences,
-        options
+        options,
+        topicPreviews
       );
       stats.script_segments = script.total_segments;
       stats.script_words = script.metadata?.total_words || 0;
@@ -138,11 +172,18 @@ export class PodcastGeneratorService {
       });
 
       // Step 3: Generate audio
-      const audioSegments = await this.generateAudio(
+      let audioSegments = await this.generateAudio(
         script,
         preferences,
         options
       );
+
+      // Add music segments if available
+      if (podcastMusicConfig) {
+        audioSegments = await this.addMusicToAudio(audioSegments, podcastMusicConfig);
+        console.log(`🎵 Added music segments (intro, transitions, outro)`);
+      }
+
       stats.audio_segments = audioSegments.length;
       stats.audio_duration_seconds = calculateTotalDuration(audioSegments);
       stats.audio_size_mb = calculateTotalSize(audioSegments).megabytes;
@@ -155,7 +196,7 @@ export class PodcastGeneratorService {
       await this.reportProgress(options.onProgress, {
         step: 'audio_generated',
         progress_percent: 70,
-        message: `Generated ${audioSegments.length} audio segments`,
+        message: `Generated ${audioSegments.length} audio segments${podcastMusicConfig ? ' with music' : ''}`,
       });
 
       // Step 4: Upload audio
@@ -306,10 +347,18 @@ export class PodcastGeneratorService {
     emails: any[],
     calendarEvents: any[],
     preferences: UserPreferences,
-    options: GenerationOptions
+    options: GenerationOptions,
+    topicPreviews?: TopicPreviewCollection | null
   ) {
     // Use client date if provided, otherwise fall back to server date
     const dateForScript = options.date || new Date().toISOString().split('T')[0];
+
+    // Convert topic previews to TopicTeaser format for the input
+    const topicTeasers: TopicTeaser[] = topicPreviews?.previews.map(preview => ({
+      topicId: preview.topicId,
+      topicName: preview.topicName,
+      headlines: preview.headlines,
+    })) || [];
 
     const input: PodcastGenerationInput = {
       user_id: userId,
@@ -317,6 +366,7 @@ export class PodcastGeneratorService {
       calendar_events: calendarEvents,
       date: dateForScript,
       preferences,
+      topic_teasers: topicTeasers,
     };
 
     // Generate with retry
@@ -378,6 +428,84 @@ export class PodcastGeneratorService {
     }
 
     return audioSegments;
+  }
+
+  /**
+   * Add music segments (intro, transitions, outro) to the audio
+   * Music is inserted at appropriate positions in the podcast
+   */
+  private async addMusicToAudio(
+    audioSegments: AudioSegment[],
+    musicConfig: PodcastMusicConfig
+  ): Promise<AudioSegment[]> {
+    const enhancedSegments: AudioSegment[] = [];
+
+    // Download intro music if available
+    let introBuffer: Buffer | null = null;
+    if (musicConfig.intro) {
+      introBuffer = await musicService.downloadAsset(musicConfig.intro);
+      if (introBuffer) {
+        enhancedSegments.push({
+          buffer: introBuffer,
+          duration_seconds: musicConfig.intro.duration_seconds,
+          speaker: 'host1', // Music doesn't have a speaker, but we need to satisfy the type
+          segment_type: 'intro',
+        });
+      }
+    }
+
+    // Track which segment types we've seen for transition insertion
+    let lastSegmentType: string | null = null;
+    let transitionIndex = 0;
+
+    for (const segment of audioSegments) {
+      // Insert transition music when switching between major section types
+      const majorSectionChange = lastSegmentType !== null &&
+        lastSegmentType !== segment.segment_type &&
+        this.isMajorSection(lastSegmentType) &&
+        this.isMajorSection(segment.segment_type);
+
+      if (majorSectionChange &&
+          musicConfig.transitions.length > 0 &&
+          transitionIndex < musicConfig.transitions.length) {
+        const transition = musicConfig.transitions[transitionIndex];
+        const transitionBuffer = await musicService.downloadAsset(transition);
+        if (transitionBuffer) {
+          enhancedSegments.push({
+            buffer: transitionBuffer,
+            duration_seconds: transition.duration_seconds,
+            speaker: 'host1',
+            segment_type: 'intro', // Use intro type for transitions
+          });
+          transitionIndex++;
+        }
+      }
+
+      enhancedSegments.push(segment);
+      lastSegmentType = segment.segment_type;
+    }
+
+    // Download and add outro music if available
+    if (musicConfig.outro) {
+      const outroBuffer = await musicService.downloadAsset(musicConfig.outro);
+      if (outroBuffer) {
+        enhancedSegments.push({
+          buffer: outroBuffer,
+          duration_seconds: musicConfig.outro.duration_seconds,
+          speaker: 'host1',
+          segment_type: 'outro',
+        });
+      }
+    }
+
+    return enhancedSegments;
+  }
+
+  /**
+   * Check if a segment type is a major section (for transition placement)
+   */
+  private isMajorSection(segmentType: string): boolean {
+    return ['intro', 'email', 'calendar', 'news', 'teaser', 'outro'].includes(segmentType);
   }
 
   /**

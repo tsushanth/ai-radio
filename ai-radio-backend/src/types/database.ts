@@ -66,7 +66,7 @@ export interface PodcastScript {
 export interface ScriptSegment {
   speaker: 'host1' | 'host2';
   text: string;
-  type: 'intro' | 'calendar' | 'email' | 'news' | 'weather' | 'outro' | 'pause';
+  type: 'intro' | 'calendar' | 'email' | 'news' | 'weather' | 'teaser' | 'outro' | 'pause';
   duration_estimate?: number; // in seconds
   sequence?: number;
 }

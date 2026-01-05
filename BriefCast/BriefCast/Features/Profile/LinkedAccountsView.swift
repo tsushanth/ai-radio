@@ -50,20 +50,40 @@ struct LinkedAccountsView: View {
 
                     // Available Integrations
                     VStack(alignment: .leading, spacing: 12) {
-                        Text(viewModel.connectedAccounts.isEmpty ? "Available Accounts" : "Add Another Account")
+                        Text(viewModel.connectedAccounts.isEmpty && !viewModel.hasLinkedCalendar ? "Available Accounts" : "Add Another Account")
                             .font(.system(size: 20, weight: .bold))
                             .foregroundColor(Theme.Colors.primaryText)
                             .padding(.horizontal, 16)
 
                         ForEach(viewModel.availableProviders) { provider in
-                            ProviderCard(
-                                provider: provider,
-                                onConnect: {
-                                    Task {
-                                        await viewModel.connectAccount(provider: provider)
+                            // Skip showing provider if already connected
+                            let isConnected = (provider.id == "google" && !viewModel.connectedAccounts.isEmpty) ||
+                                              (provider.id == "google_calendar" && viewModel.hasLinkedCalendar)
+
+                            if !isConnected {
+                                ProviderCard(
+                                    provider: provider,
+                                    onConnect: {
+                                        Task {
+                                            await viewModel.connectAccount(provider: provider)
+                                        }
                                     }
-                                }
-                            )
+                                )
+                            }
+                        }
+                    }
+
+                    // Show connected calendar section if linked
+                    if viewModel.hasLinkedCalendar {
+                        VStack(alignment: .leading, spacing: 12) {
+                            Text("Connected Calendar")
+                                .font(.system(size: 20, weight: .bold))
+                                .foregroundColor(Theme.Colors.primaryText)
+                                .padding(.horizontal, 16)
+
+                            CalendarConnectedCard(onDisconnect: {
+                                viewModel.disconnectCalendar()
+                            })
                         }
                     }
 
@@ -334,6 +354,80 @@ struct PermissionToggle: View {
     }
 }
 
+// MARK: - Calendar Connected Card
+
+struct CalendarConnectedCard: View {
+    let onDisconnect: () -> Void
+    @State private var showDisconnectConfirmation = false
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 16) {
+            HStack(spacing: 12) {
+                Circle()
+                    .fill(Color.blue.opacity(0.15))
+                    .frame(width: 48, height: 48)
+                    .overlay(
+                        Image(systemName: "calendar")
+                            .font(.system(size: 24))
+                            .foregroundColor(.blue)
+                    )
+
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("Google Calendar")
+                        .font(.system(size: 17, weight: .semibold))
+                        .foregroundColor(Theme.Colors.primaryText)
+
+                    HStack(spacing: 6) {
+                        Circle()
+                            .fill(Color.green)
+                            .frame(width: 8, height: 8)
+
+                        Text("Connected")
+                            .font(.system(size: 12, weight: .medium))
+                            .foregroundColor(.green)
+                    }
+                }
+
+                Spacer()
+            }
+
+            Divider()
+                .background(Color.white.opacity(0.1))
+
+            Button(action: {
+                showDisconnectConfirmation = true
+            }) {
+                HStack {
+                    Image(systemName: "link.badge.minus")
+                        .font(.system(size: 14))
+
+                    Text("Disconnect Calendar")
+                        .font(.system(size: 14, weight: .semibold))
+                }
+                .foregroundColor(.red)
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 8)
+            }
+        }
+        .padding(16)
+        .background(Theme.Colors.cardBackground)
+        .cornerRadius(12)
+        .overlay(
+            RoundedRectangle(cornerRadius: 12)
+                .stroke(Color.white.opacity(0.05), lineWidth: 1)
+        )
+        .padding(.horizontal, 16)
+        .alert("Disconnect Calendar", isPresented: $showDisconnectConfirmation) {
+            Button("Cancel", role: .cancel) { }
+            Button("Disconnect", role: .destructive) {
+                onDisconnect()
+            }
+        } message: {
+            Text("Are you sure you want to disconnect your Google Calendar? Your Daily Brief will no longer include upcoming events.")
+        }
+    }
+}
+
 // MARK: - View-Specific Models
 
 struct OAuthProvider: Identifiable {
@@ -366,15 +460,28 @@ class LinkedAccountsViewModel: ObservableObject {
     let availableProviders: [OAuthProvider] = [
         OAuthProvider(
             id: "google",
-            displayName: "Google",
-            iconName: "g.circle.fill",
+            displayName: "Gmail",
+            iconName: "envelope.fill",
             color: .red,
             accessDescriptions: [
                 "Read your Gmail messages",
                 "Basic profile information"
             ]
+        ),
+        OAuthProvider(
+            id: "google_calendar",
+            displayName: "Google Calendar",
+            iconName: "calendar",
+            color: .blue,
+            accessDescriptions: [
+                "Read your calendar events",
+                "Basic profile information"
+            ]
         )
     ]
+
+    // Track calendar connection separately
+    @Published var hasLinkedCalendar: Bool = false
 
     init() {
         // Load connected accounts from user profile
@@ -389,6 +496,8 @@ class LinkedAccountsViewModel: ObservableObject {
             switch provider.id {
             case "google":
                 try await connectGoogleAccount(provider: provider)
+            case "google_calendar":
+                try await connectGoogleCalendar(provider: provider)
             default:
                 throw NSError(domain: "OAuth", code: -1, userInfo: [NSLocalizedDescriptionKey: "Unknown provider"])
             }
@@ -462,6 +571,35 @@ class LinkedAccountsViewModel: ObservableObject {
         print("✅ Connected Google account: \(email)")
     }
 
+    private func connectGoogleCalendar(provider: OAuthProvider) async throws {
+        // Request OAuth access with Calendar scope only
+        let (email, accessToken, refreshToken) = try await googleOAuthHelper.requestAccess(
+            includeEmail: false,
+            includeCalendar: true
+        )
+
+        // Store tokens in backend with calendar enabled
+        _ = try await storeLinkedAccount(
+            provider: "google",
+            email: email,
+            accessToken: accessToken,
+            refreshToken: refreshToken,
+            calendarEnabled: true
+        )
+
+        // Mark calendar as connected
+        hasLinkedCalendar = true
+        UserDefaults.standard.set(true, forKey: "hasLinkedCalendar")
+
+        print("✅ Connected Google Calendar: \(email)")
+    }
+
+    func disconnectCalendar() {
+        hasLinkedCalendar = false
+        UserDefaults.standard.set(false, forKey: "hasLinkedCalendar")
+        print("📅 Disconnected Google Calendar")
+    }
+
     func disconnectAccount(_ account: UserConnectedAccount) {
         Task {
             do {
@@ -508,6 +646,9 @@ class LinkedAccountsViewModel: ObservableObject {
         let linkedEmail = UserDefaults.standard.string(forKey: "linkedAccountEmail")
         let linkedProvider = UserDefaults.standard.string(forKey: "linkedAccountProvider")
 
+        // Load calendar status
+        hasLinkedCalendar = UserDefaults.standard.bool(forKey: "hasLinkedCalendar")
+
         if hasLinkedAccount, let email = linkedEmail, !email.isEmpty {
             // Get provider from stored value, or fall back to heuristic
             let providerId = linkedProvider ?? (email.contains("gmail.com") || email.contains("googlemail.com") ? "google" : "microsoft")
@@ -536,7 +677,8 @@ class LinkedAccountsViewModel: ObservableObject {
         provider: String,
         email: String,
         accessToken: String,
-        refreshToken: String?
+        refreshToken: String?,
+        calendarEnabled: Bool = false
     ) async throws -> String {
         // Get the linked account email as the user ID for backend
         // This is the email being linked (e.g., t.sushanth@gmail.com)
@@ -552,8 +694,8 @@ class LinkedAccountsViewModel: ObservableObject {
             "email": email,
             "access_token": accessToken,
             "refresh_token": refreshToken ?? "",
-            "email_enabled": true,
-            "calendar_enabled": false
+            "email_enabled": !calendarEnabled,  // If calendar only, email is false
+            "calendar_enabled": calendarEnabled
         ]
 
         request.httpBody = try JSONSerialization.data(withJSONObject: body)

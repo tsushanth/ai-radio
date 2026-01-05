@@ -1,0 +1,7 @@
+{
+  "project": "summarizerproxy",
+  "region": "us-central1",
+  "service": "audexa-web",
+  "domain": "audexa.app",
+  "description": "Audexa Web App - AI-powered daily audio briefing"
+}

@@ -17,6 +17,7 @@ struct GradientHeader: View {
     let onPauseTapped: () -> Void
     let onLinkAccountTapped: () -> Void
     let onRegenerateTapped: () -> Void
+    let onCancelTapped: () -> Void
 
     @Environment(\.colorScheme) private var colorScheme
 
@@ -29,7 +30,8 @@ struct GradientHeader: View {
         onPlayTapped: @escaping () -> Void = {},
         onPauseTapped: @escaping () -> Void = {},
         onLinkAccountTapped: @escaping () -> Void = {},
-        onRegenerateTapped: @escaping () -> Void = {}
+        onRegenerateTapped: @escaping () -> Void = {},
+        onCancelTapped: @escaping () -> Void = {}
     ) {
         self.greeting = greeting
         self.userName = userName
@@ -40,6 +42,7 @@ struct GradientHeader: View {
         self.onPauseTapped = onPauseTapped
         self.onLinkAccountTapped = onLinkAccountTapped
         self.onRegenerateTapped = onRegenerateTapped
+        self.onCancelTapped = onCancelTapped
     }
 
     var body: some View {
@@ -101,8 +104,8 @@ struct GradientHeader: View {
             GenerateBriefButton(onTap: onPlayTapped)
 
         case .generating(let progress):
-            // Show progress
-            GeneratingProgressView(progress: progress)
+            // Show progress with cancel option
+            GeneratingProgressView(progress: progress, onCancel: onCancelTapped)
 
         case .completed(_):
             // Show play button with optional regenerate
@@ -206,6 +209,7 @@ struct GenerateBriefButton: View {
 
 struct GeneratingProgressView: View {
     let progress: Int
+    var onCancel: (() -> Void)? = nil
 
     var body: some View {
         VStack(spacing: 12) {
@@ -228,6 +232,15 @@ struct GeneratingProgressView: View {
                 Text("\(progress)%")
                     .font(.system(size: 14, weight: .bold))
                     .foregroundColor(.white)
+
+                // Cancel button
+                if let onCancel = onCancel {
+                    Button(action: onCancel) {
+                        Image(systemName: "xmark.circle.fill")
+                            .font(.system(size: 24))
+                            .foregroundColor(.white.opacity(0.7))
+                    }
+                }
             }
             .padding(.horizontal, 20)
             .padding(.vertical, 16)

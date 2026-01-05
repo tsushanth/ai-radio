@@ -236,36 +236,58 @@ export class TokenManager {
 
   /**
    * Store OAuth token (internal method)
+   * Handles both new and existing tokens
    */
   async storeToken(userId: string, token: StoredOAuthToken): Promise<void> {
     try {
-      // Update memory cache
       const key = `${userId}:${token.provider}`;
-      const existingRecord = tokenStore.get(key);
 
+      // Always create or update memory cache
+      const existingRecord = tokenStore.get(key);
       if (existingRecord) {
         existingRecord.accessToken = token.accessToken;
         existingRecord.refreshToken = token.refreshToken;
         existingRecord.expiresAt = token.expiresAt;
         existingRecord.scopes = token.scopes;
+      } else {
+        // Create new record in memory
+        const record: TokenRecord = {
+          userId,
+          provider: token.provider,
+          email: userId, // Use userId as email (they're the same in our flow)
+          accessToken: token.accessToken,
+          refreshToken: token.refreshToken,
+          expiresAt: token.expiresAt,
+          scopes: token.scopes,
+          createdAt: new Date(),
+        };
+        tokenStore.set(key, record);
+        console.log(`✅ Token created in memory: ${key}`);
       }
 
-      // Update database if available
+      // Upsert to database if available
       if (this.supabase) {
         const { error } = await this.supabase
           .from('linked_accounts')
-          .update({
+          .upsert({
+            user_email: userId,
+            provider: token.provider,
+            oauth_email: userId, // Use userId as oauth_email
             access_token: token.accessToken,
             refresh_token: token.refreshToken,
             expires_at: token.expiresAt.toISOString(),
             scopes: token.scopes,
+            email_enabled: true,
+            calendar_enabled: true,
             updated_at: new Date().toISOString(),
-          })
-          .eq('user_email', userId)
-          .eq('provider', token.provider);
+          }, {
+            onConflict: 'user_email,provider',
+          });
 
         if (error) {
-          console.error('Failed to update token in database:', error.message);
+          console.error('❌ Failed to upsert token in database:', error.message);
+        } else {
+          console.log(`✅ Token stored in database: ${userId} / ${token.provider}`);
         }
       }
 

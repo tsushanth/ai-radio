@@ -28,6 +28,9 @@ android {
         buildConfigField("String", "SUPABASE_ANON_KEY", "\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx4dHV2dnNydHBvcWdpa2JwYXNtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUzMDA5NDEsImV4cCI6MjA4MDg3Njk0MX0.-0L2P6Wutv8hlsmMBaurznr1HgWSOWukj7rZTmmkuI4\"")
         buildConfigField("String", "API_BASE_URL", "\"https://ai-radio-backend-917362189743.us-central1.run.app/api\"")
         buildConfigField("String", "GOOGLE_WEB_CLIENT_ID", "\"517355381306-o9vf858ti99540b6s21l15gj5dk3d8e2.apps.googleusercontent.com\"")
+        // OAuth client for Gmail/Calendar linking - use same project as sign-in (517355381306)
+        // This project has Android OAuth clients with SHA-1 fingerprints configured
+        buildConfigField("String", "GOOGLE_OAUTH_CLIENT_ID", "\"517355381306-o9vf858ti99540b6s21l15gj5dk3d8e2.apps.googleusercontent.com\"")
     }
 
     buildTypes {

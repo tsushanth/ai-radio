@@ -35,6 +35,10 @@ class PreferencesManager @Inject constructor(
         val PREFERRED_LANGUAGE = stringPreferencesKey("preferred_language")
         val SELECTED_TOPICS = stringSetPreferencesKey("selected_topics")
         val APP_THEME = stringPreferencesKey("app_theme")
+        val EMAIL_ENABLED = booleanPreferencesKey("email_enabled")
+        val CALENDAR_ENABLED = booleanPreferencesKey("calendar_enabled")
+        val VOICE_HOST1 = stringPreferencesKey("voice_host1")
+        val VOICE_HOST2 = stringPreferencesKey("voice_host2")
 
         // Cached episode for today (to avoid regeneration)
         val CACHED_EPISODE_ID = stringPreferencesKey("cached_episode_id")
@@ -89,6 +93,22 @@ class PreferencesManager @Inject constructor(
     // Theme (system, dark, light)
     val appTheme: Flow<String> = dataStore.data.map {
         it[Keys.APP_THEME] ?: "system"
+    }
+
+    // Email/Calendar integration
+    val emailEnabled: Flow<Boolean> = dataStore.data.map {
+        it[Keys.EMAIL_ENABLED] ?: true  // Default to true
+    }
+    val calendarEnabled: Flow<Boolean> = dataStore.data.map {
+        it[Keys.CALENDAR_ENABLED] ?: true  // Default to true
+    }
+
+    // Voice preferences
+    val voiceHost1: Flow<String?> = dataStore.data.map {
+        it[Keys.VOICE_HOST1]
+    }
+    val voiceHost2: Flow<String?> = dataStore.data.map {
+        it[Keys.VOICE_HOST2]
     }
 
     // Setters
@@ -153,6 +173,30 @@ class PreferencesManager @Inject constructor(
     suspend fun setAppTheme(theme: String) {
         dataStore.edit { prefs ->
             prefs[Keys.APP_THEME] = theme
+        }
+    }
+
+    suspend fun setEmailEnabled(enabled: Boolean) {
+        dataStore.edit { prefs ->
+            prefs[Keys.EMAIL_ENABLED] = enabled
+        }
+    }
+
+    suspend fun setCalendarEnabled(enabled: Boolean) {
+        dataStore.edit { prefs ->
+            prefs[Keys.CALENDAR_ENABLED] = enabled
+        }
+    }
+
+    suspend fun setVoiceHost1(voiceId: String) {
+        dataStore.edit { prefs ->
+            prefs[Keys.VOICE_HOST1] = voiceId
+        }
+    }
+
+    suspend fun setVoiceHost2(voiceId: String) {
+        dataStore.edit { prefs ->
+            prefs[Keys.VOICE_HOST2] = voiceId
         }
     }
 

@@ -66,7 +66,8 @@ fun HomeScreen(
                 onProfileTapped = onNavigateToProfile,
                 onRetryTapped = { viewModel.playDailyBrief() },
                 onRegenerateTapped = { viewModel.regenerateDailyBrief() },
-                onRelinkTapped = onNavigateToLinkedAccounts  // Navigate directly to linked accounts
+                onRelinkTapped = onNavigateToLinkedAccounts,  // Navigate directly to linked accounts
+                onCancelTapped = { viewModel.cancelGeneration() }
             )
 
             Spacer(modifier = Modifier.height(24.dp))

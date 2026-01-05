@@ -60,8 +60,12 @@ class GoogleOAuthHelper {
         return topController
     }
 
-    /// Request OAuth access for Gmail and Calendar
-    func requestAccess(includeEmail: Bool = true, includeCalendar: Bool = true) async throws -> (email: String, accessToken: String, refreshToken: String?) {
+    /// Request OAuth access for Gmail and/or Calendar
+    /// - Parameters:
+    ///   - includeEmail: Request Gmail access
+    ///   - includeCalendar: Request Calendar access
+    /// - Returns: Tuple containing email, access token, and refresh token
+    func requestAccess(includeEmail: Bool = true, includeCalendar: Bool = false) async throws -> (email: String, accessToken: String, refreshToken: String?) {
         guard let presentingViewController = getTopViewController() else {
             throw NSError(domain: "GoogleOAuth", code: -1, userInfo: [NSLocalizedDescriptionKey: "No view controller available to present from"])
         }

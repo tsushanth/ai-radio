@@ -373,13 +373,29 @@ actor PodcastService {
             let id: String
             let audioUrl: String
             let durationSeconds: Int
-            let scriptSegments: Int
+            let title: String?
+            let status: String?
+            let script: ScriptInfo?
 
             enum CodingKeys: String, CodingKey {
                 case id
-                case audioUrl = "audio_url"
-                case durationSeconds = "duration_seconds"
-                case scriptSegments = "script_segments"
+                case audioUrl  // Backend async endpoint returns camelCase
+                case durationSeconds
+                case title
+                case status
+                case script
+            }
+
+            struct ScriptInfo: Codable {
+                let segments: [ScriptSegment]?
+                let totalSegments: Int?
+                let estimatedDurationSeconds: Int?
+            }
+
+            struct ScriptSegment: Codable {
+                let speaker: String
+                let text: String
+                let type: String
             }
         }
 
@@ -517,7 +533,7 @@ actor PodcastService {
                         id: episode.id,
                         audioUrl: episode.audioUrl,
                         durationSeconds: episode.durationSeconds,
-                        scriptSegments: episode.scriptSegments
+                        scriptSegments: episode.script?.totalSegments ?? 0
                     ),
                     costEstimate: GeneratePodcastResponse.CostEstimate(
                         scriptCostUsd: 0,

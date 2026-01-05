@@ -11,8 +11,12 @@ struct PlayerView: View {
     @State private var viewModel = PlayerViewModel()
     @Environment(\.dismiss) private var dismiss
     @State private var showTranscript = true
+    @State private var showVoicePicker = false
+    @State private var selectedHost1Voice: String?
+    @State private var selectedHost2Voice: String?
 
     let episode: Episode
+    var voiceService = VoiceService.shared
 
     var body: some View {
         ZStack {
@@ -40,6 +44,21 @@ struct PlayerView: View {
                         }
 
                         Spacer()
+
+                        // Voice picker button
+                        Button(action: { showVoicePicker = true }) {
+                            HStack(spacing: 4) {
+                                Image(systemName: "waveform")
+                                    .font(.system(size: 14))
+                                Text("Voice")
+                                    .font(.system(size: 14, weight: .semibold))
+                            }
+                            .foregroundColor(.white.opacity(0.8))
+                            .padding(.horizontal, 10)
+                            .padding(.vertical, 6)
+                            .background(Color.white.opacity(0.2))
+                            .cornerRadius(8)
+                        }
 
                         // Playback speed button
                         Menu {
@@ -201,6 +220,13 @@ struct PlayerView: View {
         }
         .onAppear {
             viewModel.loadEpisode(episode)
+        }
+        .sheet(isPresented: $showVoicePicker) {
+            VoicePickerView(
+                voiceService: voiceService,
+                selectedHost1Voice: $selectedHost1Voice,
+                selectedHost2Voice: $selectedHost2Voice
+            )
         }
     }
 }

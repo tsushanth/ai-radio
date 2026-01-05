@@ -204,7 +204,7 @@ export function validateAudioSegment(segment: AudioSegment): {
     issues.push('Invalid speaker');
   }
 
-  if (!['intro', 'calendar', 'email', 'news', 'weather', 'outro'].includes(segment.segment_type)) {
+  if (!['intro', 'calendar', 'email', 'news', 'weather', 'teaser', 'outro'].includes(segment.segment_type)) {
     issues.push('Invalid segment type');
   }
 

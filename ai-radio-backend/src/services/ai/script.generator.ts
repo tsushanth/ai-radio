@@ -61,7 +61,13 @@ export class ScriptGeneratorService {
       // 3. Generate script with GPT-4
       const segments = await this.generateWithGPT4(context);
 
-      // 4. Validate and format script
+      // 4. Check if we got enough segments - if not, use fallback
+      if (segments.length < 5) {
+        console.warn(`GPT-4 returned only ${segments.length} segments, using fallback script instead`);
+        return this.generateFallbackScript(input);
+      }
+
+      // 5. Validate and format script
       const script = this.formatScript(segments, input);
 
       return script;
@@ -142,9 +148,17 @@ export class ScriptGeneratorService {
       }
     }
 
+    // Process topic teasers (if provided)
+    const topicTeasers = input.topic_teasers?.map(teaser => ({
+      topicId: teaser.topicId,
+      topicName: teaser.topicName,
+      headlines: teaser.headlines,
+    }));
+
     return {
       emails: emailSummary,
       calendar: calendarSummary,
+      topicTeasers,
     };
   }
 
@@ -281,7 +295,7 @@ export class ScriptGeneratorService {
 
       // Normalize and validate each segment with flexible field mapping
       // Cast to any[] since GPT-4 may return various field names
-      const validTypes = ['intro', 'email', 'calendar', 'news', 'weather', 'outro', 'pause'];
+      const validTypes = ['intro', 'email', 'calendar', 'news', 'weather', 'teaser', 'outro', 'pause'];
       const rawSegments = segments as any[];
       segments = rawSegments.map((segment, index) => {
         // Handle various speaker field names
@@ -314,6 +328,9 @@ export class ScriptGeneratorService {
             'discussion': 'news',
             'general': 'news',
             'forecast': 'weather',
+            'preview': 'teaser',
+            'teasers': 'teaser',
+            'upcoming': 'teaser',
           };
           type = typeMap[type.toLowerCase()] || 'email'; // Default to 'email' for unknown types
         }

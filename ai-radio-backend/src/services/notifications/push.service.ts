@@ -190,8 +190,8 @@ export class PushNotificationService {
         return false;
       }
 
-      const result = await response.json();
-      if (result.failure > 0) {
+      const result = await response.json() as { failure?: number; results?: unknown[] };
+      if (result.failure && result.failure > 0) {
         console.error('[Push] FCM delivery failed:', result.results);
         return false;
       }

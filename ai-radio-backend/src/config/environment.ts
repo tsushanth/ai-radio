@@ -20,27 +20,27 @@ const envSchema = z.object({
 
   // Supabase
   SUPABASE_URL: z.string().url('Invalid Supabase URL'),
-  SUPABASE_ANON_KEY: z.string().min(1, 'Supabase anon key is required'),
+  SUPABASE_ANON_KEY: z.string().optional(), // Optional - service key is sufficient for backend
   SUPABASE_SERVICE_KEY: z.string().min(1, 'Supabase service key is required'),
   SUPABASE_STORAGE_BUCKET: z.string().default('podcasts'),
 
   // Google OAuth & APIs
   GOOGLE_CLIENT_ID: z.string().min(1, 'Google client ID is required'),
   GOOGLE_CLIENT_SECRET: z.string().min(1, 'Google client secret is required'),
-  GOOGLE_REDIRECT_URI: z.string().url('Invalid Google redirect URI'),
+  GOOGLE_REDIRECT_URI: z.string().optional(), // Optional for backend-only operations
   GOOGLE_TTS_API_KEY: z.string().optional(),
 
-  // Microsoft OAuth
-  MICROSOFT_CLIENT_ID: z.string().min(1, 'Microsoft client ID is required'),
-  MICROSOFT_CLIENT_SECRET: z.string().min(1, 'Microsoft client secret is required'),
-  MICROSOFT_REDIRECT_URI: z.string().url('Invalid Microsoft redirect URI'),
+  // Microsoft OAuth (optional - only needed for Outlook integration)
+  MICROSOFT_CLIENT_ID: z.string().optional(),
+  MICROSOFT_CLIENT_SECRET: z.string().optional(),
+  MICROSOFT_REDIRECT_URI: z.string().optional(),
 
   // OpenAI
   OPENAI_API_KEY: z.string().min(1, 'OpenAI API key is required').startsWith('sk-', 'Invalid OpenAI API key format'),
   OPENAI_ORG_ID: z.string().optional(),
 
   // Google Cloud Platform
-  GCP_PROJECT_ID: z.string().min(1, 'GCP project ID is required'),
+  GCP_PROJECT_ID: z.string().optional(), // Optional - auto-detected in Cloud Run
   GCP_REGION: z.string().default('us-central1'),
 
   // TTS Provider

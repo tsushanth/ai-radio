@@ -12,6 +12,9 @@ import linkedAccountsRoutes from './linked-accounts';
 import topicsRoutes from './topics';
 import voicesRoutes from './voices';
 import deepdiveRoutes from './deepdive';
+import livestationRoutes from './livestation';
+import qaRoutes from './qa';
+import customsourceRoutes from './customsource';
 
 const router = express.Router();
 
@@ -24,6 +27,9 @@ router.use('/linked-accounts', linkedAccountsRoutes);
 router.use('/topics', topicsRoutes);
 router.use('/voices', voicesRoutes);
 router.use('/deepdive', deepdiveRoutes);
+router.use('/livestation', livestationRoutes);
+router.use('/qa', qaRoutes);
+router.use('/sources', customsourceRoutes);
 
 // API root
 router.get('/', (req, res) => {
@@ -39,6 +45,9 @@ router.get('/', (req, res) => {
       topics: '/api/topics',
       voices: '/api/voices',
       deepdive: '/api/deepdive',
+      livestation: '/api/livestation',
+      qa: '/api/qa',
+      sources: '/api/sources',
     },
     documentation: 'https://github.com/your-repo/ai-radio',
   });

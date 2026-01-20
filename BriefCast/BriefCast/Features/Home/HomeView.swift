@@ -14,6 +14,7 @@ struct HomeView: View {
     @State private var searchText = ""
     @State private var showLinkedAccounts = false
     @State private var selectedTopicForDetail: Topic?
+    @State private var selectedDeepDiveForDetail: DeepDiveEpisode?
     @State private var toastMessage: String?
     @State private var showToast = false
 
@@ -65,6 +66,9 @@ struct HomeView: View {
                             },
                             onBookmarkToggled: { topic, isNowBookmarked in
                                 showBookmarkToast(topic: topic, isBookmarked: isNowBookmarked)
+                            },
+                            onDeepDiveTapped: { deepDive in
+                                selectedDeepDiveForDetail = deepDive
                             }
                         )
                     } else {
@@ -119,6 +123,14 @@ struct HomeView: View {
                 }
             )
         }
+        .sheet(item: $selectedDeepDiveForDetail) { deepDive in
+            DeepDiveDetailView(
+                deepDive: deepDive,
+                onDismiss: {
+                    selectedDeepDiveForDetail = nil
+                }
+            )
+        }
         .overlay(alignment: .top) {
             if showToast, let message = toastMessage {
                 BookmarkToast(message: message)
@@ -161,12 +173,38 @@ struct ForYouTabContent: View {
     @Bindable var viewModel: HomeViewModel
     let onTopicTapped: (Topic) -> Void
     var onBookmarkToggled: ((Topic, Bool) -> Void)? = nil
+    var onDeepDiveTapped: ((DeepDiveEpisode) -> Void)? = nil
 
     // Observe AudioService for now playing indicator
     private let audioService = AudioService.shared
 
     var body: some View {
         VStack(spacing: 32) {
+            // Deep Dives history section
+            if !viewModel.deepDiveHistory.isEmpty {
+                VStack(alignment: .leading, spacing: 16) {
+                    Text("Your Deep Dives")
+                        .font(.system(size: 22, weight: .bold))
+                        .foregroundColor(Theme.Colors.primaryText)
+                        .padding(.horizontal, Theme.Spacing.screenPadding)
+
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack(spacing: 16) {
+                            ForEach(viewModel.deepDiveHistory.prefix(5)) { deepDive in
+                                DeepDiveCard(
+                                    deepDive: deepDive,
+                                    isPlaying: isPlayingDeepDive(deepDive.id),
+                                    onTap: {
+                                        onDeepDiveTapped?(deepDive)
+                                    }
+                                )
+                            }
+                        }
+                        .padding(.horizontal, Theme.Spacing.screenPadding)
+                    }
+                }
+            }
+
             // Keep listening section
             if !viewModel.keepListening.isEmpty {
                 VStack(alignment: .leading, spacing: 16) {
@@ -354,6 +392,15 @@ struct ForYouTabContent: View {
             return false
         }
         return currentEpisode.showId == topicId
+    }
+
+    private func isPlayingDeepDive(_ deepDiveId: String) -> Bool {
+        // Check if AudioService is currently playing this deep dive
+        guard let currentEpisode = audioService.currentEpisode,
+              audioService.isPlaying else {
+            return false
+        }
+        return currentEpisode.id == deepDiveId
     }
 
     private func formatDate(_ date: Date) -> String {

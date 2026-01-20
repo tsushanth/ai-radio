@@ -14,9 +14,14 @@ struct PlayerView: View {
     @State private var showVoicePicker = false
     @State private var selectedHost1Voice: String?
     @State private var selectedHost2Voice: String?
+    @State private var showPlaybackControls = true
+    @State private var currentExpansion: TellMeMoreExpansion?
+    @State private var isLoadingExpansion = false
+    @State private var showQAInput = false
 
     let episode: Episode
     var voiceService = VoiceService.shared
+    private let interactionService = PlaybackInteractionService.shared
 
     var body: some View {
         ZStack {
@@ -165,15 +170,54 @@ struct PlayerView: View {
                     }
                     .padding(.vertical, 8)
 
-                    // "Tap to ask" button (future feature)
-                    Button(action: {
-                        print("Tap to ask - voice interaction")
-                    }) {
+                    // Skip and Tell Me More controls
+                    HStack(spacing: 16) {
+                        // Skip button
+                        Button(action: handleSkip) {
+                            HStack(spacing: 6) {
+                                Image(systemName: "forward.fill")
+                                    .font(.system(size: 14))
+                                Text("Skip")
+                                    .font(.system(size: 15, weight: .semibold))
+                            }
+                            .foregroundColor(.white)
+                            .padding(.horizontal, 20)
+                            .padding(.vertical, 12)
+                            .background(Color.white.opacity(0.2))
+                            .cornerRadius(24)
+                        }
+
+                        // Tell Me More button
+                        Button(action: handleTellMeMore) {
+                            HStack(spacing: 6) {
+                                if isLoadingExpansion {
+                                    ProgressView()
+                                        .progressViewStyle(CircularProgressViewStyle(tint: .black))
+                                        .scaleEffect(0.8)
+                                } else {
+                                    Image(systemName: "plus.magnifyingglass")
+                                        .font(.system(size: 14))
+                                }
+                                Text("Tell Me More")
+                                    .font(.system(size: 15, weight: .semibold))
+                            }
+                            .foregroundColor(.black)
+                            .padding(.horizontal, 20)
+                            .padding(.vertical, 12)
+                            .background(Color.white)
+                            .cornerRadius(24)
+                        }
+                        .disabled(isLoadingExpansion)
+                    }
+                    .padding(.horizontal, 24)
+
+                    // "Tap to ask" button - opens Q&A
+                    Button(action: { showQAInput = true }) {
                         HStack(spacing: 8) {
                             Image(systemName: "waveform.circle")
                                 .font(.system(size: 20))
 
-                            Text("Tap to ask")
+                            Text("Tap to ask a question")
                                 .font(.system(size: 16, weight: .semibold))
                         }
                         .foregroundColor(.white)
@@ -228,6 +272,180 @@ struct PlayerView: View {
                 selectedHost2Voice: $selectedHost2Voice
             )
         }
+        .sheet(isPresented: $showQAInput) {
+            QAInputView(
+                contextType: .topic,
+                contextId: episode.showId ?? episode.id,
+                contextTitle: episode.title
+            )
+            .environmentObject(AudioService.shared)
+        }
+        .sheet(item: $currentExpansion) { expansion in
+            ExpansionSheet(expansion: expansion) {
+                currentExpansion = nil
+            }
+        }
+    }
+
+    // MARK: - Actions
+
+    private func handleSkip() {
+        Task {
+            await interactionService.recordSkip(
+                contextType: episode.showId ?? "topic",
+                contextId: episode.id,
+                segmentType: nil,
+                segmentIndex: viewModel.currentSegmentIndex,
+                timestamp: viewModel.currentTime
+            )
+
+            // Skip forward to next segment or 30 seconds
+            viewModel.skipForward(30)
+        }
+    }
+
+    private func handleTellMeMore() {
+        guard !isLoadingExpansion else { return }
+
+        isLoadingExpansion = true
+        viewModel.pause()
+
+        Task {
+            let expansion = await interactionService.recordTellMeMore(
+                contextType: episode.showId ?? "topic",
+                contextId: episode.id,
+                segmentType: nil,
+                segmentIndex: viewModel.currentSegmentIndex,
+                timestamp: viewModel.currentTime
+            )
+
+            await MainActor.run {
+                isLoadingExpansion = false
+                if let expansion = expansion {
+                    currentExpansion = expansion
+                }
+            }
+        }
+    }
+}
+
+// MARK: - Expansion Sheet
+
+struct ExpansionSheet: View {
+    let expansion: TellMeMoreExpansion
+    let onDismiss: () -> Void
+
+    @EnvironmentObject private var audioService: AudioService
+
+    var body: some View {
+        NavigationStack {
+            ScrollView {
+                VStack(alignment: .leading, spacing: 20) {
+                    // Expanded content
+                    Text(expansion.expandedContent)
+                        .font(.body)
+                        .lineSpacing(6)
+                        .foregroundColor(.primary)
+
+                    // Play audio button
+                    if let audioUrl = expansion.audioUrl {
+                        Button(action: { playExpansionAudio(url: audioUrl) }) {
+                            HStack {
+                                Image(systemName: "play.circle.fill")
+                                    .font(.system(size: 24))
+
+                                VStack(alignment: .leading) {
+                                    Text("Listen to Expansion")
+                                        .font(.headline)
+
+                                    if let duration = expansion.durationSeconds {
+                                        Text("\(duration / 60):\(String(format: "%02d", duration % 60))")
+                                            .font(.caption)
+                                            .foregroundColor(.secondary)
+                                    }
+                                }
+
+                                Spacer()
+
+                                Image(systemName: "chevron.right")
+                                    .foregroundColor(.secondary)
+                            }
+                            .padding()
+                            .background(Color(.secondarySystemBackground))
+                            .cornerRadius(12)
+                        }
+                        .buttonStyle(.plain)
+                    }
+
+                    // Sources
+                    if let sources = expansion.sources, !sources.isEmpty {
+                        VStack(alignment: .leading, spacing: 12) {
+                            Text("Sources")
+                                .font(.headline)
+
+                            ForEach(sources) { source in
+                                VStack(alignment: .leading, spacing: 4) {
+                                    if let urlString = source.url, let url = URL(string: urlString) {
+                                        Link(destination: url) {
+                                            HStack {
+                                                Image(systemName: "link")
+                                                    .foregroundColor(.accentColor)
+                                                Text(source.title)
+                                                    .foregroundColor(.accentColor)
+                                            }
+                                        }
+                                    } else {
+                                        Text(source.title)
+                                            .font(.subheadline)
+                                            .fontWeight(.medium)
+                                    }
+
+                                    if let snippet = source.snippet {
+                                        Text(snippet)
+                                            .font(.caption)
+                                            .foregroundColor(.secondary)
+                                    }
+                                }
+                                .padding()
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .background(Color(.tertiarySystemBackground))
+                                .cornerRadius(8)
+                            }
+                        }
+                    }
+                }
+                .padding()
+            }
+            .navigationTitle("More Details")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button("Done") { onDismiss() }
+                }
+            }
+        }
+    }
+
+    private func playExpansionAudio(url: String) {
+        let episode = Episode(
+            id: expansion.id,
+            userId: "",
+            title: "Expanded Content",
+            description: expansion.expandedContent.prefix(100) + "...",
+            audioUrl: url,
+            durationSeconds: expansion.durationSeconds,
+            status: .completed,
+            errorMessage: nil,
+            generatedAt: Date(),
+            createdAt: Date(),
+            showId: "expansion",
+            showName: "Tell Me More",
+            imageColor: "#6366F1",
+            progress: 0,
+            isCompleted: false,
+            lastPlayedAt: nil
+        )
+        audioService.play(episode: episode)
     }
 }
 

@@ -234,15 +234,15 @@ Return ONLY valid JSON.`;
       speed: 1.0,
     };
 
-    const buffer = await openaiTTS.synthesize(answerContent.answer, {
+    const ttsResponse = await openaiTTS.synthesize({
+      text: answerContent.answer,
       voice: voiceConfig.host1,
-      model: voiceConfig.model,
       speed: voiceConfig.speed,
     });
 
     // Upload
     const audioPath = `${sessionId}/${messageId}.mp3`;
-    const audioUrl = await this.uploadAudio(buffer, audioPath);
+    const audioUrl = await this.uploadAudio(ttsResponse.audio_buffer, audioPath);
 
     // Estimate duration (rough: 150 words per minute)
     const wordCount = answerContent.answer.split(/\s+/).length;

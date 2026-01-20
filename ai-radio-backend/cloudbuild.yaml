@@ -49,7 +49,7 @@ steps:
       - 'NODE_ENV=production,GCP_PROJECT_ID=$PROJECT_ID'
       # Secrets from Secret Manager
       - '--update-secrets'
-      - 'SUPABASE_URL=supabase-url:latest,SUPABASE_ANON_KEY=supabase-anon-key:latest,SUPABASE_SERVICE_KEY=supabase-service-key:latest,OPENAI_API_KEY=openai-api-key:latest,GOOGLE_CLIENT_ID=google-client-id:latest,GOOGLE_CLIENT_SECRET=google-client-secret:latest,MICROSOFT_CLIENT_ID=microsoft-client-id:latest,MICROSOFT_CLIENT_SECRET=microsoft-client-secret:latest,JWT_SECRET=jwt-secret:latest'
+      - 'SUPABASE_URL=SUPABASE_URL:latest,SUPABASE_SERVICE_KEY=SUPABASE_SERVICE_KEY:latest,OPENAI_API_KEY=openai-key:latest,GOOGLE_CLIENT_ID=GOOGLE_CLIENT_ID:latest,GOOGLE_CLIENT_SECRET=GOOGLE_CLIENT_SECRET:latest,JWT_SECRET=JWT_SECRET:latest,ELEVENLABS_API_KEY=ELEVENLABS_API_KEY:latest'
 
 images:
   - '${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/ai-radio-backend:$COMMIT_SHA'
@@ -57,8 +57,8 @@ images:
 
 substitutions:
   _REGION: us-central1  # Change to your preferred region
-  _REPOSITORY: ai-radio  # Artifact Registry repository name
-  _SERVICE_ACCOUNT: ai-radio-backend@${PROJECT_ID}.iam.gserviceaccount.com
+  _REPOSITORY: ai-radio-backend  # Artifact Registry repository name
+  _SERVICE_ACCOUNT: 917362189743-compute@developer.gserviceaccount.com
 
 options:
   machineType: 'N1_HIGHCPU_8'

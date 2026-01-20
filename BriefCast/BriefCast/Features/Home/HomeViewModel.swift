@@ -74,6 +74,10 @@ class HomeViewModel {
     var selectedTopic: Topic?
     var topicPlaybackState: TopicPlaybackState = .idle
 
+    // Deep Dive history
+    var deepDiveHistory: [DeepDiveEpisode] = []
+    private let deepDiveService = DeepDiveService.shared
+
     // Preferences - stored locally to trigger UI updates
     private let preferencesService = PreferencesService.shared
     var hiddenTopicIds: Set<String> = []
@@ -281,10 +285,30 @@ class HomeViewModel {
         // Load topics from API
         await loadTopics()
 
+        // Load deep dive history
+        await loadDeepDiveHistory()
+
         // Check if user has linked accounts
         await checkLinkedAccounts()
 
         isLoading = false
+    }
+
+    // MARK: - Deep Dive History
+
+    func loadDeepDiveHistory() async {
+        // Load cached immediately
+        deepDiveHistory = deepDiveService.getCachedDeepDives()
+
+        do {
+            // Fetch fresh from server
+            let history = try await deepDiveService.fetchHistory(limit: 10)
+            deepDiveHistory = history
+            print("✅ Loaded \(history.count) deep dives")
+        } catch {
+            print("⚠️ Failed to load deep dive history: \(error.localizedDescription)")
+            // Keep cached data if available
+        }
     }
 
     func loadTopics() async {

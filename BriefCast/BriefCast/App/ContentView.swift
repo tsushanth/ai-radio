@@ -13,6 +13,8 @@ struct ContentView: View {
     @State private var selectedTab: Tab = .home
     @State private var showOnboarding: Bool = false
     @State private var showFullPlayer: Bool = false
+    @State private var showDeepDiveInput: Bool = false
+    @State private var deepDiveToShow: DeepDiveEpisode?
 
     // HomeViewModel is owned here so it survives tab navigation
     // This preserves generation progress when switching between Home and Profile tabs
@@ -104,11 +106,43 @@ struct ContentView: View {
                 // Floating tab bar
                 TabRouter(selectedTab: $selectedTab)
             }
+
+            // Deep Dive FAB (bottom-right, above mini player and tab bar)
+            VStack {
+                Spacer()
+                HStack {
+                    Spacer()
+                    DeepDiveFAB {
+                        showDeepDiveInput = true
+                    }
+                    .padding(.trailing, 20)
+                    .padding(.bottom, audioService.currentEpisode != nil ? 180 : 100) // Adjust for mini player
+                }
+            }
         }
         .sheet(isPresented: $showFullPlayer) {
             if let episode = audioService.currentEpisode {
                 PlayerView(episode: episode)
             }
+        }
+        .sheet(isPresented: $showDeepDiveInput) {
+            DeepDiveInputView(
+                onGenerated: { episode in
+                    // Show the detail view after generation
+                    deepDiveToShow = episode
+                },
+                onDismiss: {
+                    showDeepDiveInput = false
+                }
+            )
+        }
+        .sheet(item: $deepDiveToShow) { episode in
+            DeepDiveDetailView(
+                deepDive: episode,
+                onDismiss: {
+                    deepDiveToShow = nil
+                }
+            )
         }
     }
 }

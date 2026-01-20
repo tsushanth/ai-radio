@@ -6,6 +6,7 @@ import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import { env } from './config/environment';
+import { dailyBriefScheduler } from './services/scheduler/daily-brief.scheduler';
 
 // Import middleware
 import { errorHandler, notFoundHandler } from './middleware/errorHandler';
@@ -70,6 +71,12 @@ app.listen(PORT, HOST, () => {
   console.log(`🚀 AI Radio Backend running on ${HOST}:${PORT}`);
   console.log(`📡 Environment: ${env.NODE_ENV}`);
   console.log(`📋 API available at: http://${HOST}:${PORT}/api`);
+
+  // Start the daily brief scheduler
+  if (env.ENABLE_SCHEDULER) {
+    dailyBriefScheduler.start();
+    console.log(`⏰ Daily brief scheduler started`);
+  }
 });
 
 // Handle uncaught exceptions

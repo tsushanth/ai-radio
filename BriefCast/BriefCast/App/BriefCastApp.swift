@@ -10,9 +10,12 @@ import GoogleSignIn
 
 @main
 struct BriefCastApp: App {
+    @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     @StateObject private var authService = AuthService()
     @StateObject private var preferencesService = PreferencesService.shared
     @State private var showSplash = true
+    @State private var showDailyBriefPlayer = false
+    @State private var pendingEpisodeId: String?
 
     var body: some Scene {
         WindowGroup {
@@ -25,6 +28,17 @@ struct BriefCastApp: App {
                     }
                     .task {
                         await authService.restoreSession()
+                    }
+                    .onReceive(NotificationCenter.default.publisher(for: .openDailyBriefPlayer)) { notification in
+                        // Handle push notification to open daily brief player
+                        if let episodeId = notification.userInfo?["episode_id"] as? String {
+                            pendingEpisodeId = episodeId
+                        }
+                        showDailyBriefPlayer = true
+                    }
+                    .onReceive(NotificationCenter.default.publisher(for: .showDailyBriefRetry)) { _ in
+                        // Navigate to home for retry - HomeView will handle this
+                        NotificationCenter.default.post(name: .navigateToHome, object: nil)
                     }
 
                 // Splash screen overlay
@@ -45,4 +59,9 @@ struct BriefCastApp: App {
             }
         }
     }
+}
+
+// Additional notification names for navigation
+extension Notification.Name {
+    static let navigateToHome = Notification.Name("navigateToHome")
 }

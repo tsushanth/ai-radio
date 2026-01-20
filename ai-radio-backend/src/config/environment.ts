@@ -78,6 +78,21 @@ const envSchema = z.object({
   MAX_PODCAST_DURATION_MINUTES: z.string().transform(Number).default('10'),
   DEFAULT_VOICE_HOST1: z.string().default('en-US-Neural2-J'),
   DEFAULT_VOICE_HOST2: z.string().default('en-US-Neural2-D'),
+
+  // Push Notifications - APNs (iOS)
+  APNS_KEY_ID: z.string().optional(),
+  APNS_TEAM_ID: z.string().optional(),
+  APNS_PRIVATE_KEY: z.string().optional(), // Base64 encoded or PEM format with \n
+  APNS_BUNDLE_ID: z.string().default('com.kreativekoala.briefcast'),
+
+  // Push Notifications - FCM (Android)
+  FCM_SERVER_KEY: z.string().optional(),
+
+  // External APIs
+  OPENWEATHER_API_KEY: z.string().optional(),
+
+  // Scheduler
+  ENABLE_SCHEDULER: z.string().transform(val => val === 'true').default('true'),
 });
 
 export type Environment = z.infer<typeof envSchema>;

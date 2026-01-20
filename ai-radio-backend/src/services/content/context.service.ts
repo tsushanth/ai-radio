@@ -58,7 +58,7 @@ export class ContextService {
         throw new Error(`Weather API error: ${response.status}`);
       }
 
-      const apiData = await response.json();
+      const apiData = await response.json() as Record<string, unknown>;
       const weather = this.mapOpenWeatherResponse(apiData);
 
       // Cache the result

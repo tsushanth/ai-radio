@@ -15,6 +15,7 @@ struct HomeView: View {
     @State private var showLinkedAccounts = false
     @State private var selectedTopicForDetail: Topic?
     @State private var selectedDeepDiveForDetail: DeepDiveEpisode?
+    @State private var selectedLiveStation: LiveStation?
     @State private var toastMessage: String?
     @State private var showToast = false
 
@@ -69,6 +70,9 @@ struct HomeView: View {
                             },
                             onDeepDiveTapped: { deepDive in
                                 selectedDeepDiveForDetail = deepDive
+                            },
+                            onLiveStationTapped: { station in
+                                selectedLiveStation = station
                             }
                         )
                     } else {
@@ -131,6 +135,10 @@ struct HomeView: View {
                 }
             )
         }
+        .fullScreenCover(item: $selectedLiveStation) { station in
+            LiveStationPlayerView(station: station)
+                .environmentObject(AudioService.shared)
+        }
         .overlay(alignment: .top) {
             if showToast, let message = toastMessage {
                 BookmarkToast(message: message)
@@ -174,12 +182,55 @@ struct ForYouTabContent: View {
     let onTopicTapped: (Topic) -> Void
     var onBookmarkToggled: ((Topic, Bool) -> Void)? = nil
     var onDeepDiveTapped: ((DeepDiveEpisode) -> Void)? = nil
+    var onLiveStationTapped: ((LiveStation) -> Void)? = nil
 
     // Observe AudioService for now playing indicator
     private let audioService = AudioService.shared
 
     var body: some View {
         VStack(spacing: 32) {
+            // Live Stations section (new feature)
+            if !viewModel.liveStations.isEmpty {
+                VStack(alignment: .leading, spacing: 16) {
+                    HStack {
+                        Text("Live Stations")
+                            .font(.system(size: 22, weight: .bold))
+                            .foregroundColor(Theme.Colors.primaryText)
+
+                        // Live indicator
+                        HStack(spacing: 4) {
+                            Circle()
+                                .fill(.red)
+                                .frame(width: 6, height: 6)
+
+                            Text("LIVE")
+                                .font(.caption2)
+                                .fontWeight(.bold)
+                                .foregroundColor(.red)
+                        }
+                        .padding(.horizontal, 6)
+                        .padding(.vertical, 3)
+                        .background(.red.opacity(0.1))
+                        .cornerRadius(8)
+                    }
+                    .padding(.horizontal, Theme.Spacing.screenPadding)
+
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack(spacing: 16) {
+                            ForEach(viewModel.liveStations.prefix(5)) { station in
+                                LiveStationCard(
+                                    station: station,
+                                    onTap: {
+                                        onLiveStationTapped?(station)
+                                    }
+                                )
+                            }
+                        }
+                        .padding(.horizontal, Theme.Spacing.screenPadding)
+                    }
+                }
+            }
+
             // Deep Dives history section
             if !viewModel.deepDiveHistory.isEmpty {
                 VStack(alignment: .leading, spacing: 16) {

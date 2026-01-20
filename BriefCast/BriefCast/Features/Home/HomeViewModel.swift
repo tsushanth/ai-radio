@@ -78,6 +78,10 @@ class HomeViewModel {
     var deepDiveHistory: [DeepDiveEpisode] = []
     private let deepDiveService = DeepDiveService.shared
 
+    // Live Stations
+    var liveStations: [LiveStation] = []
+    private let liveStationService = LiveStationService.shared
+
     // Preferences - stored locally to trigger UI updates
     private let preferencesService = PreferencesService.shared
     var hiddenTopicIds: Set<String> = []
@@ -285,6 +289,9 @@ class HomeViewModel {
         // Load topics from API
         await loadTopics()
 
+        // Load live stations
+        await loadLiveStations()
+
         // Load deep dive history
         await loadDeepDiveHistory()
 
@@ -292,6 +299,21 @@ class HomeViewModel {
         await checkLinkedAccounts()
 
         isLoading = false
+    }
+
+    // MARK: - Live Stations
+
+    func loadLiveStations() async {
+        // Load cached immediately
+        liveStations = liveStationService.getCachedStations()
+
+        do {
+            let stations = try await liveStationService.fetchStations()
+            liveStations = stations
+            print("✅ Loaded \(stations.count) live stations")
+        } catch {
+            print("⚠️ Failed to load live stations: \(error.localizedDescription)")
+        }
     }
 
     // MARK: - Deep Dive History

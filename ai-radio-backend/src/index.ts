@@ -1,5 +1,6 @@
 /**
  * AI Radio Backend - Main Entry Point
+ * Updated: 2025-01-21 - Service key refresh
  */
 
 import express from 'express';

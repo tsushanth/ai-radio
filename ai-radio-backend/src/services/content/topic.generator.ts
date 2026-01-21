@@ -422,6 +422,7 @@ Create an engaging ${topic.targetDurationMinutes}-minute podcast covering the mo
 
     if (error) {
       console.error('Failed to save episode:', error);
+      throw new Error(`Failed to save episode: ${error.message}`);
     }
   }
 

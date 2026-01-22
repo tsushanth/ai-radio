@@ -9,10 +9,11 @@ import { CategoryRow } from '@/components/home/CategoryRow';
 import { TopicCard } from '@/components/home/TopicCard';
 import { LiveStationCard } from '@/components/home/LiveStationCard';
 import { ScriptViewer } from '@/components/episodes/ScriptViewer';
-import { generateEpisode, getJobStatus, getLiveStations, getDeepDiveHistory, tuneIntoStation } from '@/lib/api/episodes';
+import { generateEpisode, getJobStatus, getLiveStations, getDeepDiveHistory, generateDeepDive } from '@/lib/api/episodes';
 import type { LiveStation, DeepDiveEpisode } from '@/lib/api/episodes';
+import { DeepDiveModal } from '@/components/deepdive/DeepDiveModal';
 import { DailyBriefStatus, Topic, Episode } from '@/types';
-import { Loader2, Search, Radio, Sparkles, History, Bookmark, X } from 'lucide-react';
+import { Loader2, Search, Radio, Sparkles, Bookmark, X, Play, Pause, Plus } from 'lucide-react';
 
 type TabType = 'forYou' | 'discover';
 
@@ -35,9 +36,14 @@ export default function HomePage() {
   // Live Stations state
   const [liveStations, setLiveStations] = useState<LiveStation[]>([]);
   const [loadingStations, setLoadingStations] = useState(false);
+  const [playingStation, setPlayingStation] = useState<LiveStation | null>(null);
+  const [isStationPlaying, setIsStationPlaying] = useState(false);
+  const stationAudioRef = useRef<HTMLAudioElement | null>(null);
 
   // Deep Dive history state
   const [deepDiveHistory, setDeepDiveHistory] = useState<DeepDiveEpisode[]>([]);
+  const [showDeepDiveModal, setShowDeepDiveModal] = useState(false);
+  const [isGeneratingDeepDive, setIsGeneratingDeepDive] = useState(false);
 
   // Update status based on linked accounts
   useEffect(() => {
@@ -182,18 +188,83 @@ export default function HomePage() {
     router.push(`/topics/${topic.id}`);
   }, [router]);
 
-  const handleStationTap = useCallback(async (station: LiveStation) => {
+  const handleStationTap = useCallback((station: LiveStation) => {
+    // If clicking the same station that's playing, toggle play/pause
+    if (playingStation?.id === station.id && stationAudioRef.current) {
+      if (isStationPlaying) {
+        stationAudioRef.current.pause();
+        setIsStationPlaying(false);
+      } else {
+        stationAudioRef.current.play();
+        setIsStationPlaying(true);
+      }
+      return;
+    }
+
+    // Stop any existing playback
+    if (stationAudioRef.current) {
+      stationAudioRef.current.pause();
+      stationAudioRef.current = null;
+    }
+
+    // Check if station has a current episode with audio
+    const audioUrl = station.currentEpisode?.audioUrl;
+    if (!audioUrl) {
+      console.log('No audio available for station:', station.name);
+      return;
+    }
+
+    // Create new audio and play
+    const audio = new Audio(audioUrl);
+    audio.onended = () => {
+      setIsStationPlaying(false);
+    };
+    audio.onplay = () => setIsStationPlaying(true);
+    audio.onpause = () => setIsStationPlaying(false);
+
+    stationAudioRef.current = audio;
+    setPlayingStation(station);
+    audio.play().catch(err => {
+      console.error('Failed to play station:', err);
+      setPlayingStation(null);
+    });
+  }, [playingStation, isStationPlaying]);
+
+  const handleStopStation = useCallback(() => {
+    if (stationAudioRef.current) {
+      stationAudioRef.current.pause();
+      stationAudioRef.current = null;
+    }
+    setPlayingStation(null);
+    setIsStationPlaying(false);
+  }, []);
+
+  const handleGenerateDeepDive = useCallback(async (query: string, options: { language: string; durationMinutes: number }) => {
+    if (!user?.email) return;
+
+    setIsGeneratingDeepDive(true);
     try {
-      const result = await tuneIntoStation(station.id);
-      if (result.episode?.audioUrl) {
-        // Play the station's current episode
-        const audio = new Audio(result.episode.audioUrl);
-        audio.play();
+      const episode = await generateDeepDive(user.email, query, {
+        language: options.language,
+        targetDurationMinutes: options.durationMinutes,
+      });
+
+      // Add to history
+      setDeepDiveHistory(prev => [episode, ...prev]);
+      setShowDeepDiveModal(false);
+
+      // Auto-play the generated episode
+      if (episode.audioUrl) {
+        const audio = new Audio(episode.audioUrl);
+        audio.play().catch(console.error);
       }
     } catch (err) {
-      console.error('Failed to tune into station:', err);
+      console.error('Failed to generate deep dive:', err);
+      alert('Failed to generate deep dive. Please try again.');
+    } finally {
+      setIsGeneratingDeepDive(false);
     }
-  }, []);
+  }, [user?.email]);
 
   if (topicsLoading) {
     return (
@@ -204,7 +275,7 @@ export default function HomePage() {
   }
 
   return (
-    <div className="pb-8">
+    <div className={`pb-8 ${playingStation ? 'pb-24' : ''}`}>
       {/* Daily Brief Header */}
       <div className="p-4">
         <GradientHeader
@@ -395,11 +466,11 @@ export default function HomePage() {
             </div>
           ) : (
             <>
-              {/* All Topics */}
+              {/* All Topics Grid */}
               <section className="px-4">
-                <h2 className="text-lg font-bold mb-4">All Topics</h2>
-                <div className="grid grid-cols-2 gap-4">
-                  {visibleTopics.slice(0, 8).map((topic) => (
+                <h2 className="text-lg font-bold mb-4">All Topics ({visibleTopics.length})</h2>
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                  {visibleTopics.map((topic) => (
                     <TopicCard
                       key={topic.id}
                       topic={topic}
@@ -411,23 +482,6 @@ export default function HomePage() {
                   ))}
                 </div>
               </section>
-
-              {/* Categories */}
-              {categories.map((category) => {
-                const categoryTopics = topicsByCategory[category] || [];
-                if (categoryTopics.length === 0) return null;
-                return (
-                  <CategoryRow
-                    key={category}
-                    title={category}
-                    topics={categoryTopics}
-                    bookmarkedIds={preferences.bookmarkedTopicIds}
-                    onTopicTap={handleTopicTap}
-                    onBookmarkToggle={toggleBookmark}
-                    onHideTopic={hideTopic}
-                  />
-                );
-              })}
             </>
           )}
         </div>
@@ -439,6 +493,62 @@ export default function HomePage() {
         onClose={() => setShowScriptViewer(false)}
         script={dailyBriefEpisode?.script || null}
         title="Daily Brief Script"
+      />
+
+      {/* Live Station Mini Player */}
+      {playingStation && (
+        <div className="fixed bottom-0 left-0 right-0 bg-gradient-to-r from-red-600 to-red-500 text-white p-4 shadow-lg z-50">
+          <div className="max-w-md mx-auto flex items-center gap-4">
+            <div className="flex items-center gap-2">
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-white"></span>
+              </span>
+              <span className="text-xs font-bold">LIVE</span>
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="font-semibold truncate">{playingStation.name}</p>
+              <p className="text-xs text-white/70 truncate">
+                {playingStation.currentEpisode?.title || playingStation.description}
+              </p>
+            </div>
+            <button
+              onClick={() => handleStationTap(playingStation)}
+              className="w-10 h-10 bg-white rounded-full flex items-center justify-center"
+            >
+              {isStationPlaying ? (
+                <Pause className="w-5 h-5 text-red-600" />
+              ) : (
+                <Play className="w-5 h-5 text-red-600 ml-0.5" />
+              )}
+            </button>
+            <button
+              onClick={handleStopStation}
+              className="p-2 hover:bg-white/20 rounded-full"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Deep Dive FAB */}
+      {!playingStation && (
+        <button
+          onClick={() => setShowDeepDiveModal(true)}
+          className="fixed bottom-6 right-6 w-14 h-14 bg-gradient-to-br from-purple-500 to-indigo-600 text-white rounded-full shadow-lg hover:shadow-xl hover:scale-105 transition-all flex items-center justify-center z-40"
+          title="Create Deep Dive"
+        >
+          <Plus className="w-6 h-6" />
+        </button>
+      )}
+
+      {/* Deep Dive Modal */}
+      <DeepDiveModal
+        isOpen={showDeepDiveModal}
+        onClose={() => setShowDeepDiveModal(false)}
+        onGenerate={handleGenerateDeepDive}
+        isGenerating={isGeneratingDeepDive}
       />
     </div>
   );

@@ -47,7 +47,7 @@ steps:
       - '--service-account'
       - '${_SERVICE_ACCOUNT}'
       - '--set-env-vars'
-      - 'NODE_ENV=production,GCP_PROJECT_ID=$PROJECT_ID'
+      - 'NODE_ENV=production,GCP_PROJECT_ID=$PROJECT_ID,GOOGLE_REDIRECT_URI=https://ai-radio-backend-917362189743.us-central1.run.app/api/auth/oauth/google/callback'
       # Secrets from Secret Manager
       - '--update-secrets'
       - 'SUPABASE_URL=SUPABASE_URL:latest,SUPABASE_SERVICE_KEY=SUPABASE_SERVICE_KEY:latest,OPENAI_API_KEY=openai-key:latest,GOOGLE_CLIENT_ID=GOOGLE_CLIENT_ID:latest,GOOGLE_CLIENT_SECRET=GOOGLE_CLIENT_SECRET:latest,JWT_SECRET=JWT_SECRET:latest,ELEVENLABS_API_KEY=ELEVENLABS_API_KEY:latest'

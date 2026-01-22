@@ -47,10 +47,10 @@ steps:
       - '--service-account'
       - '${_SERVICE_ACCOUNT}'
       - '--set-env-vars'
-      - 'NODE_ENV=production,GCP_PROJECT_ID=$PROJECT_ID,GOOGLE_REDIRECT_URI=https://ai-radio-backend-917362189743.us-central1.run.app/api/auth/oauth/google/callback'
+      - 'NODE_ENV=production,GCP_PROJECT_ID=$PROJECT_ID,GOOGLE_REDIRECT_URI=https://ai-radio-backend-917362189743.us-central1.run.app/api/auth/oauth/google/callback,GOOGLE_CLIENT_ID=517355381306-o9vf858ti99540b6s21l15gj5dk3d8e2.apps.googleusercontent.com,GOOGLE_CLIENT_SECRET=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'
       # Secrets from Secret Manager
       - '--update-secrets'
-      - 'SUPABASE_URL=SUPABASE_URL:latest,SUPABASE_SERVICE_KEY=SUPABASE_SERVICE_KEY:latest,OPENAI_API_KEY=openai-key:latest,GOOGLE_CLIENT_ID=GOOGLE_CLIENT_ID:latest,GOOGLE_CLIENT_SECRET=GOOGLE_CLIENT_SECRET:latest,JWT_SECRET=JWT_SECRET:latest,ELEVENLABS_API_KEY=ELEVENLABS_API_KEY:latest'
+      - 'SUPABASE_URL=SUPABASE_URL:latest,SUPABASE_SERVICE_KEY=SUPABASE_SERVICE_KEY:latest,OPENAI_API_KEY=openai-key:latest,JWT_SECRET=JWT_SECRET:latest,ELEVENLABS_API_KEY=ELEVENLABS_API_KEY:latest'
 
 images:
   - '${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/ai-radio-backend:$COMMIT_SHA'

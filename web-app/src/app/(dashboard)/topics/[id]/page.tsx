@@ -54,6 +54,7 @@ export default function TopicDetailPage() {
   const [isGenerating, setIsGenerating] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [showPrevious, setShowPrevious] = useState(false);
+  const [shouldAutoPlay, setShouldAutoPlay] = useState(false);
 
   const topicId = params.id as string;
   const isBookmarked = preferences.bookmarkedTopicIds.includes(topicId);
@@ -102,11 +103,13 @@ export default function TopicDetailPage() {
   const handleGenerate = useCallback(async () => {
     setIsGenerating(true);
     setError(null);
+    setShouldAutoPlay(false);
 
     try {
       // Topic generation is synchronous - waits for completion
       const generatedEpisode = await generateTopicEpisode(topicId);
       setEpisode(generatedEpisode);
+      setShouldAutoPlay(true); // Auto-play newly generated episodes
     } catch (err) {
       console.error('Generation error:', err);
       setError(err instanceof Error ? err.message : 'Failed to generate episode');
@@ -191,7 +194,7 @@ export default function TopicDetailPage() {
           ) : episode?.audioUrl ? (
             <div>
               <h2 className="text-lg font-semibold mb-4">Today&apos;s Episode</h2>
-              <AudioPlayer src={episode.audioUrl} title={episode.title} />
+              <AudioPlayer src={episode.audioUrl} title={episode.title} autoPlay={shouldAutoPlay} />
               <div className="mt-4 pt-4 border-t">
                 <Button
                   variant="outline"

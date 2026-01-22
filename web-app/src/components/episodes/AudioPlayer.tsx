@@ -7,6 +7,7 @@ import { cn } from '@/lib/utils/cn';
 interface AudioPlayerProps {
   src: string;
   title: string;
+  autoPlay?: boolean;
 }
 
 function formatTime(seconds: number): string {
@@ -15,19 +16,31 @@ function formatTime(seconds: number): string {
   return `${mins}:${secs.toString().padStart(2, '0')}`;
 }
 
-export function AudioPlayer({ src, title }: AudioPlayerProps) {
+export function AudioPlayer({ src, title, autoPlay = false }: AudioPlayerProps) {
   const audioRef = useRef<HTMLAudioElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const [playbackRate, setPlaybackRate] = useState(1);
+  const [hasAutoPlayed, setHasAutoPlayed] = useState(false);
 
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return;
 
     const handleTimeUpdate = () => setCurrentTime(audio.currentTime);
-    const handleLoadedMetadata = () => setDuration(audio.duration);
+    const handleLoadedMetadata = () => {
+      setDuration(audio.duration);
+      // Auto-play when metadata is loaded and autoPlay is true
+      if (autoPlay && !hasAutoPlayed) {
+        audio.play().then(() => {
+          setIsPlaying(true);
+          setHasAutoPlayed(true);
+        }).catch(err => {
+          console.log('Auto-play prevented by browser:', err);
+        });
+      }
+    };
     const handleEnded = () => setIsPlaying(false);
 
     audio.addEventListener('timeupdate', handleTimeUpdate);
@@ -39,7 +52,7 @@ export function AudioPlayer({ src, title }: AudioPlayerProps) {
       audio.removeEventListener('loadedmetadata', handleLoadedMetadata);
       audio.removeEventListener('ended', handleEnded);
     };
-  }, []);
+  }, [autoPlay, hasAutoPlayed]);
 
   const togglePlay = () => {
     const audio = audioRef.current;

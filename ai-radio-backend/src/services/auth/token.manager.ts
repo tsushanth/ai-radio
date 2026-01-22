@@ -56,9 +56,10 @@ export class TokenManager {
     refreshToken: string | null
   ): Promise<void> {
     const expiresAt = new Date(Date.now() + 3600 * 1000); // 1 hour from now
+    // Only gmail.modify is required; calendar is optional
     const scopes = provider === 'google'
-      ? ['https://www.googleapis.com/auth/gmail.readonly', 'https://www.googleapis.com/auth/calendar.readonly']
-      : ['Mail.Read', 'Calendars.Read'];
+      ? ['https://www.googleapis.com/auth/gmail.modify']
+      : ['Mail.Read'];
 
     // Always store in memory for immediate access
     const key = `${userId}:${provider}`;

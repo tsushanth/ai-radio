@@ -23,9 +23,10 @@ export class GmailAuthService implements OAuthProvider {
       clientId: config?.clientId || env.GOOGLE_CLIENT_ID,
       clientSecret: config?.clientSecret || env.GOOGLE_CLIENT_SECRET,
       redirectUri: config?.redirectUri || env.GOOGLE_REDIRECT_URI,
+      // Only request gmail.modify by default (verified scope)
+      // Calendar is optional and requested separately if needed
       scopes: config?.scopes || [
-        'https://www.googleapis.com/auth/gmail.readonly',
-        'https://www.googleapis.com/auth/calendar.readonly',
+        'https://www.googleapis.com/auth/gmail.modify',
         'https://www.googleapis.com/auth/userinfo.email',
         'https://www.googleapis.com/auth/userinfo.profile',
       ],

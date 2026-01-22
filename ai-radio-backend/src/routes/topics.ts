@@ -110,7 +110,8 @@ router.post('/:topicId/generate', async (req: Request, res: Response) => {
   try {
     const { topicId } = req.params;
     const userId = req.body.userId as string | undefined;
-    const forceRegenerate = req.body.forceRegenerate === true;
+    // Accept both camelCase and snake_case for compatibility with iOS/Android clients
+    const forceRegenerate = req.body.forceRegenerate === true || req.body.force_regenerate === true;
     const language = (req.body.language as string) || 'en';
 
     console.log(`📡 Generate request for topic: ${topicId} (force: ${forceRegenerate}, lang: ${language})`);

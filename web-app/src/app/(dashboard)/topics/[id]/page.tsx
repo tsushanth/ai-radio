@@ -17,6 +17,7 @@ import {
   RefreshCw,
   ChevronDown,
   ChevronUp,
+  Sparkles,
 } from 'lucide-react';
 
 // Map icon names to emoji
@@ -41,6 +42,13 @@ function getTopicIcon(icon: string): string {
   return iconMap[icon] || '🎙️';
 }
 
+function formatDuration(seconds: number | undefined): string {
+  if (!seconds) return '';
+  const mins = Math.floor(seconds / 60);
+  const secs = seconds % 60;
+  return `${mins}:${secs.toString().padStart(2, '0')}`;
+}
+
 export default function TopicDetailPage() {
   const params = useParams();
   const router = useRouter();
@@ -48,7 +56,7 @@ export default function TopicDetailPage() {
   const { preferences, toggleBookmark } = useAuth();
 
   const [topic, setTopic] = useState<Topic | null>(null);
-  const [episode, setEpisode] = useState<Episode | null>(null);
+  const [currentEpisode, setCurrentEpisode] = useState<Episode | null>(null);
   const [previousEpisodes, setPreviousEpisodes] = useState<Episode[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isGenerating, setIsGenerating] = useState(false);
@@ -73,19 +81,18 @@ export default function TopicDetailPage() {
       try {
         setIsLoading(true);
 
-        // Fetch current episode and previous episodes in parallel
-        const [currentEpisode, episodes] = await Promise.all([
-          getTopicEpisode(topicId),
-          getTopicEpisodes(topicId, 7),
-        ]);
+        // Fetch all episodes for the topic
+        const episodes = await getTopicEpisodes(topicId, 10);
 
-        if (currentEpisode && currentEpisode.audioUrl) {
-          setEpisode(currentEpisode);
+        if (episodes && episodes.length > 0) {
+          // First episode is the current/latest one
+          const latest = episodes[0];
+          if (latest.audioUrl) {
+            setCurrentEpisode(latest);
+          }
+          // Rest are previous episodes
+          setPreviousEpisodes(episodes.slice(1));
         }
-
-        // Filter out current episode from previous episodes
-        const prevEps = episodes.filter(ep => ep.id !== currentEpisode?.id);
-        setPreviousEpisodes(prevEps);
       } catch (err) {
         // No episode exists yet, that's ok
         console.log('No existing episode for topic:', err);
@@ -106,17 +113,29 @@ export default function TopicDetailPage() {
     setShouldAutoPlay(false);
 
     try {
+      // Move current episode to previous episodes before generating
+      if (currentEpisode) {
+        setPreviousEpisodes(prev => [currentEpisode, ...prev]);
+      }
+
       // Topic generation is synchronous - waits for completion
       const generatedEpisode = await generateTopicEpisode(topicId);
-      setEpisode(generatedEpisode);
+
+      // Set the new episode as current
+      setCurrentEpisode(generatedEpisode);
       setShouldAutoPlay(true); // Auto-play newly generated episodes
     } catch (err) {
       console.error('Generation error:', err);
       setError(err instanceof Error ? err.message : 'Failed to generate episode');
+
+      // Revert: move the episode back from previous if generation failed
+      if (currentEpisode) {
+        setPreviousEpisodes(prev => prev.filter(ep => ep.id !== currentEpisode.id));
+      }
     } finally {
       setIsGenerating(false);
     }
-  }, [topicId]);
+  }, [topicId, currentEpisode]);
 
   if (!topic) {
     return (
@@ -170,70 +189,102 @@ export default function TopicDetailPage() {
 
       {/* Content area - overlaps header */}
       <div className="relative -mt-16 px-6 pb-8">
-        <div className="bg-white rounded-2xl shadow-lg p-6">
-          {isLoading ? (
-            <div className="flex items-center justify-center py-12">
-              <Loader2 className="w-8 h-8 animate-spin text-orange-500" />
-            </div>
-          ) : isGenerating ? (
-            <div className="py-8 text-center">
-              <Loader2 className="w-12 h-12 animate-spin text-orange-500 mx-auto mb-4" />
-              <p className="font-semibold">Generating episode...</p>
+        {/* Generate New Episode Card */}
+        <div className="bg-white rounded-2xl shadow-lg p-6 mb-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <h2 className="text-lg font-semibold flex items-center gap-2">
+                <Sparkles className="w-5 h-5 text-orange-500" />
+                Generate New Episode
+              </h2>
               <p className="text-sm text-gray-500 mt-1">
-                This may take a minute or two
+                Create a fresh episode with the latest news
               </p>
             </div>
-          ) : error ? (
-            <div className="text-center py-8">
-              <p className="text-red-500 mb-4">{error}</p>
-              <Button onClick={handleGenerate} className="bg-orange-500 hover:bg-orange-600">
-                <RefreshCw className="w-4 h-4 mr-2" />
-                Try Again
-              </Button>
-            </div>
-          ) : episode?.audioUrl ? (
-            <div>
-              <h2 className="text-lg font-semibold mb-4">Today&apos;s Episode</h2>
-              <AudioPlayer src={episode.audioUrl} title={episode.title} autoPlay={shouldAutoPlay} />
-              <div className="mt-4 pt-4 border-t">
-                <Button
-                  variant="outline"
-                  onClick={handleGenerate}
-                  className="w-full"
-                >
+            <Button
+              onClick={handleGenerate}
+              disabled={isGenerating}
+              className="bg-orange-500 hover:bg-orange-600"
+            >
+              {isGenerating ? (
+                <>
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  Generating...
+                </>
+              ) : (
+                <>
                   <RefreshCw className="w-4 h-4 mr-2" />
-                  Generate New Episode
-                </Button>
+                  Generate
+                </>
+              )}
+            </Button>
+          </div>
+
+          {isGenerating && (
+            <div className="mt-4 p-4 bg-orange-50 rounded-lg">
+              <div className="flex items-center gap-3">
+                <Loader2 className="w-5 h-5 animate-spin text-orange-500" />
+                <div>
+                  <p className="text-sm font-medium text-orange-800">Generating your episode...</p>
+                  <p className="text-xs text-orange-600">This may take a minute or two</p>
+                </div>
               </div>
             </div>
-          ) : (
+          )}
+
+          {error && (
+            <div className="mt-4 p-4 bg-red-50 rounded-lg">
+              <p className="text-sm text-red-600">{error}</p>
+            </div>
+          )}
+        </div>
+
+        {/* Current Episode Card */}
+        {isLoading ? (
+          <div className="bg-white rounded-2xl shadow-lg p-6">
+            <div className="flex items-center justify-center py-8">
+              <Loader2 className="w-8 h-8 animate-spin text-orange-500" />
+            </div>
+          </div>
+        ) : currentEpisode?.audioUrl ? (
+          <div className="bg-white rounded-2xl shadow-lg p-6">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-lg font-semibold">Latest Episode</h2>
+              <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded">
+                {new Date(currentEpisode.createdAt).toLocaleDateString()}
+              </span>
+            </div>
+            <p className="text-sm text-gray-600 mb-4">{currentEpisode.title}</p>
+            <AudioPlayer
+              src={currentEpisode.audioUrl}
+              title={currentEpisode.title}
+              autoPlay={shouldAutoPlay}
+            />
+          </div>
+        ) : !isGenerating && (
+          <div className="bg-white rounded-2xl shadow-lg p-6">
             <div className="text-center py-8">
               <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 <Play className="w-8 h-8 text-orange-500 ml-1" />
               </div>
               <h3 className="text-lg font-semibold mb-2">No episode yet</h3>
-              <p className="text-gray-500 mb-4">
-                Generate your first episode on {topic.name}
+              <p className="text-gray-500">
+                Click &quot;Generate&quot; above to create your first episode on {topic.name}
               </p>
-              <Button
-                onClick={handleGenerate}
-                className="bg-orange-500 hover:bg-orange-600"
-              >
-                <Play className="w-4 h-4 mr-2" />
-                Generate Episode
-              </Button>
             </div>
-          )}
-        </div>
+          </div>
+        )}
 
         {/* Previous Episodes */}
         {previousEpisodes.length > 0 && (
-          <div className="mt-6 bg-white rounded-2xl shadow-lg p-6">
+          <div className="mt-4 bg-white rounded-2xl shadow-lg p-6">
             <button
               onClick={() => setShowPrevious(!showPrevious)}
               className="flex items-center justify-between w-full"
             >
-              <h2 className="text-lg font-semibold">Previous Episodes</h2>
+              <h2 className="text-lg font-semibold">
+                Previous Episodes ({previousEpisodes.length})
+              </h2>
               {showPrevious ? (
                 <ChevronUp className="w-5 h-5 text-gray-500" />
               ) : (
@@ -250,9 +301,12 @@ export default function TopicDetailPage() {
                   >
                     <div className="flex items-center justify-between mb-2">
                       <p className="font-medium text-sm">{ep.title}</p>
-                      <p className="text-xs text-gray-500">
-                        {new Date(ep.createdAt).toLocaleDateString()}
-                      </p>
+                      <div className="flex items-center gap-2 text-xs text-gray-500">
+                        {ep.durationSeconds && (
+                          <span>{formatDuration(ep.durationSeconds)}</span>
+                        )}
+                        <span>{new Date(ep.createdAt).toLocaleDateString()}</span>
+                      </div>
                     </div>
                     {ep.audioUrl && (
                       <AudioPlayer src={ep.audioUrl} title={ep.title} />

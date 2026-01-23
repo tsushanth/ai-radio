@@ -17,9 +17,10 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
         // Set notification delegate
         UNUserNotificationCenter.current().delegate = self
 
-        // Request push notification permission on launch
+        // Check permission status and restore scheduled notification if needed
         Task {
-            await PushNotificationService.shared.requestPermissionAndRegister()
+            await PushNotificationService.shared.checkPermissionStatus()
+            await PushNotificationService.shared.restoreScheduledNotificationIfNeeded()
         }
 
         return true

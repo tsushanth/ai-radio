@@ -149,7 +149,15 @@ class PushNotificationService: NSObject, ObservableObject {
     private func handleNotificationType(_ type: String, userInfo: [AnyHashable: Any]) {
         switch type {
         case "daily_brief_ready":
-            // Navigate to player
+            // Navigate to player (from push notification when brief is generated)
+            NotificationCenter.default.post(
+                name: .openDailyBriefPlayer,
+                object: nil,
+                userInfo: userInfo
+            )
+
+        case "daily_brief_reminder":
+            // Navigate to home to generate/play daily brief (from local scheduled notification)
             NotificationCenter.default.post(
                 name: .openDailyBriefPlayer,
                 object: nil,
@@ -190,11 +198,11 @@ class PushNotificationService: NSObject, ObservableObject {
 
         // Create notification content
         let content = UNMutableNotificationContent()
-        content.title = "Your Daily Brief is Ready"
-        content.body = "Your personalized briefing is ready to play. Tap to listen."
+        content.title = "Good Morning!"
+        content.body = "Time for your Daily Brief. Tap to get caught up on emails, calendar, and news."
         content.sound = .default
         content.badge = 1
-        content.userInfo = ["type": "daily_brief_ready"]
+        content.userInfo = ["type": "daily_brief_reminder"]
 
         // Create date components for the trigger
         var calendar = Calendar.current
@@ -240,6 +248,33 @@ class PushNotificationService: NSObject, ObservableObject {
         let center = UNUserNotificationCenter.current()
         let requests = await center.pendingNotificationRequests()
         return requests.contains { $0.identifier == dailyNotificationIdentifier }
+    }
+
+    /// Restore scheduled notification on app launch if it was enabled but missing
+    /// This handles cases where the notification was removed (e.g., after app update)
+    func restoreScheduledNotificationIfNeeded() async {
+        let settings = loadLocalNotificationSettings()
+
+        // Only restore if notifications were enabled
+        guard settings.enabled else { return }
+
+        // Check if notification is already scheduled
+        let isScheduled = await isDailyNotificationScheduled()
+        if isScheduled {
+            print("✅ Daily notification already scheduled")
+            return
+        }
+
+        // Check if we have permission
+        await checkPermissionStatus()
+        guard permissionStatus == .authorized else {
+            print("⚠️ Notification permission not granted, cannot restore notification")
+            return
+        }
+
+        // Re-schedule the notification
+        print("🔄 Restoring daily notification...")
+        await scheduleDailyNotification(at: settings.time, timezone: settings.timezone)
     }
 
     /// Save notification settings locally

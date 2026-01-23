@@ -94,6 +94,20 @@ struct NotificationSettingsView: View {
                     }
                 }
 
+                // Daily Brief Content Section
+                Section {
+                    Toggle(isOn: $viewModel.includeTopicUpdates) {
+                        Label("Include Topic Updates", systemImage: "newspaper.fill")
+                    }
+                    .onChange(of: viewModel.includeTopicUpdates) { _, _ in
+                        viewModel.saveTopicPreference()
+                    }
+                } header: {
+                    Text("Daily Brief Content")
+                } footer: {
+                    Text("When enabled, your Daily Brief will include headlines and updates from your selected topics of interest.")
+                }
+
                 // Preview Section
                 if viewModel.notificationsEnabled {
                     Section {
@@ -165,6 +179,7 @@ class NotificationSettingsViewModel {
     var permissionStatus: UNAuthorizationStatus = .notDetermined
     var isGenerating = false
     var isSaving = false
+    var includeTopicUpdates = true
 
     let availableTimezones: [TimezoneOption] = [
         .losAngeles,
@@ -189,7 +204,10 @@ class NotificationSettingsViewModel {
         await pushService.checkPermissionStatus()
         permissionStatus = pushService.permissionStatus
 
-        // Fetch settings from backend
+        // Load topic updates preference from local storage
+        includeTopicUpdates = UserDefaults.standard.object(forKey: "includeTopicUpdates") as? Bool ?? true
+
+        // Fetch settings from backend/local
         if let settings = await pushService.fetchSettings() {
             notificationsEnabled = settings.notificationsEnabled
 
@@ -206,6 +224,11 @@ class NotificationSettingsViewModel {
                 selectedTimezone = tz
             }
         }
+    }
+
+    func saveTopicPreference() {
+        UserDefaults.standard.set(includeTopicUpdates, forKey: "includeTopicUpdates")
+        print("📰 Topic updates preference saved: \(includeTopicUpdates)")
     }
 
     func requestPermission() async {

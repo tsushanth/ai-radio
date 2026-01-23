@@ -71,6 +71,17 @@ struct OnboardingView: View {
         // Use "hasLinkedCalendar" to be consistent with LinkedAccountsView
         UserDefaults.standard.set(viewModel.calendarEnabled, forKey: "hasLinkedCalendar")
 
+        // Save topic updates preference
+        UserDefaults.standard.set(viewModel.includeTopicUpdates, forKey: "includeTopicUpdates")
+
+        // Schedule daily notification if enabled
+        if viewModel.dailyNotificationsEnabled && viewModel.googleLinked {
+            Task {
+                await PushNotificationService.shared.requestPermissionAndRegister()
+                await PushNotificationService.shared.scheduleDailyNotification(at: viewModel.briefingTime)
+            }
+        }
+
         // If user linked email or calendar, start generating their Daily Brief immediately
         // so it's ready (or in progress) when they reach the home screen
         if viewModel.googleLinked {
@@ -548,40 +559,101 @@ struct TopicSelectionPage: View {
     ]
 
     var body: some View {
-        VStack(spacing: 24) {
+        VStack(spacing: 20) {
             // Title
-            VStack(spacing: 12) {
+            VStack(spacing: 8) {
                 Text("Choose Your Interests")
                     .font(.system(size: 28, weight: .bold))
                     .foregroundColor(Theme.Colors.primaryText)
                     .multilineTextAlignment(.center)
 
-                Text("Select at least one topic to personalize your briefings. We'll include relevant news and updates.")
+                Text("Select topics to personalize your Daily Brief.")
                     .font(.system(size: 16, weight: .regular))
                     .foregroundColor(Theme.Colors.secondaryText)
                     .multilineTextAlignment(.center)
                     .padding(.horizontal, 32)
             }
-            .padding(.top, 40)
+            .padding(.top, 32)
 
             // Topic grid
-            ScrollView {
-                LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 12) {
-                    ForEach(allTopics, id: \.0) { topic in
-                        TopicChip(
-                            title: topic.0,
-                            icon: topic.1,
-                            color: Color(hex: topic.2),
-                            isSelected: viewModel.selectedTopics.contains(topic.0)
-                        ) {
-                            viewModel.toggleTopic(topic.0)
+            ScrollView(showsIndicators: false) {
+                VStack(spacing: 16) {
+                    LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 12) {
+                        ForEach(allTopics, id: \.0) { topic in
+                            TopicChip(
+                                title: topic.0,
+                                icon: topic.1,
+                                color: Color(hex: topic.2),
+                                isSelected: viewModel.selectedTopics.contains(topic.0)
+                            ) {
+                                viewModel.toggleTopic(topic.0)
+                            }
                         }
                     }
-                }
-                .padding(.horizontal, 24)
-            }
+                    .padding(.horizontal, 24)
 
-            Spacer()
+                    // Daily Brief Options
+                    if viewModel.googleLinked {
+                        VStack(spacing: 12) {
+                            // Divider
+                            Rectangle()
+                                .fill(Color.white.opacity(0.1))
+                                .frame(height: 1)
+                                .padding(.vertical, 8)
+
+                            Text("Daily Brief Options")
+                                .font(.system(size: 14, weight: .semibold))
+                                .foregroundColor(Theme.Colors.secondaryText)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+
+                            // Include topic updates toggle
+                            IntegrationToggle(
+                                icon: "newspaper.fill",
+                                title: "Include Topic Updates",
+                                subtitle: "Add headlines from your topics to Daily Brief",
+                                isEnabled: $viewModel.includeTopicUpdates
+                            )
+
+                            // Daily notification toggle
+                            IntegrationToggle(
+                                icon: "bell.fill",
+                                title: "Daily Reminder",
+                                subtitle: "Get notified when your brief is ready",
+                                isEnabled: $viewModel.dailyNotificationsEnabled
+                            )
+
+                            // Briefing time picker
+                            if viewModel.dailyNotificationsEnabled {
+                                HStack {
+                                    Image(systemName: "clock.fill")
+                                        .font(.system(size: 20))
+                                        .foregroundColor(Theme.Colors.accent)
+                                        .frame(width: 32)
+
+                                    Text("Reminder Time")
+                                        .font(.system(size: 16, weight: .medium))
+                                        .foregroundColor(Theme.Colors.primaryText)
+
+                                    Spacer()
+
+                                    DatePicker(
+                                        "",
+                                        selection: $viewModel.briefingTime,
+                                        displayedComponents: .hourAndMinute
+                                    )
+                                    .labelsHidden()
+                                    .tint(Theme.Colors.accent)
+                                }
+                                .padding(12)
+                                .background(Theme.Colors.cardBackground)
+                                .cornerRadius(10)
+                            }
+                        }
+                        .padding(.horizontal, 24)
+                    }
+                }
+                .padding(.bottom, 16)
+            }
 
             // Complete button
             VStack(spacing: 8) {
@@ -658,6 +730,9 @@ class OnboardingViewModel: ObservableObject {
     @Published var permissionDenied: Bool = false
     @Published var emailEnabled: Bool = true
     @Published var calendarEnabled: Bool = false  // Start with calendar disabled
+    @Published var includeTopicUpdates: Bool = true  // Include topic updates in daily brief
+    @Published var dailyNotificationsEnabled: Bool = true  // Daily brief notification reminder
+    @Published var briefingTime: Date = Calendar.current.date(from: DateComponents(hour: 7, minute: 0)) ?? Date()
 
     private let googleOAuthHelper = GoogleOAuthHelper()
     private var linkedEmail: String?
@@ -676,6 +751,13 @@ class OnboardingViewModel: ObservableObject {
         emailEnabled = UserDefaults.standard.object(forKey: "emailEnabled") as? Bool ?? true
         // Use "hasLinkedCalendar" to be consistent with LinkedAccountsView
         calendarEnabled = UserDefaults.standard.bool(forKey: "hasLinkedCalendar")
+        // Load topic updates preference
+        includeTopicUpdates = UserDefaults.standard.object(forKey: "includeTopicUpdates") as? Bool ?? true
+        // Load notification preferences
+        dailyNotificationsEnabled = UserDefaults.standard.object(forKey: "dailyBriefNotificationsEnabled") as? Bool ?? true
+        if let savedTime = UserDefaults.standard.object(forKey: "dailyBriefingTime") as? TimeInterval, savedTime > 0 {
+            briefingTime = Date(timeIntervalSince1970: savedTime)
+        }
     }
 
     var hasLinkedAccount: Bool {

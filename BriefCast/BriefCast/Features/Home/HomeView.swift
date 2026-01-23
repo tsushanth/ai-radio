@@ -137,7 +137,7 @@ struct HomeView: View {
         }
         .fullScreenCover(item: $selectedLiveStation) { station in
             LiveStationPlayerView(station: station)
-                .environmentObject(AudioService.shared)
+                .environment(AudioService.shared)
         }
         .overlay(alignment: .top) {
             if showToast, let message = toastMessage {

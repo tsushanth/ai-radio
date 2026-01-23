@@ -619,6 +619,10 @@ class LinkedAccountsViewModel: ObservableObject {
                     UserDefaults.standard.set(false, forKey: "hasLinkedGoogleAccount")
                     UserDefaults.standard.removeObject(forKey: "linkedAccountEmail")
                     UserDefaults.standard.removeObject(forKey: "linkedAccountProvider")
+
+                    // Also clear calendar link since it's tied to the Google account
+                    self.hasLinkedCalendar = false
+                    UserDefaults.standard.set(false, forKey: "hasLinkedCalendar")
                 }
 
                 // TODO: Call backend to delete linked account

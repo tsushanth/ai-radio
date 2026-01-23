@@ -2,7 +2,8 @@
 //  PushNotificationService.swift
 //  BriefCast
 //
-//  Handles push notification registration and handling
+//  Handles push notification registration, local notification scheduling,
+//  and remote notification handling
 //
 
 import Foundation
@@ -17,8 +18,13 @@ class PushNotificationService: NSObject, ObservableObject {
     @Published var permissionStatus: UNAuthorizationStatus = .notDetermined
     @Published var deviceToken: String?
 
-    private let apiClient = APIClient.shared
     private let tokenKey = "apns_device_token"
+    private let dailyNotificationIdentifier = "daily_brief_reminder"
+
+    // UserDefaults keys for notification settings
+    private let notificationsEnabledKey = "dailyBriefNotificationsEnabled"
+    private let briefingTimeKey = "dailyBriefingTime"
+    private let briefingTimezoneKey = "dailyBriefingTimezone"
 
     private override init() {
         super.init()
@@ -87,45 +93,25 @@ class PushNotificationService: NSObject, ObservableObject {
 
     /// Register device token with backend
     private func registerTokenWithBackend(_ token: String) async {
-        guard let userId = AuthService.shared.currentUserId else {
+        let userId = UserDefaults.standard.string(forKey: "linkedAccountEmail")
+        guard let userId = userId, !userId.isEmpty else {
             print("⚠️ No user ID, skipping token registration")
             return
         }
 
-        do {
-            let _: EmptyResponse = try await apiClient.post(
-                endpoint: "/notifications/register",
-                body: [
-                    "user_id": userId,
-                    "device_token": token,
-                    "platform": "ios"
-                ]
-            )
-            print("✅ Device token registered with backend")
-        } catch {
-            print("⚠️ Failed to register token with backend: \(error.localizedDescription)")
-        }
+        // TODO: Implement server-side registration
+        print("📱 Would register token with backend for user: \(userId)")
     }
 
     /// Unregister device from push notifications
     func unregisterDevice() async {
-        guard let token = deviceToken,
-              let userId = AuthService.shared.currentUserId else {
+        let userId = UserDefaults.standard.string(forKey: "linkedAccountEmail")
+        guard let _ = deviceToken, let userId = userId else {
             return
         }
 
-        do {
-            let _: EmptyResponse = try await apiClient.delete(
-                endpoint: "/notifications/unregister",
-                body: [
-                    "user_id": userId,
-                    "device_token": token
-                ]
-            )
-            print("✅ Device unregistered from push notifications")
-        } catch {
-            print("⚠️ Failed to unregister device: \(error.localizedDescription)")
-        }
+        // TODO: Implement server-side unregistration
+        print("📱 Would unregister token from backend for user: \(userId)")
 
         deviceToken = nil
         isRegistered = false
@@ -193,45 +179,145 @@ class PushNotificationService: NSObject, ObservableObject {
         }
     }
 
-    // MARK: - Settings
+    // MARK: - Local Daily Notification Scheduling
 
-    /// Update notification settings on backend
+    /// Schedule a daily local notification for the briefing reminder
+    func scheduleDailyNotification(at time: Date, timezone: TimeZone = .current) async {
+        let center = UNUserNotificationCenter.current()
+
+        // Cancel any existing daily notification
+        center.removePendingNotificationRequests(withIdentifiers: [dailyNotificationIdentifier])
+
+        // Create notification content
+        let content = UNMutableNotificationContent()
+        content.title = "Your Daily Brief is Ready"
+        content.body = "Your personalized briefing is ready to play. Tap to listen."
+        content.sound = .default
+        content.badge = 1
+        content.userInfo = ["type": "daily_brief_ready"]
+
+        // Create date components for the trigger
+        var calendar = Calendar.current
+        calendar.timeZone = timezone
+
+        var dateComponents = calendar.dateComponents([.hour, .minute], from: time)
+        dateComponents.second = 0
+
+        // Create a repeating daily trigger
+        let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: true)
+
+        // Create the request
+        let request = UNNotificationRequest(
+            identifier: dailyNotificationIdentifier,
+            content: content,
+            trigger: trigger
+        )
+
+        do {
+            try await center.add(request)
+            let timeString = String(format: "%02d:%02d", dateComponents.hour ?? 0, dateComponents.minute ?? 0)
+            print("✅ Daily notification scheduled for \(timeString) in \(timezone.identifier)")
+
+            // Save settings locally
+            saveLocalNotificationSettings(enabled: true, time: time, timezone: timezone)
+        } catch {
+            print("❌ Failed to schedule daily notification: \(error.localizedDescription)")
+        }
+    }
+
+    /// Cancel the daily notification
+    func cancelDailyNotification() {
+        let center = UNUserNotificationCenter.current()
+        center.removePendingNotificationRequests(withIdentifiers: [dailyNotificationIdentifier])
+        print("🔕 Daily notification cancelled")
+
+        // Update local settings
+        UserDefaults.standard.set(false, forKey: notificationsEnabledKey)
+    }
+
+    /// Check if daily notification is currently scheduled
+    func isDailyNotificationScheduled() async -> Bool {
+        let center = UNUserNotificationCenter.current()
+        let requests = await center.pendingNotificationRequests()
+        return requests.contains { $0.identifier == dailyNotificationIdentifier }
+    }
+
+    /// Save notification settings locally
+    private func saveLocalNotificationSettings(enabled: Bool, time: Date, timezone: TimeZone) {
+        UserDefaults.standard.set(enabled, forKey: notificationsEnabledKey)
+        UserDefaults.standard.set(time.timeIntervalSince1970, forKey: briefingTimeKey)
+        UserDefaults.standard.set(timezone.identifier, forKey: briefingTimezoneKey)
+    }
+
+    /// Load saved notification settings
+    func loadLocalNotificationSettings() -> (enabled: Bool, time: Date, timezone: TimeZone) {
+        let enabled = UserDefaults.standard.bool(forKey: notificationsEnabledKey)
+        let timeInterval = UserDefaults.standard.double(forKey: briefingTimeKey)
+        let timezoneId = UserDefaults.standard.string(forKey: briefingTimezoneKey) ?? TimeZone.current.identifier
+
+        let time: Date
+        if timeInterval > 0 {
+            time = Date(timeIntervalSince1970: timeInterval)
+        } else {
+            // Default to 7:00 AM
+            time = Calendar.current.date(from: DateComponents(hour: 7, minute: 0)) ?? Date()
+        }
+
+        let timezone = TimeZone(identifier: timezoneId) ?? .current
+
+        return (enabled, time, timezone)
+    }
+
+    // MARK: - Settings Sync
+
+    /// Update notification settings (local + backend)
     func updateSettings(
         briefingTime: String,
         timezone: String,
         enabled: Bool
     ) async {
-        guard let userId = AuthService.shared.currentUserId else { return }
+        // Parse time string (HH:mm format)
+        let components = briefingTime.split(separator: ":")
+        if components.count == 2,
+           let hour = Int(components[0]),
+           let minute = Int(components[1]) {
+            let time = Calendar.current.date(from: DateComponents(hour: hour, minute: minute)) ?? Date()
+            let tz = TimeZone(identifier: timezone) ?? .current
 
-        do {
-            let _: EmptyResponse = try await apiClient.post(
-                endpoint: "/notifications/settings",
-                body: [
-                    "user_id": userId,
-                    "briefing_time": briefingTime,
-                    "timezone": timezone,
-                    "notifications_enabled": enabled
-                ]
-            )
-            print("✅ Notification settings updated")
-        } catch {
-            print("⚠️ Failed to update notification settings: \(error.localizedDescription)")
+            if enabled {
+                await scheduleDailyNotification(at: time, timezone: tz)
+            } else {
+                cancelDailyNotification()
+            }
         }
+
+        // Sync with backend
+        let userId = UserDefaults.standard.string(forKey: "linkedAccountEmail")
+        guard let userId = userId, !userId.isEmpty else { return }
+
+        // TODO: Implement server-side settings update
+        print("📱 Would update notification settings for user: \(userId)")
     }
 
-    /// Fetch current notification settings from backend
+    /// Fetch current notification settings (local fallback if backend unavailable)
     func fetchSettings() async -> NotificationSettings? {
-        guard let userId = AuthService.shared.currentUserId else { return nil }
+        let userId = UserDefaults.standard.string(forKey: "linkedAccountEmail")
+        guard let userId = userId, !userId.isEmpty else { return nil }
 
-        do {
-            let response: NotificationSettingsResponse = try await apiClient.get(
-                endpoint: "/notifications/settings/\(userId)"
-            )
-            return response.data
-        } catch {
-            print("⚠️ Failed to fetch notification settings: \(error.localizedDescription)")
-            return nil
-        }
+        // TODO: Implement server-side settings fetch
+        // For now, return local settings
+        let local = loadLocalNotificationSettings()
+
+        let formatter = DateFormatter()
+        formatter.dateFormat = "HH:mm"
+        let timeString = formatter.string(from: local.time)
+
+        return NotificationSettings(
+            briefingTime: timeString,
+            timezone: local.timezone.identifier,
+            notificationsEnabled: local.enabled,
+            deviceTokens: deviceToken != nil ? [deviceToken!] : []
+        )
     }
 
     // MARK: - Cache
@@ -246,11 +332,6 @@ class PushNotificationService: NSObject, ObservableObject {
 
 // MARK: - Response Types
 
-struct EmptyResponse: Codable {
-    let success: Bool
-    let message: String?
-}
-
 struct NotificationSettings: Codable {
     let briefingTime: String
     let timezone: String
@@ -263,11 +344,6 @@ struct NotificationSettings: Codable {
         case notificationsEnabled = "notifications_enabled"
         case deviceTokens = "device_tokens"
     }
-}
-
-struct NotificationSettingsResponse: Codable {
-    let success: Bool
-    let data: NotificationSettings?
 }
 
 // MARK: - Notification Names

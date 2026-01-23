@@ -77,6 +77,7 @@ struct UserPreferences: Codable {
     var includeCalendar: Bool?
     var includeEmail: Bool?
     var language: String? // e.g., "en", "es", "hi"
+    var includeTopicTeasers: Bool? // Include topic headlines in Daily Brief
 
     enum CodingKeys: String, CodingKey {
         case briefingTime = "briefing_time"
@@ -87,6 +88,7 @@ struct UserPreferences: Codable {
         case includeCalendar = "include_calendar"
         case includeEmail = "include_email"
         case language
+        case includeTopicTeasers = "include_topic_teasers"
     }
 }
 

@@ -522,6 +522,9 @@ class HomeViewModel {
         let language = preferencesService.preferredLanguage
         print("🌐 Daily Brief generation with language: \(language)")
 
+        // Check if user wants topic updates included
+        let includeTopicTeasers = UserDefaults.standard.object(forKey: "includeTopicUpdates") as? Bool ?? true
+
         // Create preferences from selected topics
         let preferences = UserPreferences(
             briefingTime: "07:00",
@@ -531,7 +534,8 @@ class HomeViewModel {
             includeWeather: false,
             includeCalendar: true,
             includeEmail: true,
-            language: language
+            language: language,
+            includeTopicTeasers: includeTopicTeasers
         )
 
         // Use the linked account email (from OAuth) for podcast generation

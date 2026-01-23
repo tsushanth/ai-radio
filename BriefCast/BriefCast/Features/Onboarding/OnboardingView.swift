@@ -68,7 +68,19 @@ struct OnboardingView: View {
 
         // Save email/calendar preferences
         UserDefaults.standard.set(viewModel.emailEnabled, forKey: "emailEnabled")
-        UserDefaults.standard.set(viewModel.calendarEnabled, forKey: "calendarEnabled")
+        // Use "hasLinkedCalendar" to be consistent with LinkedAccountsView
+        UserDefaults.standard.set(viewModel.calendarEnabled, forKey: "hasLinkedCalendar")
+
+        // If user linked email or calendar, start generating their Daily Brief immediately
+        // so it's ready (or in progress) when they reach the home screen
+        if viewModel.googleLinked {
+            // Post notification to trigger Daily Brief generation
+            NotificationCenter.default.post(
+                name: .startDailyBriefGeneration,
+                object: nil
+            )
+            print("🚀 Starting Daily Brief generation after onboarding")
+        }
 
         dismiss()
     }
@@ -190,12 +202,13 @@ struct LinkAccountPage: View {
                             isEnabled: $viewModel.emailEnabled
                         )
 
-                        IntegrationToggle(
-                            icon: "calendar",
-                            title: "Calendar",
-                            subtitle: "Include upcoming events in briefings",
-                            isEnabled: $viewModel.calendarEnabled
-                        )
+                        // Calendar requires separate OAuth request
+                        CalendarIntegrationRow(
+                            isEnabled: viewModel.calendarEnabled,
+                            isLinking: viewModel.isLinkingCalendar
+                        ) {
+                            Task { await viewModel.linkCalendar() }
+                        }
                     }
                     .padding(.top, 8)
                 }
@@ -275,6 +288,136 @@ struct IntegrationToggle: View {
                 .tint(Theme.Colors.accent)
         }
         .padding(12)
+        .background(Theme.Colors.cardBackground)
+        .cornerRadius(10)
+    }
+}
+
+// MARK: - Calendar Integration Row
+
+struct CalendarIntegrationRow: View {
+    let isEnabled: Bool
+    let isLinking: Bool
+    let onConnect: () -> Void
+
+    @State private var showCalendarInfo = false
+
+    var body: some View {
+        VStack(spacing: 0) {
+            HStack(spacing: 12) {
+                Image(systemName: "calendar")
+                    .font(.system(size: 20))
+                    .foregroundColor(isEnabled ? Theme.Colors.accent : Theme.Colors.secondaryText)
+                    .frame(width: 32)
+
+                VStack(alignment: .leading, spacing: 2) {
+                    HStack(spacing: 4) {
+                        Text("Calendar")
+                            .font(.system(size: 16, weight: .medium))
+                            .foregroundColor(Theme.Colors.primaryText)
+
+                        if !isEnabled {
+                            Text("(Optional)")
+                                .font(.system(size: 12, weight: .regular))
+                                .foregroundColor(Theme.Colors.secondaryText)
+                        }
+                    }
+
+                    Text(isEnabled ? "Connected" : "Include upcoming events in briefings")
+                        .font(.system(size: 13, weight: .regular))
+                        .foregroundColor(isEnabled ? .green : Theme.Colors.secondaryText)
+                }
+
+                Spacer()
+
+                if isLinking {
+                    ProgressView()
+                        .progressViewStyle(CircularProgressViewStyle(tint: Theme.Colors.accent))
+                } else if isEnabled {
+                    Image(systemName: "checkmark.circle.fill")
+                        .font(.system(size: 22))
+                        .foregroundColor(.green)
+                } else {
+                    HStack(spacing: 8) {
+                        Button(action: { showCalendarInfo.toggle() }) {
+                            Image(systemName: "info.circle")
+                                .font(.system(size: 18))
+                                .foregroundColor(Theme.Colors.secondaryText)
+                        }
+
+                        Button(action: onConnect) {
+                            Text("Connect")
+                                .font(.system(size: 14, weight: .semibold))
+                                .foregroundColor(.white)
+                                .padding(.horizontal, 12)
+                                .padding(.vertical, 6)
+                                .background(Theme.Colors.accent)
+                                .cornerRadius(6)
+                        }
+                    }
+                }
+            }
+            .padding(12)
+
+            // Info panel about unverified app
+            if showCalendarInfo && !isEnabled {
+                VStack(alignment: .leading, spacing: 8) {
+                    HStack(spacing: 6) {
+                        Image(systemName: "exclamationmark.shield")
+                            .font(.system(size: 14))
+                            .foregroundColor(.orange)
+
+                        Text("\"Unverified App\" Warning")
+                            .font(.system(size: 13, weight: .semibold))
+                            .foregroundColor(Theme.Colors.primaryText)
+                    }
+
+                    Text("Google may show an \"unverified app\" screen because our calendar access is pending verification. This is safe to proceed.")
+                        .font(.system(size: 12, weight: .regular))
+                        .foregroundColor(Theme.Colors.secondaryText)
+                        .fixedSize(horizontal: false, vertical: true)
+
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("To connect:")
+                            .font(.system(size: 12, weight: .semibold))
+                            .foregroundColor(Theme.Colors.secondaryText)
+
+                        HStack(alignment: .top, spacing: 6) {
+                            Text("1.")
+                                .font(.system(size: 12))
+                                .foregroundColor(Theme.Colors.secondaryText)
+                            Text("Tap \"Advanced\" on the warning screen")
+                                .font(.system(size: 12))
+                                .foregroundColor(Theme.Colors.secondaryText)
+                        }
+
+                        HStack(alignment: .top, spacing: 6) {
+                            Text("2.")
+                                .font(.system(size: 12))
+                                .foregroundColor(Theme.Colors.secondaryText)
+                            Text("Tap \"Go to Audexa (unsafe)\"")
+                                .font(.system(size: 12))
+                                .foregroundColor(Theme.Colors.secondaryText)
+                        }
+
+                        HStack(alignment: .top, spacing: 6) {
+                            Text("3.")
+                                .font(.system(size: 12))
+                                .foregroundColor(Theme.Colors.secondaryText)
+                            Text("Grant calendar access")
+                                .font(.system(size: 12))
+                                .foregroundColor(Theme.Colors.secondaryText)
+                        }
+                    }
+                    .padding(.top, 4)
+                }
+                .padding(12)
+                .background(Color.orange.opacity(0.1))
+                .cornerRadius(8)
+                .padding(.horizontal, 12)
+                .padding(.bottom, 12)
+            }
+        }
         .background(Theme.Colors.cardBackground)
         .cornerRadius(10)
     }
@@ -508,19 +651,22 @@ class OnboardingViewModel: ObservableObject {
     @Published var currentPage: Int = 0
     @Published var googleLinked: Bool = false
     @Published var isLinkingGoogle: Bool = false
+    @Published var isLinkingCalendar: Bool = false
     @Published var showError: Bool = false
     @Published var errorMessage: String?
     @Published var selectedTopics: [String] = []  // Start with empty selection
     @Published var permissionDenied: Bool = false
     @Published var emailEnabled: Bool = true
-    @Published var calendarEnabled: Bool = true
+    @Published var calendarEnabled: Bool = false  // Start with calendar disabled
 
     private let googleOAuthHelper = GoogleOAuthHelper()
+    private var linkedEmail: String?
 
     init() {
         // Check if user already has linked accounts
         if UserDefaults.standard.bool(forKey: "hasLinkedGoogleAccount") {
             googleLinked = true
+            linkedEmail = UserDefaults.standard.string(forKey: "linkedAccountEmail")
         }
         // Load saved topics if they exist
         if let savedTopics = UserDefaults.standard.stringArray(forKey: "selectedTopics"), !savedTopics.isEmpty {
@@ -528,7 +674,8 @@ class OnboardingViewModel: ObservableObject {
         }
         // Load email/calendar preferences
         emailEnabled = UserDefaults.standard.object(forKey: "emailEnabled") as? Bool ?? true
-        calendarEnabled = UserDefaults.standard.object(forKey: "calendarEnabled") as? Bool ?? true
+        // Use "hasLinkedCalendar" to be consistent with LinkedAccountsView
+        calendarEnabled = UserDefaults.standard.bool(forKey: "hasLinkedCalendar")
     }
 
     var hasLinkedAccount: Bool {
@@ -554,10 +701,11 @@ class OnboardingViewModel: ObservableObject {
         errorMessage = nil
 
         do {
-            // Request both email and calendar access
+            // Request only Gmail access (verified scope)
+            // Calendar is optional and requested separately if user enables it
             let (email, accessToken, refreshToken) = try await googleOAuthHelper.requestAccess(
                 includeEmail: true,
-                includeCalendar: true
+                includeCalendar: false
             )
 
             // Store in backend
@@ -569,6 +717,7 @@ class OnboardingViewModel: ObservableObject {
             )
 
             googleLinked = true
+            linkedEmail = email
             UserDefaults.standard.set(true, forKey: "hasLinkedGoogleAccount")
             UserDefaults.standard.set(email, forKey: "linkedAccountEmail")
             UserDefaults.standard.set("google", forKey: "linkedAccountProvider")
@@ -595,11 +744,58 @@ class OnboardingViewModel: ObservableObject {
         isLinkingGoogle = false
     }
 
+    func linkCalendar() async {
+        isLinkingCalendar = true
+        errorMessage = nil
+
+        do {
+            // Request calendar access separately (may show unverified warning)
+            let (email, accessToken, refreshToken) = try await googleOAuthHelper.requestAccess(
+                includeEmail: false,
+                includeCalendar: true
+            )
+
+            // Update backend with calendar access
+            try await storeLinkedAccount(
+                provider: "google",
+                email: linkedEmail ?? email,
+                accessToken: accessToken,
+                refreshToken: refreshToken,
+                emailEnabled: emailEnabled,
+                calendarEnabled: true
+            )
+
+            calendarEnabled = true
+            // Use "hasLinkedCalendar" to be consistent with LinkedAccountsView
+            UserDefaults.standard.set(true, forKey: "hasLinkedCalendar")
+
+            print("Calendar linked in onboarding: \(email)")
+        } catch let error as GoogleOAuthError {
+            errorMessage = error.localizedDescription
+            showError = true
+            print("Calendar OAuth permission denied: \(error)")
+        } catch let error as NSError {
+            if error.code == -5 || error.localizedDescription.contains("canceled") || error.localizedDescription.contains("cancelled") {
+                print("User cancelled Calendar sign-in")
+                errorMessage = nil
+                showError = false
+            } else {
+                errorMessage = "Failed to connect Calendar: \(error.localizedDescription)"
+                showError = true
+                print("Calendar OAuth error: \(error)")
+            }
+        }
+
+        isLinkingCalendar = false
+    }
+
     private func storeLinkedAccount(
         provider: String,
         email: String,
         accessToken: String,
-        refreshToken: String?
+        refreshToken: String?,
+        emailEnabled: Bool? = nil,
+        calendarEnabled: Bool? = nil
     ) async throws {
         let userId = email
 
@@ -613,8 +809,8 @@ class OnboardingViewModel: ObservableObject {
             "email": email,
             "access_token": accessToken,
             "refresh_token": refreshToken ?? "",
-            "email_enabled": emailEnabled,
-            "calendar_enabled": calendarEnabled
+            "email_enabled": emailEnabled ?? self.emailEnabled,
+            "calendar_enabled": calendarEnabled ?? self.calendarEnabled
         ]
 
         request.httpBody = try JSONSerialization.data(withJSONObject: body)
@@ -625,6 +821,12 @@ class OnboardingViewModel: ObservableObject {
             throw NSError(domain: "API", code: -1, userInfo: [NSLocalizedDescriptionKey: "Failed to store linked account"])
         }
     }
+}
+
+// MARK: - Notification Names
+
+extension Notification.Name {
+    static let startDailyBriefGeneration = Notification.Name("startDailyBriefGeneration")
 }
 
 #Preview {

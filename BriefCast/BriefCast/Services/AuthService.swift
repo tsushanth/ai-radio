@@ -133,6 +133,7 @@ class AuthService: ObservableObject {
             "hasLinkedGoogleAccount",
             "linkedAccountEmail",
             "linkedAccountProvider",
+            "hasLinkedCalendar",
             "hasCompletedOnboarding",
             "bookmarkedTopicIds",
             "hiddenTopicIds",

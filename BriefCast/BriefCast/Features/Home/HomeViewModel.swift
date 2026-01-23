@@ -145,6 +145,8 @@ class HomeViewModel {
 
     // Playback end observer
     private nonisolated(unsafe) var playbackEndObserver: NSObjectProtocol?
+    // Onboarding generation observer
+    private nonisolated(unsafe) var onboardingGenerationObserver: NSObjectProtocol?
 
     init() {
         // Check linked account status immediately from UserDefaults
@@ -196,6 +198,7 @@ class HomeViewModel {
         }
 
         setupPlaybackEndObserver()
+        setupOnboardingGenerationObserver()
     }
 
     // MARK: - Episode Caching
@@ -255,10 +258,34 @@ class HomeViewModel {
         }
     }
 
+    private func setupOnboardingGenerationObserver() {
+        onboardingGenerationObserver = NotificationCenter.default.addObserver(
+            forName: .startDailyBriefGeneration,
+            object: nil,
+            queue: .main
+        ) { [weak self] _ in
+            Task { @MainActor in
+                guard let self = self else { return }
+                // Refresh linked account status from UserDefaults
+                self.hasLinkedAccount = UserDefaults.standard.bool(forKey: "hasLinkedGoogleAccount")
+
+                // Only generate if we have a linked account and don't already have today's episode
+                if self.hasLinkedAccount && !self.hasCachedEpisodeForToday {
+                    print("🚀 Received onboarding generation notification, starting Daily Brief generation")
+                    await self.generateDailyBrief()
+                }
+            }
+        }
+    }
+
     func removeObservers() {
         if let observer = playbackEndObserver {
             NotificationCenter.default.removeObserver(observer)
             playbackEndObserver = nil
+        }
+        if let observer = onboardingGenerationObserver {
+            NotificationCenter.default.removeObserver(observer)
+            onboardingGenerationObserver = nil
         }
     }
 

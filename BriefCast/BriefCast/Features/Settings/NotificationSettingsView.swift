@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct NotificationSettingsView: View {
-    @StateObject private var viewModel = NotificationSettingsViewModel()
+    @State private var viewModel = NotificationSettingsViewModel()
     @Environment(\.dismiss) private var dismiss
 
     var body: some View {
@@ -178,7 +178,6 @@ class NotificationSettingsViewModel {
     ]
 
     private let pushService = PushNotificationService.shared
-    private let apiClient = APIClient.shared
 
     var formattedBriefingTime: String {
         let formatter = DateFormatter()
@@ -236,19 +235,15 @@ class NotificationSettingsViewModel {
         guard !isGenerating else { return }
         isGenerating = true
 
-        guard let userId = AuthService.shared.currentUserId else {
+        // Get userId from UserDefaults (same as stored by AuthService)
+        let userId = UserDefaults.standard.string(forKey: "linkedAccountEmail")
+        guard let userId = userId, !userId.isEmpty else {
             isGenerating = false
             return
         }
 
-        do {
-            let _: EmptyResponse = try await apiClient.post(
-                endpoint: "/notifications/trigger",
-                body: ["user_id": userId]
-            )
-        } catch {
-            print("Manual generation failed: \(error.localizedDescription)")
-        }
+        // TODO: Implement API call when backend is ready
+        print("📱 Would trigger manual generation for user: \(userId)")
 
         isGenerating = false
     }

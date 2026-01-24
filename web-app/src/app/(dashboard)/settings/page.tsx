@@ -68,10 +68,12 @@ export default function SettingsPage() {
     const success = searchParams.get('success');
     const provider = searchParams.get('provider');
     const email = searchParams.get('email');
+    const service = searchParams.get('service') as 'gmail' | 'calendar' | null;
 
     if (success === 'true' && provider && email) {
       // Link the account with the email from OAuth
-      linkAccount(provider, decodeURIComponent(email));
+      // Pass the service type to only enable the specific capability
+      linkAccount(provider, decodeURIComponent(email), service || 'gmail');
       // Clean up URL
       window.history.replaceState({}, '', '/settings');
     }

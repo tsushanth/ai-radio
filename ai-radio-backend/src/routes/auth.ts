@@ -145,8 +145,10 @@ router.get('/oauth/google/callback', async (req: Request, res: Response, next: N
     });
 
     // Redirect to frontend or return success
+    // Include the service type (gmail or calendar) so frontend knows what was connected
     const redirectUrl = stateData.redirectUrl || '/dashboard';
-    res.redirect(`${redirectUrl}?success=true&provider=google&email=${encodeURIComponent(userInfo.email)}`);
+    const service = stateData.metadata?.requestedService || 'gmail';
+    res.redirect(`${redirectUrl}?success=true&provider=google&email=${encodeURIComponent(userInfo.email)}&service=${service}`);
   } catch (error) {
     logOAuthEvent('auth_error', {
       provider: 'google',

@@ -13,7 +13,7 @@ interface AuthContextType {
   signIn: (email: string, name?: string) => void;
   signOut: () => void;
   refreshLinkedAccounts: () => Promise<void>;
-  linkAccount: (provider: string, email: string) => void;
+  linkAccount: (provider: string, email: string, service?: 'gmail' | 'calendar') => void;
   updatePreferences: (updates: Partial<UserPreferences>) => void;
   toggleBookmark: (topicId: string) => void;
   hideTopic: (topicId: string) => void;
@@ -158,7 +158,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   // Link account after OAuth callback
-  const linkAccount = useCallback((provider: string, email: string) => {
+  // service parameter determines which capability was enabled (gmail or calendar)
+  const linkAccount = useCallback((provider: string, email: string, service?: 'gmail' | 'calendar') => {
     // Update user with the actual email from OAuth
     const newUser: User = {
       id: email,
@@ -168,18 +169,45 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser(newUser);
     localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(newUser));
 
-    // Add linked account locally
-    const newAccount: LinkedAccount = {
-      id: `${provider}_${Date.now()}`,
-      provider: provider as 'google' | 'microsoft',
-      email,
-      emailEnabled: true,
-      calendarEnabled: true,
-      createdAt: new Date().toISOString(),
-    };
-    setLinkedAccounts([newAccount]);
-    localStorage.setItem(LINKED_ACCOUNTS_KEY, JSON.stringify([newAccount]));
-  }, []);
+    // Determine which capabilities are enabled based on service
+    // Default to gmail if not specified (backwards compatibility)
+    const emailEnabled = service !== 'calendar'; // gmail or undefined
+    const calendarEnabled = service === 'calendar';
+
+    // Check if we already have an account for this provider
+    const existingAccount = linkedAccounts.find(
+      (a) => a.provider === provider && a.email === email
+    );
+
+    let newAccounts: LinkedAccount[];
+    if (existingAccount) {
+      // Update existing account - merge capabilities
+      newAccounts = linkedAccounts.map((a) => {
+        if (a.provider === provider && a.email === email) {
+          return {
+            ...a,
+            emailEnabled: a.emailEnabled || emailEnabled,
+            calendarEnabled: a.calendarEnabled || calendarEnabled,
+          };
+        }
+        return a;
+      });
+    } else {
+      // Add new linked account
+      const newAccount: LinkedAccount = {
+        id: `${provider}_${Date.now()}`,
+        provider: provider as 'google' | 'microsoft',
+        email,
+        emailEnabled,
+        calendarEnabled,
+        createdAt: new Date().toISOString(),
+      };
+      newAccounts = [...linkedAccounts, newAccount];
+    }
+
+    setLinkedAccounts(newAccounts);
+    localStorage.setItem(LINKED_ACCOUNTS_KEY, JSON.stringify(newAccounts));
+  }, [linkedAccounts]);
 
   const isLinked = linkedAccounts.length > 0;
 

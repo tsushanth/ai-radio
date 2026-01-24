@@ -4,7 +4,7 @@
  */
 
 import express, { Request, Response, NextFunction } from 'express';
-import { gmailAuthService } from '../services/auth/gmail.auth';
+import { gmailAuthService, GmailAuthService } from '../services/auth/gmail.auth';
 import { outlookAuthService } from '../services/auth/outlook.auth';
 import { tokenManager } from '../services/auth/token.manager';
 import {
@@ -30,6 +30,17 @@ router.get('/oauth/google', async (req: Request, res: Response, next: NextFuncti
     // Generate secure state parameter
     const state = generateState();
 
+    // Determine which service is being requested (gmail or calendar)
+    const requestedService = req.query.scope as string;
+    let scopes: string[] | undefined;
+
+    if (requestedService === 'gmail' || requestedService === 'gmail.modify') {
+      scopes = GmailAuthService.getScopesForService('gmail');
+    } else if (requestedService === 'calendar') {
+      scopes = GmailAuthService.getScopesForService('calendar');
+    }
+    // If no specific scope requested, will use default (gmail.modify)
+
     // Store state with user context (if authenticated)
     // For initial auth, userId will be stored after callback
     stateManager.store(state, {
@@ -37,11 +48,12 @@ router.get('/oauth/google', async (req: Request, res: Response, next: NextFuncti
       metadata: {
         userAgent: req.headers['user-agent'],
         ip: req.ip,
+        requestedService: requestedService || 'gmail',
       },
     });
 
-    // Get authorization URL
-    const { url } = await gmailAuthService.getAuthorizationUrl(state);
+    // Get authorization URL with specific scopes
+    const { url } = await gmailAuthService.getAuthorizationUrl(state, scopes);
 
     logOAuthEvent('auth_start', {
       provider: 'google',

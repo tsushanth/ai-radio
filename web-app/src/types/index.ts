@@ -69,6 +69,12 @@ export interface UserPreferences {
   includeCalendar: boolean;
   bookmarkedTopicIds: string[];
   hiddenTopicIds: string[];
+  // Notification settings
+  notificationsEnabled: boolean;
+  briefingHour: number;
+  briefingMinute: number;
+  briefingTimezone: string;
+  includeTopicUpdates: boolean;
 }
 
 export type DailyBriefStatus =

@@ -167,7 +167,7 @@ struct SourceRow: View {
 
                 Text(source.formattedLastFetch)
                     .font(.caption2)
-                    .foregroundColor(.tertiary)
+                    .foregroundStyle(.tertiary)
             }
 
             Spacer()
@@ -328,7 +328,7 @@ struct CustomSourceDetailView: View {
 
                             Text(item.formattedDate)
                                 .font(.caption2)
-                                .foregroundColor(.tertiary)
+                                .foregroundStyle(.tertiary)
                         }
                         .padding(.vertical, 4)
                     }

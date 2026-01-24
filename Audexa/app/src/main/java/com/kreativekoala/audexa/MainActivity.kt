@@ -1,20 +1,27 @@
 package com.kreativekoala.audexa
 
+import android.Manifest
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.*
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.rememberNavController
 import com.kreativekoala.audexa.data.local.PreferencesManager
 import com.kreativekoala.audexa.data.model.Topic
 import com.kreativekoala.audexa.service.AudioManager
+import com.kreativekoala.audexa.service.NotificationService
 import com.kreativekoala.audexa.ui.components.MiniPlayer
 import com.kreativekoala.audexa.ui.components.SplashScreen
 import com.kreativekoala.audexa.ui.navigation.AudexaNavGraph
@@ -25,6 +32,7 @@ import com.kreativekoala.audexa.ui.topic.TopicDetailScreen
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -36,12 +44,30 @@ class MainActivity : ComponentActivity() {
     @Inject
     lateinit var preferencesManager: PreferencesManager
 
+    @Inject
+    lateinit var notificationService: NotificationService
+
+    // Permission launcher for notification permission (Android 13+)
+    private val notificationPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        if (isGranted) {
+            // Permission granted, restore notification schedule if needed
+            lifecycleScope.launch {
+                notificationService.restoreScheduledNotificationIfNeeded()
+            }
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
         // Initialize the audio manager to connect to the playback service
         audioManager.initialize()
+
+        // Request notification permission on Android 13+ and restore scheduled notifications
+        requestNotificationPermissionIfNeeded()
 
         setContent {
             val appTheme by preferencesManager.appTheme
@@ -57,6 +83,31 @@ class MainActivity : ComponentActivity() {
     override fun onDestroy() {
         super.onDestroy()
         audioManager.release()
+    }
+
+    private fun requestNotificationPermissionIfNeeded() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            when {
+                ContextCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.POST_NOTIFICATIONS
+                ) == PackageManager.PERMISSION_GRANTED -> {
+                    // Permission already granted, restore notification schedule
+                    lifecycleScope.launch {
+                        notificationService.restoreScheduledNotificationIfNeeded()
+                    }
+                }
+                else -> {
+                    // Request permission
+                    notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                }
+            }
+        } else {
+            // Android 12 and below - no runtime permission needed
+            lifecycleScope.launch {
+                notificationService.restoreScheduledNotificationIfNeeded()
+            }
+        }
     }
 }
 

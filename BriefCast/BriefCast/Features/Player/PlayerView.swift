@@ -278,12 +278,13 @@ struct PlayerView: View {
                 contextId: episode.showId ?? episode.id,
                 contextTitle: episode.title
             )
-            .environmentObject(AudioService.shared)
+            .environment(AudioService.shared)
         }
         .sheet(item: $currentExpansion) { expansion in
             ExpansionSheet(expansion: expansion) {
                 currentExpansion = nil
             }
+            .environment(AudioService.shared)
         }
     }
 
@@ -335,7 +336,7 @@ struct ExpansionSheet: View {
     let expansion: TellMeMoreExpansion
     let onDismiss: () -> Void
 
-    @EnvironmentObject private var audioService: AudioService
+    @Environment(AudioService.self) private var audioService
 
     var body: some View {
         NavigationStack {

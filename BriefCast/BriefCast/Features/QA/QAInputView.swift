@@ -182,7 +182,7 @@ struct QAInputView: View {
 
 struct QAMessageBubble: View {
     let message: QAMessage
-    @EnvironmentObject private var audioService: AudioService
+    @Environment(AudioService.self) private var audioService
 
     var body: some View {
         HStack(alignment: .top) {
@@ -206,8 +206,8 @@ struct QAMessageBubble: View {
                             Image(systemName: "play.circle.fill")
                             Text("Play answer")
                                 .font(.caption)
-                            if let duration = message.formattedDuration, !duration.isEmpty {
-                                Text("(\(duration))")
+                            if !message.formattedDuration.isEmpty {
+                                Text("(\(message.formattedDuration))")
                                     .font(.caption)
                             }
                         }
@@ -365,5 +365,5 @@ class QAInputViewModel: ObservableObject {
         contextId: "tech-news",
         contextTitle: "Technology News"
     )
-    .environmentObject(AudioService.shared)
+    .environment(AudioService.shared)
 }

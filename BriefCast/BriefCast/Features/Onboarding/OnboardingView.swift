@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import UserNotifications
 
 struct OnboardingView: View {
     @Environment(\.dismiss) private var dismiss
@@ -74,11 +75,26 @@ struct OnboardingView: View {
         // Save topic updates preference
         UserDefaults.standard.set(viewModel.includeTopicUpdates, forKey: "includeTopicUpdates")
 
-        // Schedule daily notification if enabled
+        // Schedule daily notification and sync with backend if enabled
         if viewModel.dailyNotificationsEnabled && viewModel.googleLinked {
             Task {
+                // Request permission and register for remote notifications
                 await PushNotificationService.shared.requestPermissionAndRegister()
+
+                // Schedule local notification as backup reminder
                 await PushNotificationService.shared.scheduleDailyNotification(at: viewModel.briefingTime)
+
+                // Sync notification settings with backend so it generates the brief at this time
+                // The backend will generate the brief and send a push notification when ready
+                let formatter = DateFormatter()
+                formatter.dateFormat = "HH:mm"
+                let timeString = formatter.string(from: viewModel.briefingTime)
+
+                await PushNotificationService.shared.updateSettings(
+                    briefingTime: timeString,
+                    timezone: TimeZone.current.identifier,
+                    enabled: true
+                )
             }
         }
 
@@ -301,6 +317,74 @@ struct IntegrationToggle: View {
         .padding(12)
         .background(Theme.Colors.cardBackground)
         .cornerRadius(10)
+    }
+}
+
+// MARK: - Notification Toggle Row
+
+struct NotificationToggleRow: View {
+    @Binding var isEnabled: Bool
+    let permissionStatus: UNAuthorizationStatus
+    let onRequestPermission: () async -> Void
+
+    var body: some View {
+        HStack(spacing: 12) {
+            Image(systemName: "bell.fill")
+                .font(.system(size: 20))
+                .foregroundColor(isEnabled ? Theme.Colors.accent : Theme.Colors.secondaryText)
+                .frame(width: 32)
+
+            VStack(alignment: .leading, spacing: 2) {
+                Text("Daily Reminder")
+                    .font(.system(size: 16, weight: .medium))
+                    .foregroundColor(Theme.Colors.primaryText)
+
+                Text(subtitleText)
+                    .font(.system(size: 13, weight: .regular))
+                    .foregroundColor(subtitleColor)
+            }
+
+            Spacer()
+
+            if permissionStatus == .denied {
+                Button("Settings") {
+                    if let url = URL(string: UIApplication.openSettingsURLString) {
+                        UIApplication.shared.open(url)
+                    }
+                }
+                .font(.system(size: 14, weight: .semibold))
+                .foregroundColor(Theme.Colors.accent)
+            } else {
+                Toggle("", isOn: $isEnabled)
+                    .labelsHidden()
+                    .tint(Theme.Colors.accent)
+                    .onChange(of: isEnabled) { _, newValue in
+                        if newValue && permissionStatus == .notDetermined {
+                            Task {
+                                await onRequestPermission()
+                            }
+                        }
+                    }
+            }
+        }
+        .padding(12)
+        .background(Theme.Colors.cardBackground)
+        .cornerRadius(10)
+    }
+
+    private var subtitleText: String {
+        switch permissionStatus {
+        case .denied:
+            return "Notifications blocked. Tap Settings to enable."
+        case .authorized:
+            return "Get notified when your brief is ready"
+        default:
+            return "Get notified when your brief is ready"
+        }
+    }
+
+    private var subtitleColor: Color {
+        permissionStatus == .denied ? .orange : Theme.Colors.secondaryText
     }
 }
 
@@ -614,13 +698,13 @@ struct TopicSelectionPage: View {
                                 isEnabled: $viewModel.includeTopicUpdates
                             )
 
-                            // Daily notification toggle
-                            IntegrationToggle(
-                                icon: "bell.fill",
-                                title: "Daily Reminder",
-                                subtitle: "Get notified when your brief is ready",
-                                isEnabled: $viewModel.dailyNotificationsEnabled
-                            )
+                            // Daily notification toggle - requests permission when enabled
+                            NotificationToggleRow(
+                                isEnabled: $viewModel.dailyNotificationsEnabled,
+                                permissionStatus: viewModel.notificationPermissionStatus
+                            ) {
+                                await viewModel.requestNotificationPermission()
+                            }
 
                             // Briefing time picker
                             if viewModel.dailyNotificationsEnabled {
@@ -733,6 +817,7 @@ class OnboardingViewModel: ObservableObject {
     @Published var includeTopicUpdates: Bool = true  // Include topic updates in daily brief
     @Published var dailyNotificationsEnabled: Bool = true  // Daily brief notification reminder
     @Published var briefingTime: Date = Calendar.current.date(from: DateComponents(hour: 7, minute: 0)) ?? Date()
+    @Published var notificationPermissionStatus: UNAuthorizationStatus = .notDetermined
 
     private let googleOAuthHelper = GoogleOAuthHelper()
     private var linkedEmail: String?
@@ -757,6 +842,38 @@ class OnboardingViewModel: ObservableObject {
         dailyNotificationsEnabled = UserDefaults.standard.object(forKey: "dailyBriefNotificationsEnabled") as? Bool ?? true
         if let savedTime = UserDefaults.standard.object(forKey: "dailyBriefingTime") as? TimeInterval, savedTime > 0 {
             briefingTime = Date(timeIntervalSince1970: savedTime)
+        }
+
+        // Check notification permission status
+        Task {
+            await checkNotificationPermissionStatus()
+        }
+    }
+
+    func checkNotificationPermissionStatus() async {
+        let center = UNUserNotificationCenter.current()
+        let settings = await center.notificationSettings()
+        notificationPermissionStatus = settings.authorizationStatus
+    }
+
+    func requestNotificationPermission() async {
+        let center = UNUserNotificationCenter.current()
+
+        do {
+            let granted = try await center.requestAuthorization(options: [.alert, .sound, .badge])
+
+            if granted {
+                notificationPermissionStatus = .authorized
+                print("✅ Notification permission granted during onboarding")
+            } else {
+                notificationPermissionStatus = .denied
+                dailyNotificationsEnabled = false
+                print("⚠️ Notification permission denied during onboarding")
+            }
+        } catch {
+            print("❌ Notification permission error: \(error.localizedDescription)")
+            notificationPermissionStatus = .denied
+            dailyNotificationsEnabled = false
         }
     }
 

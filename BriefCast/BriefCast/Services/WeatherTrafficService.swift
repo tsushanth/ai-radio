@@ -3,6 +3,9 @@
 //  BriefCast
 //
 //  Service for fetching weather and traffic data
+//  Note: Weather/traffic APIs are not yet implemented
+//
+//  Models are defined in WeatherTraffic.swift
 //
 
 import Foundation
@@ -12,7 +15,6 @@ import CoreLocation
 class WeatherTrafficService: NSObject, ObservableObject {
     static let shared = WeatherTrafficService()
 
-    private let apiClient = APIClient.shared
     private let locationManager = CLLocationManager()
 
     // Published state
@@ -71,38 +73,16 @@ class WeatherTrafficService: NSObject, ObservableObject {
         isLoadingWeather = true
         defer { isLoadingWeather = false }
 
-        do {
-            var endpoint = "/context/weather"
-            var params: [String: String] = [:]
-
-            if locationSettings.useCurrentLocation, let location = currentLocation {
-                params["lat"] = String(location.coordinate.latitude)
-                params["lon"] = String(location.coordinate.longitude)
-            } else if let homeAddress = locationSettings.homeAddress {
-                params["address"] = homeAddress
-            }
-
-            if !params.isEmpty {
-                endpoint += "?" + params.map { "\($0.key)=\($0.value.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? $0.value)" }.joined(separator: "&")
-            }
-
-            let response: WeatherResponse = try await apiClient.get(endpoint: endpoint)
-
-            if let weather = response.data {
-                currentWeather = weather
-                cacheWeather(weather)
-            }
-        } catch {
-            print("⚠️ Failed to fetch weather: \(error.localizedDescription)")
-        }
+        // TODO: Implement weather API fetch
+        print("🌤️ Would fetch weather data")
     }
 
     // MARK: - Fetch Traffic
 
     func fetchTraffic(forceRefresh: Bool = false) async {
         // Need both home and work addresses for traffic
-        guard let homeAddress = locationSettings.homeAddress,
-              let workAddress = locationSettings.workAddress else {
+        guard locationSettings.homeAddress != nil,
+              locationSettings.workAddress != nil else {
             return
         }
 
@@ -115,22 +95,8 @@ class WeatherTrafficService: NSObject, ObservableObject {
         isLoadingTraffic = true
         defer { isLoadingTraffic = false }
 
-        do {
-            let endpoint = "/context/traffic"
-            let body: [String: Any] = [
-                "origin": homeAddress,
-                "destination": workAddress
-            ]
-
-            let response: TrafficResponse = try await apiClient.post(endpoint: endpoint, body: body)
-
-            if let traffic = response.data {
-                currentTraffic = traffic
-                cacheTraffic(traffic)
-            }
-        } catch {
-            print("⚠️ Failed to fetch traffic: \(error.localizedDescription)")
-        }
+        // TODO: Implement traffic API fetch
+        print("🚗 Would fetch traffic data")
     }
 
     // MARK: - Fetch All Context Data
@@ -146,7 +112,7 @@ class WeatherTrafficService: NSObject, ObservableObject {
         return ContextData(
             weather: currentWeather,
             traffic: currentTraffic,
-            localNews: nil // Would need separate API
+            localNews: nil
         )
     }
 
@@ -158,7 +124,7 @@ class WeatherTrafficService: NSObject, ObservableObject {
 
         // Refresh data with new settings
         Task {
-            await fetchContextData(forceRefresh: true)
+            _ = await fetchContextData(forceRefresh: true)
         }
     }
 

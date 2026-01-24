@@ -10,7 +10,7 @@ import SwiftUI
 struct LiveStationPlayerView: View {
     @Environment(\.dismiss) private var dismiss
     @StateObject private var viewModel: LiveStationPlayerViewModel
-    @EnvironmentObject private var audioService: AudioService
+    @Environment(AudioService.self) private var audioService
 
     init(station: LiveStation) {
         _viewModel = StateObject(wrappedValue: LiveStationPlayerViewModel(station: station))
@@ -206,7 +206,7 @@ struct LiveStationPlayerView: View {
         .task {
             await viewModel.tuneIn()
         }
-        .onReceive(audioService.$isPlaying) { isPlaying in
+        .onChange(of: audioService.isPlaying) { _, isPlaying in
             viewModel.updatePlayingState(isPlaying)
         }
     }
@@ -341,5 +341,5 @@ class LiveStationPlayerViewModel: ObservableObject {
 
 #Preview {
     LiveStationPlayerView(station: .preview)
-        .environmentObject(AudioService.shared)
+        .environment(AudioService.shared)
 }

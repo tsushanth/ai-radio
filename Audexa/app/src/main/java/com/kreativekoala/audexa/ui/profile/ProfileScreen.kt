@@ -32,6 +32,7 @@ fun ProfileScreen(
     onNavigateToLanguageSettings: () -> Unit,
     onNavigateToThemeSettings: () -> Unit,
     onNavigateToVoiceSettings: () -> Unit = {},
+    onNavigateToNotificationSettings: () -> Unit = {},
     onSignOut: () -> Unit,
     viewModel: ProfileViewModel = hiltViewModel()
 ) {
@@ -128,6 +129,13 @@ fun ProfileScreen(
                     subtitle = "${uiState.hiddenTopicsCount} hidden",
                     onClick = onNavigateToHiddenTopics
                 )
+                HorizontalDivider(color = MaterialTheme.colorScheme.surfaceVariant)
+                SettingsRow(
+                    icon = Icons.Default.Notifications,
+                    title = "Notifications",
+                    subtitle = "Daily brief reminders",
+                    onClick = onNavigateToNotificationSettings
+                )
             }
 
             Spacer(modifier = Modifier.height(24.dp))
@@ -146,7 +154,7 @@ fun ProfileScreen(
                     icon = Icons.Default.Description,
                     title = "Terms of Service",
                     onClick = {
-                        val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://www.sendsmiles.biz/terms-of-service"))
+                        val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://kreativekoala.llc/terms"))
                         context.startActivity(intent)
                     }
                 )
@@ -155,7 +163,7 @@ fun ProfileScreen(
                     icon = Icons.Default.Security,
                     title = "Privacy Policy",
                     onClick = {
-                        val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://www.sendsmiles.biz/privacy-policy"))
+                        val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://kreativekoala.llc/privacy"))
                         context.startActivity(intent)
                     }
                 )

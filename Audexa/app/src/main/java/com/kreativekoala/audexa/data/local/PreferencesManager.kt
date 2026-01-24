@@ -45,6 +45,14 @@ class PreferencesManager @Inject constructor(
         val CACHED_EPISODE_AUDIO_URL = stringPreferencesKey("cached_episode_audio_url")
         val CACHED_EPISODE_DURATION = intPreferencesKey("cached_episode_duration")
         val CACHED_EPISODE_DATE = stringPreferencesKey("cached_episode_date")
+
+        // Notification settings
+        val NOTIFICATIONS_ENABLED = booleanPreferencesKey("notifications_enabled")
+        val BRIEFING_TIME_HOUR = intPreferencesKey("briefing_time_hour")
+        val BRIEFING_TIME_MINUTE = intPreferencesKey("briefing_time_minute")
+        val BRIEFING_TIMEZONE = stringPreferencesKey("briefing_timezone")
+        val FCM_TOKEN = stringPreferencesKey("fcm_token")
+        val INCLUDE_TOPIC_UPDATES = booleanPreferencesKey("include_topic_updates")
     }
 
     /**
@@ -109,6 +117,26 @@ class PreferencesManager @Inject constructor(
     }
     val voiceHost2: Flow<String?> = dataStore.data.map {
         it[Keys.VOICE_HOST2]
+    }
+
+    // Notification preferences
+    val notificationsEnabled: Flow<Boolean> = dataStore.data.map {
+        it[Keys.NOTIFICATIONS_ENABLED] ?: true  // Default to true
+    }
+    val briefingTimeHour: Flow<Int> = dataStore.data.map {
+        it[Keys.BRIEFING_TIME_HOUR] ?: 7  // Default to 7 AM
+    }
+    val briefingTimeMinute: Flow<Int> = dataStore.data.map {
+        it[Keys.BRIEFING_TIME_MINUTE] ?: 0
+    }
+    val briefingTimezone: Flow<String> = dataStore.data.map {
+        it[Keys.BRIEFING_TIMEZONE] ?: java.util.TimeZone.getDefault().id
+    }
+    val fcmToken: Flow<String?> = dataStore.data.map {
+        it[Keys.FCM_TOKEN]
+    }
+    val includeTopicUpdates: Flow<Boolean> = dataStore.data.map {
+        it[Keys.INCLUDE_TOPIC_UPDATES] ?: true  // Default to true
     }
 
     // Setters
@@ -242,4 +270,56 @@ class PreferencesManager @Inject constructor(
             prefs.remove(Keys.CACHED_EPISODE_DATE)
         }
     }
+
+    // Notification settings
+    suspend fun setNotificationsEnabled(enabled: Boolean) {
+        dataStore.edit { prefs ->
+            prefs[Keys.NOTIFICATIONS_ENABLED] = enabled
+        }
+    }
+
+    suspend fun setBriefingTime(hour: Int, minute: Int) {
+        dataStore.edit { prefs ->
+            prefs[Keys.BRIEFING_TIME_HOUR] = hour
+            prefs[Keys.BRIEFING_TIME_MINUTE] = minute
+        }
+    }
+
+    suspend fun setBriefingTimezone(timezone: String) {
+        dataStore.edit { prefs ->
+            prefs[Keys.BRIEFING_TIMEZONE] = timezone
+        }
+    }
+
+    suspend fun setFcmToken(token: String) {
+        dataStore.edit { prefs ->
+            prefs[Keys.FCM_TOKEN] = token
+        }
+    }
+
+    suspend fun setIncludeTopicUpdates(enabled: Boolean) {
+        dataStore.edit { prefs ->
+            prefs[Keys.INCLUDE_TOPIC_UPDATES] = enabled
+        }
+    }
+
+    suspend fun getNotificationSettingsSync(): NotificationSettings {
+        return dataStore.data.map { prefs ->
+            NotificationSettings(
+                enabled = prefs[Keys.NOTIFICATIONS_ENABLED] ?: true,
+                hour = prefs[Keys.BRIEFING_TIME_HOUR] ?: 7,
+                minute = prefs[Keys.BRIEFING_TIME_MINUTE] ?: 0,
+                timezone = prefs[Keys.BRIEFING_TIMEZONE] ?: java.util.TimeZone.getDefault().id,
+                includeTopicUpdates = prefs[Keys.INCLUDE_TOPIC_UPDATES] ?: true
+            )
+        }.first()
+    }
+
+    data class NotificationSettings(
+        val enabled: Boolean,
+        val hour: Int,
+        val minute: Int,
+        val timezone: String,
+        val includeTopicUpdates: Boolean
+    )
 }

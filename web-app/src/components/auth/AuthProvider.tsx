@@ -34,6 +34,12 @@ const DEFAULT_PREFERENCES: UserPreferences = {
   includeCalendar: true,
   bookmarkedTopicIds: [],
   hiddenTopicIds: [],
+  // Notification defaults
+  notificationsEnabled: false,
+  briefingHour: 7,
+  briefingMinute: 0,
+  briefingTimezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+  includeTopicUpdates: true,
 };
 
 export function AuthProvider({ children }: { children: ReactNode }) {

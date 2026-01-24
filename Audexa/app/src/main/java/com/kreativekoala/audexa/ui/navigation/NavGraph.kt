@@ -31,6 +31,7 @@ sealed class Screen(val route: String) {
     data object LanguageSettings : Screen("language_settings")
     data object ThemeSettings : Screen("theme_settings")
     data object VoiceSettings : Screen("voice_settings")
+    data object NotificationSettings : Screen("notification_settings")
 }
 
 @Composable
@@ -94,6 +95,9 @@ fun AudexaNavGraph(
                 onNavigateToVoiceSettings = {
                     navController.navigate(Screen.VoiceSettings.route)
                 },
+                onNavigateToNotificationSettings = {
+                    navController.navigate(Screen.NotificationSettings.route)
+                },
                 onSignOut = {
                     navController.navigate(Screen.Auth.route) {
                         popUpTo(0) { inclusive = true }
@@ -136,6 +140,14 @@ fun AudexaNavGraph(
 
         composable(Screen.VoiceSettings.route) {
             VoiceSettingsScreen(
+                onNavigateBack = {
+                    navController.popBackStack()
+                }
+            )
+        }
+
+        composable(Screen.NotificationSettings.route) {
+            NotificationSettingsScreen(
                 onNavigateBack = {
                     navController.popBackStack()
                 }

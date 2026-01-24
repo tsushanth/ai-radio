@@ -6,7 +6,7 @@ import { useSearchParams } from 'next/navigation';
 import { useAuth } from '@/components/auth/AuthProvider';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { User, Mail, Bell, Trash2, Link2, Check, ExternalLink, Info, Smartphone } from 'lucide-react';
+import { User, Mail, Bell, Trash2, Link2, Check, ExternalLink, Info, Smartphone, Clock } from 'lucide-react';
 import { disconnectAccount } from '@/lib/api/episodes';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://ai-radio-backend-917362189743.us-central1.run.app/api';
@@ -27,6 +27,29 @@ const LANGUAGES = [
   { code: 'de', name: 'German' },
   { code: 'pt', name: 'Portuguese' },
 ];
+
+// Helper to format time for display
+function formatTime(hour: number, minute: number): string {
+  const amPm = hour < 12 ? 'AM' : 'PM';
+  const displayHour = hour === 0 ? 12 : hour > 12 ? hour - 12 : hour;
+  return `${displayHour}:${minute.toString().padStart(2, '0')} ${amPm}`;
+}
+
+// Generate time options for select (every 30 minutes)
+function generateTimeOptions(): { value: string; label: string }[] {
+  const options: { value: string; label: string }[] = [];
+  for (let hour = 0; hour < 24; hour++) {
+    for (const minute of [0, 30]) {
+      options.push({
+        value: `${hour}:${minute}`,
+        label: formatTime(hour, minute),
+      });
+    }
+  }
+  return options;
+}
+
+const TIME_OPTIONS = generateTimeOptions();
 
 export default function SettingsPage() {
   const searchParams = useSearchParams();
@@ -260,6 +283,78 @@ export default function SettingsPage() {
             />
             <span className="text-sm">Include calendar events</span>
           </label>
+        </CardContent>
+      </Card>
+
+      {/* Notification Settings */}
+      <Card className="mb-6">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Bell className="w-5 h-5" />
+            Daily Brief Notifications
+          </CardTitle>
+          <CardDescription>Configure when you want to be reminded about your daily brief</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <label className="flex items-center justify-between cursor-pointer">
+            <div>
+              <span className="text-sm font-medium">Enable Daily Notifications</span>
+              <p className="text-xs text-gray-500">Get notified when your brief is ready</p>
+            </div>
+            <input
+              type="checkbox"
+              checked={preferences.notificationsEnabled}
+              onChange={(e) => updatePreferences({ notificationsEnabled: e.target.checked })}
+              className="w-4 h-4 rounded border-gray-300 text-orange-500 focus:ring-orange-500"
+            />
+          </label>
+
+          {preferences.notificationsEnabled && (
+            <>
+              <div>
+                <label className="block text-sm font-medium mb-2 flex items-center gap-2">
+                  <Clock className="w-4 h-4" />
+                  Briefing Time
+                </label>
+                <select
+                  value={`${preferences.briefingHour}:${preferences.briefingMinute}`}
+                  onChange={(e) => {
+                    const [hour, minute] = e.target.value.split(':').map(Number);
+                    updatePreferences({ briefingHour: hour, briefingMinute: minute });
+                  }}
+                  className="w-full h-10 rounded-md border border-gray-300 px-3 focus:outline-none focus:ring-2 focus:ring-orange-500"
+                >
+                  {TIME_OPTIONS.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
+                <p className="text-xs text-gray-500 mt-1">
+                  Time is set for your local timezone ({preferences.briefingTimezone})
+                </p>
+              </div>
+
+              <label className="flex items-center justify-between cursor-pointer">
+                <div>
+                  <span className="text-sm font-medium">Include Topic Updates</span>
+                  <p className="text-xs text-gray-500">Add headlines from your topics to Daily Brief</p>
+                </div>
+                <input
+                  type="checkbox"
+                  checked={preferences.includeTopicUpdates}
+                  onChange={(e) => updatePreferences({ includeTopicUpdates: e.target.checked })}
+                  className="w-4 h-4 rounded border-gray-300 text-orange-500 focus:ring-orange-500"
+                />
+              </label>
+            </>
+          )}
+
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+            <p className="text-sm text-blue-800">
+              <strong>Note:</strong> For the best notification experience, download our mobile apps. Web notifications require the browser to be open.
+            </p>
+          </div>
         </CardContent>
       </Card>
 

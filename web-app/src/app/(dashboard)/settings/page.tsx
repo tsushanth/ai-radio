@@ -348,6 +348,18 @@ export default function SettingsPage() {
             />
             <span className="text-sm">Include calendar events</span>
           </label>
+          <label className="flex items-center gap-3 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={preferences.includeTopicUpdates}
+              onChange={(e) => updatePreferences({ includeTopicUpdates: e.target.checked })}
+              className="w-4 h-4 rounded border-gray-300 text-orange-500 focus:ring-orange-500"
+            />
+            <div>
+              <span className="text-sm">Include topic updates</span>
+              <p className="text-xs text-gray-500">Add headlines from your bookmarked topics</p>
+            </div>
+          </label>
         </CardContent>
       </Card>
 
@@ -399,19 +411,6 @@ export default function SettingsPage() {
                   Time is set for your local timezone ({preferences.briefingTimezone})
                 </p>
               </div>
-
-              <label className="flex items-center justify-between cursor-pointer">
-                <div>
-                  <span className="text-sm font-medium">Include Topic Updates</span>
-                  <p className="text-xs text-gray-500">Add headlines from your topics to Daily Brief</p>
-                </div>
-                <input
-                  type="checkbox"
-                  checked={preferences.includeTopicUpdates}
-                  onChange={(e) => updatePreferences({ includeTopicUpdates: e.target.checked })}
-                  className="w-4 h-4 rounded border-gray-300 text-orange-500 focus:ring-orange-500"
-                />
-              </label>
             </>
           )}
 

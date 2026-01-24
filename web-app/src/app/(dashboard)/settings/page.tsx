@@ -102,9 +102,9 @@ export default function SettingsPage() {
   const isCalendarConnected = !!calendarAccount;
 
   const handleConnectGmail = () => {
-    // Redirect to backend OAuth endpoint for Gmail scope
+    // Redirect to backend OAuth endpoint for Gmail scope (gmail.modify is the approved scope)
     const redirectUrl = `${window.location.origin}/settings`;
-    window.location.href = `${API_URL}/auth/oauth/google?redirect_url=${encodeURIComponent(redirectUrl)}&scope=email`;
+    window.location.href = `${API_URL}/auth/oauth/google?redirect_url=${encodeURIComponent(redirectUrl)}&scope=gmail.modify`;
   };
 
   const handleConnectCalendar = () => {

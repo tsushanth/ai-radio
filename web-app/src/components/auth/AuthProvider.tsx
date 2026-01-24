@@ -174,20 +174,24 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const emailEnabled = service !== 'calendar'; // gmail or undefined
     const calendarEnabled = service === 'calendar';
 
-    // Check if we already have an account for this provider
-    const existingAccount = linkedAccounts.find(
+    // Check if we already have an account for this provider and email
+    const existingAccountIndex = linkedAccounts.findIndex(
       (a) => a.provider === provider && a.email === email
     );
 
     let newAccounts: LinkedAccount[];
-    if (existingAccount) {
-      // Update existing account - merge capabilities
-      newAccounts = linkedAccounts.map((a) => {
-        if (a.provider === provider && a.email === email) {
+    if (existingAccountIndex !== -1) {
+      // Update existing account - only set the capability being linked
+      // This allows incremental linking (Gmail first, then Calendar, or vice versa)
+      const existingAccount = linkedAccounts[existingAccountIndex];
+      newAccounts = linkedAccounts.map((a, index) => {
+        if (index === existingAccountIndex) {
           return {
             ...a,
-            emailEnabled: a.emailEnabled || emailEnabled,
-            calendarEnabled: a.calendarEnabled || calendarEnabled,
+            // When linking Gmail: set emailEnabled=true, preserve existing calendarEnabled
+            // When linking Calendar: set calendarEnabled=true, preserve existing emailEnabled
+            emailEnabled: service === 'calendar' ? existingAccount.emailEnabled : true,
+            calendarEnabled: service === 'calendar' ? true : existingAccount.calendarEnabled,
           };
         }
         return a;

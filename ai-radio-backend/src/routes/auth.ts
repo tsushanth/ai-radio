@@ -41,6 +41,9 @@ router.get('/oauth/google', async (req: Request, res: Response, next: NextFuncti
     }
     // If no specific scope requested, will use default (gmail.modify)
 
+    // Normalize service type for frontend (gmail.modify -> gmail)
+    const normalizedService = requestedService === 'calendar' ? 'calendar' : 'gmail';
+
     // Store state with user context (if authenticated)
     // For initial auth, userId will be stored after callback
     stateManager.store(state, {
@@ -48,7 +51,7 @@ router.get('/oauth/google', async (req: Request, res: Response, next: NextFuncti
       metadata: {
         userAgent: req.headers['user-agent'],
         ip: req.ip,
-        requestedService: requestedService || 'gmail',
+        requestedService: normalizedService,
       },
     });
 

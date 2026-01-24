@@ -81,6 +81,7 @@ const generatePodcastSchema = z.object({
     include_weather: z.boolean().optional().default(false),
     include_calendar: z.boolean().optional().default(true),
     include_email: z.boolean().optional().default(true),
+    include_topics: z.boolean().optional().default(true), // Include updates from bookmarked topics
     language: z.string().optional().default('en'), // Language code: en, es, fr, de, hi, etc.
   }),
   options: z.object({
@@ -160,6 +161,8 @@ router.post('/generate-async', async (req: Request, res: Response, next: NextFun
       {
         ...validated.options,
         date: clientDate,
+        // Pass include_topics preference to options as include_topic_teasers
+        include_topic_teasers: validated.preferences.include_topics,
         onProgress: async (progress) => {
           // Update job progress
           job.progress = progress.progress_percent;
@@ -319,6 +322,8 @@ router.post('/generate', async (req: Request, res: Response, next: NextFunction)
       {
         ...validated.options,
         date: clientDate,
+        // Pass include_topics preference to options as include_topic_teasers
+        include_topic_teasers: validated.preferences.include_topics,
         onProgress: async (progress) => {
           // TODO: Send progress via WebSocket or SSE
           console.log(`[${validated.user_id}] ${progress.progress_percent}%: ${progress.message}`);

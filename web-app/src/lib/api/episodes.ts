@@ -34,6 +34,8 @@ export async function generateEpisode(
     language?: string;
     includeEmail?: boolean;
     includeCalendar?: boolean;
+    includeTopics?: boolean;
+    topics?: string[];
   }
 ): Promise<{ jobId: string }> {
   // Format request to match backend schema
@@ -52,6 +54,8 @@ export async function generateEpisode(
         language: options?.language || 'en',
         include_email: options?.includeEmail ?? true,
         include_calendar: options?.includeCalendar ?? true,
+        include_topics: options?.includeTopics ?? true,
+        topics: options?.topics || [],
       },
     }),
   });

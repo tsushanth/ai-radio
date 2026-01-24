@@ -91,7 +91,7 @@ class PushNotificationService: NSObject, ObservableObject {
         isRegistered = false
     }
 
-    /// Register device token with backend
+    /// Register device token with backend for push notifications
     private func registerTokenWithBackend(_ token: String) async {
         let userId = UserDefaults.standard.string(forKey: "linkedAccountEmail")
         guard let userId = userId, !userId.isEmpty else {
@@ -99,19 +99,66 @@ class PushNotificationService: NSObject, ObservableObject {
             return
         }
 
-        // TODO: Implement server-side registration
-        print("📱 Would register token with backend for user: \(userId)")
+        guard let url = URL(string: "https://ai-radio-backend-917362189743.us-central1.run.app/api/notifications/register") else {
+            print("❌ Invalid backend URL for token registration")
+            return
+        }
+
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+
+        let body: [String: Any] = [
+            "user_id": userId,
+            "device_token": token,
+            "platform": "ios"
+        ]
+
+        do {
+            request.httpBody = try JSONSerialization.data(withJSONObject: body)
+            let (_, response) = try await URLSession.shared.data(for: request)
+
+            if let httpResponse = response as? HTTPURLResponse {
+                if httpResponse.statusCode == 200 || httpResponse.statusCode == 201 {
+                    print("✅ Device token registered with backend for user: \(userId)")
+                } else {
+                    print("⚠️ Backend returned status \(httpResponse.statusCode) for token registration")
+                }
+            }
+        } catch {
+            print("❌ Failed to register token with backend: \(error.localizedDescription)")
+        }
     }
 
     /// Unregister device from push notifications
     func unregisterDevice() async {
         let userId = UserDefaults.standard.string(forKey: "linkedAccountEmail")
-        guard let _ = deviceToken, let userId = userId else {
+        guard let token = deviceToken, let userId = userId else {
             return
         }
 
-        // TODO: Implement server-side unregistration
-        print("📱 Would unregister token from backend for user: \(userId)")
+        // Unregister from backend
+        if let url = URL(string: "https://ai-radio-backend-917362189743.us-central1.run.app/api/notifications/unregister") {
+            var request = URLRequest(url: url)
+            request.httpMethod = "DELETE"
+            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+
+            let body: [String: Any] = [
+                "user_id": userId,
+                "device_token": token
+            ]
+
+            do {
+                request.httpBody = try JSONSerialization.data(withJSONObject: body)
+                let (_, response) = try await URLSession.shared.data(for: request)
+
+                if let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 {
+                    print("✅ Device token unregistered from backend")
+                }
+            } catch {
+                print("❌ Failed to unregister token from backend: \(error.localizedDescription)")
+            }
+        }
 
         deviceToken = nil
         isRegistered = false
@@ -326,12 +373,65 @@ class PushNotificationService: NSObject, ObservableObject {
             }
         }
 
-        // Sync with backend
+        // Sync with backend so it generates the brief at the scheduled time
         let userId = UserDefaults.standard.string(forKey: "linkedAccountEmail")
-        guard let userId = userId, !userId.isEmpty else { return }
+        guard let userId = userId, !userId.isEmpty else {
+            print("⚠️ No user ID, skipping backend notification settings sync")
+            return
+        }
 
-        // TODO: Implement server-side settings update
-        print("📱 Would update notification settings for user: \(userId)")
+        await syncSettingsWithBackend(
+            userId: userId,
+            briefingTime: briefingTime,
+            timezone: timezone,
+            enabled: enabled
+        )
+    }
+
+    /// Sync notification settings with backend
+    /// The backend scheduler will generate the daily brief at the specified time
+    private func syncSettingsWithBackend(
+        userId: String,
+        briefingTime: String,
+        timezone: String,
+        enabled: Bool
+    ) async {
+        guard let url = URL(string: "https://ai-radio-backend-917362189743.us-central1.run.app/api/notifications/settings") else {
+            print("❌ Invalid backend URL for notification settings")
+            return
+        }
+
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+
+        var body: [String: Any] = [
+            "user_id": userId,
+            "briefing_time": briefingTime,
+            "timezone": timezone,
+            "notifications_enabled": enabled
+        ]
+
+        // Include device token if available for push notifications
+        if let token = deviceToken {
+            body["device_token"] = token
+            body["platform"] = "ios"
+        }
+
+        do {
+            request.httpBody = try JSONSerialization.data(withJSONObject: body)
+            let (_, response) = try await URLSession.shared.data(for: request)
+
+            if let httpResponse = response as? HTTPURLResponse {
+                if httpResponse.statusCode == 200 || httpResponse.statusCode == 201 {
+                    print("✅ Notification settings synced with backend: \(briefingTime) \(timezone)")
+                } else {
+                    print("⚠️ Backend returned status \(httpResponse.statusCode) for notification settings")
+                }
+            }
+        } catch {
+            print("❌ Failed to sync notification settings with backend: \(error.localizedDescription)")
+        }
     }
 
     /// Fetch current notification settings (local fallback if backend unavailable)

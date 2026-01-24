@@ -100,8 +100,8 @@ struct CustomSource: Identifiable, Codable, Hashable {
     }
 
     var displayDomain: String {
-        guard let url = URL(string: url) else { return url }
-        return url.host ?? url
+        guard let parsedUrl = URL(string: url) else { return url }
+        return parsedUrl.host ?? url
     }
 
     var formattedLastFetch: String {

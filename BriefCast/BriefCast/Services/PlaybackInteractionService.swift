@@ -3,6 +3,9 @@
 //  BriefCast
 //
 //  Service for tracking playback interactions (skip/tell me more) and adaptive learning
+//  Note: Server-side interaction tracking is not yet implemented
+//
+//  Models are defined in PlaybackInteraction.swift
 //
 
 import Foundation
@@ -11,7 +14,6 @@ import Foundation
 class PlaybackInteractionService {
     static let shared = PlaybackInteractionService()
 
-    private let apiClient = APIClient.shared
     private let cacheKey = "cached_user_preferences"
 
     // Local tracking for immediate UI response
@@ -50,15 +52,13 @@ class PlaybackInteractionService {
             userPreferences.skippedTopics[topicId, default: 0] += 1
         }
         if let segmentType = segmentType {
-            // Decrease preference for skipped segment types
             let currentScore = userPreferences.preferredSegmentTypes[segmentType] ?? 0.5
             userPreferences.preferredSegmentTypes[segmentType] = max(0, currentScore - 0.1)
         }
         userPreferences.lastUpdated = Date()
         cachePreferences()
 
-        // Send to server async
-        await sendInteractionToServer(interaction)
+        print("📊 Recorded skip interaction for \(contextId)")
     }
 
     /// Record a "Tell Me More" interaction
@@ -87,21 +87,16 @@ class PlaybackInteractionService {
             userPreferences.expandedTopics[topicId, default: 0] += 1
         }
         if let segmentType = segmentType {
-            // Increase preference for expanded segment types
             let currentScore = userPreferences.preferredSegmentTypes[segmentType] ?? 0.5
             userPreferences.preferredSegmentTypes[segmentType] = min(1.0, currentScore + 0.15)
         }
         userPreferences.lastUpdated = Date()
         cachePreferences()
 
-        // Get expanded content from server
-        return await fetchExpandedContent(
-            contextType: contextType,
-            contextId: contextId,
-            segmentType: segmentType,
-            segmentIndex: segmentIndex,
-            timestamp: timestamp
-        )
+        print("📊 Recorded tell-me-more interaction for \(contextId)")
+
+        // TODO: Fetch expanded content from server
+        return nil
     }
 
     /// Record completion of listening
@@ -146,61 +141,13 @@ class PlaybackInteractionService {
         userPreferences.lastUpdated = Date()
         cachePreferences()
 
-        await sendInteractionToServer(interaction)
-    }
-
-    // MARK: - Fetch Expanded Content (Tell Me More)
-
-    private func fetchExpandedContent(
-        contextType: String,
-        contextId: String,
-        segmentType: String?,
-        segmentIndex: Int?,
-        timestamp: Double
-    ) async -> TellMeMoreExpansion? {
-        do {
-            var body: [String: Any] = [
-                "context_type": contextType,
-                "context_id": contextId,
-                "timestamp": timestamp
-            ]
-
-            if let segmentType = segmentType {
-                body["segment_type"] = segmentType
-            }
-            if let segmentIndex = segmentIndex {
-                body["segment_index"] = segmentIndex
-            }
-
-            let response: TellMeMoreResponse = try await apiClient.post(
-                endpoint: "/interactions/tell-me-more",
-                body: body
-            )
-
-            return response.data?.expansion
-        } catch {
-            print("⚠️ Failed to fetch expanded content: \(error.localizedDescription)")
-            return nil
-        }
+        print("📊 Recorded completion for \(contextId)")
     }
 
     // MARK: - Preferences
 
-    /// Get user preferences (with recommendations)
+    /// Get user preferences
     func fetchUserPreferences() async -> UserPreferencesData {
-        do {
-            let response: UserPreferencesResponse = try await apiClient.get(
-                endpoint: "/interactions/preferences"
-            )
-
-            if let data = response.data {
-                userPreferences = data.preferences
-                cachePreferences()
-            }
-        } catch {
-            print("⚠️ Failed to fetch user preferences: \(error.localizedDescription)")
-        }
-
         return userPreferences
     }
 
@@ -230,9 +177,11 @@ class PlaybackInteractionService {
         timestamp: Double,
         metadata: [String: String]?
     ) -> PlaybackInteraction {
-        PlaybackInteraction(
+        let userId = UserDefaults.standard.string(forKey: "linkedAccountEmail") ?? "anonymous"
+
+        return PlaybackInteraction(
             id: "interaction-\(Date().timeIntervalSince1970)-\(UUID().uuidString.prefix(8))",
-            userId: AuthService.shared.currentUserId ?? "anonymous",
+            userId: userId,
             contextType: contextType,
             contextId: contextId,
             segmentType: segmentType,
@@ -242,26 +191,6 @@ class PlaybackInteractionService {
             metadata: metadata,
             createdAt: Date()
         )
-    }
-
-    private func sendInteractionToServer(_ interaction: PlaybackInteraction) async {
-        do {
-            let _: RecordInteractionResponse = try await apiClient.post(
-                endpoint: "/interactions/record",
-                body: [
-                    "context_type": interaction.contextType,
-                    "context_id": interaction.contextId,
-                    "segment_type": interaction.segmentType as Any,
-                    "segment_index": interaction.segmentIndex as Any,
-                    "interaction_type": interaction.interactionType.rawValue,
-                    "timestamp": interaction.timestamp,
-                    "metadata": interaction.metadata as Any
-                ]
-            )
-        } catch {
-            print("⚠️ Failed to send interaction to server: \(error.localizedDescription)")
-            // Interaction is still stored locally
-        }
     }
 
     // MARK: - Caching

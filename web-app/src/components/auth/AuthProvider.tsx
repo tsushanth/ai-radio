@@ -91,36 +91,39 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const accountsRes = await getLinkedAccounts(user.email).catch(() => ({ linkedAccounts: [] }));
       const serverAccounts = accountsRes.linkedAccounts || [];
 
-      // Merge server accounts with local flags (server doesn't persist emailEnabled/calendarEnabled)
-      const mergedAccounts = serverAccounts.map((serverAccount) => {
-        // Find matching local account to preserve flags
-        const localAccount = linkedAccounts.find(
-          (a) => a.provider === serverAccount.provider && a.email === serverAccount.email
-        );
-        if (localAccount) {
-          // Preserve local emailEnabled/calendarEnabled flags
+      // Use functional update to access current linkedAccounts without dependency
+      setLinkedAccounts((currentAccounts) => {
+        // Merge server accounts with local flags (server doesn't persist emailEnabled/calendarEnabled)
+        const mergedAccounts = serverAccounts.map((serverAccount) => {
+          // Find matching local account to preserve flags
+          const localAccount = currentAccounts.find(
+            (a) => a.provider === serverAccount.provider && a.email === serverAccount.email
+          );
+          if (localAccount) {
+            // Preserve local emailEnabled/calendarEnabled flags
+            return {
+              ...serverAccount,
+              emailEnabled: localAccount.emailEnabled,
+              calendarEnabled: localAccount.calendarEnabled,
+            };
+          }
+          // New account from server - default to what server says (but server hardcodes true)
+          // For new accounts, prefer false for calendarEnabled unless explicitly set
           return {
             ...serverAccount,
-            emailEnabled: localAccount.emailEnabled,
-            calendarEnabled: localAccount.calendarEnabled,
+            calendarEnabled: false, // Default to false for accounts not in local storage
           };
-        }
-        // New account from server - default to what server says (but server hardcodes true)
-        // For new accounts, prefer false for calendarEnabled unless explicitly set
-        return {
-          ...serverAccount,
-          calendarEnabled: false, // Default to false for accounts not in local storage
-        };
-      });
+        });
 
-      setLinkedAccounts(mergedAccounts);
-      localStorage.setItem(LINKED_ACCOUNTS_KEY, JSON.stringify(mergedAccounts));
+        localStorage.setItem(LINKED_ACCOUNTS_KEY, JSON.stringify(mergedAccounts));
+        return mergedAccounts;
+      });
     } catch (err) {
       console.error('Failed to refresh linked accounts:', err);
     }
-  }, [user?.email, linkedAccounts]);
+  }, [user?.email]);
 
-  // Refresh accounts when user changes
+  // Refresh accounts when user email changes (not on every linkedAccounts change)
   useEffect(() => {
     if (user?.email) {
       refreshLinkedAccounts();

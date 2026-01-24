@@ -82,19 +82,43 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   // Refresh linked accounts from server
+  // Note: Server doesn't store emailEnabled/calendarEnabled flags yet,
+  // so we preserve local values when merging
   const refreshLinkedAccounts = useCallback(async () => {
     if (!user?.email) return;
 
     try {
       const accountsRes = await getLinkedAccounts(user.email).catch(() => ({ linkedAccounts: [] }));
+      const serverAccounts = accountsRes.linkedAccounts || [];
 
-      const accounts = accountsRes.linkedAccounts || [];
-      setLinkedAccounts(accounts);
-      localStorage.setItem(LINKED_ACCOUNTS_KEY, JSON.stringify(accounts));
+      // Merge server accounts with local flags (server doesn't persist emailEnabled/calendarEnabled)
+      const mergedAccounts = serverAccounts.map((serverAccount) => {
+        // Find matching local account to preserve flags
+        const localAccount = linkedAccounts.find(
+          (a) => a.provider === serverAccount.provider && a.email === serverAccount.email
+        );
+        if (localAccount) {
+          // Preserve local emailEnabled/calendarEnabled flags
+          return {
+            ...serverAccount,
+            emailEnabled: localAccount.emailEnabled,
+            calendarEnabled: localAccount.calendarEnabled,
+          };
+        }
+        // New account from server - default to what server says (but server hardcodes true)
+        // For new accounts, prefer false for calendarEnabled unless explicitly set
+        return {
+          ...serverAccount,
+          calendarEnabled: false, // Default to false for accounts not in local storage
+        };
+      });
+
+      setLinkedAccounts(mergedAccounts);
+      localStorage.setItem(LINKED_ACCOUNTS_KEY, JSON.stringify(mergedAccounts));
     } catch (err) {
       console.error('Failed to refresh linked accounts:', err);
     }
-  }, [user?.email]);
+  }, [user?.email, linkedAccounts]);
 
   // Refresh accounts when user changes
   useEffect(() => {
@@ -160,8 +184,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   // Link account after OAuth callback
   // service parameter determines which capability was enabled (gmail or calendar)
   const linkAccount = useCallback((provider: string, email: string, service?: 'gmail' | 'calendar') => {
-    console.log('[linkAccount] Called with:', { provider, email, service });
-
     // Update user with the actual email from OAuth
     const newUser: User = {
       id: email,
@@ -175,7 +197,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     // Default to gmail if not specified (backwards compatibility)
     const emailEnabled = service !== 'calendar'; // gmail or undefined
     const calendarEnabled = service === 'calendar';
-    console.log('[linkAccount] Computed flags:', { emailEnabled, calendarEnabled });
 
     // Check if we already have an account for this provider and email
     const existingAccountIndex = linkedAccounts.findIndex(
@@ -212,7 +233,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       newAccounts = [...linkedAccounts, newAccount];
     }
 
-    console.log('[linkAccount] Final accounts:', newAccounts);
     setLinkedAccounts(newAccounts);
     localStorage.setItem(LINKED_ACCOUNTS_KEY, JSON.stringify(newAccounts));
   }, [linkedAccounts]);

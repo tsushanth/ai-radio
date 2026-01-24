@@ -74,7 +74,6 @@ export default function SettingsPage() {
     const service: 'gmail' | 'calendar' = serviceParam === 'calendar' ? 'calendar' : 'gmail';
 
     if (success === 'true' && provider && email) {
-      console.log('[OAuth Callback] service param:', serviceParam, '-> normalized:', service);
       // Link the account with the email from OAuth
       // Pass the service type to only enable the specific capability
       linkAccount(provider, decodeURIComponent(email), service);

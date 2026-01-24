@@ -68,12 +68,16 @@ export default function SettingsPage() {
     const success = searchParams.get('success');
     const provider = searchParams.get('provider');
     const email = searchParams.get('email');
-    const service = searchParams.get('service') as 'gmail' | 'calendar' | null;
+    const serviceParam = searchParams.get('service');
+
+    // Normalize service - treat anything that's not 'calendar' as 'gmail'
+    const service: 'gmail' | 'calendar' = serviceParam === 'calendar' ? 'calendar' : 'gmail';
 
     if (success === 'true' && provider && email) {
+      console.log('[OAuth Callback] service param:', serviceParam, '-> normalized:', service);
       // Link the account with the email from OAuth
       // Pass the service type to only enable the specific capability
-      linkAccount(provider, decodeURIComponent(email), service || 'gmail');
+      linkAccount(provider, decodeURIComponent(email), service);
       // Clean up URL
       window.history.replaceState({}, '', '/settings');
     }

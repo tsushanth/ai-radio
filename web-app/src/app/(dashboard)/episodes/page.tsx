@@ -133,6 +133,8 @@ export default function HomePage() {
         language: preferences.language,
         includeEmail: preferences.includeEmail,
         includeCalendar: preferences.includeCalendar,
+        includeTopics: preferences.includeTopicUpdates,
+        topics: preferences.bookmarkedTopicIds,
       });
 
       const pollInterval = setInterval(async () => {

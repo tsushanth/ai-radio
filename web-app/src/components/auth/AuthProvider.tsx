@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
+import { createContext, useContext, useState, useEffect, useCallback, useRef, ReactNode } from 'react';
 import { User, LinkedAccount, UserPreferences } from '@/types';
 import { getLinkedAccounts } from '@/lib/api/episodes';
 
@@ -47,6 +47,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [linkedAccounts, setLinkedAccounts] = useState<LinkedAccount[]>([]);
   const [preferences, setPreferences] = useState<UserPreferences>(DEFAULT_PREFERENCES);
   const [isLoading, setIsLoading] = useState(true);
+
+  // Track if we just linked an account to skip the auto-refresh
+  const justLinkedRef = useRef(false);
 
   // Load from localStorage on mount
   useEffect(() => {
@@ -124,9 +127,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [user?.email]);
 
   // Refresh accounts when user email changes (not on every linkedAccounts change)
+  // Skip if we just linked an account (to avoid overwriting local state)
   useEffect(() => {
     if (user?.email) {
-      refreshLinkedAccounts();
+      if (justLinkedRef.current) {
+        // Skip refresh - we just linked an account and have fresh local state
+        justLinkedRef.current = false;
+      } else {
+        refreshLinkedAccounts();
+      }
     }
   }, [user?.email, refreshLinkedAccounts]);
 
@@ -187,6 +196,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   // Link account after OAuth callback
   // service parameter determines which capability was enabled (gmail or calendar)
   const linkAccount = useCallback((provider: string, email: string, service?: 'gmail' | 'calendar') => {
+    // Mark that we're linking - skip the auto-refresh that will be triggered by user change
+    justLinkedRef.current = true;
+
     // Update user with the actual email from OAuth
     const newUser: User = {
       id: email,

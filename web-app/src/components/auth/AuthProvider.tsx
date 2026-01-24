@@ -160,6 +160,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   // Link account after OAuth callback
   // service parameter determines which capability was enabled (gmail or calendar)
   const linkAccount = useCallback((provider: string, email: string, service?: 'gmail' | 'calendar') => {
+    console.log('[linkAccount] Called with:', { provider, email, service });
+
     // Update user with the actual email from OAuth
     const newUser: User = {
       id: email,
@@ -173,6 +175,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     // Default to gmail if not specified (backwards compatibility)
     const emailEnabled = service !== 'calendar'; // gmail or undefined
     const calendarEnabled = service === 'calendar';
+    console.log('[linkAccount] Computed flags:', { emailEnabled, calendarEnabled });
 
     // Check if we already have an account for this provider and email
     const existingAccountIndex = linkedAccounts.findIndex(
@@ -209,6 +212,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       newAccounts = [...linkedAccounts, newAccount];
     }
 
+    console.log('[linkAccount] Final accounts:', newAccounts);
     setLinkedAccounts(newAccounts);
     localStorage.setItem(LINKED_ACCOUNTS_KEY, JSON.stringify(newAccounts));
   }, [linkedAccounts]);

@@ -42,15 +42,22 @@ export class GmailAuthService implements OAuthProvider {
   /**
    * Generate authorization URL for OAuth flow
    * User will be redirected to this URL to grant permissions
+   * @param state - CSRF protection state
+   * @param requestedScopes - Optional specific scopes to request (gmail, calendar, or both)
    */
-  async getAuthorizationUrl(state: string): Promise<{
+  async getAuthorizationUrl(state: string, requestedScopes?: string[]): Promise<{
     url: string;
     params: OAuthAuthorizationParams;
   }> {
     try {
+      // Use requested scopes if provided, otherwise use default config scopes
+      const scopes = requestedScopes && requestedScopes.length > 0
+        ? requestedScopes
+        : this.config.scopes;
+
       const authUrl = this.oauth2Client.generateAuthUrl({
         access_type: 'offline', // Request refresh token
-        scope: this.config.scopes,
+        scope: scopes,
         state: state,
         prompt: 'consent', // Force consent screen to ensure refresh token
         // Enable incremental authorization
@@ -67,6 +74,24 @@ export class GmailAuthService implements OAuthProvider {
     } catch (error) {
       throw this.createOAuthError('Failed to generate authorization URL', error);
     }
+  }
+
+  /**
+   * Get scopes for a specific service type
+   */
+  static getScopesForService(service: 'gmail' | 'calendar'): string[] {
+    const baseScopes = [
+      'https://www.googleapis.com/auth/userinfo.email',
+      'https://www.googleapis.com/auth/userinfo.profile',
+    ];
+
+    if (service === 'gmail') {
+      return [...baseScopes, 'https://www.googleapis.com/auth/gmail.modify'];
+    } else if (service === 'calendar') {
+      return [...baseScopes, 'https://www.googleapis.com/auth/calendar.readonly'];
+    }
+
+    return baseScopes;
   }
 
   /**

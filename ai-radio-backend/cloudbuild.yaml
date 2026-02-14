@@ -42,6 +42,7 @@ steps:
       - '1'
       - '--timeout'
       - '600s'
+      - '--no-cpu-throttling'
       - '--concurrency'
       - '80'
       - '--service-account'

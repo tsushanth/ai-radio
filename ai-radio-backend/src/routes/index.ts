@@ -18,6 +18,8 @@ import customsourceRoutes from './customsource';
 import interactionsRoutes from './interactions';
 import contextRoutes from './context';
 import notificationsRoutes from './notifications';
+import batchRoutes from './batch';
+import adsRoutes from './ads';
 
 const router = express.Router();
 
@@ -36,6 +38,8 @@ router.use('/sources', customsourceRoutes);
 router.use('/interactions', interactionsRoutes);
 router.use('/context', contextRoutes);
 router.use('/notifications', notificationsRoutes);
+router.use('/batch', batchRoutes);
+router.use('/ads', adsRoutes);
 
 // API root
 router.get('/', (req, res) => {
@@ -57,6 +61,8 @@ router.get('/', (req, res) => {
       interactions: '/api/interactions',
       context: '/api/context',
       notifications: '/api/notifications',
+      batch: '/api/batch',
+      ads: '/api/ads',
     },
     documentation: 'https://github.com/your-repo/ai-radio',
   });

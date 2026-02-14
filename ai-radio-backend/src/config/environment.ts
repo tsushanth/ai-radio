@@ -93,6 +93,10 @@ const envSchema = z.object({
 
   // Scheduler
   ENABLE_SCHEDULER: z.string().transform(val => val === 'true').default('true'),
+
+  // Batch Generation
+  BATCH_SECRET: z.string().optional().default(''),
+  ENABLE_TOPIC_BATCH: z.string().transform(val => val === 'true').default('true'),
 });
 
 export type Environment = z.infer<typeof envSchema>;

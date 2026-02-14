@@ -5,6 +5,7 @@
 
 import { Router, Request, Response } from 'express';
 import { topicPodcastGenerator } from '../services/content/topic.generator';
+import { adService } from '../services/ads/ad.service';
 
 const router = Router();
 
@@ -86,9 +87,17 @@ router.get('/:topicId/episode', async (req: Request, res: Response) => {
       language
     );
 
+    // Select ads for completed episodes (non-blocking, returns [] on error)
+    const ads = result.episode.status === 'completed'
+      ? await adService.selectAdsForEpisode(topicId, language, 2)
+      : [];
+
     res.json({
       success: true,
-      data: result,
+      data: {
+        ...result,
+        ads,
+      },
     });
   } catch (error) {
     console.error('Error getting/generating episode:', error);

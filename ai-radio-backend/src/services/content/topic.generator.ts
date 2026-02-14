@@ -19,6 +19,7 @@ import type {
   TopicListResponse,
 } from '../../types/topics';
 import type { PodcastScript, ScriptSegment } from '../../types/database';
+import type { SegmentTiming } from '../../types/ads';
 
 export class TopicPodcastGenerator {
   private supabase: SupabaseClient | null = null;
@@ -199,6 +200,21 @@ export class TopicPodcastGenerator {
     const audioBuffer = concatenateBuffers(audioSegments.map(s => s.buffer));
     const totalDuration = openaiTTS.calculateTotalDuration(audioSegments);
 
+    // Compute segment timings for client-side ad insertion
+    const segmentTimings: SegmentTiming[] = [];
+    let cumulativeTime = 0;
+    for (let i = 0; i < audioSegments.length; i++) {
+      const seg = audioSegments[i];
+      const scriptSeg = script.segments[i];
+      segmentTimings.push({
+        type: scriptSeg?.type || 'news',
+        speaker: scriptSeg?.speaker || 'host1',
+        startTime: parseFloat(cumulativeTime.toFixed(2)),
+        endTime: parseFloat((cumulativeTime + seg.duration_seconds).toFixed(2)),
+      });
+      cumulativeTime += seg.duration_seconds;
+    }
+
     // Step 4: Upload to storage - include language in path
     console.log(`  [4/4] Uploading audio...`);
     const audioPath = `${topic.id}/${episode.date}-${language}.mp3`;
@@ -209,6 +225,7 @@ export class TopicPodcastGenerator {
     episode.audioUrl = audioUrl;
     episode.audioPath = audioPath;
     episode.durationSeconds = totalDuration;
+    episode.segmentTimings = segmentTimings;
     episode.generatedAt = new Date();
     episode.updatedAt = new Date();
     episode.language = language;
@@ -412,6 +429,7 @@ Create an engaging ${topic.targetDurationMinutes}-minute podcast covering the mo
       play_count: episode.playCount,
       error: episode.error,
       language: episode.language || 'en',
+      segment_timings: episode.segmentTimings ? JSON.stringify(episode.segmentTimings) : null,
       created_at: episode.createdAt.toISOString(),
       updated_at: episode.updatedAt.toISOString(),
     };
@@ -458,6 +476,11 @@ Create an engaging ${topic.targetDurationMinutes}-minute podcast covering the mo
       playCount: (data.play_count as number) || 0,
       error: data.error as string | undefined,
       language: (data.language as string) || 'en',
+      segmentTimings: data.segment_timings
+        ? (typeof data.segment_timings === 'string'
+            ? JSON.parse(data.segment_timings)
+            : data.segment_timings)
+        : undefined,
     };
   }
 

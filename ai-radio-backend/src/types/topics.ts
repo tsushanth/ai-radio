@@ -3,6 +3,8 @@
  * Definitions for topic-based podcasts
  */
 
+import type { SegmentTiming } from './ads';
+
 /**
  * Content source types
  */
@@ -106,6 +108,7 @@ export interface TopicEpisode {
   playCount: number;
   error?: string;
   language?: string; // ISO language code (e.g., 'en', 'es', 'fr')
+  segmentTimings?: SegmentTiming[]; // Timing data for client-side ad insertion
 }
 
 /**

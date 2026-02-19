@@ -13,6 +13,7 @@ struct BriefCastApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     @StateObject private var authService = AuthService()
     @StateObject private var preferencesService = PreferencesService.shared
+    @State private var subscriptionManager = SubscriptionManager.shared
     @State private var showSplash = true
     @State private var showDailyBriefPlayer = false
     @State private var pendingEpisodeId: String?

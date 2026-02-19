@@ -9,18 +9,36 @@
 //
 
 import Foundation
+import UIKit
 
 @MainActor
 class PlaybackInteractionService {
     static let shared = PlaybackInteractionService()
 
+    private let baseURL = "https://ai-radio-backend-917362189743.us-central1.run.app/api"
     private let cacheKey = "cached_user_preferences"
+    private let jsonDecoder = JSONDecoder()
+    private let jsonEncoder = JSONEncoder()
+
+    /// Session with extended timeout for AI-generated content
+    private let generationSession: URLSession
 
     // Local tracking for immediate UI response
     private(set) var localInteractions: [PlaybackInteraction] = []
     private(set) var userPreferences: UserPreferencesData = .empty
 
+    /// Get the current user ID
+    private var currentUserId: String {
+        if let guestId = UserDefaults.standard.string(forKey: "guestUserId"), !guestId.isEmpty {
+            return guestId
+        }
+        return UIDevice.current.identifierForVendor?.uuidString ?? "anonymous"
+    }
+
     private init() {
+        let config = URLSessionConfiguration.default
+        config.timeoutIntervalForRequest = 120
+        generationSession = URLSession(configuration: config)
         loadCachedPreferences()
     }
 
@@ -61,7 +79,7 @@ class PlaybackInteractionService {
         print("📊 Recorded skip interaction for \(contextId)")
     }
 
-    /// Record a "Tell Me More" interaction
+    /// Record a "Tell Me More" interaction and fetch expanded content from server
     func recordTellMeMore(
         contextType: String,
         contextId: String,
@@ -95,7 +113,66 @@ class PlaybackInteractionService {
 
         print("📊 Recorded tell-me-more interaction for \(contextId)")
 
-        // TODO: Fetch expanded content from server
+        // Fetch expanded content from backend
+        do {
+            let expansion = try await fetchExpansion(
+                contextType: contextType,
+                contextId: contextId,
+                segmentType: segmentType,
+                segmentIndex: segmentIndex,
+                timestamp: timestamp
+            )
+            return expansion
+        } catch {
+            print("⚠️ Failed to fetch expansion: \(error.localizedDescription)")
+            return nil
+        }
+    }
+
+    /// Call backend to generate expanded content
+    private func fetchExpansion(
+        contextType: String,
+        contextId: String,
+        segmentType: String?,
+        segmentIndex: Int?,
+        timestamp: Double
+    ) async throws -> TellMeMoreExpansion? {
+        guard let url = URL(string: "\(baseURL)/interactions/tell-me-more") else {
+            return nil
+        }
+
+        var body: [String: Any] = [
+            "context_type": contextType,
+            "context_id": contextId,
+            "timestamp": timestamp
+        ]
+        if let segmentType = segmentType {
+            body["segment_type"] = segmentType
+        }
+        if let segmentIndex = segmentIndex {
+            body["segment_index"] = segmentIndex
+        }
+
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.setValue(currentUserId, forHTTPHeaderField: "x-user-id")
+        request.httpBody = try JSONSerialization.data(withJSONObject: body)
+
+        let (data, response) = try await generationSession.data(for: request)
+
+        guard let httpResponse = response as? HTTPURLResponse,
+              (200...299).contains(httpResponse.statusCode) else {
+            return nil
+        }
+
+        let tellMeMoreResponse = try jsonDecoder.decode(TellMeMoreResponse.self, from: data)
+
+        if tellMeMoreResponse.success, let expansion = tellMeMoreResponse.data?.expansion {
+            print("✅ Expansion received: \(expansion.expandedContent.prefix(50))...")
+            return expansion
+        }
+
         return nil
     }
 

@@ -9,6 +9,8 @@ import Foundation
 import AVFoundation
 import Combine
 import MediaPlayer
+import StoreKit
+import UIKit
 
 // Notification sent when playback finishes
 extension Notification.Name {
@@ -36,6 +38,10 @@ class AudioService {
     // Queue for auto-play next episode
     var queue: [Episode] = []
     var autoPlayEnabled: Bool = true
+
+    // Sleep timer
+    var sleepTimerRemaining: TimeInterval? = nil // seconds, nil = off
+    private var sleepTimer: Timer?
 
     // Download manager for local caching
     private let downloadManager = AudioDownloadManager.shared
@@ -78,9 +84,18 @@ class AudioService {
             return
         }
 
+        // Save position of previous episode before switching
+        saveCurrentPosition()
+
         // Load new episode - download first, then play locally
         print("🎵 Loading new episode...")
         currentEpisode = episode
+        isDownloading = true
+        isBuffering = true
+        isPlaying = true
+
+        // Record in listening history
+        recordListeningHistory(episode: episode)
 
         // Start download and playback task
         Task {
@@ -148,6 +163,7 @@ class AudioService {
     /// Pause playback
     func pause() {
         print("⏸️ AudioService.pause() called")
+        saveCurrentPosition()
         player?.pause()
         isPlaying = false
         updateNowPlayingPlaybackRate()
@@ -205,6 +221,106 @@ class AudioService {
         currentTime = 0
         duration = 0
         clearNowPlayingInfo()
+    }
+
+    // MARK: - Sleep Timer
+
+    func startSleepTimer(minutes: Int) {
+        cancelSleepTimer()
+        let duration = TimeInterval(minutes * 60)
+        sleepTimerRemaining = duration
+        print("🎵 Sleep timer started: \(minutes) minutes")
+
+        sleepTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] timer in
+            Task { @MainActor in
+                guard let self = self else { timer.invalidate(); return }
+                guard var remaining = self.sleepTimerRemaining else {
+                    timer.invalidate()
+                    return
+                }
+                remaining -= 1
+                if remaining <= 0 {
+                    self.sleepTimerRemaining = nil
+                    self.pause()
+                    timer.invalidate()
+                    self.sleepTimer = nil
+                    print("🎵 Sleep timer fired — pausing playback")
+                } else {
+                    self.sleepTimerRemaining = remaining
+                }
+            }
+        }
+    }
+
+    func cancelSleepTimer() {
+        sleepTimer?.invalidate()
+        sleepTimer = nil
+        sleepTimerRemaining = nil
+    }
+
+    // MARK: - Position Persistence
+
+    func saveCurrentPosition() {
+        guard let episode = currentEpisode, currentTime > 0 else { return }
+        var positions = UserDefaults.standard.dictionary(forKey: "playbackPositions") as? [String: Double] ?? [:]
+        positions[episode.id] = currentTime
+        // Keep last 50
+        if positions.count > 50 {
+            let sorted = positions.sorted { $0.value < $1.value }
+            positions = Dictionary(uniqueKeysWithValues: sorted.suffix(50))
+        }
+        UserDefaults.standard.set(positions, forKey: "playbackPositions")
+    }
+
+    func getSavedPosition(for episodeId: String) -> TimeInterval {
+        let positions = UserDefaults.standard.dictionary(forKey: "playbackPositions") as? [String: Double] ?? [:]
+        return positions[episodeId] ?? 0
+    }
+
+    func clearSavedPosition(for episodeId: String) {
+        var positions = UserDefaults.standard.dictionary(forKey: "playbackPositions") as? [String: Double] ?? [:]
+        positions.removeValue(forKey: episodeId)
+        UserDefaults.standard.set(positions, forKey: "playbackPositions")
+    }
+
+    // MARK: - Listening History
+
+    struct ListeningHistoryEntry: Codable, Identifiable {
+        let id: String // episodeId
+        let title: String
+        let showId: String
+        let showName: String
+        let playedAt: Date
+        let durationSeconds: Int
+
+        var formattedPlayedAt: String {
+            let formatter = RelativeDateTimeFormatter()
+            formatter.unitsStyle = .short
+            return formatter.localizedString(for: playedAt, relativeTo: Date())
+        }
+    }
+
+    func recordListeningHistory(episode: Episode) {
+        var history = getListeningHistory()
+        history.removeAll { $0.id == episode.id }
+        let entry = ListeningHistoryEntry(
+            id: episode.id,
+            title: episode.title,
+            showId: episode.showId ?? "",
+            showName: episode.showName ?? "Audexa",
+            playedAt: Date(),
+            durationSeconds: episode.durationSeconds ?? 0
+        )
+        history.insert(entry, at: 0)
+        if history.count > 30 { history = Array(history.prefix(30)) }
+        if let data = try? JSONEncoder().encode(history) {
+            UserDefaults.standard.set(data, forKey: "listeningHistory")
+        }
+    }
+
+    func getListeningHistory() -> [ListeningHistoryEntry] {
+        guard let data = UserDefaults.standard.data(forKey: "listeningHistory") else { return [] }
+        return (try? JSONDecoder().decode([ListeningHistoryEntry].self, from: data)) ?? []
     }
 
     // MARK: - Queue Management
@@ -522,6 +638,15 @@ class AudioService {
                     print("🎵 Duration: \(seconds) seconds")
                 }
             }
+            // Restore saved position if available
+            if let episode = currentEpisode {
+                let savedPosition = getSavedPosition(for: episode.id)
+                if savedPosition > 0 && savedPosition < duration - 5 {
+                    print("🎵 Restoring saved position: \(savedPosition)s")
+                    seek(to: savedPosition)
+                    clearSavedPosition(for: episode.id)
+                }
+            }
             // Make sure we're actually playing
             if !isPlaying {
                 print("🎵 Wasn't playing, starting now...")
@@ -544,6 +669,16 @@ class AudioService {
         let endedEpisode = currentEpisode
         isPlaying = false
         currentTime = 0
+
+        // Track episode completion and prompt for review
+        let prefs = PreferencesService.shared
+        prefs.incrementEpisodesListened()
+        if prefs.shouldPromptForReview {
+            prefs.recordReviewPrompt()
+            if let scene = UIApplication.shared.connectedScenes.first(where: { $0.activationState == .foregroundActive }) as? UIWindowScene {
+                SKStoreReviewController.requestReview(in: scene)
+            }
+        }
 
         // Post notification so ViewModels can update their state
         NotificationCenter.default.post(
@@ -607,6 +742,7 @@ class AudioService {
 
     private func updateNowPlayingPlaybackRate() {
         var nowPlayingInfo = MPNowPlayingInfoCenter.default().nowPlayingInfo ?? [String: Any]()
+        nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = currentTime
         nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = isPlaying ? playbackRate : 0
         MPNowPlayingInfoCenter.default().nowPlayingInfo = nowPlayingInfo
     }

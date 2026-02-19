@@ -29,6 +29,9 @@ struct Episode: Codable, Identifiable {
     var isCompleted: Bool
     var lastPlayedAt: Date?
 
+    // Transcript data (carried from TopicEpisode, not in CodingKeys)
+    var script: PodcastScript? = nil
+
     enum CodingKeys: String, CodingKey {
         case id
         case userId = "user_id"

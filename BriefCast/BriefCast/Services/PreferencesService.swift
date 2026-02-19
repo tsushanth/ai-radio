@@ -57,6 +57,9 @@ class PreferencesService: ObservableObject {
         static let appTheme = "appTheme"
         static let emailEnabled = "emailEnabled"
         static let calendarEnabled = "calendarEnabled"
+        static let isSubscribed = "isSubscribed"
+        static let episodesListened = "episodesListened"
+        static let lastReviewPromptDate = "lastReviewPromptDate"
     }
 
     private let defaults = UserDefaults.standard
@@ -219,6 +222,45 @@ class PreferencesService: ObservableObject {
             defaults.set(newValue, forKey: Keys.calendarEnabled)
             objectWillChange.send()
         }
+    }
+
+    // MARK: - Subscription (cached for offline/instant access)
+
+    var isSubscribed: Bool {
+        get { defaults.bool(forKey: Keys.isSubscribed) }
+        set {
+            defaults.set(newValue, forKey: Keys.isSubscribed)
+            objectWillChange.send()
+        }
+    }
+
+    // MARK: - Review Prompt
+
+    var episodesListened: Int {
+        get { defaults.integer(forKey: Keys.episodesListened) }
+        set { defaults.set(newValue, forKey: Keys.episodesListened) }
+    }
+
+    var lastReviewPromptDate: Date? {
+        get { defaults.object(forKey: Keys.lastReviewPromptDate) as? Date }
+        set { defaults.set(newValue, forKey: Keys.lastReviewPromptDate) }
+    }
+
+    func incrementEpisodesListened() {
+        episodesListened += 1
+    }
+
+    /// Whether we should prompt for a review (after 3 episodes, max once per 60 days)
+    var shouldPromptForReview: Bool {
+        guard episodesListened >= 3 else { return false }
+        if let lastPrompt = lastReviewPromptDate {
+            return Date().timeIntervalSince(lastPrompt) > 60 * 24 * 60 * 60
+        }
+        return true
+    }
+
+    func recordReviewPrompt() {
+        lastReviewPromptDate = Date()
     }
 
     // MARK: - Reset

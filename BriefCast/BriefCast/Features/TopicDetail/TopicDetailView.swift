@@ -25,49 +25,61 @@ struct TopicDetailView: View {
 
     var body: some View {
         NavigationStack {
-            ScrollView {
-                VStack(spacing: 24) {
-                    // Topic header with artwork
-                    topicHeader
+            ZStack {
+                ScrollView {
+                    VStack(spacing: 24) {
+                        // Topic header with artwork
+                        topicHeader
 
-                    // Language selector
-                    languageSelector
+                        // Language selector
+                        languageSelector
 
-                    // Player controls (if episode available and not regenerating)
-                    if viewModel.isGenerating {
-                        generatingView
-                    } else if viewModel.hasEpisodeForCurrentLanguage {
-                        TopicPlayerControls(
-                            isPlaying: viewModel.isPlaying,
-                            currentTime: viewModel.currentTime,
-                            duration: viewModel.duration,
-                            onPlayPause: { viewModel.togglePlayPause() },
-                            onSeek: { viewModel.seek(to: $0) },
-                            onSkipBackward: { viewModel.skipBackward() },
-                            onSkipForward: { viewModel.skipForward() }
-                        )
-                    } else if viewModel.isLoading {
-                        loadingView
-                    } else {
-                        generateButton
+                        // Player controls (if episode available and not regenerating)
+                        if viewModel.isGenerating {
+                            generatingView
+                        } else if viewModel.hasEpisodeForCurrentLanguage {
+                            TopicPlayerControls(
+                                isPlaying: viewModel.isPlaying,
+                                currentTime: viewModel.currentTime,
+                                duration: viewModel.duration,
+                                onPlayPause: { viewModel.togglePlayPause() },
+                                onSeek: { viewModel.seek(to: $0) },
+                                onSkipBackward: { viewModel.skipBackward() },
+                                onSkipForward: { viewModel.skipForward() }
+                            )
+                        } else if viewModel.isLoading {
+                            loadingView
+                        } else {
+                            generateButton
+                        }
+
+                        // Regenerate button (when episode exists and not generating)
+                        if viewModel.hasEpisodeForCurrentLanguage && !viewModel.isGenerating {
+                            regenerateButton
+                        }
+
+                        // Error message
+                        if let error = viewModel.loadError {
+                            errorView(error)
+                        }
+
+                        // Episode history
+                        episodeHistorySection
+
+                        Spacer(minLength: 100)
                     }
-
-                    // Regenerate button (when episode exists and not generating)
-                    if viewModel.hasEpisodeForCurrentLanguage && !viewModel.isGenerating {
-                        regenerateButton
-                    }
-
-                    // Error message
-                    if let error = viewModel.loadError {
-                        errorView(error)
-                    }
-
-                    // Episode history
-                    episodeHistorySection
-
-                    Spacer(minLength: 100)
+                    .padding(.top, 16)
                 }
-                .padding(.top, 16)
+
+                // Ad companion overlay
+                if viewModel.isPlayingAd, let ad = viewModel.currentAd {
+                    AdCompanionView(
+                        ad: ad,
+                        timeRemaining: viewModel.adTimeRemaining,
+                        onSkip: { viewModel.skipAd() },
+                        onTap: { viewModel.handleAdTap() }
+                    )
+                }
             }
             .background(Theme.Colors.background)
             .navigationBarTitleDisplayMode(.inline)

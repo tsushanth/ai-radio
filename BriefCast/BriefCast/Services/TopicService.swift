@@ -184,6 +184,54 @@ class TopicService {
         return response.data.episodes
     }
 
+    // MARK: - Ad Tracking
+
+    /// Track an ad impression (fire-and-forget)
+    func trackAdImpression(
+        creativeId: String,
+        campaignId: String,
+        episodeId: String,
+        topicId: String,
+        language: String,
+        durationListened: Int,
+        wasSkipped: Bool
+    ) async {
+        let endpoint = "\(baseURL)/ads/impression"
+        let body: [String: Any] = [
+            "creativeId": creativeId,
+            "campaignId": campaignId,
+            "episodeId": episodeId,
+            "topicId": topicId,
+            "devicePlatform": "ios",
+            "language": language,
+            "durationListenedSeconds": durationListened,
+            "wasSkipped": wasSkipped
+        ]
+
+        do {
+            let bodyData = try JSONSerialization.data(withJSONObject: body)
+            _ = try await performRequest(endpoint: endpoint, method: "POST", bodyData: bodyData)
+        } catch {
+            print("Failed to track ad impression: \(error.localizedDescription)")
+        }
+    }
+
+    /// Track an ad click (fire-and-forget)
+    func trackAdClick(creativeId: String, campaignId: String) async {
+        let endpoint = "\(baseURL)/ads/click"
+        let body: [String: Any] = [
+            "creativeId": creativeId,
+            "campaignId": campaignId
+        ]
+
+        do {
+            let bodyData = try JSONSerialization.data(withJSONObject: body)
+            _ = try await performRequest(endpoint: endpoint, method: "POST", bodyData: bodyData)
+        } catch {
+            print("Failed to track ad click: \(error.localizedDescription)")
+        }
+    }
+
     // MARK: - Helpers
 
     /// Convert Topic to Show for UI compatibility

@@ -117,6 +117,8 @@ struct TopicEpisode: Identifiable, Codable {
     let playCount: Int
     let error: String?
     let language: String
+    let segmentTimings: [SegmentTiming]?
+    let script: PodcastScript?
 
     enum CodingKeys: String, CodingKey {
         case id
@@ -128,9 +130,11 @@ struct TopicEpisode: Identifiable, Codable {
         case playCount = "playCount"
         case error
         case language
+        case segmentTimings = "segmentTimings"
+        case script
     }
 
-    // Custom init to ignore extra fields from backend (stories, script, audioPath, etc.)
+    // Custom init to handle extra fields from backend
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         id = try container.decode(String.self, forKey: .id)
@@ -145,6 +149,8 @@ struct TopicEpisode: Identifiable, Codable {
         playCount = try container.decodeIfPresent(Int.self, forKey: .playCount) ?? 0
         error = try container.decodeIfPresent(String.self, forKey: .error)
         language = try container.decodeIfPresent(String.self, forKey: .language) ?? "en"
+        segmentTimings = try container.decodeIfPresent([SegmentTiming].self, forKey: .segmentTimings)
+        script = try container.decodeIfPresent(PodcastScript.self, forKey: .script)
     }
 
     var formattedDate: String {
@@ -171,6 +177,70 @@ enum TopicEpisodeStatus: String, Codable {
     case generating
     case completed
     case failed
+}
+
+// MARK: - Podcast Script (transcript data from backend)
+
+struct PodcastScript: Codable {
+    let segments: [ScriptSegment]
+    let totalDurationEstimate: Int?
+    let estimatedDurationSeconds: Int?
+
+    enum CodingKeys: String, CodingKey {
+        case segments
+        case totalDurationEstimate = "total_duration_estimate"
+        case estimatedDurationSeconds = "estimated_duration_seconds"
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        segments = try container.decodeIfPresent([ScriptSegment].self, forKey: .segments) ?? []
+        totalDurationEstimate = try container.decodeIfPresent(Int.self, forKey: .totalDurationEstimate)
+        estimatedDurationSeconds = try container.decodeIfPresent(Int.self, forKey: .estimatedDurationSeconds)
+    }
+}
+
+struct ScriptSegment: Codable {
+    let speaker: String
+    let text: String
+    let type: String
+    let durationEstimate: Int?
+    let sequence: Int?
+
+    enum CodingKeys: String, CodingKey {
+        case speaker, text, type
+        case durationEstimate = "duration_estimate"
+        case sequence
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        speaker = try container.decodeIfPresent(String.self, forKey: .speaker) ?? "host1"
+        text = try container.decodeIfPresent(String.self, forKey: .text) ?? ""
+        type = try container.decodeIfPresent(String.self, forKey: .type) ?? "news"
+        durationEstimate = try container.decodeIfPresent(Int.self, forKey: .durationEstimate)
+        sequence = try container.decodeIfPresent(Int.self, forKey: .sequence)
+    }
+}
+
+// MARK: - Ad Models
+
+struct AdSegment: Codable {
+    let type: String
+    let creativeId: String
+    let campaignId: String
+    let audioUrl: String
+    let audioDurationSeconds: Int
+    let companionImageUrl: String?
+    let clickThroughUrl: String?
+    let ctaText: String?
+}
+
+struct SegmentTiming: Codable {
+    let type: String
+    let speaker: String
+    let startTime: Double
+    let endTime: Double
 }
 
 // MARK: - API Response Types
@@ -200,6 +270,7 @@ struct TopicEpisodeData: Codable {
     let episode: TopicEpisode
     let isNew: Bool
     let message: String
+    let ads: [AdSegment]?
 }
 
 struct TopicDetailResponse: Codable {

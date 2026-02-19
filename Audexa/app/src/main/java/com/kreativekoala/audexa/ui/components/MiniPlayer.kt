@@ -25,6 +25,8 @@ fun MiniPlayer(
     isBuffering: Boolean,
     progress: Float,
     onPlayPause: () -> Unit,
+    onSkipForward: () -> Unit,
+    onSkipBack: () -> Unit,
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -56,7 +58,7 @@ fun MiniPlayer(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 16.dp, vertical = 12.dp),
+                        .padding(horizontal = 12.dp, vertical = 10.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     // Episode thumbnail placeholder
@@ -75,7 +77,7 @@ fun MiniPlayer(
                         )
                     }
 
-                    Spacer(modifier = Modifier.width(12.dp))
+                    Spacer(modifier = Modifier.width(10.dp))
 
                     // Title
                     Column(modifier = Modifier.weight(1f)) {
@@ -97,10 +99,24 @@ fun MiniPlayer(
                         }
                     }
 
-                    Spacer(modifier = Modifier.width(8.dp))
+                    // Skip Back
+                    IconButton(
+                        onClick = onSkipBack,
+                        modifier = Modifier.size(36.dp)
+                    ) {
+                        Icon(
+                            Icons.Default.Replay10,
+                            contentDescription = "Skip back",
+                            tint = MaterialTheme.colorScheme.onSurface,
+                            modifier = Modifier.size(22.dp)
+                        )
+                    }
 
                     // Play/Pause button
-                    IconButton(onClick = onPlayPause) {
+                    IconButton(
+                        onClick = onPlayPause,
+                        modifier = Modifier.size(40.dp)
+                    ) {
                         if (isBuffering) {
                             CircularProgressIndicator(
                                 modifier = Modifier.size(24.dp),
@@ -115,6 +131,19 @@ fun MiniPlayer(
                                 modifier = Modifier.size(28.dp)
                             )
                         }
+                    }
+
+                    // Skip Forward
+                    IconButton(
+                        onClick = onSkipForward,
+                        modifier = Modifier.size(36.dp)
+                    ) {
+                        Icon(
+                            Icons.Default.Forward10,
+                            contentDescription = "Skip forward",
+                            tint = MaterialTheme.colorScheme.onSurface,
+                            modifier = Modifier.size(22.dp)
+                        )
                     }
                 }
             }

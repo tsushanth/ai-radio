@@ -18,6 +18,7 @@ import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.rememberNavController
+import com.kreativekoala.audexa.billing.BillingManager
 import com.kreativekoala.audexa.data.local.PreferencesManager
 import com.kreativekoala.audexa.data.model.Topic
 import com.kreativekoala.audexa.service.AudioManager
@@ -47,6 +48,9 @@ class MainActivity : ComponentActivity() {
     @Inject
     lateinit var notificationService: NotificationService
 
+    @Inject
+    lateinit var billingManager: BillingManager
+
     // Permission launcher for notification permission (Android 13+)
     private val notificationPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
@@ -75,7 +79,7 @@ class MainActivity : ComponentActivity() {
                 .collectAsState(initial = AppTheme.SYSTEM)
 
             AudexaTheme(appTheme = appTheme) {
-                AudexaApp(audioManager = audioManager, appTheme = appTheme)
+                AudexaApp(audioManager = audioManager, billingManager = billingManager, appTheme = appTheme)
             }
         }
     }
@@ -115,6 +119,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun AudexaApp(
     audioManager: AudioManager,
+    billingManager: BillingManager,
     appTheme: AppTheme = AppTheme.SYSTEM,
     mainViewModel: MainViewModel = hiltViewModel()
 ) {
@@ -140,7 +145,11 @@ fun AudexaApp(
     // Dismiss splash after minimum time and when loading is complete
     LaunchedEffect(uiState.isLoading) {
         if (!uiState.isLoading && !startDestinationDetermined) {
-            startDestination = if (uiState.isLoggedIn) Screen.Home.route else Screen.Auth.route
+            startDestination = when {
+                !uiState.isLoggedIn -> Screen.Auth.route
+                !uiState.hasCompletedOnboarding -> Screen.Onboarding.route
+                else -> Screen.Home.route
+            }
             startDestinationDetermined = true
         }
     }
@@ -159,6 +168,7 @@ fun AudexaApp(
                 navController = navController,
                 startDestination = startDestination,
                 audioManager = audioManager,
+                billingManager = billingManager,
                 audioState = audioState,
                 currentEpisodeTitle = currentEpisodeTitle,
                 currentPosition = currentPosition,
@@ -187,6 +197,7 @@ private fun MainContent(
     navController: androidx.navigation.NavHostController,
     startDestination: String,
     audioManager: AudioManager,
+    billingManager: BillingManager,
     audioState: Boolean,
     currentEpisodeTitle: String?,
     currentPosition: Long,
@@ -212,6 +223,8 @@ private fun MainContent(
                     onPlayPause = {
                         if (audioState) audioManager.pause() else audioManager.resume()
                     },
+                    onSkipForward = { audioManager.skipForward(15) },
+                    onSkipBack = { audioManager.skipBackward(15) },
                     onClick = {
                         // Could navigate to full player or show topic detail
                     }
@@ -227,6 +240,7 @@ private fun MainContent(
             AudexaNavGraph(
                 navController = navController,
                 startDestination = startDestination,
+                billingManager = billingManager,
                 onShowTopicDetail = { topic ->
                     onSelectedTopicChange(topic)
                 }

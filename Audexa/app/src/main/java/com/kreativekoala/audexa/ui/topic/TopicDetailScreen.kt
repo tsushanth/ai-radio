@@ -1,6 +1,10 @@
 package com.kreativekoala.audexa.ui.topic
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
@@ -13,10 +17,15 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import coil.compose.AsyncImage
+import com.kreativekoala.audexa.data.model.AdSegment
 import com.kreativekoala.audexa.data.model.Topic
 import com.kreativekoala.audexa.data.model.SupportedLanguage
 import com.kreativekoala.audexa.ui.components.NowPlayingIndicator
@@ -44,11 +53,12 @@ fun TopicDetailScreen(
         }
     }
 
-    Column(
+    Box(
         modifier = Modifier
             .fillMaxSize()
             .background(Background)
     ) {
+        Column(modifier = Modifier.fillMaxSize()) {
         // Top Bar
         TopAppBar(
             title = { },
@@ -171,10 +181,15 @@ fun TopicDetailScreen(
                 currentTime = uiState.currentTime,
                 duration = uiState.duration,
                 isSeekEnabled = uiState.isEpisodeActiveInPlayer,
+                playbackSpeed = uiState.playbackSpeed,
+                sleepTimerRemaining = uiState.sleepTimerRemaining,
                 onPlayPause = { viewModel.togglePlayPause() },
                 onSkipBack = { viewModel.skipBackward() },
                 onSkipForward = { viewModel.skipForward() },
-                onSeek = { viewModel.seekTo(it) }
+                onSeek = { viewModel.seekTo(it) },
+                onSpeedChange = { viewModel.setPlaybackSpeed(it) },
+                onSleepTimer = { viewModel.startSleepTimer(it) },
+                onCancelSleepTimer = { viewModel.cancelSleepTimer() }
             )
 
             Spacer(modifier = Modifier.height(24.dp))
@@ -245,7 +260,25 @@ fun TopicDetailScreen(
 
             Spacer(modifier = Modifier.height(Sizing.miniPlayerHeight.dp))
         }
-    }
+        } // End main Column
+
+        // Ad companion overlay
+        AnimatedVisibility(
+            visible = uiState.isPlayingAd && uiState.currentAd != null,
+            enter = slideInVertically(initialOffsetY = { it }),
+            exit = slideOutVertically(targetOffsetY = { it }),
+            modifier = Modifier.align(Alignment.BottomCenter)
+        ) {
+            uiState.currentAd?.let { ad ->
+                AdCompanionOverlay(
+                    ad = ad,
+                    timeRemainingMs = uiState.adTimeRemaining,
+                    onSkip = { viewModel.skipAd() },
+                    onTap = { viewModel.handleAdTap() }
+                )
+            }
+        }
+    } // End Box
 }
 
 @Composable
@@ -301,10 +334,15 @@ private fun PlayerControls(
     currentTime: Long,
     duration: Long,
     isSeekEnabled: Boolean,
+    playbackSpeed: Float,
+    sleepTimerRemaining: Long?,
     onPlayPause: () -> Unit,
     onSkipBack: () -> Unit,
     onSkipForward: () -> Unit,
-    onSeek: (Long) -> Unit
+    onSeek: (Long) -> Unit,
+    onSpeedChange: (Float) -> Unit,
+    onSleepTimer: (Int) -> Unit,
+    onCancelSleepTimer: () -> Unit
 ) {
     Column(
         modifier = Modifier.fillMaxWidth(),
@@ -395,6 +433,100 @@ private fun PlayerControls(
                 )
             }
         }
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        // Speed & Sleep Timer Row
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            // Speed control
+            var showSpeedMenu by remember { mutableStateOf(false) }
+            Surface(
+                onClick = { showSpeedMenu = true },
+                shape = RoundedCornerShape(16.dp),
+                color = if (playbackSpeed != 1.0f) AccentOrange.copy(alpha = 0.15f) else CardBackground
+            ) {
+                Text(
+                    text = "${if (playbackSpeed % 1 == 0f) playbackSpeed.toInt().toString() else playbackSpeed}x",
+                    style = MaterialTheme.typography.labelMedium,
+                    color = if (playbackSpeed != 1.0f) AccentOrange else SecondaryText,
+                    fontWeight = FontWeight.SemiBold,
+                    modifier = Modifier.padding(horizontal = 14.dp, vertical = 8.dp)
+                )
+            }
+            DropdownMenu(
+                expanded = showSpeedMenu,
+                onDismissRequest = { showSpeedMenu = false }
+            ) {
+                listOf(0.5f, 0.75f, 1.0f, 1.25f, 1.5f, 2.0f).forEach { speed ->
+                    DropdownMenuItem(
+                        text = {
+                            Text(
+                                "${if (speed % 1 == 0f) speed.toInt().toString() else speed}x",
+                                fontWeight = if (speed == playbackSpeed) FontWeight.Bold else FontWeight.Normal
+                            )
+                        },
+                        onClick = {
+                            onSpeedChange(speed)
+                            showSpeedMenu = false
+                        }
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.width(16.dp))
+
+            // Sleep timer
+            var showTimerMenu by remember { mutableStateOf(false) }
+            Surface(
+                onClick = {
+                    if (sleepTimerRemaining != null) onCancelSleepTimer()
+                    else showTimerMenu = true
+                },
+                shape = RoundedCornerShape(16.dp),
+                color = if (sleepTimerRemaining != null) AccentOrange.copy(alpha = 0.15f) else CardBackground
+            ) {
+                Row(
+                    modifier = Modifier.padding(horizontal = 14.dp, vertical = 8.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Timer,
+                        contentDescription = "Sleep timer",
+                        tint = if (sleepTimerRemaining != null) AccentOrange else SecondaryText,
+                        modifier = Modifier.size(16.dp)
+                    )
+                    Text(
+                        text = if (sleepTimerRemaining != null) {
+                            val mins = sleepTimerRemaining / 60000
+                            val secs = (sleepTimerRemaining % 60000) / 1000
+                            "${mins}:${String.format("%02d", secs)}"
+                        } else "Timer",
+                        style = MaterialTheme.typography.labelMedium,
+                        color = if (sleepTimerRemaining != null) AccentOrange else SecondaryText,
+                        fontWeight = FontWeight.SemiBold
+                    )
+                }
+            }
+            DropdownMenu(
+                expanded = showTimerMenu,
+                onDismissRequest = { showTimerMenu = false }
+            ) {
+                listOf(5 to "5 min", 10 to "10 min", 15 to "15 min", 30 to "30 min", 60 to "1 hour").forEach { (mins, label) ->
+                    DropdownMenuItem(
+                        text = { Text(label) },
+                        onClick = {
+                            onSleepTimer(mins)
+                            showTimerMenu = false
+                        }
+                    )
+                }
+            }
+        }
     }
 }
 
@@ -465,5 +597,132 @@ private fun getTopicIcon(icon: String): androidx.compose.ui.graphics.vector.Imag
         "heart", "favorite" -> Icons.Default.Favorite
         "building.columns", "building", "account_balance" -> Icons.Default.AccountBalance
         else -> Icons.Default.Radio
+    }
+}
+
+@Composable
+private fun AdCompanionOverlay(
+    ad: AdSegment,
+    timeRemainingMs: Long,
+    onSkip: () -> Unit,
+    onTap: () -> Unit
+) {
+    val totalDurationMs = ad.audioDurationSeconds * 1000f
+    val progress = if (totalDurationMs > 0) {
+        ((totalDurationMs - timeRemainingMs) / totalDurationMs).coerceIn(0f, 1f)
+    } else 0f
+    val timeRemainingSeconds = (timeRemainingMs / 1000).coerceAtLeast(0)
+
+    Surface(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(12.dp),
+        shape = RoundedCornerShape(20.dp),
+        color = CardBackground,
+        tonalElevation = 8.dp,
+        shadowElevation = 8.dp
+    ) {
+        Column(
+            modifier = Modifier.padding(20.dp)
+        ) {
+            // Sponsored + Skip row
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "SPONSORED",
+                    style = MaterialTheme.typography.labelSmall,
+                    color = SecondaryText,
+                    letterSpacing = 0.5.sp
+                )
+
+                Surface(
+                    onClick = onSkip,
+                    shape = RoundedCornerShape(14.dp),
+                    color = PrimaryText.copy(alpha = 0.15f)
+                ) {
+                    Row(
+                        modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(4.dp)
+                    ) {
+                        Text(
+                            text = "Skip",
+                            style = MaterialTheme.typography.labelMedium,
+                            color = PrimaryText
+                        )
+                        Icon(
+                            Icons.Default.SkipNext,
+                            contentDescription = "Skip ad",
+                            tint = PrimaryText,
+                            modifier = Modifier.size(14.dp)
+                        )
+                    }
+                }
+            }
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            // Companion image
+            if (ad.companionImageUrl != null) {
+                AsyncImage(
+                    model = ad.companionImageUrl,
+                    contentDescription = "Ad",
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .heightIn(max = 200.dp)
+                        .clip(RoundedCornerShape(12.dp))
+                        .clickable(onClick = onTap),
+                    contentScale = ContentScale.Crop
+                )
+
+                Spacer(modifier = Modifier.height(12.dp))
+            }
+
+            // CTA button
+            if (!ad.ctaText.isNullOrBlank() && !ad.clickThroughUrl.isNullOrBlank()) {
+                Button(
+                    onClick = onTap,
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(10.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = AccentOrange)
+                ) {
+                    Text(
+                        text = ad.ctaText,
+                        style = MaterialTheme.typography.labelLarge,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(12.dp))
+            }
+
+            // Progress bar + countdown
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                LinearProgressIndicator(
+                    progress = { progress },
+                    modifier = Modifier
+                        .weight(1f)
+                        .height(3.dp)
+                        .clip(RoundedCornerShape(1.5.dp)),
+                    color = AccentOrange,
+                    trackColor = PrimaryText.copy(alpha = 0.15f)
+                )
+
+                Text(
+                    text = "0:${String.format("%02d", timeRemainingSeconds)}",
+                    style = MaterialTheme.typography.labelSmall,
+                    color = SecondaryText,
+                    fontWeight = FontWeight.Medium
+                )
+            }
+        }
     }
 }

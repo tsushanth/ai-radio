@@ -20,6 +20,7 @@ googleServices = "4.4.2"
 playServicesAuth = "21.2.0"
 ksp = "2.0.0-1.0.21"
 coroutines = "1.8.1"
+playBilling = "7.1.1"
 
 [libraries]
 # Core Android
@@ -78,6 +79,9 @@ ktor-client-android = { group = "io.ktor", name = "ktor-client-android", version
 
 # Google Sign-In
 play-services-auth = { group = "com.google.android.gms", name = "play-services-auth", version.ref = "playServicesAuth" }
+
+# Google Play Billing
+play-billing-ktx = { group = "com.android.billingclient", name = "billing-ktx", version.ref = "playBilling" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

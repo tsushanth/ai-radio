@@ -10,6 +10,7 @@ import javax.inject.Inject
 
 data class MainUiState(
     val isLoggedIn: Boolean = false,
+    val hasCompletedOnboarding: Boolean = false,
     val isLoading: Boolean = true
 )
 
@@ -23,9 +24,15 @@ class MainViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            preferencesManager.isLoggedIn.collect { isLoggedIn ->
+            combine(
+                preferencesManager.isLoggedIn,
+                preferencesManager.hasCompletedOnboarding
+            ) { isLoggedIn, hasCompletedOnboarding ->
+                Pair(isLoggedIn, hasCompletedOnboarding)
+            }.collect { (isLoggedIn, hasCompletedOnboarding) ->
                 _uiState.value = _uiState.value.copy(
                     isLoggedIn = isLoggedIn,
+                    hasCompletedOnboarding = hasCompletedOnboarding,
                     isLoading = false
                 )
             }

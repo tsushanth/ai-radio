@@ -15,10 +15,12 @@ struct ProfileView: View {
     @State private var showHiddenTopics = false
     @State private var showDeleteConfirmation = false
     @State private var showSignOutConfirmation = false
+    @State private var showPaywall = false
     @State private var isDeleting = false
     @State private var deleteError: String?
     @State private var showDeleteError = false
     @StateObject private var preferencesService = PreferencesService.shared
+    @State private var subscriptionManager = SubscriptionManager.shared
 
     var body: some View {
         NavigationStack {
@@ -58,6 +60,23 @@ struct ProfileView: View {
                         }
                     }
                     .padding(.top, 24)
+
+                    // Premium Section
+                    VStack(alignment: .leading, spacing: 16) {
+                        SectionHeader(title: "Premium")
+
+                        VStack(spacing: 12) {
+                            SettingsRow(
+                                icon: "star.fill",
+                                title: subscriptionManager.isSubscribed ? "Ad-Free" : "Go Ad-Free",
+                                subtitle: subscriptionManager.isSubscribed ? "Active subscription" : "Remove all ads",
+                                action: {
+                                    showPaywall = true
+                                }
+                            )
+                        }
+                    }
+                    .padding(.horizontal, 16)
 
                     // Linked Accounts Section
                     VStack(alignment: .leading, spacing: 16) {
@@ -284,6 +303,9 @@ struct ProfileView: View {
                     }
                 )
                 .presentationDetents([.height(280)])
+            }
+            .sheet(isPresented: $showPaywall) {
+                PaywallView()
             }
             .alert("Sign Out", isPresented: $showSignOutConfirmation) {
                 Button("Cancel", role: .cancel) { }

@@ -35,6 +35,7 @@ class PlayerViewModel {
     var currentTime: TimeInterval { audioService.currentTime }
     var duration: TimeInterval { audioService.duration }
     var playbackSpeed: Float { audioService.playbackRate }
+    var sleepTimerRemaining: TimeInterval? { audioService.sleepTimerRemaining }
 
     // MARK: - Playback Control
 
@@ -67,6 +68,23 @@ class PlayerViewModel {
         audioService.setRate(speed)
     }
 
+    // MARK: - Sleep Timer
+
+    func startSleepTimer(minutes: Int) {
+        audioService.startSleepTimer(minutes: minutes)
+    }
+
+    func cancelSleepTimer() {
+        audioService.cancelSleepTimer()
+    }
+
+    func formatSleepTimer() -> String? {
+        guard let remaining = sleepTimerRemaining, remaining > 0 else { return nil }
+        let mins = Int(remaining) / 60
+        let secs = Int(remaining) % 60
+        return String(format: "%d:%02d", mins, secs)
+    }
+
     // MARK: - Episode Management
 
     func loadEpisode(_ episode: Episode) {
@@ -74,7 +92,7 @@ class PlayerViewModel {
         if audioService.currentEpisode?.id != episode.id {
             audioService.play(episode: episode)
         }
-        loadMockTranscript()
+        loadTranscript(from: episode)
     }
 
     // MARK: - Transcript Management
@@ -90,15 +108,55 @@ class PlayerViewModel {
         }
     }
 
-    private func loadMockTranscript() {
-        // TODO: Load actual transcript from API or episode metadata
-        transcript = [
-            TranscriptSegment(text: "Welcome to your daily briefing for December 10th.", startTime: 0, endTime: 3, speaker: "host1"),
-            TranscriptSegment(text: "Let's start with your calendar for today.", startTime: 3, endTime: 5, speaker: "host2"),
-            TranscriptSegment(text: "You have 3 meetings scheduled, starting at 10 AM.", startTime: 5, endTime: 8, speaker: "host1"),
-            TranscriptSegment(text: "Your inbox has 12 new messages since yesterday.", startTime: 8, endTime: 11, speaker: "host2"),
-            TranscriptSegment(text: "Here are the most important ones to review.", startTime: 11, endTime: 14, speaker: "host1")
-        ]
+    private func loadTranscript(from episode: Episode) {
+        guard let script = episode.script, !script.segments.isEmpty else {
+            transcript = []
+            return
+        }
+
+        var segments: [TranscriptSegment] = []
+        var currentOffset: TimeInterval = 0
+
+        // Use segment timings from the episode if available for accurate timing
+        let totalDuration = episode.duration > 0 ? episode.duration : TimeInterval(script.estimatedDurationSeconds ?? 300)
+
+        for (index, seg) in script.segments.enumerated() {
+            guard !seg.text.isEmpty else { continue }
+
+            let estimatedDuration: TimeInterval
+            if let est = seg.durationEstimate, est > 0 {
+                estimatedDuration = TimeInterval(est)
+            } else {
+                // Rough estimate: ~150 words per minute
+                let wordCount = seg.text.split(separator: " ").count
+                estimatedDuration = max(2.0, TimeInterval(wordCount) / 2.5)
+            }
+
+            segments.append(TranscriptSegment(
+                text: seg.text,
+                startTime: currentOffset,
+                endTime: currentOffset + estimatedDuration,
+                speaker: seg.speaker
+            ))
+            currentOffset += estimatedDuration
+        }
+
+        // Scale timing to match actual episode duration if we have it
+        if !segments.isEmpty && totalDuration > 0 && currentOffset > 0 {
+            let scale = totalDuration / currentOffset
+            if abs(scale - 1.0) > 0.1 { // Only rescale if off by more than 10%
+                segments = segments.map { seg in
+                    TranscriptSegment(
+                        text: seg.text,
+                        startTime: seg.startTime * scale,
+                        endTime: seg.endTime * scale,
+                        speaker: seg.speaker
+                    )
+                }
+            }
+        }
+
+        transcript = segments
     }
 
     // MARK: - Formatting

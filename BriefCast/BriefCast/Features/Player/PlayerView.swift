@@ -65,16 +65,46 @@ struct PlayerView: View {
                             .cornerRadius(8)
                         }
 
+                        // Sleep timer button
+                        Menu {
+                            if viewModel.sleepTimerRemaining != nil {
+                                Button("Cancel Timer", role: .destructive) {
+                                    viewModel.cancelSleepTimer()
+                                }
+                            }
+                            Button("5 min") { viewModel.startSleepTimer(minutes: 5) }
+                            Button("10 min") { viewModel.startSleepTimer(minutes: 10) }
+                            Button("15 min") { viewModel.startSleepTimer(minutes: 15) }
+                            Button("30 min") { viewModel.startSleepTimer(minutes: 30) }
+                            Button("60 min") { viewModel.startSleepTimer(minutes: 60) }
+                        } label: {
+                            HStack(spacing: 4) {
+                                Image(systemName: "moon.zzz")
+                                    .font(.system(size: 14))
+                                if let timerText = viewModel.formatSleepTimer() {
+                                    Text(timerText)
+                                        .font(.system(size: 12, weight: .semibold))
+                                }
+                            }
+                            .foregroundColor(viewModel.sleepTimerRemaining != nil ? Theme.Colors.accent : .white.opacity(0.8))
+                            .padding(.horizontal, 10)
+                            .padding(.vertical, 6)
+                            .background(Color.white.opacity(0.2))
+                            .cornerRadius(8)
+                        }
+
                         // Playback speed button
                         Menu {
+                            Button("0.5x") { viewModel.setPlaybackSpeed(0.5) }
+                            Button("0.75x") { viewModel.setPlaybackSpeed(0.75) }
                             Button("1.0x") { viewModel.setPlaybackSpeed(1.0) }
                             Button("1.25x") { viewModel.setPlaybackSpeed(1.25) }
                             Button("1.5x") { viewModel.setPlaybackSpeed(1.5) }
                             Button("2.0x") { viewModel.setPlaybackSpeed(2.0) }
                         } label: {
-                            Text("\(String(format: "%.2f", viewModel.playbackSpeed))x")
+                            Text("\(String(format: "%.2g", viewModel.playbackSpeed))x")
                                 .font(.system(size: 16, weight: .semibold))
-                                .foregroundColor(.white.opacity(0.8))
+                                .foregroundColor(viewModel.playbackSpeed != 1.0 ? Theme.Colors.accent : .white.opacity(0.8))
                                 .padding(.horizontal, 12)
                                 .padding(.vertical, 6)
                                 .background(Color.white.opacity(0.2))
@@ -275,7 +305,7 @@ struct PlayerView: View {
         .sheet(isPresented: $showQAInput) {
             QAInputView(
                 contextType: .topic,
-                contextId: episode.showId ?? episode.id,
+                contextId: episode.id,
                 contextTitle: episode.title
             )
             .environment(AudioService.shared)
@@ -313,7 +343,7 @@ struct PlayerView: View {
 
         Task {
             let expansion = await interactionService.recordTellMeMore(
-                contextType: episode.showId ?? "topic",
+                contextType: "topic",
                 contextId: episode.id,
                 segmentType: nil,
                 segmentIndex: viewModel.currentSegmentIndex,
@@ -324,6 +354,9 @@ struct PlayerView: View {
                 isLoadingExpansion = false
                 if let expansion = expansion {
                     currentExpansion = expansion
+                } else {
+                    // Resume playback if no expansion returned
+                    viewModel.play()
                 }
             }
         }

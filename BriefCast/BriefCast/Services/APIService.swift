@@ -187,6 +187,20 @@ actor APIService {
         _ = try await performRequest(endpoint: endpoint, method: "DELETE")
     }
 
+    // MARK: - Subscription
+
+    /// Verify iOS subscription with backend
+    func verifyIOSSubscription(receiptData: String) async throws {
+        let endpoint = "\(baseURL)/subscription/verify-ios"
+
+        struct VerifyRequest: Codable {
+            let receiptData: String
+        }
+
+        let bodyData = try jsonEncoder.encode(VerifyRequest(receiptData: receiptData))
+        _ = try await performRequest(endpoint: endpoint, method: "POST", bodyData: bodyData)
+    }
+
     // MARK: - Private Helpers
 
     private func performRequest(

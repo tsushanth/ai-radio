@@ -255,7 +255,11 @@ class LiveStationPlayerViewModel: ObservableObject {
     }
 
     func tuneIn() async {
-        guard currentEpisode == nil else { return }
+        // If we already have an episode, auto-play it immediately
+        if currentEpisode != nil {
+            play()
+            return
+        }
 
         isLoading = true
         errorMessage = nil

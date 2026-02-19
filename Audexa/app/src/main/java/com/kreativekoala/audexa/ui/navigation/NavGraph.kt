@@ -12,8 +12,11 @@ import com.kreativekoala.audexa.data.model.Topic
 import com.kreativekoala.audexa.ui.auth.AuthScreen
 import com.kreativekoala.audexa.ui.home.HomeScreen
 import com.kreativekoala.audexa.ui.home.HomeViewModel
+import com.kreativekoala.audexa.billing.BillingManager
 import com.kreativekoala.audexa.ui.profile.ProfileScreen
 import com.kreativekoala.audexa.ui.profile.ThemeSettingsScreen
+import com.kreativekoala.audexa.ui.onboarding.OnboardingScreen
+import com.kreativekoala.audexa.ui.subscription.PaywallScreen
 import kotlinx.serialization.json.Json
 
 sealed class Screen(val route: String) {
@@ -26,12 +29,14 @@ sealed class Screen(val route: String) {
             return "topic/${java.net.URLEncoder.encode(json, "UTF-8")}"
         }
     }
+    data object Onboarding : Screen("onboarding")
     data object LinkedAccounts : Screen("linked_accounts")
     data object HiddenTopics : Screen("hidden_topics")
     data object LanguageSettings : Screen("language_settings")
     data object ThemeSettings : Screen("theme_settings")
     data object VoiceSettings : Screen("voice_settings")
     data object NotificationSettings : Screen("notification_settings")
+    data object Subscription : Screen("subscription")
 }
 
 @Composable
@@ -39,6 +44,7 @@ fun AudexaNavGraph(
     navController: NavHostController,
     startDestination: String,
     modifier: Modifier = Modifier,
+    billingManager: BillingManager,
     onShowTopicDetail: (Topic) -> Unit
 ) {
     // Create HomeViewModel at NavGraph level so it survives navigation
@@ -53,8 +59,18 @@ fun AudexaNavGraph(
         composable(Screen.Auth.route) {
             AuthScreen(
                 onAuthSuccess = {
-                    navController.navigate(Screen.Home.route) {
+                    navController.navigate(Screen.Onboarding.route) {
                         popUpTo(Screen.Auth.route) { inclusive = true }
+                    }
+                }
+            )
+        }
+
+        composable(Screen.Onboarding.route) {
+            OnboardingScreen(
+                onOnboardingComplete = {
+                    navController.navigate(Screen.Home.route) {
+                        popUpTo(Screen.Onboarding.route) { inclusive = true }
                     }
                 }
             )
@@ -97,6 +113,9 @@ fun AudexaNavGraph(
                 },
                 onNavigateToNotificationSettings = {
                     navController.navigate(Screen.NotificationSettings.route)
+                },
+                onNavigateToSubscription = {
+                    navController.navigate(Screen.Subscription.route)
                 },
                 onSignOut = {
                     navController.navigate(Screen.Auth.route) {
@@ -148,6 +167,15 @@ fun AudexaNavGraph(
 
         composable(Screen.NotificationSettings.route) {
             NotificationSettingsScreen(
+                onNavigateBack = {
+                    navController.popBackStack()
+                }
+            )
+        }
+
+        composable(Screen.Subscription.route) {
+            PaywallScreen(
+                billingManager = billingManager,
                 onNavigateBack = {
                     navController.popBackStack()
                 }

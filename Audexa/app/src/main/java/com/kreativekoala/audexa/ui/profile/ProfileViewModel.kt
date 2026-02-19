@@ -19,6 +19,7 @@ data class ProfileUiState(
     val appTheme: String = "System",
     val preferredLanguage: String = "English",
     val hiddenTopicsCount: Int = 0,
+    val isSubscribed: Boolean = false,
     val isSignedOut: Boolean = false,
     val isDeleting: Boolean = false,
     val error: String? = null
@@ -66,6 +67,13 @@ class ProfileViewModel @Inject constructor(
                 )
             }.collect { state ->
                 _uiState.value = state
+            }
+        }
+
+        // Subscription status (separate collector since combine has 6-flow limit)
+        viewModelScope.launch {
+            preferencesManager.isSubscribed.collect { subscribed ->
+                _uiState.value = _uiState.value.copy(isSubscribed = subscribed)
             }
         }
     }

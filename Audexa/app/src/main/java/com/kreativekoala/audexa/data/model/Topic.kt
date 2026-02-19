@@ -53,7 +53,8 @@ data class TopicEpisode(
     val durationSeconds: Int? = null,
     val playCount: Int = 0,
     val error: String? = null,
-    val language: String = "en"
+    val language: String = "en",
+    val segmentTimings: List<SegmentTiming>? = null
 ) {
     val durationFormatted: String
         get() {
@@ -63,6 +64,26 @@ data class TopicEpisode(
             return String.format("%d:%02d", minutes, seconds)
         }
 }
+
+@Serializable
+data class AdSegment(
+    val type: String = "ad",
+    val creativeId: String,
+    val campaignId: String,
+    val audioUrl: String,
+    val audioDurationSeconds: Int,
+    val companionImageUrl: String? = null,
+    val clickThroughUrl: String? = null,
+    val ctaText: String? = null
+)
+
+@Serializable
+data class SegmentTiming(
+    val type: String,
+    val speaker: String,
+    val startTime: Double,
+    val endTime: Double
+)
 
 enum class TopicCategory(val displayName: String) {
     NEWS("News"),

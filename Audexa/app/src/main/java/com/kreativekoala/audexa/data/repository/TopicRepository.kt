@@ -125,4 +125,21 @@ class TopicRepository @Inject constructor(
     ): Result<TopicEpisodesResponse> = runCatching {
         apiService.getTopicEpisodes(topicId, language, limit)
     }
+
+    // Ad tracking (fire-and-forget, errors are silently logged)
+    suspend fun trackAdImpression(request: AdImpressionRequest) {
+        try {
+            apiService.trackAdImpression(request)
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to track ad impression: ${e.message}")
+        }
+    }
+
+    suspend fun trackAdClick(request: AdClickRequest) {
+        try {
+            apiService.trackAdClick(request)
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to track ad click: ${e.message}")
+        }
+    }
 }

@@ -103,6 +103,13 @@ interface ApiService {
     suspend fun getVoicePairs(
         @Query("provider") provider: String? = null
     ): VoicePairsResponse
+
+    // Ad tracking endpoints
+    @POST("ads/impression")
+    suspend fun trackAdImpression(@Body request: AdImpressionRequest): AdTrackingResponse
+
+    @POST("ads/click")
+    suspend fun trackAdClick(@Body request: AdClickRequest): AdTrackingResponse
 }
 
 // Request/Response models
@@ -227,7 +234,8 @@ data class TopicEpisodeResponse(
 data class TopicEpisodeData(
     val episode: TopicEpisode,
     val isNew: Boolean? = null,
-    val message: String? = null
+    val message: String? = null,
+    val ads: List<AdSegment>? = null
 )
 
 @Serializable
@@ -322,4 +330,29 @@ data class JobError(
     val message: String,
     val action: String,
     val retryable: Boolean
+)
+
+// Ad tracking models
+@Serializable
+data class AdImpressionRequest(
+    val creativeId: String,
+    val campaignId: String,
+    val episodeId: String,
+    val topicId: String,
+    val devicePlatform: String = "android",
+    val language: String,
+    val durationListenedSeconds: Int,
+    val wasSkipped: Boolean
+)
+
+@Serializable
+data class AdClickRequest(
+    val creativeId: String,
+    val campaignId: String
+)
+
+@Serializable
+data class AdTrackingResponse(
+    val success: Boolean,
+    val message: String? = null
 )

@@ -33,6 +33,7 @@ fun ProfileScreen(
     onNavigateToThemeSettings: () -> Unit,
     onNavigateToVoiceSettings: () -> Unit = {},
     onNavigateToNotificationSettings: () -> Unit = {},
+    onNavigateToSubscription: () -> Unit = {},
     onSignOut: () -> Unit,
     viewModel: ProfileViewModel = hiltViewModel()
 ) {
@@ -87,6 +88,18 @@ fun ProfileScreen(
             )
 
             Spacer(modifier = Modifier.height(32.dp))
+
+            // Premium Section
+            SettingsSection(title = "Premium") {
+                SettingsRow(
+                    icon = Icons.Default.Star,
+                    title = if (uiState.isSubscribed) "Ad-Free" else "Go Ad-Free",
+                    subtitle = if (uiState.isSubscribed) "Active subscription" else "Remove all ads",
+                    onClick = onNavigateToSubscription
+                )
+            }
+
+            Spacer(modifier = Modifier.height(24.dp))
 
             // Linked Accounts Section
             SettingsSection(title = "Linked Accounts") {

@@ -36,6 +36,11 @@ class AuthService: ObservableObject {
 
         // Save auth token
         await saveAuthToken(session.accessToken)
+
+        // Link user to Apple Search Ads attribution for bid optimization
+        if let email = currentUser?.email, !email.isEmpty {
+            await SearchAdsAttributionService.shared.linkUserToAttribution(userId: email)
+        }
     }
 
     func signInWithGoogle() async throws {
@@ -52,6 +57,11 @@ class AuthService: ObservableObject {
 
         // Save auth token
         await saveAuthToken(session.accessToken)
+
+        // Link user to Apple Search Ads attribution for bid optimization
+        if let email = currentUser?.email, !email.isEmpty {
+            await SearchAdsAttributionService.shared.linkUserToAttribution(userId: email)
+        }
 
         print("✅ Signed in with Google (Gmail permissions will be requested in onboarding)")
     }

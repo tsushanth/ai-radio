@@ -40,6 +40,9 @@ class AuthService: ObservableObject {
         // Identify user with RevenueCat for cross-platform subscription tracking
         if let email = currentUser?.email, !email.isEmpty {
             await SubscriptionManager.shared.identifyUser(email)
+            
+            // Link user to Apple Search Ads attribution for bid optimization
+            await SearchAdsAttributionService.shared.linkUserToAttribution(userId: email)
         }
     }
 
@@ -61,6 +64,9 @@ class AuthService: ObservableObject {
         // Identify user with RevenueCat for cross-platform subscription tracking
         if let email = currentUser?.email, !email.isEmpty {
             await SubscriptionManager.shared.identifyUser(email)
+            
+            // Link user to Apple Search Ads attribution for bid optimization
+            await SearchAdsAttributionService.shared.linkUserToAttribution(userId: email)
         }
 
         print("✅ Signed in with Google (Gmail permissions will be requested in onboarding)")

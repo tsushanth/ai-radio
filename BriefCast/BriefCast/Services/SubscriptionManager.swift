@@ -3,10 +3,12 @@
 //  BriefCast
 //
 //  StoreKit 2 subscription manager for ad-free premium
+//  Integrated with RevenueCat for subscription tracking and LTV attribution
 //
 
 import Foundation
 import StoreKit
+import RevenueCat
 
 @MainActor
 @Observable
@@ -42,10 +44,58 @@ class SubscriptionManager {
         // Start listening for transaction updates
         transactionListener = listenForTransactions()
 
-        // Load products and check entitlements
+        // Load products and check entitlements (both StoreKit and RevenueCat)
         Task {
             await loadProducts()
             await checkCurrentEntitlements()
+            await syncWithRevenueCat()
+        }
+    }
+
+    // MARK: - RevenueCat Integration
+
+    /// Sync subscription status with RevenueCat
+    func syncWithRevenueCat() async {
+        do {
+            let customerInfo = try await Purchases.shared.customerInfo()
+            let hasRevenueCatEntitlement = customerInfo.entitlements[RevenueCatConfig.premiumEntitlementId]?.isActive == true
+
+            // If RevenueCat shows active subscription, update local state
+            if hasRevenueCatEntitlement && !isSubscribed {
+                isSubscribed = true
+                preferencesService.isSubscribed = true
+                print("[SubscriptionManager] RevenueCat sync: subscription active")
+            }
+        } catch {
+            print("[SubscriptionManager] RevenueCat sync failed: \(error)")
+            // Continue with StoreKit-based state - RevenueCat is supplementary
+        }
+    }
+
+    /// Identify the user with RevenueCat for cross-platform attribution
+    func identifyUser(_ userId: String) async {
+        do {
+            let (customerInfo, _) = try await Purchases.shared.logIn(userId)
+            print("[SubscriptionManager] RevenueCat user identified: \(userId)")
+
+            // Check if user has active subscription from another platform
+            if customerInfo.entitlements[RevenueCatConfig.premiumEntitlementId]?.isActive == true {
+                isSubscribed = true
+                preferencesService.isSubscribed = true
+                print("[SubscriptionManager] Cross-platform subscription detected")
+            }
+        } catch {
+            print("[SubscriptionManager] RevenueCat identify failed: \(error)")
+        }
+    }
+
+    /// Log out user from RevenueCat (when signing out)
+    func logOutRevenueCat() async {
+        do {
+            _ = try await Purchases.shared.logOut()
+            print("[SubscriptionManager] RevenueCat user logged out")
+        } catch {
+            print("[SubscriptionManager] RevenueCat logout failed: \(error)")
         }
     }
 
@@ -151,7 +201,7 @@ class SubscriptionManager {
 
     // MARK: - Helpers
 
-    private func checkVerification<T>(_ result: VerificationResult<T>) throws -> T {
+    private func checkVerification<T>(_ result: StoreKit.VerificationResult<T>) throws -> T {
         switch result {
         case .verified(let value):
             return value
@@ -166,6 +216,11 @@ class SubscriptionManager {
 
         isSubscribed = active
         preferencesService.isSubscribed = active
+
+        // Sync with RevenueCat for attribution tracking
+        Task {
+            await syncWithRevenueCat()
+        }
 
         // Server-side verification (fire and forget)
         Task {

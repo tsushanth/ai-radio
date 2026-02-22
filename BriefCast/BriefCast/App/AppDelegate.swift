@@ -32,6 +32,11 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
             await PushNotificationService.shared.restoreScheduledNotificationIfNeeded()
         }
 
+        // Fetch Apple Search Ads attribution on first launch
+        Task {
+            await SearchAdsAttributionService.shared.fetchAttributionIfNeeded()
+        }
+
         return true
     }
 

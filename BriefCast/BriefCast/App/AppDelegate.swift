@@ -7,6 +7,7 @@
 
 import UIKit
 import UserNotifications
+import RevenueCat
 
 class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDelegate {
 
@@ -16,6 +17,10 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
     ) -> Bool {
         // Set notification delegate
         UNUserNotificationCenter.current().delegate = self
+
+        // Configure RevenueCat
+        Purchases.logLevel = .debug
+        Purchases.configure(withAPIKey: RevenueCatConfig.apiKey)
 
         // Check permission status and restore scheduled notification if needed
         Task {
@@ -73,4 +78,15 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
         }
         completionHandler()
     }
+}
+
+// MARK: - RevenueCat Configuration
+
+enum RevenueCatConfig {
+    // TODO: Replace with your RevenueCat public API key from the RevenueCat dashboard
+    // Dashboard: https://app.revenuecat.com → Project → API Keys → Public API Key (iOS)
+    static let apiKey = "appl_YOUR_REVENUECAT_API_KEY"
+
+    // Entitlement identifier configured in RevenueCat
+    static let premiumEntitlementId = "premium"
 }

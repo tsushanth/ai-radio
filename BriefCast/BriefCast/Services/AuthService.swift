@@ -36,6 +36,11 @@ class AuthService: ObservableObject {
 
         // Save auth token
         await saveAuthToken(session.accessToken)
+
+        // Identify user with RevenueCat for cross-platform subscription tracking
+        if let email = currentUser?.email, !email.isEmpty {
+            await SubscriptionManager.shared.identifyUser(email)
+        }
     }
 
     func signInWithGoogle() async throws {
@@ -53,6 +58,11 @@ class AuthService: ObservableObject {
         // Save auth token
         await saveAuthToken(session.accessToken)
 
+        // Identify user with RevenueCat for cross-platform subscription tracking
+        if let email = currentUser?.email, !email.isEmpty {
+            await SubscriptionManager.shared.identifyUser(email)
+        }
+
         print("✅ Signed in with Google (Gmail permissions will be requested in onboarding)")
     }
 
@@ -64,6 +74,9 @@ class AuthService: ObservableObject {
 
         // Sign out from Google if needed
         googleSignInHelper.signOut()
+
+        // Log out from RevenueCat
+        await SubscriptionManager.shared.logOutRevenueCat()
 
         // Clear local state
         isAuthenticated = false
@@ -164,6 +177,11 @@ class AuthService: ObservableObject {
             currentUser = try await createUserFromSession(session)
             isAuthenticated = true
             await saveAuthToken(session.accessToken)
+
+            // Re-identify user with RevenueCat on session restore
+            if let email = currentUser?.email, !email.isEmpty {
+                await SubscriptionManager.shared.identifyUser(email)
+            }
         } catch {
             print("Failed to restore session: \(error)")
             // Clear invalid session

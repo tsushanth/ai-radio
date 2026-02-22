@@ -16,7 +16,6 @@
 		881B33BA2EEA019B003270AA /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = 881B33B92EEA019B003270AA /* GoogleSignIn */; };
 		881B33BC2EEA019B003270AA /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 881B33BB2EEA019B003270AA /* GoogleSignInSwift */; };
 		881B33BD2EEA01A0003270AA /* RevenueCat in Frameworks */ = {isa = PBXBuildFile; productRef = 881B33BE2EEA01A0003270AA /* RevenueCat */; };
-		881B33BD2EEB0001003270AA /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 881B33BE2EEB0001003270AA /* FirebaseAnalytics */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -58,7 +57,6 @@
 				881B33B32EEA0167003270AA /* Realtime in Frameworks */,
 				881B33BA2EEA019B003270AA /* GoogleSignIn in Frameworks */,
 				881B33BD2EEA01A0003270AA /* RevenueCat in Frameworks */,
-				881B33BD2EEB0001003270AA /* FirebaseAnalytics in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -110,7 +108,7 @@
 				881B33B92EEA019B003270AA /* GoogleSignIn */,
 				881B33BB2EEA019B003270AA /* GoogleSignInSwift */,
 				881B33BE2EEA01A0003270AA /* RevenueCat */,
-				881B33BE2EEB0001003270AA /* FirebaseAnalytics */,
+				40AD34D43873B64461C0D6B7 /* FirebaseAnalytics */,
 			);
 			productName = BriefCast;
 			productReference = 881B32E22EE8AE52003270AA /* BriefCast.app */;
@@ -144,7 +142,7 @@
 				881B33AB2EEA0167003270AA /* XCRemoteSwiftPackageReference "supabase-swift" */,
 				881B33B82EEA019B003270AA /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
 				881B33BF2EEA01A0003270AA /* XCRemoteSwiftPackageReference "purchases-ios" */,
-				881B33BF2EEB0001003270AA /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				4248B23A2A8836B7D53FE1D1 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 881B32E32EE8AE52003270AA /* Products */;
@@ -392,6 +390,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		4248B23A2A8836B7D53FE1D1 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 11.0.0;
+			};
+		};
 		881B33AB2EEA0167003270AA /* XCRemoteSwiftPackageReference "supabase-swift" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/supabase/supabase-swift";
@@ -414,14 +420,16 @@
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 5.0.0;
-		881B33BF2EEB0001003270AA /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
-			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
-				minimumVersion = 11.0.0;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		40AD34D43873B64461C0D6B7 /* FirebaseAnalytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4248B23A2A8836B7D53FE1D1 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAnalytics;
+		};
 		881B33AC2EEA0167003270AA /* Auth */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 881B33AB2EEA0167003270AA /* XCRemoteSwiftPackageReference "supabase-swift" */;
@@ -466,9 +474,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 881B33BF2EEA01A0003270AA /* XCRemoteSwiftPackageReference "purchases-ios" */;
 			productName = RevenueCat;
-		881B33BE2EEB0001003270AA /* FirebaseAnalytics */ = {
-			package = 881B33BF2EEB0001003270AA /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
-			productName = FirebaseAnalytics;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

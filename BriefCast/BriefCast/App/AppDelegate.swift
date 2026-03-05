@@ -23,8 +23,20 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
         UNUserNotificationCenter.current().delegate = self
 
         // Configure RevenueCat
+        #if DEBUG
         Purchases.logLevel = .debug
+        #endif
         Purchases.configure(withAPIKey: RevenueCatConfig.apiKey)
+
+        // Set customer attributes for segmentation
+        Purchases.shared.attribution.setAttributes([
+            "$appVersion": Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "",
+            "app_name": "Audexa",
+            "platform": "ios"
+        ])
+
+        // Enable automatic Apple Search Ads attribution collection
+        Purchases.shared.attribution.enableAdServicesAttributionTokenCollection()
 
         // Check permission status and restore scheduled notification if needed
         Task {

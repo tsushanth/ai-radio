@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5A3909BFB61200D7D5C8C354 /* RevenueCatUI in Frameworks */ = {isa = PBXBuildFile; productRef = E135063CEB7EFAE24CD5F0C4 /* RevenueCatUI */; };
 		881B33AD2EEA0167003270AA /* Auth in Frameworks */ = {isa = PBXBuildFile; productRef = 881B33AC2EEA0167003270AA /* Auth */; };
 		881B33AF2EEA0167003270AA /* Functions in Frameworks */ = {isa = PBXBuildFile; productRef = 881B33AE2EEA0167003270AA /* Functions */; };
 		881B33B12EEA0167003270AA /* PostgREST in Frameworks */ = {isa = PBXBuildFile; productRef = 881B33B02EEA0167003270AA /* PostgREST */; };
@@ -57,6 +58,7 @@
 				881B33B32EEA0167003270AA /* Realtime in Frameworks */,
 				881B33BA2EEA019B003270AA /* GoogleSignIn in Frameworks */,
 				881B33BD2EEA01A0003270AA /* RevenueCat in Frameworks */,
+				5A3909BFB61200D7D5C8C354 /* RevenueCatUI in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -109,6 +111,7 @@
 				881B33BB2EEA019B003270AA /* GoogleSignInSwift */,
 				881B33BE2EEA01A0003270AA /* RevenueCat */,
 				40AD34D43873B64461C0D6B7 /* FirebaseAnalytics */,
+				E135063CEB7EFAE24CD5F0C4 /* RevenueCatUI */,
 			);
 			productName = BriefCast;
 			productReference = 881B32E22EE8AE52003270AA /* BriefCast.app */;
@@ -301,7 +304,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = BriefCast/BriefCast.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 14;
+				CURRENT_PROJECT_VERSION = 17;
 				DEVELOPMENT_ASSET_PATHS = "\"BriefCast/Preview Content\"";
 				DEVELOPMENT_TEAM = 7RS696YC75;
 				ENABLE_PREVIEWS = YES;
@@ -319,7 +322,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 12.0;
+				MARKETING_VERSION = 14.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.kreativekoala.briefcast;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -337,7 +340,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = BriefCast/BriefCast.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 14;
+				CURRENT_PROJECT_VERSION = 17;
 				DEVELOPMENT_ASSET_PATHS = "\"BriefCast/Preview Content\"";
 				DEVELOPMENT_TEAM = 7RS696YC75;
 				ENABLE_PREVIEWS = YES;
@@ -355,7 +358,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 12.0;
+				MARKETING_VERSION = 14.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.kreativekoala.briefcast;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -474,6 +477,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 881B33BF2EEA01A0003270AA /* XCRemoteSwiftPackageReference "purchases-ios" */;
 			productName = RevenueCat;
+		};
+		E135063CEB7EFAE24CD5F0C4 /* RevenueCatUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 881B33BF2EEA01A0003270AA /* XCRemoteSwiftPackageReference "purchases-ios" */;
+			productName = RevenueCatUI;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

@@ -305,7 +305,7 @@ struct ProfileView: View {
                 .presentationDetents([.height(280)])
             }
             .sheet(isPresented: $showPaywall) {
-                PaywallView()
+                RemotePaywallView(triggerSource: "profile")
             }
             .alert("Sign Out", isPresented: $showSignOutConfirmation) {
                 Button("Cancel", role: .cancel) { }

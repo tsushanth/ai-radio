@@ -4,6 +4,10 @@ import android.app.Application
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.os.Build
+import android.util.Log
+import com.revenuecat.purchases.LogLevel
+import com.revenuecat.purchases.Purchases
+import com.revenuecat.purchases.PurchasesConfiguration
 import dagger.hilt.android.HiltAndroidApp
 
 @HiltAndroidApp
@@ -11,7 +15,22 @@ class AudexaApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
+        configureRevenueCat()
         createNotificationChannels()
+    }
+
+    private fun configureRevenueCat() {
+        Purchases.logLevel = if (BuildConfig.DEBUG) LogLevel.DEBUG else LogLevel.ERROR
+        Purchases.configure(
+            PurchasesConfiguration.Builder(this, REVENUECAT_API_KEY).build()
+        )
+        Purchases.sharedInstance.setAttributes(
+            mapOf(
+                "app_name" to "Audexa",
+                "platform" to "android"
+            )
+        )
+        Log.d("AudexaApplication", "RevenueCat configured")
     }
 
     private fun createNotificationChannels() {
@@ -34,5 +53,8 @@ class AudexaApplication : Application() {
 
     companion object {
         const val CHANNEL_ID_DAILY_BRIEF = "daily_brief_channel"
+        // TODO: Replace with your Google public API key from RevenueCat dashboard
+        // Go to RevenueCat > Audexa project > API Keys > Google public key (goog_xxx)
+        const val REVENUECAT_API_KEY = "goog_LKFhnHmKhKjfezMFzViXElCPLzg"
     }
 }

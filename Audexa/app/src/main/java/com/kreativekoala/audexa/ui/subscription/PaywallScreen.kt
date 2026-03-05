@@ -1,7 +1,6 @@
 package com.kreativekoala.audexa.ui.subscription
 
 import android.app.Activity
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -15,14 +14,17 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.android.billingclient.api.ProductDetails
+import com.revenuecat.purchases.Package
+import com.revenuecat.purchases.PackageType
+import com.revenuecat.purchases.models.StoreProduct
+import com.revenuecat.purchases.ui.revenuecatui.PaywallDialog
+import com.revenuecat.purchases.ui.revenuecatui.PaywallDialogOptions
 import com.kreativekoala.audexa.billing.BillingManager
 import com.kreativekoala.audexa.ui.theme.*
 
@@ -32,15 +34,39 @@ fun PaywallScreen(
     billingManager: BillingManager,
     onNavigateBack: () -> Unit
 ) {
-    val products by billingManager.products.collectAsState()
+    // Try RevenueCat remote paywall first (design controlled from dashboard)
+    var showRemotePaywall by remember { mutableStateOf(true) }
+
+    if (showRemotePaywall) {
+        PaywallDialog(
+            PaywallDialogOptions.Builder()
+                .setDismissRequest {
+                    showRemotePaywall = false
+                    onNavigateBack()
+                }
+                .build()
+        )
+    }
+}
+
+// Fallback custom paywall (kept for reference or if remote paywall is not configured)
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun CustomPaywallScreen(
+    billingManager: BillingManager,
+    onNavigateBack: () -> Unit
+) {
+    val packages by billingManager.packages.collectAsState()
     val isSubscribed by billingManager.isSubscribed.collectAsState()
     val purchaseInProgress by billingManager.purchaseInProgress.collectAsState()
     val context = LocalContext.current
 
-    var selectedProductId by remember { mutableStateOf(BillingManager.YEARLY_PRODUCT_ID) }
+    val monthlyPackage = packages.find { it.packageType == PackageType.MONTHLY }
+    val yearlyPackage = packages.find { it.packageType == PackageType.ANNUAL }
 
-    val monthlyProduct = products.find { it.productId == BillingManager.MONTHLY_PRODUCT_ID }
-    val yearlyProduct = products.find { it.productId == BillingManager.YEARLY_PRODUCT_ID }
+    var selectedPackage by remember(packages) {
+        mutableStateOf(yearlyPackage ?: monthlyPackage)
+    }
 
     Scaffold(
         topBar = {
@@ -127,37 +153,36 @@ fun PaywallScreen(
                 }
             } else {
                 // Pricing cards
-                if (yearlyProduct != null) {
+                if (yearlyPackage != null) {
                     PricingCard(
-                        product = yearlyProduct,
+                        pkg = yearlyPackage,
                         label = "Yearly",
                         badge = "Save 58%",
-                        isSelected = selectedProductId == BillingManager.YEARLY_PRODUCT_ID,
-                        onClick = { selectedProductId = BillingManager.YEARLY_PRODUCT_ID }
+                        isSelected = selectedPackage == yearlyPackage,
+                        onClick = { selectedPackage = yearlyPackage }
                     )
                 }
 
                 Spacer(modifier = Modifier.height(12.dp))
 
-                if (monthlyProduct != null) {
+                if (monthlyPackage != null) {
                     PricingCard(
-                        product = monthlyProduct,
+                        pkg = monthlyPackage,
                         label = "Monthly",
                         badge = null,
-                        isSelected = selectedProductId == BillingManager.MONTHLY_PRODUCT_ID,
-                        onClick = { selectedProductId = BillingManager.MONTHLY_PRODUCT_ID }
+                        isSelected = selectedPackage == monthlyPackage,
+                        onClick = { selectedPackage = monthlyPackage }
                     )
                 }
 
                 Spacer(modifier = Modifier.height(24.dp))
 
                 // Subscribe button
-                val selectedProduct = products.find { it.productId == selectedProductId }
                 Button(
                     onClick = {
-                        selectedProduct?.let { product ->
+                        selectedPackage?.let { pkg ->
                             (context as? Activity)?.let { activity ->
-                                billingManager.launchPurchaseFlow(activity, product)
+                                billingManager.launchPurchaseFlow(activity, pkg)
                             }
                         }
                     },
@@ -166,7 +191,7 @@ fun PaywallScreen(
                         .height(56.dp),
                     shape = RoundedCornerShape(16.dp),
                     colors = ButtonDefaults.buttonColors(containerColor = AccentOrange),
-                    enabled = selectedProduct != null && !purchaseInProgress
+                    enabled = selectedPackage != null && !purchaseInProgress
                 ) {
                     if (purchaseInProgress) {
                         CircularProgressIndicator(
@@ -235,23 +260,18 @@ private fun FeatureRow(icon: ImageVector, text: String) {
 
 @Composable
 private fun PricingCard(
-    product: ProductDetails,
+    pkg: Package,
     label: String,
     badge: String?,
     isSelected: Boolean,
     onClick: () -> Unit
 ) {
-    val price = product.subscriptionOfferDetails
-        ?.firstOrNull()?.pricingPhases?.pricingPhaseList
-        ?.firstOrNull()?.formattedPrice ?: ""
-
-    val period = product.subscriptionOfferDetails
-        ?.firstOrNull()?.pricingPhases?.pricingPhaseList
-        ?.firstOrNull()?.billingPeriod ?: ""
-
-    val periodLabel = when {
-        period.contains("Y") -> "/year"
-        period.contains("M") -> "/month"
+    val product = pkg.product
+    val price = product.price.formatted
+    val periodLabel = when (pkg.packageType) {
+        PackageType.ANNUAL -> "/year"
+        PackageType.MONTHLY -> "/month"
+        PackageType.WEEKLY -> "/week"
         else -> ""
     }
 

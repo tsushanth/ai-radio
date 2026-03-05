@@ -130,8 +130,9 @@ dependencies {
     // Google Sign-In
     implementation(libs.play.services.auth)
 
-    // Google Play Billing
-    implementation(libs.play.billing.ktx)
+    // RevenueCat
+    implementation(libs.revenuecat.purchases)
+    implementation(libs.revenuecat.purchases.ui)
 
     // Testing
     testImplementation("junit:junit:4.13.2")

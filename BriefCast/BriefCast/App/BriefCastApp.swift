@@ -15,6 +15,10 @@ struct BriefCastApp: App {
     @StateObject private var preferencesService = PreferencesService.shared
     @State private var subscriptionManager = SubscriptionManager.shared
     @State private var showSplash = true
+
+    init() {
+        ReviewManager.shared.recordAppLaunch()
+    }
     @State private var showDailyBriefPlayer = false
     @State private var pendingEpisodeId: String?
 
@@ -49,6 +53,7 @@ struct BriefCastApp: App {
                         .zIndex(1)
                 }
             }
+            .reviewPrompt()
             .preferredColorScheme(preferencesService.appTheme.colorScheme)
             .onAppear {
                 // Dismiss splash screen after a delay

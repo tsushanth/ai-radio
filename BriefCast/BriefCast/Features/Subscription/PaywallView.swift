@@ -8,7 +8,7 @@
 import SwiftUI
 import StoreKit
 
-struct PaywallView: View {
+struct LegacyPaywallView: View {
     @Environment(\.dismiss) private var dismiss
     @State private var subscriptionManager = SubscriptionManager.shared
     @State private var selectedProductId = SubscriptionManager.yearlyProductId

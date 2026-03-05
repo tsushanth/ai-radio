@@ -254,8 +254,7 @@ private fun MainContent(
         ModalBottomSheet(
             onDismissRequest = { onSelectedTopicChange(null) },
             sheetState = sheetState,
-            containerColor = MaterialTheme.colorScheme.background,
-            windowInsets = WindowInsets(0)
+            containerColor = MaterialTheme.colorScheme.background
         ) {
             TopicDetailScreen(
                 topic = selectedTopic!!,

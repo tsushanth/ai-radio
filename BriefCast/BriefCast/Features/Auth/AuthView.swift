@@ -176,6 +176,16 @@ struct AuthView: View {
             }
 
             do {
+                // Save Apple-provided name (only available on first sign-in)
+                if let fullName = appleIDCredential.fullName {
+                    let givenName = fullName.givenName ?? ""
+                    let familyName = fullName.familyName ?? ""
+                    let displayName = [givenName, familyName].filter { !$0.isEmpty }.joined(separator: " ")
+                    if !displayName.isEmpty {
+                        UserDefaults.standard.set(displayName, forKey: "appleSignInDisplayName")
+                    }
+                }
+
                 // Use the Supabase manager directly with the credentials
                 let session = try await SupabaseManager.shared.signInWithApple(idToken: idTokenString, nonce: nonce)
 

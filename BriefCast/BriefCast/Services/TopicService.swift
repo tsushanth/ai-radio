@@ -137,6 +137,7 @@ class TopicService {
     // MARK: - Episodes
 
     /// Get or generate today's episode for a topic
+    /// Polls automatically if the episode is still generating (matches Android behavior)
     func getOrGenerateEpisode(
         topicId: String,
         language: String = "en",
@@ -151,7 +152,46 @@ class TopicService {
         let data = try await performRequest(endpoint: endpoint, session: generationSession)
 
         let response = try jsonDecoder.decode(TopicEpisodeResponse.self, from: data)
+
+        // If episode is still generating, poll until ready (like Android)
+        if response.data.episode.status == .generating {
+            return try await pollForEpisodeCompletion(topicId: topicId, language: language)
+        }
+
         return response.data
+    }
+
+    /// Poll for episode completion with exponential backoff (matches Android behavior)
+    private func pollForEpisodeCompletion(
+        topicId: String,
+        language: String
+    ) async throws -> TopicEpisodeData {
+        var pollInterval: TimeInterval = 2.0
+        let maxPollInterval: TimeInterval = 10.0
+        let maxWaitTime: TimeInterval = 360 // 6 minutes
+        let startTime = Date()
+        let endpoint = "\(baseURL)/topics/\(topicId)/episode?lang=\(language)"
+
+        while true {
+            if Date().timeIntervalSince(startTime) > maxWaitTime {
+                throw APIError.serverError(408, "Episode generation timed out. Please try again.")
+            }
+
+            try await Task.sleep(nanoseconds: UInt64(pollInterval * 1_000_000_000))
+
+            let data = try await performRequest(endpoint: endpoint, session: generationSession)
+            let response = try jsonDecoder.decode(TopicEpisodeResponse.self, from: data)
+
+            switch response.data.episode.status {
+            case .completed:
+                return response.data
+            case .failed:
+                throw APIError.serverError(500, response.data.episode.error ?? "Episode generation failed")
+            case .generating, .notGenerated:
+                pollInterval = min(pollInterval * 1.5, maxPollInterval)
+                continue
+            }
+        }
     }
 
     /// Generate a new episode (force generation)

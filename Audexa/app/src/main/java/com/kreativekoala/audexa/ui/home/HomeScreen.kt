@@ -13,9 +13,11 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.kreativekoala.audexa.R
 import com.kreativekoala.audexa.data.model.DiscoverCategory
 import com.kreativekoala.audexa.data.model.Topic
 import com.kreativekoala.audexa.ui.components.*
@@ -58,7 +60,7 @@ fun HomeScreen(
             GradientHeader(
                 greeting = getGreeting(),
                 userName = userName,
-                subtitle = "Daily Brief • ${viewModel.dailyBriefDate}",
+                subtitle = stringResource(R.string.daily_brief_subtitle, viewModel.dailyBriefDate),
                 briefState = dailyBriefState,
                 hasCachedEpisode = hasCachedEpisode,
                 onPlayTapped = { viewModel.playDailyBrief() },
@@ -75,7 +77,7 @@ fun HomeScreen(
             // Tab Selector
             TabSelector(
                 selectedIndex = selectedTab,
-                tabs = listOf("For You", "Discover"),
+                tabs = listOf(stringResource(R.string.tab_for_you), stringResource(R.string.tab_discover)),
                 onTabSelected = { viewModel.selectTab(it) }
             )
 
@@ -131,7 +133,7 @@ private fun ForYouTabContent(
         if (keepListening.isNotEmpty()) {
             Column {
                 Text(
-                    text = "Keep listening",
+                    text = stringResource(R.string.keep_listening),
                     style = MaterialTheme.typography.headlineLarge,
                     color = MaterialTheme.colorScheme.onBackground,
                     modifier = Modifier.padding(horizontal = Spacing.screenPadding.dp)
@@ -155,7 +157,7 @@ private fun ForYouTabContent(
         if (bookmarkedTopics.isNotEmpty()) {
             Column {
                 Text(
-                    text = "Your Topics",
+                    text = stringResource(R.string.your_topics),
                     style = MaterialTheme.typography.headlineLarge,
                     color = MaterialTheme.colorScheme.onBackground,
                     modifier = Modifier.padding(horizontal = Spacing.screenPadding.dp)
@@ -183,13 +185,13 @@ private fun ForYouTabContent(
         if (visibleTopics.isNotEmpty()) {
             Column {
                 Text(
-                    text = "Topic Podcasts",
+                    text = stringResource(R.string.topic_podcasts),
                     style = MaterialTheme.typography.headlineLarge,
                     color = MaterialTheme.colorScheme.onBackground,
                     modifier = Modifier.padding(horizontal = Spacing.screenPadding.dp)
                 )
                 Text(
-                    text = "Tap to explore and play",
+                    text = stringResource(R.string.tap_to_explore),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.padding(horizontal = Spacing.screenPadding.dp)
@@ -219,7 +221,7 @@ private fun ForYouTabContent(
         if (recommendedTopics.isNotEmpty()) {
             Column {
                 Text(
-                    text = "Recommended for you",
+                    text = stringResource(R.string.recommended_for_you),
                     style = MaterialTheme.typography.headlineLarge,
                     color = MaterialTheme.colorScheme.onBackground,
                     modifier = Modifier.padding(horizontal = Spacing.screenPadding.dp)
@@ -248,7 +250,7 @@ private fun ForYouTabContent(
         if (moreForYouTopics.isNotEmpty()) {
             Column {
                 Text(
-                    text = "More for you",
+                    text = stringResource(R.string.more_for_you),
                     style = MaterialTheme.typography.headlineLarge,
                     color = MaterialTheme.colorScheme.onBackground,
                     modifier = Modifier.padding(horizontal = Spacing.screenPadding.dp)
@@ -344,7 +346,7 @@ private fun DiscoverTabContent(
                 )
                 Spacer(modifier = Modifier.height(12.dp))
                 Text(
-                    text = "No results for \"$searchText\"",
+                    text = stringResource(R.string.no_results_for, searchText),
                     style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -368,7 +370,7 @@ private fun DiscoverTabContent(
             if (filteredTopics.isNotEmpty()) {
                 Column {
                     Text(
-                        text = if (searchText.isEmpty()) "All Topics" else "Matching Topics",
+                        text = if (searchText.isEmpty()) stringResource(R.string.all_topics) else stringResource(R.string.matching_topics),
                         style = MaterialTheme.typography.headlineLarge,
                         color = MaterialTheme.colorScheme.onBackground,
                         modifier = Modifier.padding(horizontal = Spacing.screenPadding.dp)
@@ -409,14 +411,14 @@ private fun SearchBar(
         modifier = modifier.fillMaxWidth(),
         placeholder = {
             Text(
-                "Find new shows",
+                stringResource(R.string.find_new_shows),
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         },
         leadingIcon = {
             Icon(
                 imageVector = Icons.Default.Search,
-                contentDescription = "Search",
+                contentDescription = stringResource(R.string.search),
                 tint = if (searchText.isNotEmpty()) AccentOrange else MaterialTheme.colorScheme.onSurfaceVariant
             )
         },
@@ -425,7 +427,7 @@ private fun SearchBar(
                 IconButton(onClick = { onSearchTextChange("") }) {
                     Icon(
                         imageVector = Icons.Default.Close,
-                        contentDescription = "Clear",
+                        contentDescription = stringResource(R.string.clear),
                         tint = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
@@ -492,11 +494,12 @@ private fun CategorySection(
     }
 }
 
+@Composable
 private fun getGreeting(): String {
     val hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
     return when (hour) {
-        in 0..11 -> "Good Morning"
-        in 12..16 -> "Good Afternoon"
-        else -> "Good Evening"
+        in 0..11 -> stringResource(R.string.good_morning)
+        in 12..16 -> stringResource(R.string.good_afternoon)
+        else -> stringResource(R.string.good_evening)
     }
 }

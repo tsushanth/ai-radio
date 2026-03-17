@@ -6,6 +6,7 @@ import android.net.NetworkCapabilities
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.kreativekoala.audexa.R
 import com.kreativekoala.audexa.data.local.PreferencesManager
 import com.kreativekoala.audexa.data.model.*
 import com.kreativekoala.audexa.data.remote.JobError
@@ -377,17 +378,40 @@ class HomeViewModel @Inject constructor(
                 val audioUrl = dailyBriefAudioUrl!!
                 audioManager.play(
                     id = dailyBriefEpisodeId ?: "daily-brief",
-                    title = "Daily Brief - $dailyBriefDate",
-                    description = "Your personalized morning briefing",
+                    title = context.getString(R.string.daily_brief_title_format, dailyBriefDate),
+                    description = context.getString(R.string.daily_brief_description),
                     audioUrl = audioUrl
                 )
                 _dailyBriefState.value = DailyBriefState.Playing(audioUrl)
                 return@launch
             }
 
+            // Try to fetch latest episode from backend before generating
+            try {
+                val episodesResult = podcastRepository.getEpisodes(email, limit = 1, offset = 0)
+                episodesResult.getOrNull()?.episodes?.firstOrNull()?.let { latestEpisode ->
+                    if (latestEpisode.audioUrl != null && latestEpisode.status == "completed") {
+                        dailyBriefAudioUrl = latestEpisode.audioUrl
+                        dailyBriefEpisodeId = latestEpisode.id
+                        dailyBriefDurationSeconds = latestEpisode.durationSeconds ?: 0
+                        cacheEpisode(latestEpisode.id, latestEpisode.audioUrl, latestEpisode.durationSeconds ?: 0)
+                        audioManager.play(
+                            id = latestEpisode.id,
+                            title = context.getString(R.string.daily_brief_title_format, dailyBriefDate),
+                            description = context.getString(R.string.daily_brief_description),
+                            audioUrl = latestEpisode.audioUrl
+                        )
+                        _dailyBriefState.value = DailyBriefState.Playing(latestEpisode.audioUrl)
+                        return@launch
+                    }
+                }
+            } catch (e: Exception) {
+                Log.w(TAG, "Failed to check backend for existing episode: ${e.message}")
+            }
+
             // Check network connectivity before attempting generation
             if (!isNetworkAvailable()) {
-                _dailyBriefState.value = DailyBriefState.Error("No internet connection. Please check your network and try again.")
+                _dailyBriefState.value = DailyBriefState.Error(context.getString(R.string.error_no_internet))
                 return@launch
             }
 
@@ -432,8 +456,8 @@ class HomeViewModel @Inject constructor(
                                 // Auto-play
                                 audioManager.play(
                                     id = episode.id,
-                                    title = "Daily Brief - $dailyBriefDate",
-                                    description = "Your personalized morning briefing",
+                                    title = context.getString(R.string.daily_brief_title_format, dailyBriefDate),
+                                    description = context.getString(R.string.daily_brief_description),
                                     audioUrl = episode.audioUrl
                                 )
                                 _dailyBriefState.value = DailyBriefState.Playing(episode.audioUrl)
@@ -454,7 +478,7 @@ class HomeViewModel @Inject constructor(
                     }
             } catch (e: Exception) {
                 Log.e(TAG, "Failed to generate podcast: ${e.message}")
-                _dailyBriefState.value = DailyBriefState.Error(e.message ?: "Generation failed")
+                _dailyBriefState.value = DailyBriefState.Error(e.message ?: context.getString(R.string.generation_failed))
             }
         }
     }

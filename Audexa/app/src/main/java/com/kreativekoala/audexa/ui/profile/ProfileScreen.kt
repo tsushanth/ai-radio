@@ -18,9 +18,11 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.kreativekoala.audexa.R
 import com.kreativekoala.audexa.ui.theme.*
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -53,7 +55,7 @@ fun ProfileScreen(
             TopAppBar(
                 title = {
                     Text(
-                        "Profile",
+                        stringResource(R.string.profile),
                         color = MaterialTheme.colorScheme.onBackground,
                         fontWeight = FontWeight.Bold
                     )
@@ -62,7 +64,7 @@ fun ProfileScreen(
                     IconButton(onClick = onNavigateBack) {
                         Icon(
                             Icons.Default.ArrowBack,
-                            contentDescription = "Back",
+                            contentDescription = stringResource(R.string.back),
                             tint = MaterialTheme.colorScheme.onBackground
                         )
                     }
@@ -90,11 +92,11 @@ fun ProfileScreen(
             Spacer(modifier = Modifier.height(32.dp))
 
             // Premium Section
-            SettingsSection(title = "Premium") {
+            SettingsSection(title = stringResource(R.string.premium)) {
                 SettingsRow(
                     icon = Icons.Default.Star,
-                    title = if (uiState.isSubscribed) "Ad-Free" else "Go Ad-Free",
-                    subtitle = if (uiState.isSubscribed) "Active subscription" else "Remove all ads",
+                    title = if (uiState.isSubscribed) stringResource(R.string.ad_free) else stringResource(R.string.go_ad_free),
+                    subtitle = if (uiState.isSubscribed) stringResource(R.string.active_subscription) else stringResource(R.string.remove_all_ads),
                     onClick = onNavigateToSubscription
                 )
             }
@@ -102,11 +104,11 @@ fun ProfileScreen(
             Spacer(modifier = Modifier.height(24.dp))
 
             // Linked Accounts Section
-            SettingsSection(title = "Linked Accounts") {
+            SettingsSection(title = stringResource(R.string.linked_accounts)) {
                 SettingsRow(
                     icon = Icons.Default.Link,
-                    title = "Email Accounts",
-                    subtitle = if (uiState.hasLinkedGoogle) "Connected" else "Not Connected",
+                    title = stringResource(R.string.email_accounts),
+                    subtitle = if (uiState.hasLinkedGoogle) stringResource(R.string.connected) else stringResource(R.string.not_connected),
                     onClick = onNavigateToLinkedAccounts
                 )
             }
@@ -114,39 +116,39 @@ fun ProfileScreen(
             Spacer(modifier = Modifier.height(24.dp))
 
             // Preferences Section
-            SettingsSection(title = "Preferences") {
+            SettingsSection(title = stringResource(R.string.preferences)) {
                 SettingsRow(
                     icon = Icons.Default.Palette,
-                    title = "App Theme",
+                    title = stringResource(R.string.app_theme),
                     subtitle = uiState.appTheme,
                     onClick = onNavigateToThemeSettings
                 )
                 HorizontalDivider(color = MaterialTheme.colorScheme.surfaceVariant)
                 SettingsRow(
                     icon = Icons.Default.Language,
-                    title = "Podcast Language",
+                    title = stringResource(R.string.podcast_language),
                     subtitle = uiState.preferredLanguage,
                     onClick = onNavigateToLanguageSettings
                 )
                 HorizontalDivider(color = MaterialTheme.colorScheme.surfaceVariant)
                 SettingsRow(
                     icon = Icons.Default.RecordVoiceOver,
-                    title = "Voice Settings",
-                    subtitle = "Choose podcast voices",
+                    title = stringResource(R.string.voice_settings),
+                    subtitle = stringResource(R.string.choose_podcast_voices),
                     onClick = onNavigateToVoiceSettings
                 )
                 HorizontalDivider(color = MaterialTheme.colorScheme.surfaceVariant)
                 SettingsRow(
                     icon = Icons.Default.VisibilityOff,
-                    title = "Hidden Topics",
-                    subtitle = "${uiState.hiddenTopicsCount} hidden",
+                    title = stringResource(R.string.hidden_topics),
+                    subtitle = stringResource(R.string.hidden_count, uiState.hiddenTopicsCount),
                     onClick = onNavigateToHiddenTopics
                 )
                 HorizontalDivider(color = MaterialTheme.colorScheme.surfaceVariant)
                 SettingsRow(
                     icon = Icons.Default.Notifications,
-                    title = "Notifications",
-                    subtitle = "Daily brief reminders",
+                    title = stringResource(R.string.notifications),
+                    subtitle = stringResource(R.string.daily_brief_reminders),
                     onClick = onNavigateToNotificationSettings
                 )
             }
@@ -154,10 +156,10 @@ fun ProfileScreen(
             Spacer(modifier = Modifier.height(24.dp))
 
             // About Section
-            SettingsSection(title = "About") {
+            SettingsSection(title = stringResource(R.string.about)) {
                 SettingsRow(
                     icon = Icons.Default.Info,
-                    title = "Version",
+                    title = stringResource(R.string.version),
                     subtitle = "1.0.0",
                     showChevron = false,
                     onClick = { }
@@ -165,7 +167,7 @@ fun ProfileScreen(
                 HorizontalDivider(color = MaterialTheme.colorScheme.surfaceVariant)
                 SettingsRow(
                     icon = Icons.Default.Description,
-                    title = "Terms of Service",
+                    title = stringResource(R.string.terms_of_service),
                     onClick = {
                         val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://kreativekoala.llc/terms"))
                         context.startActivity(intent)
@@ -174,7 +176,7 @@ fun ProfileScreen(
                 HorizontalDivider(color = MaterialTheme.colorScheme.surfaceVariant)
                 SettingsRow(
                     icon = Icons.Default.Security,
-                    title = "Privacy Policy",
+                    title = stringResource(R.string.privacy_policy),
                     onClick = {
                         val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://kreativekoala.llc/privacy"))
                         context.startActivity(intent)
@@ -197,7 +199,7 @@ fun ProfileScreen(
                 Icon(Icons.Default.Logout, contentDescription = null)
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
-                    text = "Sign Out",
+                    text = stringResource(R.string.sign_out),
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.SemiBold
                 )
@@ -217,7 +219,7 @@ fun ProfileScreen(
                 Icon(Icons.Default.Delete, contentDescription = null)
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
-                    text = "Delete Account",
+                    text = stringResource(R.string.delete_account),
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.SemiBold
                 )
@@ -231,19 +233,19 @@ fun ProfileScreen(
     if (showSignOutDialog) {
         AlertDialog(
             onDismissRequest = { showSignOutDialog = false },
-            title = { Text("Sign Out", color = MaterialTheme.colorScheme.onBackground) },
-            text = { Text("Are you sure you want to sign out?", color = MaterialTheme.colorScheme.onSurfaceVariant) },
+            title = { Text(stringResource(R.string.sign_out), color = MaterialTheme.colorScheme.onBackground) },
+            text = { Text(stringResource(R.string.sign_out_confirm), color = MaterialTheme.colorScheme.onSurfaceVariant) },
             confirmButton = {
                 TextButton(onClick = {
                     showSignOutDialog = false
                     viewModel.signOut()
                 }) {
-                    Text("Sign Out", color = Error)
+                    Text(stringResource(R.string.sign_out), color = Error)
                 }
             },
             dismissButton = {
                 TextButton(onClick = { showSignOutDialog = false }) {
-                    Text("Cancel", color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    Text(stringResource(R.string.cancel), color = MaterialTheme.colorScheme.onSurfaceVariant)
                 }
             },
             containerColor = MaterialTheme.colorScheme.surface
@@ -254,10 +256,10 @@ fun ProfileScreen(
     if (showDeleteDialog) {
         AlertDialog(
             onDismissRequest = { showDeleteDialog = false },
-            title = { Text("Delete Account", color = MaterialTheme.colorScheme.onBackground) },
+            title = { Text(stringResource(R.string.delete_account), color = MaterialTheme.colorScheme.onBackground) },
             text = {
                 Text(
-                    "Are you sure you want to delete your account? This will permanently delete all your data including podcasts, preferences, and linked accounts. This action cannot be undone.",
+                    stringResource(R.string.delete_account_confirm),
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             },
@@ -266,12 +268,12 @@ fun ProfileScreen(
                     showDeleteDialog = false
                     viewModel.deleteAccount()
                 }) {
-                    Text("Delete", color = Error)
+                    Text(stringResource(R.string.delete), color = Error)
                 }
             },
             dismissButton = {
                 TextButton(onClick = { showDeleteDialog = false }) {
-                    Text("Cancel", color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    Text(stringResource(R.string.cancel), color = MaterialTheme.colorScheme.onSurfaceVariant)
                 }
             },
             containerColor = MaterialTheme.colorScheme.surface

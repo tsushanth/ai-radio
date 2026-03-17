@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Audexa</string>
+    <string name="app_tagline">Votre radio IA personnelle</string>
+
+    <!-- Auth -->
+    <string name="sign_in_with_google">Se connecter avec Google</string>
+    <string name="sign_out">Se deconnecter</string>
+    <string name="delete_account">Supprimer le compte</string>
+    <string name="auth_description">Ecoutez des podcasts generes par IA sur des sujets qui vous interessent. Liez votre e-mail dans les parametres pour recevoir des resumes quotidiens personnalises.</string>
+    <string name="auth_terms">En continuant, vous acceptez nos Conditions d\'utilisation et notre Politique de confidentialite</string>
+    <string name="start">Commencer</string>
+
+    <!-- Navigation -->
+    <string name="nav_home">Accueil</string>
+    <string name="nav_profile">Profil</string>
+    <string name="back">Retour</string>
+    <string name="close">Fermer</string>
+    <string name="cancel">Annuler</string>
+    <string name="ok">OK</string>
+    <string name="delete">Supprimer</string>
+    <string name="retry">Reessayer</string>
+    <string name="enable">Activer</string>
+
+    <!-- Tabs -->
+    <string name="tab_for_you">Pour vous</string>
+    <string name="tab_discover">Decouvrir</string>
+
+    <!-- Home -->
+    <string name="good_morning">Bonjour</string>
+    <string name="good_afternoon">Bon apres-midi</string>
+    <string name="good_evening">Bonsoir</string>
+    <string name="daily_brief">Resume quotidien</string>
+    <string name="daily_brief_subtitle">Resume quotidien \u2022 %s</string>
+    <string name="keep_listening">Continuer a ecouter</string>
+    <string name="your_topics">Vos sujets</string>
+    <string name="topic_podcasts">Podcasts par sujet</string>
+    <string name="recommended_for_you">Recommande pour vous</string>
+    <string name="more_for_you">Plus pour vous</string>
+    <string name="all_topics">Tous les sujets</string>
+    <string name="matching_topics">Sujets correspondants</string>
+    <string name="tap_to_explore">Appuyez pour explorer et ecouter</string>
+    <string name="link_account_prompt">Liez votre e-mail pour generer des resumes personnalises</string>
+    <string name="link_account">Lier le compte</string>
+    <string name="find_new_shows">Trouver de nouvelles emissions</string>
+    <string name="search">Rechercher</string>
+    <string name="clear">Effacer</string>
+    <string name="no_results_for">Aucun resultat pour \"%s\"</string>
+
+    <!-- Profile -->
+    <string name="profile">Profil</string>
+    <string name="linked_accounts">Comptes lies</string>
+    <string name="preferences">Preferences</string>
+    <string name="podcast_language">Langue du podcast</string>
+    <string name="briefing_time">Heure du resume</string>
+    <string name="topics">Sujets</string>
+    <string name="voice_preference">Preference vocale</string>
+    <string name="hidden_topics">Sujets masques</string>
+    <string name="about">A propos</string>
+    <string name="version">Version</string>
+    <string name="terms_of_service">Conditions d\'utilisation</string>
+    <string name="privacy_policy">Politique de confidentialite</string>
+    <string name="premium">Premium</string>
+    <string name="go_ad_free">Sans publicite</string>
+    <string name="ad_free">Sans publicite</string>
+    <string name="active_subscription">Abonnement actif</string>
+    <string name="remove_all_ads">Supprimer toutes les publicites</string>
+    <string name="email_accounts">Comptes e-mail</string>
+    <string name="app_theme">Theme de l\'application</string>
+    <string name="voice_settings">Parametres vocaux</string>
+    <string name="choose_podcast_voices">Choisir les voix du podcast</string>
+    <string name="hidden_count">%d masque(s)</string>
+    <string name="notifications">Notifications</string>
+    <string name="daily_brief_reminders">Rappels du resume quotidien</string>
+    <string name="sign_out_confirm">Etes-vous sur de vouloir vous deconnecter ?</string>
+    <string name="delete_account_confirm">Etes-vous sur de vouloir supprimer votre compte ? Cela supprimera definitivement toutes vos donnees, y compris les podcasts, preferences et comptes lies. Cette action est irreversible.</string>
+
+    <!-- Player -->
+    <string name="playing">En lecture</string>
+    <string name="paused">En pause</string>
+    <string name="play">Lecture</string>
+    <string name="pause">Pause</string>
+    <string name="loading">Chargement\u2026</string>
+    <string name="generating">Generation\u2026</string>
+    <string name="generating_progress">Generation\u2026 %d%%</string>
+    <string name="generate_episode">Generer l\'episode</string>
+    <string name="regenerate">Regenerer</string>
+    <string name="episode_history">Historique des episodes</string>
+    <string name="skip_back">Reculer de 15 secondes</string>
+    <string name="skip_forward">Avancer de 15 secondes</string>
+    <string name="skip_back_mini">Reculer</string>
+    <string name="skip_forward_mini">Avancer</string>
+    <string name="buffering">Mise en memoire tampon\u2026</string>
+    <string name="sleep_timer">Minuterie de sommeil</string>
+    <string name="timer">Minuterie</string>
+    <string name="sleep_timer_5_min">5 min</string>
+    <string name="sleep_timer_10_min">10 min</string>
+    <string name="sleep_timer_15_min">15 min</string>
+    <string name="sleep_timer_30_min">30 min</string>
+    <string name="sleep_timer_1_hour">1 heure</string>
+    <string name="min_format">%d min</string>
+    <string name="today">Aujourd\'hui</string>
+    <string name="bookmark">Signet</string>
+    <string name="more">Plus</string>
+    <string name="hide_topic">Masquer le sujet</string>
+    <string name="hide">Masquer</string>
+
+    <!-- Errors -->
+    <string name="error_generic">Une erreur s\'est produite</string>
+    <string name="error_network">Erreur reseau. Verifiez votre connexion.</string>
+    <string name="error_auth">Echec de l\'authentification</string>
+    <string name="error_no_internet">Pas de connexion Internet. Verifiez votre reseau et reessayez.</string>
+    <string name="generation_failed">Echec de la generation</string>
+
+    <!-- Misc -->
+    <string name="min_daily">%d min par jour</string>
+    <string name="connected">Connecte</string>
+    <string name="not_connected">Non connecte</string>
+    <string name="not_connected_lower">Non connecte</string>
+    <string name="coming_soon">Bientot disponible</string>
+    <string name="microsoft_coming_soon">L\'integration Microsoft arrive bientot. Restez a l\'ecoute !</string>
+
+    <!-- Onboarding -->
+    <string name="welcome_to_audexa">Bienvenue sur Audexa</string>
+    <string name="welcome_description">Votre radio IA personnalisee qui transforme les dernieres nouvelles, la technologie et les sujets en resumes captivants style podcast.</string>
+    <string name="get_started">Commencer</string>
+    <string name="connect_your_account">Connectez votre compte</string>
+    <string name="connect_account_description">Liez votre compte Google pour recevoir des resumes quotidiens personnalises de vos e-mails et calendrier.</string>
+    <string name="gmail">Gmail</string>
+    <string name="calendar">Calendrier</string>
+    <string name="include_email_highlights">Inclure les points cles des e-mails dans votre resume</string>
+    <string name="include_calendar_events">Inclure les evenements a venir dans votre resume</string>
+    <string name="continue_button">Continuer</string>
+    <string name="skip_for_now">Passer pour le moment</string>
+    <string name="connect_later_hint">Vous pouvez toujours vous connecter plus tard dans les Parametres</string>
+    <string name="connect">Connecter</string>
+    <string name="choose_your_interests">Choisissez vos interets</string>
+    <string name="choose_interests_description">Selectionnez les sujets que vous aimeriez ecouter. Nous genererons des episodes quotidiens rien que pour vous.</string>
+    <string name="topics_selected">%d sujet%s selectionne(s)</string>
+    <string name="topics_selected_plural_suffix">s</string>
+    <string name="complete_setup">Terminer la configuration</string>
+
+    <!-- Linked Accounts -->
+    <string name="enable_daily_brief">Activer le resume quotidien</string>
+    <string name="enable_daily_brief_description">Connectez votre Gmail pour recevoir des resumes quotidiens personnalises bases sur vos e-mails. Nous resumerons les mises a jour importantes pour que vous commenciez votre journee informe.</string>
+    <string name="google_calendar">Google Calendar</string>
+    <string name="outlook">Outlook</string>
+    <string name="daily_brief_sources">Sources du resume quotidien</string>
+    <string name="email_summaries">Resumes d\'e-mails</string>
+    <string name="include_email_in_brief">Inclure les resumes d\'e-mails dans le resume quotidien</string>
+    <string name="calendar_events">Evenements du calendrier</string>
+    <string name="include_calendar_in_brief">Inclure les evenements a venir dans le resume quotidien</string>
+    <string name="unlink">Delier</string>
+    <string name="soon">Bientot</string>
+    <string name="your_privacy">Votre confidentialite</string>
+    <string name="privacy_note">Nous ne lisons que les objets et expediteurs des e-mails pour creer des resumes. Nous ne stockons jamais le contenu de vos e-mails et ne partageons pas vos donnees avec des tiers.</string>
+    <string name="microsoft_outlook_coming_soon">La liaison Microsoft Outlook sera disponible dans une future mise a jour.</string>
+    <string name="gmail_linking_cancelled">La liaison Gmail a ete annulee</string>
+    <string name="calendar_linking_cancelled">La liaison du calendrier a ete annulee</string>
+    <string name="reconnect">Reconnecter</string>
+
+    <!-- Hidden Topics -->
+    <string name="no_hidden_topics">Aucun sujet masque</string>
+    <string name="no_hidden_topics_description">Les sujets que vous masquez apparaitront ici. Vous pouvez les afficher a tout moment.</string>
+    <string name="unhide_hint">Appuyez sur l\'icone de l\'oeil pour afficher un sujet a nouveau.</string>
+    <string name="unhide">Afficher</string>
+
+    <!-- Language Settings -->
+    <string name="language">Langue</string>
+    <string name="language_description">Choisissez votre langue preferee pour les episodes de podcast.</string>
+    <string name="language_note">Les nouveaux episodes seront generes dans la langue selectionnee. Les episodes precedemment generes resteront dans leur langue d\'origine.</string>
+    <string name="selected">Selectionne</string>
+
+    <!-- Voice Settings -->
+    <string name="loading_voices">Chargement des voix\u2026</string>
+    <string name="no_voice_pairs">Aucune paire de voix disponible</string>
+    <string name="no_voices">Aucune voix disponible</string>
+    <string name="voice_pairs_description">Selectionnez une paire de voix preconfiguree pour les presentateurs de votre podcast.</string>
+    <string name="host_1">Presentateur 1</string>
+    <string name="host_2">Presentateur 2</string>
+    <string name="host_1_voice">Voix du presentateur 1</string>
+    <string name="host_2_voice">Voix du presentateur 2</string>
+
+    <!-- Theme Settings -->
+    <string name="theme_system">Systeme</string>
+    <string name="theme_system_description">Suivre les parametres de l\'appareil</string>
+    <string name="theme_dark">Sombre</string>
+    <string name="theme_dark_description">Toujours en mode sombre</string>
+    <string name="theme_light">Clair</string>
+    <string name="theme_light_description">Toujours en mode clair</string>
+
+    <!-- Notification Settings -->
+    <string name="permission">Permission</string>
+    <string name="enabled">Active</string>
+    <string name="not_enabled">Non active</string>
+    <string name="daily_brief_schedule">Horaire du resume quotidien</string>
+    <string name="daily_brief_notifications">Notifications du resume quotidien</string>
+    <string name="daily_brief_notify_hint">Soyez averti lorsque votre resume est pret</string>
+    <string name="daily_brief_content">Contenu du resume quotidien</string>
+    <string name="include_topic_updates">Inclure les mises a jour de sujets</string>
+    <string name="include_topic_updates_hint">Ajouter les titres de vos sujets au resume quotidien</string>
+    <string name="notification_info">Votre resume quotidien sera genere et pret a l\'heure programmee. Vous recevrez une notification lorsqu\'il sera pret a etre ecoute.</string>
+    <string name="select_time">Selectionner l\'heure</string>
+
+    <!-- Subscription / Paywall -->
+    <string name="enjoy_uninterrupted">Profitez d\'une ecoute sans interruption</string>
+    <string name="no_audio_ad_interruptions">Aucune interruption publicitaire audio</string>
+    <string name="seamless_episode_playback">Lecture fluide des episodes</string>
+    <string name="support_indie_development">Soutenez le developpement independant</string>
+    <string name="ad_free_subscriber">Vous etes abonne sans publicite !</string>
+    <string name="yearly">Annuel</string>
+    <string name="save_percent">Economisez 58%%</string>
+    <string name="monthly">Mensuel</string>
+    <string name="subscribe">S\'abonner</string>
+    <string name="restore_purchases">Restaurer les achats</string>
+    <string name="payment_fine_print">Le paiement sera debite de votre compte Google Play. L\'abonnement se renouvelle automatiquement sauf annulation au moins 24 heures avant la fin de la periode en cours.</string>
+    <string name="per_year">/an</string>
+    <string name="per_month">/mois</string>
+    <string name="per_week">/semaine</string>
+
+    <!-- Ads -->
+    <string name="sponsored">SPONSORISE</string>
+    <string name="skip">Passer</string>
+    <string name="skip_ad">Passer la publicite</string>
+    <string name="ad_content_description">Publicite</string>
+
+    <!-- Splash Screen -->
+    <string name="splash_tagline">Votre resume audio propulse par l\'IA</string>
+
+    <!-- Notifications (non-composable) -->
+    <string name="notification_good_morning">Bonjour !</string>
+    <string name="notification_daily_brief_text">C\'est l\'heure de votre resume quotidien. Appuyez pour vous mettre a jour sur les e-mails, le calendrier et les nouvelles.</string>
+    <string name="daily_brief_channel_description">Notifications de rappel du resume quotidien</string>
+
+    <!-- Daily Brief Playback -->
+    <string name="daily_brief_title_format">Resume quotidien - %s</string>
+    <string name="daily_brief_description">Votre resume matinal personnalise</string>
+</resources>

@@ -15,7 +15,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.kreativekoala.audexa.R
 import com.kreativekoala.audexa.data.model.Topic
 import com.kreativekoala.audexa.ui.theme.*
 
@@ -89,7 +91,7 @@ fun TopicCard(
                             onDismissRequest = { expanded = false }
                         ) {
                             DropdownMenuItem(
-                                text = { Text("Hide") },
+                                text = { Text(stringResource(R.string.hide)) },
                                 onClick = {
                                     expanded = false
                                     onHide()
@@ -119,7 +121,7 @@ fun TopicCard(
                     ) {
                         NowPlayingIndicator()
                         Text(
-                            text = "Playing",
+                            text = stringResource(R.string.playing),
                             style = MaterialTheme.typography.labelSmall,
                             color = PrimaryTextDark, // Always white on orange background
                             fontWeight = FontWeight.SemiBold
@@ -142,7 +144,7 @@ fun TopicCard(
 
         // Duration
         Text(
-            text = "${topic.targetDurationMinutes} min daily",
+            text = stringResource(R.string.min_daily, topic.targetDurationMinutes),
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )

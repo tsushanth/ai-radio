@@ -12,10 +12,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.kreativekoala.audexa.R
 import com.kreativekoala.audexa.ui.theme.*
 
 @Composable
@@ -67,14 +69,14 @@ fun AuthScreen(
 
             // App name
             Text(
-                text = "Audexa",
+                text = stringResource(R.string.app_name),
                 style = MaterialTheme.typography.displayMedium,
                 color = PrimaryText,
                 fontWeight = FontWeight.Bold
             )
 
             Text(
-                text = "Your personal AI radio",
+                text = stringResource(R.string.app_tagline),
                 style = MaterialTheme.typography.bodyLarge,
                 color = SecondaryText
             )
@@ -83,7 +85,7 @@ fun AuthScreen(
 
             // Description
             Text(
-                text = "Listen to AI-generated podcasts on topics you care about. Link your email in settings to get personalized daily briefings.",
+                text = stringResource(R.string.auth_description),
                 style = MaterialTheme.typography.bodyMedium,
                 color = SecondaryText.copy(alpha = 0.8f),
                 textAlign = TextAlign.Center,
@@ -113,7 +115,7 @@ fun AuthScreen(
                     )
                 } else {
                     Text(
-                        text = "Start",
+                        text = stringResource(R.string.start),
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.SemiBold
                     )
@@ -124,7 +126,7 @@ fun AuthScreen(
 
             // Terms
             Text(
-                text = "By continuing, you agree to our Terms of Service and Privacy Policy",
+                text = stringResource(R.string.auth_terms),
                 style = MaterialTheme.typography.bodySmall,
                 color = SecondaryText,
                 textAlign = TextAlign.Center

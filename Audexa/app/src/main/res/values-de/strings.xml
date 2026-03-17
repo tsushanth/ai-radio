@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Audexa</string>
+    <string name="app_tagline">Dein persoenliches KI-Radio</string>
+
+    <!-- Auth -->
+    <string name="sign_in_with_google">Mit Google anmelden</string>
+    <string name="sign_out">Abmelden</string>
+    <string name="delete_account">Konto loeschen</string>
+    <string name="auth_description">Hoere KI-generierte Podcasts zu Themen, die dich interessieren. Verknuepfe deine E-Mail in den Einstellungen fuer personalisierte taegliche Zusammenfassungen.</string>
+    <string name="auth_terms">Durch Fortfahren akzeptierst du unsere Nutzungsbedingungen und Datenschutzrichtlinie</string>
+    <string name="start">Starten</string>
+
+    <!-- Navigation -->
+    <string name="nav_home">Startseite</string>
+    <string name="nav_profile">Profil</string>
+    <string name="back">Zurueck</string>
+    <string name="close">Schliessen</string>
+    <string name="cancel">Abbrechen</string>
+    <string name="ok">OK</string>
+    <string name="delete">Loeschen</string>
+    <string name="retry">Erneut versuchen</string>
+    <string name="enable">Aktivieren</string>
+
+    <!-- Tabs -->
+    <string name="tab_for_you">Fuer dich</string>
+    <string name="tab_discover">Entdecken</string>
+
+    <!-- Home -->
+    <string name="good_morning">Guten Morgen</string>
+    <string name="good_afternoon">Guten Tag</string>
+    <string name="good_evening">Guten Abend</string>
+    <string name="daily_brief">Tagesbriefing</string>
+    <string name="daily_brief_subtitle">Tagesbriefing \u2022 %s</string>
+    <string name="keep_listening">Weiterhoeren</string>
+    <string name="your_topics">Deine Themen</string>
+    <string name="topic_podcasts">Themen-Podcasts</string>
+    <string name="recommended_for_you">Empfohlen fuer dich</string>
+    <string name="more_for_you">Mehr fuer dich</string>
+    <string name="all_topics">Alle Themen</string>
+    <string name="matching_topics">Passende Themen</string>
+    <string name="tap_to_explore">Tippe zum Entdecken und Abspielen</string>
+    <string name="link_account_prompt">Verknuepfe deine E-Mail fuer personalisierte Zusammenfassungen</string>
+    <string name="link_account">Konto verknuepfen</string>
+    <string name="find_new_shows">Neue Sendungen finden</string>
+    <string name="search">Suchen</string>
+    <string name="clear">Loeschen</string>
+    <string name="no_results_for">Keine Ergebnisse fuer \"%s\"</string>
+
+    <!-- Profile -->
+    <string name="profile">Profil</string>
+    <string name="linked_accounts">Verknuepfte Konten</string>
+    <string name="preferences">Einstellungen</string>
+    <string name="podcast_language">Podcast-Sprache</string>
+    <string name="briefing_time">Briefing-Zeit</string>
+    <string name="topics">Themen</string>
+    <string name="voice_preference">Stimmeinstellung</string>
+    <string name="hidden_topics">Ausgeblendete Themen</string>
+    <string name="about">Info</string>
+    <string name="version">Version</string>
+    <string name="terms_of_service">Nutzungsbedingungen</string>
+    <string name="privacy_policy">Datenschutzrichtlinie</string>
+    <string name="premium">Premium</string>
+    <string name="go_ad_free">Werbefrei werden</string>
+    <string name="ad_free">Werbefrei</string>
+    <string name="active_subscription">Aktives Abonnement</string>
+    <string name="remove_all_ads">Alle Werbung entfernen</string>
+    <string name="email_accounts">E-Mail-Konten</string>
+    <string name="app_theme">App-Design</string>
+    <string name="voice_settings">Stimmeinstellungen</string>
+    <string name="choose_podcast_voices">Podcast-Stimmen waehlen</string>
+    <string name="hidden_count">%d ausgeblendet</string>
+    <string name="notifications">Benachrichtigungen</string>
+    <string name="daily_brief_reminders">Tagesbriefing-Erinnerungen</string>
+    <string name="sign_out_confirm">Bist du sicher, dass du dich abmelden moechtest?</string>
+    <string name="delete_account_confirm">Bist du sicher, dass du dein Konto loeschen moechtest? Dies loescht dauerhaft alle deine Daten, einschliesslich Podcasts, Einstellungen und verknuepfter Konten. Diese Aktion kann nicht rueckgaengig gemacht werden.</string>
+
+    <!-- Player -->
+    <string name="playing">Wiedergabe</string>
+    <string name="paused">Pausiert</string>
+    <string name="play">Abspielen</string>
+    <string name="pause">Pause</string>
+    <string name="loading">Laden\u2026</string>
+    <string name="generating">Generieren\u2026</string>
+    <string name="generating_progress">Generieren\u2026 %d%%</string>
+    <string name="generate_episode">Episode generieren</string>
+    <string name="regenerate">Neu generieren</string>
+    <string name="episode_history">Episodenverlauf</string>
+    <string name="skip_back">15 Sekunden zurueck</string>
+    <string name="skip_forward">15 Sekunden vor</string>
+    <string name="skip_back_mini">Zurueck</string>
+    <string name="skip_forward_mini">Vor</string>
+    <string name="buffering">Puffern\u2026</string>
+    <string name="sleep_timer">Schlaf-Timer</string>
+    <string name="timer">Timer</string>
+    <string name="sleep_timer_5_min">5 Min</string>
+    <string name="sleep_timer_10_min">10 Min</string>
+    <string name="sleep_timer_15_min">15 Min</string>
+    <string name="sleep_timer_30_min">30 Min</string>
+    <string name="sleep_timer_1_hour">1 Stunde</string>
+    <string name="min_format">%d Min</string>
+    <string name="today">Heute</string>
+    <string name="bookmark">Lesezeichen</string>
+    <string name="more">Mehr</string>
+    <string name="hide_topic">Thema ausblenden</string>
+    <string name="hide">Ausblenden</string>
+
+    <!-- Errors -->
+    <string name="error_generic">Etwas ist schiefgelaufen</string>
+    <string name="error_network">Netzwerkfehler. Bitte ueberpreufe deine Verbindung.</string>
+    <string name="error_auth">Authentifizierung fehlgeschlagen</string>
+    <string name="error_no_internet">Keine Internetverbindung. Bitte ueberpreufe dein Netzwerk und versuche es erneut.</string>
+    <string name="generation_failed">Generierung fehlgeschlagen</string>
+
+    <!-- Misc -->
+    <string name="min_daily">%d Min taeglich</string>
+    <string name="connected">Verbunden</string>
+    <string name="not_connected">Nicht verbunden</string>
+    <string name="not_connected_lower">Nicht verbunden</string>
+    <string name="coming_soon">Demnaechst</string>
+    <string name="microsoft_coming_soon">Die Microsoft-Integration kommt bald. Bleib dran!</string>
+
+    <!-- Onboarding -->
+    <string name="welcome_to_audexa">Willkommen bei Audexa</string>
+    <string name="welcome_description">Dein personalisiertes KI-Radio, das aktuelle Nachrichten, Technologie und Themen in fesselnde Podcast-Briefings verwandelt.</string>
+    <string name="get_started">Loslegen</string>
+    <string name="connect_your_account">Verbinde dein Konto</string>
+    <string name="connect_account_description">Verknuepfe dein Google-Konto fuer personalisierte taegliche Zusammenfassungen aus deinen E-Mails und deinem Kalender.</string>
+    <string name="gmail">Gmail</string>
+    <string name="calendar">Kalender</string>
+    <string name="include_email_highlights">E-Mail-Highlights in dein Briefing einbeziehen</string>
+    <string name="include_calendar_events">Bevorstehende Termine in dein Briefing einbeziehen</string>
+    <string name="continue_button">Weiter</string>
+    <string name="skip_for_now">Vorerst ueberspringen</string>
+    <string name="connect_later_hint">Du kannst dich spaeter jederzeit in den Einstellungen verbinden</string>
+    <string name="connect">Verbinden</string>
+    <string name="choose_your_interests">Waehle deine Interessen</string>
+    <string name="choose_interests_description">Waehle Themen, ueber die du gerne hoeren moechtest. Wir generieren taegliche Episoden nur fuer dich.</string>
+    <string name="topics_selected">%d Thema%s ausgewaehlt</string>
+    <string name="topics_selected_plural_suffix">en</string>
+    <string name="complete_setup">Einrichtung abschliessen</string>
+
+    <!-- Linked Accounts -->
+    <string name="enable_daily_brief">Tagesbriefing aktivieren</string>
+    <string name="enable_daily_brief_description">Verbinde dein Gmail fuer personalisierte taegliche Zusammenfassungen basierend auf deinen E-Mails. Wir fassen wichtige Updates zusammen, damit du informiert in den Tag starten kannst.</string>
+    <string name="google_calendar">Google Kalender</string>
+    <string name="outlook">Outlook</string>
+    <string name="daily_brief_sources">Tagesbriefing-Quellen</string>
+    <string name="email_summaries">E-Mail-Zusammenfassungen</string>
+    <string name="include_email_in_brief">E-Mail-Zusammenfassungen ins Tagesbriefing einbeziehen</string>
+    <string name="calendar_events">Kalender-Termine</string>
+    <string name="include_calendar_in_brief">Bevorstehende Termine ins Tagesbriefing einbeziehen</string>
+    <string name="unlink">Trennen</string>
+    <string name="soon">Bald</string>
+    <string name="your_privacy">Deine Privatsphaere</string>
+    <string name="privacy_note">Wir lesen nur E-Mail-Betreffzeilen und Absender, um Zusammenfassungen zu erstellen. Wir speichern niemals deine E-Mail-Inhalte und teilen deine Daten nicht mit Dritten.</string>
+    <string name="microsoft_outlook_coming_soon">Die Microsoft Outlook-Verknuepfung wird in einem zukuenftigen Update verfuegbar sein.</string>
+    <string name="gmail_linking_cancelled">Gmail-Verknuepfung wurde abgebrochen</string>
+    <string name="calendar_linking_cancelled">Kalender-Verknuepfung wurde abgebrochen</string>
+    <string name="reconnect">Neu verbinden</string>
+
+    <!-- Hidden Topics -->
+    <string name="no_hidden_topics">Keine ausgeblendeten Themen</string>
+    <string name="no_hidden_topics_description">Themen, die du ausblendest, erscheinen hier. Du kannst sie jederzeit wieder einblenden.</string>
+    <string name="unhide_hint">Tippe auf das Augensymbol, um ein Thema wieder anzuzeigen.</string>
+    <string name="unhide">Einblenden</string>
+
+    <!-- Language Settings -->
+    <string name="language">Sprache</string>
+    <string name="language_description">Waehle deine bevorzugte Sprache fuer Podcast-Episoden.</string>
+    <string name="language_note">Neue Episoden werden in der ausgewaehlten Sprache generiert. Zuvor generierte Episoden bleiben in ihrer Originalsprache.</string>
+    <string name="selected">Ausgewaehlt</string>
+
+    <!-- Voice Settings -->
+    <string name="loading_voices">Stimmen laden\u2026</string>
+    <string name="no_voice_pairs">Keine Stimmpaare verfuegbar</string>
+    <string name="no_voices">Keine Stimmen verfuegbar</string>
+    <string name="voice_pairs_description">Waehle ein vorkonfiguriertes Stimmpaar fuer deine Podcast-Moderatoren.</string>
+    <string name="host_1">Moderator 1</string>
+    <string name="host_2">Moderator 2</string>
+    <string name="host_1_voice">Stimme Moderator 1</string>
+    <string name="host_2_voice">Stimme Moderator 2</string>
+
+    <!-- Theme Settings -->
+    <string name="theme_system">System</string>
+    <string name="theme_system_description">Geraeteeinstellungen folgen</string>
+    <string name="theme_dark">Dunkel</string>
+    <string name="theme_dark_description">Immer dunkles Design</string>
+    <string name="theme_light">Hell</string>
+    <string name="theme_light_description">Immer helles Design</string>
+
+    <!-- Notification Settings -->
+    <string name="permission">Berechtigung</string>
+    <string name="enabled">Aktiviert</string>
+    <string name="not_enabled">Nicht aktiviert</string>
+    <string name="daily_brief_schedule">Tagesbriefing-Zeitplan</string>
+    <string name="daily_brief_notifications">Tagesbriefing-Benachrichtigungen</string>
+    <string name="daily_brief_notify_hint">Benachrichtigt werden, wenn dein Briefing bereit ist</string>
+    <string name="daily_brief_content">Tagesbriefing-Inhalt</string>
+    <string name="include_topic_updates">Themen-Updates einbeziehen</string>
+    <string name="include_topic_updates_hint">Schlagzeilen deiner Themen zum Tagesbriefing hinzufuegen</string>
+    <string name="notification_info">Dein taegliches Briefing wird zur geplanten Zeit generiert und bereitgestellt. Du erhaeltst eine Benachrichtigung, wenn es abspielbereit ist.</string>
+    <string name="select_time">Zeit waehlen</string>
+
+    <!-- Subscription / Paywall -->
+    <string name="enjoy_uninterrupted">Geniesse ununterbrochenes Hoeren</string>
+    <string name="no_audio_ad_interruptions">Keine Audio-Werbeunterbrechungen</string>
+    <string name="seamless_episode_playback">Nahtlose Episodenwiedergabe</string>
+    <string name="support_indie_development">Unterstuetze unabhaengige Entwicklung</string>
+    <string name="ad_free_subscriber">Du bist werbefreier Abonnent!</string>
+    <string name="yearly">Jaehrlich</string>
+    <string name="save_percent">Spare 58%%</string>
+    <string name="monthly">Monatlich</string>
+    <string name="subscribe">Abonnieren</string>
+    <string name="restore_purchases">Kaeufe wiederherstellen</string>
+    <string name="payment_fine_print">Die Zahlung wird deinem Google Play-Konto belastet. Das Abonnement verlaengert sich automatisch, sofern es nicht mindestens 24 Stunden vor Ende des aktuellen Zeitraums gekuendigt wird.</string>
+    <string name="per_year">/Jahr</string>
+    <string name="per_month">/Monat</string>
+    <string name="per_week">/Woche</string>
+
+    <!-- Ads -->
+    <string name="sponsored">GESPONSERT</string>
+    <string name="skip">Ueberspringen</string>
+    <string name="skip_ad">Werbung ueberspringen</string>
+    <string name="ad_content_description">Werbung</string>
+
+    <!-- Splash Screen -->
+    <string name="splash_tagline">Dein KI-gesteuertes Audio-Briefing</string>
+
+    <!-- Notifications (non-composable) -->
+    <string name="notification_good_morning">Guten Morgen!</string>
+    <string name="notification_daily_brief_text">Zeit fuer dein Tagesbriefing. Tippe, um dich ueber E-Mails, Kalender und Nachrichten zu informieren.</string>
+    <string name="daily_brief_channel_description">Erinnerungsbenachrichtigungen fuer das Tagesbriefing</string>
+
+    <!-- Daily Brief Playback -->
+    <string name="daily_brief_title_format">Tagesbriefing - %s</string>
+    <string name="daily_brief_description">Dein personalisiertes Morgenbriefing</string>
+</resources>

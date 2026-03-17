@@ -16,8 +16,10 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.kreativekoala.audexa.R
 import com.kreativekoala.audexa.ui.theme.AccentOrange
 import com.kreativekoala.audexa.ui.theme.AccentOrangeLight
 
@@ -113,7 +115,7 @@ fun SplashScreen(
                 ) {
                     Icon(
                         imageVector = Icons.Default.Radio,
-                        contentDescription = "Audexa",
+                        contentDescription = stringResource(R.string.app_name),
                         modifier = Modifier
                             .size(70.dp)
                             .scale(iconScale),
@@ -126,7 +128,7 @@ fun SplashScreen(
 
             // App name
             Text(
-                text = "Audexa",
+                text = stringResource(R.string.app_name),
                 fontSize = 36.sp,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onBackground,
@@ -137,7 +139,7 @@ fun SplashScreen(
 
             // Tagline
             Text(
-                text = "Your AI-powered audio briefing",
+                text = stringResource(R.string.splash_tagline),
                 fontSize = 15.sp,
                 fontWeight = FontWeight.Medium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,

@@ -17,10 +17,12 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.kreativekoala.audexa.R
 import com.kreativekoala.audexa.data.model.*
 import com.kreativekoala.audexa.ui.theme.*
 
@@ -37,7 +39,7 @@ fun VoiceSettingsScreen(
             TopAppBar(
                 title = {
                     Text(
-                        "Voice Settings",
+                        stringResource(R.string.voice_settings),
                         color = PrimaryText,
                         fontWeight = FontWeight.Bold
                     )
@@ -46,7 +48,7 @@ fun VoiceSettingsScreen(
                     IconButton(onClick = onNavigateBack) {
                         Icon(
                             Icons.Default.ArrowBack,
-                            contentDescription = "Back",
+                            contentDescription = stringResource(R.string.back),
                             tint = PrimaryText
                         )
                     }
@@ -85,7 +87,7 @@ fun VoiceSettingsScreen(
                         CircularProgressIndicator(color = AccentOrange)
                         Spacer(modifier = Modifier.height(16.dp))
                         Text(
-                            text = "Loading voices...",
+                            text = stringResource(R.string.loading_voices),
                             style = MaterialTheme.typography.bodyMedium,
                             color = SecondaryText
                         )
@@ -114,7 +116,7 @@ fun VoiceSettingsScreen(
                             onClick = { viewModel.loadVoices() },
                             colors = ButtonDefaults.buttonColors(containerColor = AccentOrange)
                         ) {
-                            Text("Retry")
+                            Text(stringResource(R.string.retry))
                         }
                     }
                 }
@@ -217,7 +219,7 @@ private fun VoicePairsContent(
     onPairSelected: (VoicePair) -> Unit
 ) {
     if (pairs.isEmpty()) {
-        EmptyState(message = "No voice pairs available")
+        EmptyState(message = stringResource(R.string.no_voice_pairs))
     } else {
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
@@ -226,7 +228,7 @@ private fun VoicePairsContent(
         ) {
             item {
                 Text(
-                    text = "Select a pre-configured voice pair for your podcast hosts.",
+                    text = stringResource(R.string.voice_pairs_description),
                     style = MaterialTheme.typography.bodyMedium,
                     color = SecondaryText,
                     modifier = Modifier.padding(bottom = 8.dp)
@@ -278,7 +280,7 @@ private fun VoicePairCard(
                 if (isSelected) {
                     Icon(
                         Icons.Default.Check,
-                        contentDescription = "Selected",
+                        contentDescription = stringResource(R.string.selected),
                         tint = AccentOrange
                     )
                 }
@@ -302,12 +304,12 @@ private fun VoicePairCard(
             ) {
                 VoiceBadge(
                     voice = pair.host1,
-                    label = "Host 1",
+                    label = stringResource(R.string.host_1),
                     modifier = Modifier.weight(1f)
                 )
                 VoiceBadge(
                     voice = pair.host2,
-                    label = "Host 2",
+                    label = stringResource(R.string.host_2),
                     modifier = Modifier.weight(1f)
                 )
             }
@@ -354,7 +356,7 @@ private fun IndividualVoicesContent(
     onHost2Selected: (Voice) -> Unit
 ) {
     if (voices.isEmpty()) {
-        EmptyState(message = "No voices available")
+        EmptyState(message = stringResource(R.string.no_voices))
     } else {
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
@@ -364,7 +366,7 @@ private fun IndividualVoicesContent(
             // Host 1 Section
             item {
                 Text(
-                    text = "Host 1 Voice",
+                    text = stringResource(R.string.host_1_voice),
                     style = MaterialTheme.typography.titleMedium,
                     color = PrimaryText,
                     fontWeight = FontWeight.Bold
@@ -386,7 +388,7 @@ private fun IndividualVoicesContent(
             // Host 2 Section
             item {
                 Text(
-                    text = "Host 2 Voice",
+                    text = stringResource(R.string.host_2_voice),
                     style = MaterialTheme.typography.titleMedium,
                     color = PrimaryText,
                     fontWeight = FontWeight.Bold
@@ -468,7 +470,7 @@ private fun VoiceCard(
                 if (isSelected) {
                     Icon(
                         Icons.Default.Check,
-                        contentDescription = "Selected",
+                        contentDescription = stringResource(R.string.selected),
                         modifier = Modifier.size(16.dp),
                         tint = PrimaryText
                     )

@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Audexa</string>
+    <string name="app_tagline">Ваше персональное AI-радио</string>
+
+    <!-- Auth -->
+    <string name="sign_in_with_google">Войти через Google</string>
+    <string name="sign_out">Выйти</string>
+    <string name="delete_account">Удалить аккаунт</string>
+    <string name="auth_description">Слушайте подкасты, созданные ИИ, на интересующие вас темы. Привяжите email в настройках для получения персонализированных ежедневных сводок.</string>
+    <string name="auth_terms">Продолжая, вы соглашаетесь с Условиями использования и Политикой конфиденциальности</string>
+    <string name="start">Начать</string>
+
+    <!-- Navigation -->
+    <string name="nav_home">Главная</string>
+    <string name="nav_profile">Профиль</string>
+    <string name="back">Назад</string>
+    <string name="close">Закрыть</string>
+    <string name="cancel">Отмена</string>
+    <string name="ok">ОК</string>
+    <string name="delete">Удалить</string>
+    <string name="retry">Повторить</string>
+    <string name="enable">Включить</string>
+
+    <!-- Tabs -->
+    <string name="tab_for_you">Для вас</string>
+    <string name="tab_discover">Обзор</string>
+
+    <!-- Home -->
+    <string name="good_morning">Доброе утро</string>
+    <string name="good_afternoon">Добрый день</string>
+    <string name="good_evening">Добрый вечер</string>
+    <string name="daily_brief">Ежедневная сводка</string>
+    <string name="daily_brief_subtitle">Ежедневная сводка \u2022 %s</string>
+    <string name="keep_listening">Продолжить прослушивание</string>
+    <string name="your_topics">Ваши темы</string>
+    <string name="topic_podcasts">Подкасты по темам</string>
+    <string name="recommended_for_you">Рекомендуем для вас</string>
+    <string name="more_for_you">Ещё для вас</string>
+    <string name="all_topics">Все темы</string>
+    <string name="matching_topics">Подходящие темы</string>
+    <string name="tap_to_explore">Нажмите для просмотра и воспроизведения</string>
+    <string name="link_account_prompt">Привяжите email для создания персонализированных сводок</string>
+    <string name="link_account">Привязать аккаунт</string>
+    <string name="find_new_shows">Найти новые шоу</string>
+    <string name="search">Поиск</string>
+    <string name="clear">Очистить</string>
+    <string name="no_results_for">Нет результатов для \"%s\"</string>
+
+    <!-- Profile -->
+    <string name="profile">Профиль</string>
+    <string name="linked_accounts">Привязанные аккаунты</string>
+    <string name="preferences">Настройки</string>
+    <string name="podcast_language">Язык подкаста</string>
+    <string name="briefing_time">Время сводки</string>
+    <string name="topics">Темы</string>
+    <string name="voice_preference">Предпочтение голоса</string>
+    <string name="hidden_topics">Скрытые темы</string>
+    <string name="about">О приложении</string>
+    <string name="version">Версия</string>
+    <string name="terms_of_service">Условия использования</string>
+    <string name="privacy_policy">Политика конфиденциальности</string>
+    <string name="premium">Премиум</string>
+    <string name="go_ad_free">Отключить рекламу</string>
+    <string name="ad_free">Без рекламы</string>
+    <string name="active_subscription">Активная подписка</string>
+    <string name="remove_all_ads">Убрать всю рекламу</string>
+    <string name="email_accounts">Почтовые аккаунты</string>
+    <string name="app_theme">Тема приложения</string>
+    <string name="voice_settings">Настройки голоса</string>
+    <string name="choose_podcast_voices">Выберите голоса подкаста</string>
+    <string name="hidden_count">%d скрыто</string>
+    <string name="notifications">Уведомления</string>
+    <string name="daily_brief_reminders">Напоминания о ежедневной сводке</string>
+    <string name="sign_out_confirm">Вы уверены, что хотите выйти?</string>
+    <string name="delete_account_confirm">Вы уверены, что хотите удалить свой аккаунт? Это навсегда удалит все ваши данные, включая подкасты, настройки и привязанные аккаунты. Это действие нельзя отменить.</string>
+
+    <!-- Player -->
+    <string name="playing">Воспроизведение</string>
+    <string name="paused">Пауза</string>
+    <string name="play">Воспроизвести</string>
+    <string name="pause">Пауза</string>
+    <string name="loading">Загрузка\u2026</string>
+    <string name="generating">Генерация\u2026</string>
+    <string name="generating_progress">Генерация\u2026 %d%%</string>
+    <string name="generate_episode">Создать выпуск</string>
+    <string name="regenerate">Пересоздать</string>
+    <string name="episode_history">История выпусков</string>
+    <string name="skip_back">Назад на 15 секунд</string>
+    <string name="skip_forward">Вперёд на 15 секунд</string>
+    <string name="skip_back_mini">Назад</string>
+    <string name="skip_forward_mini">Вперёд</string>
+    <string name="buffering">Буферизация\u2026</string>
+    <string name="sleep_timer">Таймер сна</string>
+    <string name="timer">Таймер</string>
+    <string name="sleep_timer_5_min">5 мин</string>
+    <string name="sleep_timer_10_min">10 мин</string>
+    <string name="sleep_timer_15_min">15 мин</string>
+    <string name="sleep_timer_30_min">30 мин</string>
+    <string name="sleep_timer_1_hour">1 час</string>
+    <string name="min_format">%d мин</string>
+    <string name="today">Сегодня</string>
+    <string name="bookmark">Закладка</string>
+    <string name="more">Ещё</string>
+    <string name="hide_topic">Скрыть тему</string>
+    <string name="hide">Скрыть</string>
+
+    <!-- Errors -->
+    <string name="error_generic">Что-то пошло не так</string>
+    <string name="error_network">Ошибка сети. Проверьте подключение.</string>
+    <string name="error_auth">Ошибка аутентификации</string>
+    <string name="error_no_internet">Нет подключения к интернету. Проверьте сеть и попробуйте снова.</string>
+    <string name="generation_failed">Ошибка генерации</string>
+
+    <!-- Misc -->
+    <string name="min_daily">%d мин в день</string>
+    <string name="connected">Подключено</string>
+    <string name="not_connected">Не подключено</string>
+    <string name="not_connected_lower">Не подключено</string>
+    <string name="coming_soon">Скоро</string>
+    <string name="microsoft_coming_soon">Интеграция с аккаунтом Microsoft скоро появится. Следите за обновлениями!</string>
+
+    <!-- Onboarding -->
+    <string name="welcome_to_audexa">Добро пожаловать в Audexa</string>
+    <string name="welcome_description">Ваше персонализированное AI-радио, которое превращает последние новости, технологии и темы в увлекательные сводки в стиле подкастов.</string>
+    <string name="get_started">Начать</string>
+    <string name="connect_your_account">Подключите аккаунт</string>
+    <string name="connect_account_description">Привяжите аккаунт Google для получения персонализированных ежедневных сводок из почты и календаря.</string>
+    <string name="gmail">Gmail</string>
+    <string name="calendar">Календарь</string>
+    <string name="include_email_highlights">Включить основные моменты из почты в сводку</string>
+    <string name="include_calendar_events">Включить предстоящие события в сводку</string>
+    <string name="continue_button">Продолжить</string>
+    <string name="skip_for_now">Пропустить</string>
+    <string name="connect_later_hint">Вы всегда можете подключиться позже в Настройках</string>
+    <string name="connect">Подключить</string>
+    <string name="choose_your_interests">Выберите интересы</string>
+    <string name="choose_interests_description">Выберите темы, о которых хотите слушать. Мы будем создавать ежедневные выпуски специально для вас.</string>
+    <string name="topics_selected">Выбрано тем: %d</string>
+    <string name="topics_selected_plural_suffix"></string>
+    <string name="complete_setup">Завершить настройку</string>
+
+    <!-- Linked Accounts -->
+    <string name="enable_daily_brief">Включить ежедневную сводку</string>
+    <string name="enable_daily_brief_description">Подключите Gmail для получения персонализированных ежедневных сводок на основе ваших писем. Мы обобщим важные обновления, чтобы вы начинали день в курсе событий.</string>
+    <string name="google_calendar">Google Календарь</string>
+    <string name="outlook">Outlook</string>
+    <string name="daily_brief_sources">Источники ежедневной сводки</string>
+    <string name="email_summaries">Сводки по email</string>
+    <string name="include_email_in_brief">Включить сводки email в ежедневную сводку</string>
+    <string name="calendar_events">События календаря</string>
+    <string name="include_calendar_in_brief">Включить предстоящие события в ежедневную сводку</string>
+    <string name="unlink">Отвязать</string>
+    <string name="soon">Скоро</string>
+    <string name="your_privacy">Ваша конфиденциальность</string>
+    <string name="privacy_note">Мы читаем только темы и отправителей писем для создания сводок. Мы никогда не храним содержимое ваших писем и не передаём ваши данные третьим лицам.</string>
+    <string name="microsoft_outlook_coming_soon">Привязка Microsoft Outlook будет доступна в будущем обновлении.</string>
+    <string name="gmail_linking_cancelled">Привязка Gmail отменена</string>
+    <string name="calendar_linking_cancelled">Привязка календаря отменена</string>
+    <string name="reconnect">Переподключить</string>
+
+    <!-- Hidden Topics -->
+    <string name="no_hidden_topics">Нет скрытых тем</string>
+    <string name="no_hidden_topics_description">Скрытые вами темы появятся здесь. Вы можете показать их в любое время.</string>
+    <string name="unhide_hint">Нажмите на значок глаза, чтобы снова показать тему.</string>
+    <string name="unhide">Показать</string>
+
+    <!-- Language Settings -->
+    <string name="language">Язык</string>
+    <string name="language_description">Выберите предпочтительный язык для выпусков подкаста.</string>
+    <string name="language_note">Новые выпуски будут создаваться на выбранном языке. Ранее созданные выпуски останутся на исходном языке.</string>
+    <string name="selected">Выбрано</string>
+
+    <!-- Voice Settings -->
+    <string name="loading_voices">Загрузка голосов\u2026</string>
+    <string name="no_voice_pairs">Нет доступных пар голосов</string>
+    <string name="no_voices">Нет доступных голосов</string>
+    <string name="voice_pairs_description">Выберите предустановленную пару голосов для ведущих подкаста.</string>
+    <string name="host_1">Ведущий 1</string>
+    <string name="host_2">Ведущий 2</string>
+    <string name="host_1_voice">Голос ведущего 1</string>
+    <string name="host_2_voice">Голос ведущего 2</string>
+
+    <!-- Theme Settings -->
+    <string name="theme_system">Системная</string>
+    <string name="theme_system_description">Как в настройках устройства</string>
+    <string name="theme_dark">Тёмная</string>
+    <string name="theme_dark_description">Всегда тёмный режим</string>
+    <string name="theme_light">Светлая</string>
+    <string name="theme_light_description">Всегда светлый режим</string>
+
+    <!-- Notification Settings -->
+    <string name="permission">Разрешение</string>
+    <string name="enabled">Включено</string>
+    <string name="not_enabled">Не включено</string>
+    <string name="daily_brief_schedule">Расписание ежедневной сводки</string>
+    <string name="daily_brief_notifications">Уведомления о ежедневной сводке</string>
+    <string name="daily_brief_notify_hint">Получать уведомление, когда сводка готова</string>
+    <string name="daily_brief_content">Содержание ежедневной сводки</string>
+    <string name="include_topic_updates">Включить обновления тем</string>
+    <string name="include_topic_updates_hint">Добавить заголовки из ваших тем в ежедневную сводку</string>
+    <string name="notification_info">Ваша ежедневная сводка будет создана и готова в запланированное время. Вы получите уведомление, когда она будет готова к воспроизведению.</string>
+    <string name="select_time">Выбрать время</string>
+
+    <!-- Subscription / Paywall -->
+    <string name="enjoy_uninterrupted">Наслаждайтесь прослушиванием без перерывов</string>
+    <string name="no_audio_ad_interruptions">Без рекламных аудиовставок</string>
+    <string name="seamless_episode_playback">Непрерывное воспроизведение выпусков</string>
+    <string name="support_indie_development">Поддержка независимой разработки</string>
+    <string name="ad_free_subscriber">Вы подписчик без рекламы!</string>
+    <string name="yearly">Годовая</string>
+    <string name="save_percent">Экономия 58%%</string>
+    <string name="monthly">Месячная</string>
+    <string name="subscribe">Подписаться</string>
+    <string name="restore_purchases">Восстановить покупки</string>
+    <string name="payment_fine_print">Оплата будет списана с вашего аккаунта Google Play. Подписка автоматически продлевается, если не отменена минимум за 24 часа до окончания текущего периода.</string>
+    <string name="per_year">/год</string>
+    <string name="per_month">/мес</string>
+    <string name="per_week">/нед</string>
+
+    <!-- Ads -->
+    <string name="sponsored">РЕКЛАМА</string>
+    <string name="skip">Пропустить</string>
+    <string name="skip_ad">Пропустить рекламу</string>
+    <string name="ad_content_description">Реклама</string>
+
+    <!-- Splash Screen -->
+    <string name="splash_tagline">Ваша AI-аудиосводка</string>
+
+    <!-- Notifications (non-composable) -->
+    <string name="notification_good_morning">Доброе утро!</string>
+    <string name="notification_daily_brief_text">Время для ежедневной сводки. Нажмите, чтобы узнать о письмах, календаре и новостях.</string>
+    <string name="daily_brief_channel_description">Уведомления-напоминания о ежедневной сводке</string>
+
+    <!-- Daily Brief Playback -->
+    <string name="daily_brief_title_format">Ежедневная сводка - %s</string>
+    <string name="daily_brief_description">Ваша персонализированная утренняя сводка</string>
+</resources>

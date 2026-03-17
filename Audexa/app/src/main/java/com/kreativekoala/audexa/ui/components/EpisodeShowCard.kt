@@ -12,7 +12,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.kreativekoala.audexa.R
 import com.kreativekoala.audexa.data.model.Episode
 import com.kreativekoala.audexa.ui.theme.*
 
@@ -49,7 +51,7 @@ fun EpisodeShowCard(
                     Box(contentAlignment = Alignment.Center) {
                         Icon(
                             imageVector = Icons.Default.PlayArrow,
-                            contentDescription = "Play",
+                            contentDescription = stringResource(R.string.play),
                             tint = Background,
                             modifier = Modifier.size(24.dp)
                         )

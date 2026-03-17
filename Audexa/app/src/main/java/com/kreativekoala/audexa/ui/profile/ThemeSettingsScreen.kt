@@ -9,9 +9,11 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.kreativekoala.audexa.R
 import com.kreativekoala.audexa.ui.theme.*
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -27,7 +29,7 @@ fun ThemeSettingsScreen(
             TopAppBar(
                 title = {
                     Text(
-                        "App Theme",
+                        stringResource(R.string.app_theme),
                         color = MaterialTheme.colorScheme.onBackground,
                         fontWeight = FontWeight.Bold
                     )
@@ -36,7 +38,7 @@ fun ThemeSettingsScreen(
                     IconButton(onClick = onNavigateBack) {
                         Icon(
                             Icons.Default.ArrowBack,
-                            contentDescription = "Back",
+                            contentDescription = stringResource(R.string.back),
                             tint = MaterialTheme.colorScheme.onBackground
                         )
                     }
@@ -61,24 +63,24 @@ fun ThemeSettingsScreen(
                 Column {
                     ThemeOption(
                         icon = Icons.Default.BrightnessAuto,
-                        title = "System",
-                        description = "Match device settings",
+                        title = stringResource(R.string.theme_system),
+                        description = stringResource(R.string.theme_system_description),
                         isSelected = currentTheme == AppTheme.SYSTEM,
                         onClick = { viewModel.setTheme(AppTheme.SYSTEM) }
                     )
                     HorizontalDivider(color = MaterialTheme.colorScheme.surfaceVariant)
                     ThemeOption(
                         icon = Icons.Default.DarkMode,
-                        title = "Dark",
-                        description = "Always dark mode",
+                        title = stringResource(R.string.theme_dark),
+                        description = stringResource(R.string.theme_dark_description),
                         isSelected = currentTheme == AppTheme.DARK,
                         onClick = { viewModel.setTheme(AppTheme.DARK) }
                     )
                     HorizontalDivider(color = MaterialTheme.colorScheme.surfaceVariant)
                     ThemeOption(
                         icon = Icons.Default.LightMode,
-                        title = "Light",
-                        description = "Always light mode",
+                        title = stringResource(R.string.theme_light),
+                        description = stringResource(R.string.theme_light_description),
                         isSelected = currentTheme == AppTheme.LIGHT,
                         onClick = { viewModel.setTheme(AppTheme.LIGHT) }
                     )
@@ -131,7 +133,7 @@ private fun ThemeOption(
             if (isSelected) {
                 Icon(
                     imageVector = Icons.Default.Check,
-                    contentDescription = "Selected",
+                    contentDescription = stringResource(R.string.selected),
                     tint = AccentOrange
                 )
             }

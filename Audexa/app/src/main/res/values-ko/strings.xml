@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Audexa</string>
+    <string name="app_tagline">\ub098\ub9cc\uc758 AI \ub77c\ub514\uc624</string>
+
+    <!-- Auth -->
+    <string name="sign_in_with_google">Google\ub85c \ub85c\uadf8\uc778</string>
+    <string name="sign_out">\ub85c\uadf8\uc544\uc6c3</string>
+    <string name="delete_account">\uacc4\uc815 \uc0ad\uc81c</string>
+    <string name="auth_description">\uad00\uc2ec \uc788\ub294 \uc8fc\uc81c\uc5d0 \ub300\ud55c AI \uc0dd\uc131 \ud31f\uce90\uc2a4\ud2b8\ub97c \ub4e4\uc5b4\ubcf4\uc138\uc694. \uc124\uc815\uc5d0\uc11c \uc774\uba54\uc77c\uc744 \uc5f0\uacb0\ud558\uc5ec \ub9de\ucda4\ud615 \uc77c\uc77c \ube0c\ub9ac\ud551\uc744 \ubc1b\uc73c\uc138\uc694.</string>
+    <string name="auth_terms">\uacc4\uc18d\ud558\uba74 \uc11c\ube44\uc2a4 \uc774\uc6a9\uc57d\uad00 \ubc0f \uac1c\uc778\uc815\ubcf4 \ucc98\ub9ac\ubc29\uce68\uc5d0 \ub3d9\uc758\ud558\ub294 \uac83\uc785\ub2c8\ub2e4</string>
+    <string name="start">\uc2dc\uc791</string>
+
+    <!-- Navigation -->
+    <string name="nav_home">\ud648</string>
+    <string name="nav_profile">\ud504\ub85c\ud544</string>
+    <string name="back">\ub4a4\ub85c</string>
+    <string name="close">\ub2eb\uae30</string>
+    <string name="cancel">\ucde8\uc18c</string>
+    <string name="ok">\ud655\uc778</string>
+    <string name="delete">\uc0ad\uc81c</string>
+    <string name="retry">\ub2e4\uc2dc \uc2dc\ub3c4</string>
+    <string name="enable">\ud65c\uc131\ud654</string>
+
+    <!-- Tabs -->
+    <string name="tab_for_you">\ucd94\ucc9c</string>
+    <string name="tab_discover">\ud0d0\uc0c9</string>
+
+    <!-- Home -->
+    <string name="good_morning">\uc88b\uc740 \uc544\uce68</string>
+    <string name="good_afternoon">\uc88b\uc740 \uc624\ud6c4</string>
+    <string name="good_evening">\uc88b\uc740 \uc800\ub141</string>
+    <string name="daily_brief">\uc77c\uc77c \ube0c\ub9ac\ud551</string>
+    <string name="daily_brief_subtitle">\uc77c\uc77c \ube0c\ub9ac\ud551 \u2022 %s</string>
+    <string name="keep_listening">\uacc4\uc18d \ub4e3\uae30</string>
+    <string name="your_topics">\ub0b4 \uc8fc\uc81c</string>
+    <string name="topic_podcasts">\uc8fc\uc81c \ud31f\uce90\uc2a4\ud2b8</string>
+    <string name="recommended_for_you">\ucd94\ucc9c \ucf58\ud150\uce20</string>
+    <string name="more_for_you">\ub354 \ub9ce\uc740 \ucf58\ud150\uce20</string>
+    <string name="all_topics">\ubaa8\ub4e0 \uc8fc\uc81c</string>
+    <string name="matching_topics">\uc77c\uce58\ud558\ub294 \uc8fc\uc81c</string>
+    <string name="tap_to_explore">\ud0ed\ud558\uc5ec \ud0d0\uc0c9 \ubc0f \uc7ac\uc0dd</string>
+    <string name="link_account_prompt">\uc774\uba54\uc77c\uc744 \uc5f0\uacb0\ud558\uc5ec \ub9de\ucda4\ud615 \ube0c\ub9ac\ud551 \uc0dd\uc131</string>
+    <string name="link_account">\uacc4\uc815 \uc5f0\uacb0</string>
+    <string name="find_new_shows">\uc0c8 \ud504\ub85c\uadf8\ub7a8 \ucc3e\uae30</string>
+    <string name="search">\uac80\uc0c9</string>
+    <string name="clear">\uc9c0\uc6b0\uae30</string>
+    <string name="no_results_for">\"%s\"\uc5d0 \ub300\ud55c \uacb0\uacfc \uc5c6\uc74c</string>
+
+    <!-- Profile -->
+    <string name="profile">\ud504\ub85c\ud544</string>
+    <string name="linked_accounts">\uc5f0\uacb0\ub41c \uacc4\uc815</string>
+    <string name="preferences">\ud658\uacbd \uc124\uc815</string>
+    <string name="podcast_language">\ud31f\uce90\uc2a4\ud2b8 \uc5b8\uc5b4</string>
+    <string name="briefing_time">\ube0c\ub9ac\ud551 \uc2dc\uac04</string>
+    <string name="topics">\uc8fc\uc81c</string>
+    <string name="voice_preference">\uc74c\uc131 \uc124\uc815</string>
+    <string name="hidden_topics">\uc228\uaca8\uc9c4 \uc8fc\uc81c</string>
+    <string name="about">\uc815\ubcf4</string>
+    <string name="version">\ubc84\uc804</string>
+    <string name="terms_of_service">\uc11c\ube44\uc2a4 \uc774\uc6a9\uc57d\uad00</string>
+    <string name="privacy_policy">\uac1c\uc778\uc815\ubcf4 \ucc98\ub9ac\ubc29\uce68</string>
+    <string name="premium">\ud504\ub9ac\ubbf8\uc5c4</string>
+    <string name="go_ad_free">\uad11\uace0 \uc81c\uac70</string>
+    <string name="ad_free">\uad11\uace0 \uc5c6\uc74c</string>
+    <string name="active_subscription">\ud65c\uc131 \uad6c\ub3c5</string>
+    <string name="remove_all_ads">\ubaa8\ub4e0 \uad11\uace0 \uc81c\uac70</string>
+    <string name="email_accounts">\uc774\uba54\uc77c \uacc4\uc815</string>
+    <string name="app_theme">\uc571 \ud14c\ub9c8</string>
+    <string name="voice_settings">\uc74c\uc131 \uc124\uc815</string>
+    <string name="choose_podcast_voices">\ud31f\uce90\uc2a4\ud2b8 \uc74c\uc131 \uc120\ud0dd</string>
+    <string name="hidden_count">%d\uac1c \uc228\uaca8\uc9d0</string>
+    <string name="notifications">\uc54c\ub9bc</string>
+    <string name="daily_brief_reminders">\uc77c\uc77c \ube0c\ub9ac\ud551 \uc54c\ub9bc</string>
+    <string name="sign_out_confirm">\ub85c\uadf8\uc544\uc6c3 \ud558\uc2dc\uaca0\uc2b5\ub2c8\uae4c?</string>
+    <string name="delete_account_confirm">\uacc4\uc815\uc744 \uc0ad\uc81c\ud558\uc2dc\uaca0\uc2b5\ub2c8\uae4c? \ud31f\uce90\uc2a4\ud2b8, \ud658\uacbd \uc124\uc815, \uc5f0\uacb0\ub41c \uacc4\uc815\uc744 \ud3ec\ud568\ud55c \ubaa8\ub4e0 \ub370\uc774\ud130\uac00 \uc601\uad6c\uc801\uc73c\ub85c \uc0ad\uc81c\ub429\ub2c8\ub2e4. \uc774 \uc791\uc5c5\uc740 \ucde8\uc18c\ud560 \uc218 \uc5c6\uc2b5\ub2c8\ub2e4.</string>
+
+    <!-- Player -->
+    <string name="playing">\uc7ac\uc0dd \uc911</string>
+    <string name="paused">\uc77c\uc2dc \uc815\uc9c0</string>
+    <string name="play">\uc7ac\uc0dd</string>
+    <string name="pause">\uc77c\uc2dc \uc815\uc9c0</string>
+    <string name="loading">\ub85c\ub529 \uc911\u2026</string>
+    <string name="generating">\uc0dd\uc131 \uc911\u2026</string>
+    <string name="generating_progress">\uc0dd\uc131 \uc911\u2026 %d%%</string>
+    <string name="generate_episode">\uc5d0\ud53c\uc18c\ub4dc \uc0dd\uc131</string>
+    <string name="regenerate">\uc7ac\uc0dd\uc131</string>
+    <string name="episode_history">\uc5d0\ud53c\uc18c\ub4dc \uae30\ub85d</string>
+    <string name="skip_back">15\ucd08 \ub4a4\ub85c</string>
+    <string name="skip_forward">15\ucd08 \uc55e\uc73c\ub85c</string>
+    <string name="skip_back_mini">\ub4a4\ub85c</string>
+    <string name="skip_forward_mini">\uc55e\uc73c\ub85c</string>
+    <string name="buffering">\ubc84\ud37c\ub9c1 \uc911\u2026</string>
+    <string name="sleep_timer">\uc218\uba74 \ud0c0\uc774\uba38</string>
+    <string name="timer">\ud0c0\uc774\uba38</string>
+    <string name="sleep_timer_5_min">5\ubd84</string>
+    <string name="sleep_timer_10_min">10\ubd84</string>
+    <string name="sleep_timer_15_min">15\ubd84</string>
+    <string name="sleep_timer_30_min">30\ubd84</string>
+    <string name="sleep_timer_1_hour">1\uc2dc\uac04</string>
+    <string name="min_format">%d\ubd84</string>
+    <string name="today">\uc624\ub298</string>
+    <string name="bookmark">\ubd81\ub9c8\ud06c</string>
+    <string name="more">\ub354 \ubcf4\uae30</string>
+    <string name="hide_topic">\uc8fc\uc81c \uc228\uae30\uae30</string>
+    <string name="hide">\uc228\uae30\uae30</string>
+
+    <!-- Errors -->
+    <string name="error_generic">\ubb38\uc81c\uac00 \ubc1c\uc0dd\ud588\uc2b5\ub2c8\ub2e4</string>
+    <string name="error_network">\ub124\ud2b8\uc6cc\ud06c \uc624\ub958. \uc5f0\uacb0\uc744 \ud655\uc778\ud574 \uc8fc\uc138\uc694.</string>
+    <string name="error_auth">\uc778\uc99d \uc2e4\ud328</string>
+    <string name="error_no_internet">\uc778\ud130\ub137 \uc5f0\uacb0\uc774 \uc5c6\uc2b5\ub2c8\ub2e4. \ub124\ud2b8\uc6cc\ud06c\ub97c \ud655\uc778\ud558\uace0 \ub2e4\uc2dc \uc2dc\ub3c4\ud574 \uc8fc\uc138\uc694.</string>
+    <string name="generation_failed">\uc0dd\uc131 \uc2e4\ud328</string>
+
+    <!-- Misc -->
+    <string name="min_daily">\ub9e4\uc77c %d\ubd84</string>
+    <string name="connected">\uc5f0\uacb0\ub428</string>
+    <string name="not_connected">\uc5f0\uacb0 \uc548 \ub428</string>
+    <string name="not_connected_lower">\uc5f0\uacb0 \uc548 \ub428</string>
+    <string name="coming_soon">\uace7 \ucd9c\uc2dc</string>
+    <string name="microsoft_coming_soon">Microsoft \ud1b5\ud569\uc774 \uace7 \ucd9c\uc2dc\ub429\ub2c8\ub2e4. \uae30\ub300\ud574 \uc8fc\uc138\uc694!</string>
+
+    <!-- Onboarding -->
+    <string name="welcome_to_audexa">Audexa\uc5d0 \uc624\uc2e0 \uac83\uc744 \ud658\uc601\ud569\ub2c8\ub2e4</string>
+    <string name="welcome_description">\ucd5c\uc2e0 \ub274\uc2a4, \uae30\uc220 \ubc0f \uc8fc\uc81c\ub97c \ub9e4\ub825\uc801\uc778 \ud31f\uce90\uc2a4\ud2b8 \uc2a4\ud0c0\uc77c \ube0c\ub9ac\ud551\uc73c\ub85c \ubcc0\ud658\ud558\ub294 \ub098\ub9cc\uc758 AI \ub77c\ub514\uc624\uc785\ub2c8\ub2e4.</string>
+    <string name="get_started">\uc2dc\uc791\ud558\uae30</string>
+    <string name="connect_your_account">\uacc4\uc815 \uc5f0\uacb0</string>
+    <string name="connect_account_description">Google \uacc4\uc815\uc744 \uc5f0\uacb0\ud558\uc5ec \uc774\uba54\uc77c\uacfc \uce98\ub9b0\ub354\uc5d0\uc11c \ub9de\ucda4\ud615 \uc77c\uc77c \ube0c\ub9ac\ud551\uc744 \ubc1b\uc73c\uc138\uc694.</string>
+    <string name="gmail">Gmail</string>
+    <string name="calendar">\uce98\ub9b0\ub354</string>
+    <string name="include_email_highlights">\ube0c\ub9ac\ud551\uc5d0 \uc774\uba54\uc77c \ud558\uc774\ub77c\uc774\ud2b8 \ud3ec\ud568</string>
+    <string name="include_calendar_events">\ube0c\ub9ac\ud551\uc5d0 \uc608\uc815\ub41c \uc77c\uc815 \ud3ec\ud568</string>
+    <string name="continue_button">\uacc4\uc18d</string>
+    <string name="skip_for_now">\uc9c0\uae08\uc740 \uac74\ub108\ub6f0\uae30</string>
+    <string name="connect_later_hint">\ub098\uc911\uc5d0 \uc124\uc815\uc5d0\uc11c \uc5b8\uc81c\ub4e0\uc9c0 \uc5f0\uacb0\ud560 \uc218 \uc788\uc2b5\ub2c8\ub2e4</string>
+    <string name="connect">\uc5f0\uacb0</string>
+    <string name="choose_your_interests">\uad00\uc2ec\uc0ac \uc120\ud0dd</string>
+    <string name="choose_interests_description">\ub4e3\uace0 \uc2f6\uc740 \uc8fc\uc81c\ub97c \uc120\ud0dd\ud558\uc138\uc694. \ub2f9\uc2e0\ub9cc\uc744 \uc704\ud55c \uc77c\uc77c \uc5d0\ud53c\uc18c\ub4dc\ub97c \uc0dd\uc131\ud574 \ub4dc\ub9bd\ub2c8\ub2e4.</string>
+    <string name="topics_selected">%d\uac1c \uc8fc\uc81c%s \uc120\ud0dd\ub428</string>
+    <string name="topics_selected_plural_suffix"></string>
+    <string name="complete_setup">\uc124\uc815 \uc644\ub8cc</string>
+
+    <!-- Linked Accounts -->
+    <string name="enable_daily_brief">\uc77c\uc77c \ube0c\ub9ac\ud551 \ud65c\uc131\ud654</string>
+    <string name="enable_daily_brief_description">Gmail\uc744 \uc5f0\uacb0\ud558\uc5ec \uc774\uba54\uc77c \uae30\ubc18\uc758 \ub9de\ucda4\ud615 \uc77c\uc77c \ube0c\ub9ac\ud551\uc744 \ubc1b\uc73c\uc138\uc694. \uc911\uc694\ud55c \uc5c5\ub370\uc774\ud2b8\ub97c \uc694\uc57d\ud558\uc5ec \uc815\ubcf4\ub97c \uc5bb\uace0 \ud558\ub8e8\ub97c \uc2dc\uc791\ud558\uc138\uc694.</string>
+    <string name="google_calendar">Google \uce98\ub9b0\ub354</string>
+    <string name="outlook">Outlook</string>
+    <string name="daily_brief_sources">\uc77c\uc77c \ube0c\ub9ac\ud551 \uc18c\uc2a4</string>
+    <string name="email_summaries">\uc774\uba54\uc77c \uc694\uc57d</string>
+    <string name="include_email_in_brief">\uc77c\uc77c \ube0c\ub9ac\ud551\uc5d0 \uc774\uba54\uc77c \uc694\uc57d \ud3ec\ud568</string>
+    <string name="calendar_events">\uce98\ub9b0\ub354 \uc77c\uc815</string>
+    <string name="include_calendar_in_brief">\uc77c\uc77c \ube0c\ub9ac\ud551\uc5d0 \uc608\uc815\ub41c \uc77c\uc815 \ud3ec\ud568</string>
+    <string name="unlink">\uc5f0\uacb0 \ud574\uc81c</string>
+    <string name="soon">\uace7</string>
+    <string name="your_privacy">\uac1c\uc778\uc815\ubcf4 \ubcf4\ud638</string>
+    <string name="privacy_note">\uc694\uc57d \uc791\uc131\uc744 \uc704\ud574 \uc774\uba54\uc77c \uc81c\ubaa9\uacfc \ubc1c\uc2e0\uc790\ub9cc \uc77d\uc2b5\ub2c8\ub2e4. \uc774\uba54\uc77c \ub0b4\uc6a9\uc744 \uc800\uc7a5\ud558\uac70\ub098 \ub370\uc774\ud130\ub97c \uc81c3\uc790\uc640 \uacf5\uc720\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4.</string>
+    <string name="microsoft_outlook_coming_soon">Microsoft Outlook \uc5f0\uacb0\uc740 \ud5a5\ud6c4 \uc5c5\ub370\uc774\ud2b8\uc5d0\uc11c \uc0ac\uc6a9 \uac00\ub2a5\ud569\ub2c8\ub2e4.</string>
+    <string name="gmail_linking_cancelled">Gmail \uc5f0\uacb0\uc774 \ucde8\uc18c\ub418\uc5c8\uc2b5\ub2c8\ub2e4</string>
+    <string name="calendar_linking_cancelled">\uce98\ub9b0\ub354 \uc5f0\uacb0\uc774 \ucde8\uc18c\ub418\uc5c8\uc2b5\ub2c8\ub2e4</string>
+    <string name="reconnect">\uc7ac\uc5f0\uacb0</string>
+
+    <!-- Hidden Topics -->
+    <string name="no_hidden_topics">\uc228\uaca8\uc9c4 \uc8fc\uc81c \uc5c6\uc74c</string>
+    <string name="no_hidden_topics_description">\uc228\uae34 \uc8fc\uc81c\uac00 \uc5ec\uae30\uc5d0 \ud45c\uc2dc\ub429\ub2c8\ub2e4. \uc5b8\uc81c\ub4e0\uc9c0 \ub2e4\uc2dc \ud45c\uc2dc\ud560 \uc218 \uc788\uc2b5\ub2c8\ub2e4.</string>
+    <string name="unhide_hint">\ub208 \uc544\uc774\ucf58\uc744 \ud0ed\ud558\uc5ec \uc8fc\uc81c\ub97c \ub2e4\uc2dc \ud45c\uc2dc\ud569\ub2c8\ub2e4.</string>
+    <string name="unhide">\ud45c\uc2dc</string>
+
+    <!-- Language Settings -->
+    <string name="language">\uc5b8\uc5b4</string>
+    <string name="language_description">\ud31f\uce90\uc2a4\ud2b8 \uc5d0\ud53c\uc18c\ub4dc\uc758 \uc120\ud638 \uc5b8\uc5b4\ub97c \uc120\ud0dd\ud558\uc138\uc694.</string>
+    <string name="language_note">\uc0c8 \uc5d0\ud53c\uc18c\ub4dc\ub294 \uc120\ud0dd\ud55c \uc5b8\uc5b4\ub85c \uc0dd\uc131\ub429\ub2c8\ub2e4. \uc774\uc804\uc5d0 \uc0dd\uc131\ub41c \uc5d0\ud53c\uc18c\ub4dc\ub294 \uc6d0\ub798 \uc5b8\uc5b4\ub85c \uc720\uc9c0\ub429\ub2c8\ub2e4.</string>
+    <string name="selected">\uc120\ud0dd\ub428</string>
+
+    <!-- Voice Settings -->
+    <string name="loading_voices">\uc74c\uc131 \ub85c\ub529 \uc911\u2026</string>
+    <string name="no_voice_pairs">\uc0ac\uc6a9 \uac00\ub2a5\ud55c \uc74c\uc131 \uc870\ud569\uc774 \uc5c6\uc2b5\ub2c8\ub2e4</string>
+    <string name="no_voices">\uc0ac\uc6a9 \uac00\ub2a5\ud55c \uc74c\uc131\uc774 \uc5c6\uc2b5\ub2c8\ub2e4</string>
+    <string name="voice_pairs_description">\ud31f\uce90\uc2a4\ud2b8 \uc9c4\ud589\uc790\ub97c \uc704\ud55c \uc0ac\uc804 \uad6c\uc131\ub41c \uc74c\uc131 \uc870\ud569\uc744 \uc120\ud0dd\ud558\uc138\uc694.</string>
+    <string name="host_1">\uc9c4\ud589\uc790 1</string>
+    <string name="host_2">\uc9c4\ud589\uc790 2</string>
+    <string name="host_1_voice">\uc9c4\ud589\uc790 1 \uc74c\uc131</string>
+    <string name="host_2_voice">\uc9c4\ud589\uc790 2 \uc74c\uc131</string>
+
+    <!-- Theme Settings -->
+    <string name="theme_system">\uc2dc\uc2a4\ud15c</string>
+    <string name="theme_system_description">\uae30\uae30 \uc124\uc815 \ub530\ub974\uae30</string>
+    <string name="theme_dark">\ub2e4\ud06c</string>
+    <string name="theme_dark_description">\ud56d\uc0c1 \ub2e4\ud06c \ubaa8\ub4dc</string>
+    <string name="theme_light">\ub77c\uc774\ud2b8</string>
+    <string name="theme_light_description">\ud56d\uc0c1 \ub77c\uc774\ud2b8 \ubaa8\ub4dc</string>
+
+    <!-- Notification Settings -->
+    <string name="permission">\uad8c\ud55c</string>
+    <string name="enabled">\ud65c\uc131\ud654\ub428</string>
+    <string name="not_enabled">\ube44\ud65c\uc131\ud654</string>
+    <string name="daily_brief_schedule">\uc77c\uc77c \ube0c\ub9ac\ud551 \uc77c\uc815</string>
+    <string name="daily_brief_notifications">\uc77c\uc77c \ube0c\ub9ac\ud551 \uc54c\ub9bc</string>
+    <string name="daily_brief_notify_hint">\ube0c\ub9ac\ud551\uc774 \uc900\ube44\ub418\uba74 \uc54c\ub9bc \ubc1b\uae30</string>
+    <string name="daily_brief_content">\uc77c\uc77c \ube0c\ub9ac\ud551 \ub0b4\uc6a9</string>
+    <string name="include_topic_updates">\uc8fc\uc81c \uc5c5\ub370\uc774\ud2b8 \ud3ec\ud568</string>
+    <string name="include_topic_updates_hint">\uc8fc\uc81c \ud5e4\ub4dc\ub77c\uc778\uc744 \uc77c\uc77c \ube0c\ub9ac\ud551\uc5d0 \ucd94\uac00</string>
+    <string name="notification_info">\uc77c\uc77c \ube0c\ub9ac\ud551\uc740 \uc608\uc57d\ub41c \uc2dc\uac04\uc5d0 \uc0dd\uc131\ub418\uc5b4 \uc900\ube44\ub429\ub2c8\ub2e4. \uc7ac\uc0dd \uc900\ube44\uac00 \ub418\uba74 \uc54c\ub9bc\uc744 \ubc1b\uc2b5\ub2c8\ub2e4.</string>
+    <string name="select_time">\uc2dc\uac04 \uc120\ud0dd</string>
+
+    <!-- Subscription / Paywall -->
+    <string name="enjoy_uninterrupted">\ub04a\uae40 \uc5c6\ub294 \uccad\ucde8\ub97c \uc990\uae30\uc138\uc694</string>
+    <string name="no_audio_ad_interruptions">\uc624\ub514\uc624 \uad11\uace0 \uc911\ub2e8 \uc5c6\uc74c</string>
+    <string name="seamless_episode_playback">\ub04a\uae40 \uc5c6\ub294 \uc5d0\ud53c\uc18c\ub4dc \uc7ac\uc0dd</string>
+    <string name="support_indie_development">\ub3c5\ub9bd \uac1c\ubc1c \uc9c0\uc6d0</string>
+    <string name="ad_free_subscriber">\uad11\uace0 \uc5c6\ub294 \uad6c\ub3c5\uc790\uc785\ub2c8\ub2e4!</string>
+    <string name="yearly">\uc5f0\uac04</string>
+    <string name="save_percent">58%% \uc808\uc57d</string>
+    <string name="monthly">\uc6d4\uac04</string>
+    <string name="subscribe">\uad6c\ub3c5</string>
+    <string name="restore_purchases">\uad6c\ub9e4 \ubcf5\uc6d0</string>
+    <string name="payment_fine_print">\uacb0\uc81c\ub294 Google Play \uacc4\uc815\uc73c\ub85c \uccad\uad6c\ub429\ub2c8\ub2e4. \ud604\uc7ac \uae30\uac04 \uc885\ub8cc \ucd5c\uc18c 24\uc2dc\uac04 \uc804\uc5d0 \ucde8\uc18c\ud558\uc9c0 \uc54a\uc73c\uba74 \uad6c\ub3c5\uc774 \uc790\ub3d9 \uac31\uc2e0\ub429\ub2c8\ub2e4.</string>
+    <string name="per_year">/\ub144</string>
+    <string name="per_month">/\uc6d4</string>
+    <string name="per_week">/\uc8fc</string>
+
+    <!-- Ads -->
+    <string name="sponsored">\uc2a4\ud3f0\uc11c</string>
+    <string name="skip">\uac74\ub108\ub6f0\uae30</string>
+    <string name="skip_ad">\uad11\uace0 \uac74\ub108\ub6f0\uae30</string>
+    <string name="ad_content_description">\uad11\uace0</string>
+
+    <!-- Splash Screen -->
+    <string name="splash_tagline">AI \uae30\ubc18 \uc624\ub514\uc624 \ube0c\ub9ac\ud551</string>
+
+    <!-- Notifications (non-composable) -->
+    <string name="notification_good_morning">\uc88b\uc740 \uc544\uce68\uc785\ub2c8\ub2e4!</string>
+    <string name="notification_daily_brief_text">\uc77c\uc77c \ube0c\ub9ac\ud551 \uc2dc\uac04\uc785\ub2c8\ub2e4. \ud0ed\ud558\uc5ec \uc774\uba54\uc77c, \uce98\ub9b0\ub354, \ub274\uc2a4\ub97c \ud655\uc778\ud558\uc138\uc694.</string>
+    <string name="daily_brief_channel_description">\uc77c\uc77c \ube0c\ub9ac\ud551 \uc54c\ub9bc</string>
+
+    <!-- Daily Brief Playback -->
+    <string name="daily_brief_title_format">\uc77c\uc77c \ube0c\ub9ac\ud551 - %s</string>
+    <string name="daily_brief_description">\ub098\ub9cc\uc758 \uc544\uce68 \ube0c\ub9ac\ud551</string>
+</resources>

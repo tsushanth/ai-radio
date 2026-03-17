@@ -76,3 +76,6 @@
 
 # SLF4J
 -dontwarn org.slf4j.**
+
+# RevenueCat
+-dontwarn com.emergetools.snapshots.annotations.IgnoreEmergeSnapshot

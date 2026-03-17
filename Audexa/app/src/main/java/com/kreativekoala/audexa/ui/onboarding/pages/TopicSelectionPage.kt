@@ -16,10 +16,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import com.kreativekoala.audexa.R
 import com.kreativekoala.audexa.data.model.Topic
 import com.kreativekoala.audexa.ui.onboarding.OnboardingUiState
 import com.kreativekoala.audexa.ui.theme.*
@@ -39,7 +41,7 @@ fun TopicSelectionPage(
         Spacer(modifier = Modifier.height(48.dp))
 
         Text(
-            text = "Choose Your Interests",
+            text = stringResource(R.string.choose_your_interests),
             style = MaterialTheme.typography.headlineMedium,
             color = MaterialTheme.colorScheme.onBackground,
             fontWeight = FontWeight.Bold,
@@ -49,7 +51,7 @@ fun TopicSelectionPage(
         Spacer(modifier = Modifier.height(8.dp))
 
         Text(
-            text = "Select topics you'd like to hear about. We'll generate daily episodes just for you.",
+            text = stringResource(R.string.choose_interests_description),
             style = MaterialTheme.typography.bodyLarge,
             color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f),
             textAlign = TextAlign.Center,
@@ -91,7 +93,7 @@ fun TopicSelectionPage(
         val selectedCount = uiState.selectedTopicIds.size
         if (selectedCount > 0) {
             Text(
-                text = "$selectedCount topic${if (selectedCount != 1) "s" else ""} selected",
+                text = stringResource(R.string.topics_selected, selectedCount, if (selectedCount != 1) stringResource(R.string.topics_selected_plural_suffix) else ""),
                 style = MaterialTheme.typography.bodyMedium,
                 color = AccentOrange,
                 fontWeight = FontWeight.Medium
@@ -120,7 +122,7 @@ fun TopicSelectionPage(
                 )
             } else {
                 Text(
-                    text = "Complete Setup",
+                    text = stringResource(R.string.complete_setup),
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.SemiBold
                 )

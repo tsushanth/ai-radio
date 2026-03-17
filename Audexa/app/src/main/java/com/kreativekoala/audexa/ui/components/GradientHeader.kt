@@ -17,9 +17,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.kreativekoala.audexa.R
 import com.kreativekoala.audexa.ui.theme.*
 
 sealed class DailyBriefState {
@@ -80,7 +82,7 @@ fun GradientHeader(
             ) {
                 Icon(
                     imageVector = Icons.Default.Person,
-                    contentDescription = "Profile",
+                    contentDescription = stringResource(R.string.profile),
                     tint = PrimaryText,
                     modifier = Modifier.size(24.dp)
                 )
@@ -181,12 +183,12 @@ private fun PlayButton(
     ) {
         Icon(
             imageVector = if (isPlaying) Icons.Default.Pause else Icons.Default.PlayArrow,
-            contentDescription = if (isPlaying) "Pause" else "Play",
+            contentDescription = if (isPlaying) stringResource(R.string.pause) else stringResource(R.string.play),
             modifier = Modifier.size(24.dp)
         )
         Spacer(modifier = Modifier.width(8.dp))
         Text(
-            text = if (isPlaying) "Pause" else "Play",
+            text = if (isPlaying) stringResource(R.string.pause) else stringResource(R.string.play),
             style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.SemiBold
         )
@@ -218,12 +220,12 @@ private fun PlayButtonWithRegenerate(
         ) {
             Icon(
                 imageVector = if (isPlaying) Icons.Default.Pause else Icons.Default.PlayArrow,
-                contentDescription = if (isPlaying) "Pause" else "Play",
+                contentDescription = if (isPlaying) stringResource(R.string.pause) else stringResource(R.string.play),
                 modifier = Modifier.size(24.dp)
             )
             Spacer(modifier = Modifier.width(8.dp))
             Text(
-                text = if (isPlaying) "Pause" else "Play",
+                text = if (isPlaying) stringResource(R.string.pause) else stringResource(R.string.play),
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.SemiBold
             )
@@ -240,7 +242,7 @@ private fun PlayButtonWithRegenerate(
             ) {
                 Icon(
                     imageVector = Icons.Default.Refresh,
-                    contentDescription = "Regenerate",
+                    contentDescription = stringResource(R.string.regenerate),
                     tint = PrimaryText,
                     modifier = Modifier.size(24.dp)
                 )
@@ -256,7 +258,7 @@ private fun LinkAccountButton(
 ) {
     Column(modifier = modifier) {
         Text(
-            text = "Link your email to generate personalized briefings",
+            text = stringResource(R.string.link_account_prompt),
             style = MaterialTheme.typography.bodyMedium,
             color = PrimaryText.copy(alpha = 0.8f)
         )
@@ -276,7 +278,7 @@ private fun LinkAccountButton(
                 modifier = Modifier.size(18.dp)
             )
             Spacer(modifier = Modifier.width(8.dp))
-            Text("Link Account")
+            Text(stringResource(R.string.link_account))
         }
     }
 }
@@ -298,7 +300,7 @@ private fun GeneratingIndicator(
         )
         Spacer(modifier = Modifier.width(12.dp))
         Text(
-            text = "Generating... $progress%",
+            text = stringResource(R.string.generating_progress, progress),
             style = MaterialTheme.typography.bodyMedium,
             color = PrimaryText,
             modifier = Modifier.weight(1f)
@@ -313,7 +315,7 @@ private fun GeneratingIndicator(
         ) {
             Icon(
                 imageVector = Icons.Default.Close,
-                contentDescription = "Cancel",
+                contentDescription = stringResource(R.string.cancel),
                 tint = PrimaryText,
                 modifier = Modifier.size(20.dp)
             )
@@ -357,7 +359,7 @@ private fun ErrorBanner(
                 modifier = Modifier.size(18.dp)
             )
             Spacer(modifier = Modifier.width(8.dp))
-            Text("Retry")
+            Text(stringResource(R.string.retry))
         }
     }
 }
@@ -398,7 +400,7 @@ private fun RelinkBanner(
                 modifier = Modifier.size(18.dp)
             )
             Spacer(modifier = Modifier.width(8.dp))
-            Text("Reconnect")
+            Text(stringResource(R.string.reconnect))
         }
     }
 }

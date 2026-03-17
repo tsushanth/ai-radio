@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Audexa</string>
+    <string name="app_tagline">วิทยุ AI ส่วนตัวของคุณ</string>
+
+    <!-- Auth -->
+    <string name="sign_in_with_google">ลงชื่อเข้าใช้ด้วย Google</string>
+    <string name="sign_out">ออกจากระบบ</string>
+    <string name="delete_account">ลบบัญชี</string>
+    <string name="auth_description">ฟังพอดแคสต์ที่สร้างโดย AI ในหัวข้อที่คุณสนใจ เชื่อมต่ออีเมลในการตั้งค่าเพื่อรับสรุปรายวันที่ปรับแต่งเฉพาะคุณ</string>
+    <string name="auth_terms">เมื่อดำเนินการต่อ คุณยอมรับข้อกำหนดการให้บริการและนโยบายความเป็นส่วนตัวของเรา</string>
+    <string name="start">เริ่มต้น</string>
+
+    <!-- Navigation -->
+    <string name="nav_home">หน้าแรก</string>
+    <string name="nav_profile">โปรไฟล์</string>
+    <string name="back">ย้อนกลับ</string>
+    <string name="close">ปิด</string>
+    <string name="cancel">ยกเลิก</string>
+    <string name="ok">ตกลง</string>
+    <string name="delete">ลบ</string>
+    <string name="retry">ลองอีกครั้ง</string>
+    <string name="enable">เปิดใช้งาน</string>
+
+    <!-- Tabs -->
+    <string name="tab_for_you">สำหรับคุณ</string>
+    <string name="tab_discover">ค้นพบ</string>
+
+    <!-- Home -->
+    <string name="good_morning">สวัสดีตอนเช้า</string>
+    <string name="good_afternoon">สวัสดีตอนบ่าย</string>
+    <string name="good_evening">สวัสดีตอนเย็น</string>
+    <string name="daily_brief">สรุปรายวัน</string>
+    <string name="daily_brief_subtitle">สรุปรายวัน \u2022 %s</string>
+    <string name="keep_listening">ฟังต่อ</string>
+    <string name="your_topics">หัวข้อของคุณ</string>
+    <string name="topic_podcasts">พอดแคสต์หัวข้อ</string>
+    <string name="recommended_for_you">แนะนำสำหรับคุณ</string>
+    <string name="more_for_you">เพิ่มเติมสำหรับคุณ</string>
+    <string name="all_topics">หัวข้อทั้งหมด</string>
+    <string name="matching_topics">หัวข้อที่ตรงกัน</string>
+    <string name="tap_to_explore">แตะเพื่อสำรวจและเล่น</string>
+    <string name="link_account_prompt">เชื่อมต่ออีเมลเพื่อสร้างสรุปที่ปรับแต่งเฉพาะคุณ</string>
+    <string name="link_account">เชื่อมต่อบัญชี</string>
+    <string name="find_new_shows">ค้นหารายการใหม่</string>
+    <string name="search">ค้นหา</string>
+    <string name="clear">ล้าง</string>
+    <string name="no_results_for">ไม่พบผลลัพธ์สำหรับ \"%s\"</string>
+
+    <!-- Profile -->
+    <string name="profile">โปรไฟล์</string>
+    <string name="linked_accounts">บัญชีที่เชื่อมต่อ</string>
+    <string name="preferences">การตั้งค่า</string>
+    <string name="podcast_language">ภาษาพอดแคสต์</string>
+    <string name="briefing_time">เวลาสรุป</string>
+    <string name="topics">หัวข้อ</string>
+    <string name="voice_preference">การตั้งค่าเสียง</string>
+    <string name="hidden_topics">หัวข้อที่ซ่อน</string>
+    <string name="about">เกี่ยวกับ</string>
+    <string name="version">เวอร์ชัน</string>
+    <string name="terms_of_service">ข้อกำหนดการให้บริการ</string>
+    <string name="privacy_policy">นโยบายความเป็นส่วนตัว</string>
+    <string name="premium">พรีเมียม</string>
+    <string name="go_ad_free">ไร้โฆษณา</string>
+    <string name="ad_free">ไร้โฆษณา</string>
+    <string name="active_subscription">การสมัครสมาชิกที่ใช้งานอยู่</string>
+    <string name="remove_all_ads">ลบโฆษณาทั้งหมด</string>
+    <string name="email_accounts">บัญชีอีเมล</string>
+    <string name="app_theme">ธีมแอป</string>
+    <string name="voice_settings">การตั้งค่าเสียง</string>
+    <string name="choose_podcast_voices">เลือกเสียงพอดแคสต์</string>
+    <string name="hidden_count">ซ่อน %d รายการ</string>
+    <string name="notifications">การแจ้งเตือน</string>
+    <string name="daily_brief_reminders">การเตือนสรุปรายวัน</string>
+    <string name="sign_out_confirm">คุณแน่ใจหรือไม่ว่าต้องการออกจากระบบ?</string>
+    <string name="delete_account_confirm">คุณแน่ใจหรือไม่ว่าต้องการลบบัญชี? การดำเนินการนี้จะลบข้อมูลทั้งหมดของคุณอย่างถาวร รวมถึงพอดแคสต์ การตั้งค่า และบัญชีที่เชื่อมต่อ การดำเนินการนี้ไม่สามารถเลิกทำได้</string>
+
+    <!-- Player -->
+    <string name="playing">กำลังเล่น</string>
+    <string name="paused">หยุดชั่วคราว</string>
+    <string name="play">เล่น</string>
+    <string name="pause">หยุดชั่วคราว</string>
+    <string name="loading">กำลังโหลด\u2026</string>
+    <string name="generating">กำลังสร้าง\u2026</string>
+    <string name="generating_progress">กำลังสร้าง\u2026 %d%%</string>
+    <string name="generate_episode">สร้างตอน</string>
+    <string name="regenerate">สร้างใหม่</string>
+    <string name="episode_history">ประวัติตอน</string>
+    <string name="skip_back">ย้อนกลับ 15 วินาที</string>
+    <string name="skip_forward">ข้ามไป 15 วินาที</string>
+    <string name="skip_back_mini">ย้อนกลับ</string>
+    <string name="skip_forward_mini">ข้ามไป</string>
+    <string name="buffering">กำลังบัฟเฟอร์\u2026</string>
+    <string name="sleep_timer">ตั้งเวลาปิด</string>
+    <string name="timer">ตั้งเวลา</string>
+    <string name="sleep_timer_5_min">5 นาที</string>
+    <string name="sleep_timer_10_min">10 นาที</string>
+    <string name="sleep_timer_15_min">15 นาที</string>
+    <string name="sleep_timer_30_min">30 นาที</string>
+    <string name="sleep_timer_1_hour">1 ชั่วโมง</string>
+    <string name="min_format">%d นาที</string>
+    <string name="today">วันนี้</string>
+    <string name="bookmark">บุ๊กมาร์ก</string>
+    <string name="more">เพิ่มเติม</string>
+    <string name="hide_topic">ซ่อนหัวข้อ</string>
+    <string name="hide">ซ่อน</string>
+
+    <!-- Errors -->
+    <string name="error_generic">เกิดข้อผิดพลาด</string>
+    <string name="error_network">ข้อผิดพลาดของเครือข่าย กรุณาตรวจสอบการเชื่อมต่อของคุณ</string>
+    <string name="error_auth">การยืนยันตัวตนล้มเหลว</string>
+    <string name="error_no_internet">ไม่มีการเชื่อมต่ออินเทอร์เน็ต กรุณาตรวจสอบเครือข่ายของคุณแล้วลองอีกครั้ง</string>
+    <string name="generation_failed">การสร้างล้มเหลว</string>
+
+    <!-- Misc -->
+    <string name="min_daily">%d นาทีต่อวัน</string>
+    <string name="connected">เชื่อมต่อแล้ว</string>
+    <string name="not_connected">ไม่ได้เชื่อมต่อ</string>
+    <string name="not_connected_lower">ไม่ได้เชื่อมต่อ</string>
+    <string name="coming_soon">เร็วๆ นี้</string>
+    <string name="microsoft_coming_soon">การเชื่อมต่อบัญชี Microsoft กำลังจะมาเร็วๆ นี้ คอยติดตาม!</string>
+
+    <!-- Onboarding -->
+    <string name="welcome_to_audexa">ยินดีต้อนรับสู่ Audexa</string>
+    <string name="welcome_description">วิทยุ AI ส่วนตัวที่เปลี่ยนข่าวล่าสุด เทคโนโลยี และหัวข้อต่างๆ ให้เป็นสรุปแบบพอดแคสต์ที่น่าสนใจ</string>
+    <string name="get_started">เริ่มต้นใช้งาน</string>
+    <string name="connect_your_account">เชื่อมต่อบัญชีของคุณ</string>
+    <string name="connect_account_description">เชื่อมต่อบัญชี Google เพื่อรับสรุปรายวันที่ปรับแต่งจากอีเมลและปฏิทินของคุณ</string>
+    <string name="gmail">Gmail</string>
+    <string name="calendar">ปฏิทิน</string>
+    <string name="include_email_highlights">รวมไฮไลท์อีเมลในสรุปของคุณ</string>
+    <string name="include_calendar_events">รวมกิจกรรมที่กำลังจะมาถึงในสรุปของคุณ</string>
+    <string name="continue_button">ดำเนินการต่อ</string>
+    <string name="skip_for_now">ข้ามไปก่อน</string>
+    <string name="connect_later_hint">คุณสามารถเชื่อมต่อภายหลังได้ในการตั้งค่า</string>
+    <string name="connect">เชื่อมต่อ</string>
+    <string name="choose_your_interests">เลือกความสนใจของคุณ</string>
+    <string name="choose_interests_description">เลือกหัวข้อที่คุณต้องการฟัง เราจะสร้างตอนรายวันเฉพาะสำหรับคุณ</string>
+    <string name="topics_selected">เลือก %d หัวข้อ</string>
+    <string name="topics_selected_plural_suffix"></string>
+    <string name="complete_setup">ตั้งค่าเสร็จสิ้น</string>
+
+    <!-- Linked Accounts -->
+    <string name="enable_daily_brief">เปิดใช้สรุปรายวัน</string>
+    <string name="enable_daily_brief_description">เชื่อมต่อ Gmail เพื่อรับสรุปรายวันที่ปรับแต่งจากอีเมลของคุณ เราจะสรุปการอัปเดตสำคัญเพื่อให้คุณเริ่มต้นวันอย่างรอบรู้</string>
+    <string name="google_calendar">Google ปฏิทิน</string>
+    <string name="outlook">Outlook</string>
+    <string name="daily_brief_sources">แหล่งข้อมูลสรุปรายวัน</string>
+    <string name="email_summaries">สรุปอีเมล</string>
+    <string name="include_email_in_brief">รวมสรุปอีเมลในสรุปรายวัน</string>
+    <string name="calendar_events">กิจกรรมปฏิทิน</string>
+    <string name="include_calendar_in_brief">รวมกิจกรรมที่กำลังจะมาถึงในสรุปรายวัน</string>
+    <string name="unlink">ยกเลิกการเชื่อมต่อ</string>
+    <string name="soon">เร็วๆ นี้</string>
+    <string name="your_privacy">ความเป็นส่วนตัวของคุณ</string>
+    <string name="privacy_note">เราอ่านเฉพาะหัวเรื่องอีเมลและผู้ส่งเพื่อสร้างสรุป เราไม่เคยเก็บเนื้อหาอีเมลของคุณหรือแชร์ข้อมูลของคุณกับบุคคลที่สาม</string>
+    <string name="microsoft_outlook_coming_soon">การเชื่อมต่อ Microsoft Outlook จะพร้อมใช้งานในการอัปเดตในอนาคต</string>
+    <string name="gmail_linking_cancelled">การเชื่อมต่อ Gmail ถูกยกเลิก</string>
+    <string name="calendar_linking_cancelled">การเชื่อมต่อปฏิทินถูกยกเลิก</string>
+    <string name="reconnect">เชื่อมต่อใหม่</string>
+
+    <!-- Hidden Topics -->
+    <string name="no_hidden_topics">ไม่มีหัวข้อที่ซ่อน</string>
+    <string name="no_hidden_topics_description">หัวข้อที่คุณซ่อนจะปรากฏที่นี่ คุณสามารถยกเลิกการซ่อนได้ตลอดเวลา</string>
+    <string name="unhide_hint">แตะไอคอนรูปตาเพื่อแสดงหัวข้ออีกครั้ง</string>
+    <string name="unhide">ยกเลิกการซ่อน</string>
+
+    <!-- Language Settings -->
+    <string name="language">ภาษา</string>
+    <string name="language_description">เลือกภาษาที่คุณต้องการสำหรับตอนพอดแคสต์</string>
+    <string name="language_note">ตอนใหม่จะถูกสร้างในภาษาที่คุณเลือก ตอนที่สร้างไว้ก่อนหน้านี้จะยังคงอยู่ในภาษาเดิม</string>
+    <string name="selected">เลือกแล้ว</string>
+
+    <!-- Voice Settings -->
+    <string name="loading_voices">กำลังโหลดเสียง\u2026</string>
+    <string name="no_voice_pairs">ไม่มีคู่เสียงที่พร้อมใช้งาน</string>
+    <string name="no_voices">ไม่มีเสียงที่พร้อมใช้งาน</string>
+    <string name="voice_pairs_description">เลือกคู่เสียงที่กำหนดค่าไว้ล่วงหน้าสำหรับพิธีกรพอดแคสต์ของคุณ</string>
+    <string name="host_1">พิธีกร 1</string>
+    <string name="host_2">พิธีกร 2</string>
+    <string name="host_1_voice">เสียงพิธีกร 1</string>
+    <string name="host_2_voice">เสียงพิธีกร 2</string>
+
+    <!-- Theme Settings -->
+    <string name="theme_system">ระบบ</string>
+    <string name="theme_system_description">ตามการตั้งค่าอุปกรณ์</string>
+    <string name="theme_dark">มืด</string>
+    <string name="theme_dark_description">โหมดมืดเสมอ</string>
+    <string name="theme_light">สว่าง</string>
+    <string name="theme_light_description">โหมดสว่างเสมอ</string>
+
+    <!-- Notification Settings -->
+    <string name="permission">สิทธิ์</string>
+    <string name="enabled">เปิดใช้งานแล้ว</string>
+    <string name="not_enabled">ไม่ได้เปิดใช้งาน</string>
+    <string name="daily_brief_schedule">กำหนดการสรุปรายวัน</string>
+    <string name="daily_brief_notifications">การแจ้งเตือนสรุปรายวัน</string>
+    <string name="daily_brief_notify_hint">รับการแจ้งเตือนเมื่อสรุปของคุณพร้อมแล้ว</string>
+    <string name="daily_brief_content">เนื้อหาสรุปรายวัน</string>
+    <string name="include_topic_updates">รวมการอัปเดตหัวข้อ</string>
+    <string name="include_topic_updates_hint">เพิ่มหัวข้อข่าวจากหัวข้อของคุณในสรุปรายวัน</string>
+    <string name="notification_info">สรุปรายวันของคุณจะถูกสร้างและพร้อมในเวลาที่กำหนด คุณจะได้รับการแจ้งเตือนเมื่อพร้อมเล่น</string>
+    <string name="select_time">เลือกเวลา</string>
+
+    <!-- Subscription / Paywall -->
+    <string name="enjoy_uninterrupted">เพลิดเพลินกับการฟังอย่างต่อเนื่อง</string>
+    <string name="no_audio_ad_interruptions">ไม่มีโฆษณาเสียงขัดจังหวะ</string>
+    <string name="seamless_episode_playback">เล่นตอนอย่างไร้รอยต่อ</string>
+    <string name="support_indie_development">สนับสนุนนักพัฒนาอิสระ</string>
+    <string name="ad_free_subscriber">คุณเป็นสมาชิกแบบไร้โฆษณา!</string>
+    <string name="yearly">รายปี</string>
+    <string name="save_percent">ประหยัด 58%%</string>
+    <string name="monthly">รายเดือน</string>
+    <string name="subscribe">สมัครสมาชิก</string>
+    <string name="restore_purchases">กู้คืนการซื้อ</string>
+    <string name="payment_fine_print">การชำระเงินจะถูกเรียกเก็บจากบัญชี Google Play ของคุณ การสมัครสมาชิกจะต่ออายุโดยอัตโนมัติเว้นแต่จะยกเลิกอย่างน้อย 24 ชั่วโมงก่อนสิ้นสุดช่วงเวลาปัจจุบัน</string>
+    <string name="per_year">/ปี</string>
+    <string name="per_month">/เดือน</string>
+    <string name="per_week">/สัปดาห์</string>
+
+    <!-- Ads -->
+    <string name="sponsored">สนับสนุนโดย</string>
+    <string name="skip">ข้าม</string>
+    <string name="skip_ad">ข้ามโฆษณา</string>
+    <string name="ad_content_description">โฆษณา</string>
+
+    <!-- Splash Screen -->
+    <string name="splash_tagline">สรุปเสียงด้วย AI ของคุณ</string>
+
+    <!-- Notifications (non-composable) -->
+    <string name="notification_good_morning">สวัสดีตอนเช้า!</string>
+    <string name="notification_daily_brief_text">ถึงเวลาสรุปรายวันของคุณ แตะเพื่อติดตามอีเมล ปฏิทิน และข่าวสาร</string>
+    <string name="daily_brief_channel_description">การแจ้งเตือนเตือนความจำสรุปรายวัน</string>
+
+    <!-- Daily Brief Playback -->
+    <string name="daily_brief_title_format">สรุปรายวัน - %s</string>
+    <string name="daily_brief_description">สรุปตอนเช้าที่ปรับแต่งเฉพาะคุณ</string>
+</resources>

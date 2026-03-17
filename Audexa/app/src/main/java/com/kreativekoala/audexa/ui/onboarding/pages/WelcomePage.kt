@@ -12,9 +12,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.kreativekoala.audexa.R
 import com.kreativekoala.audexa.ui.theme.*
 
 @Composable
@@ -53,7 +55,7 @@ fun WelcomePage(
         Spacer(modifier = Modifier.height(32.dp))
 
         Text(
-            text = "Welcome to Audexa",
+            text = stringResource(R.string.welcome_to_audexa),
             style = MaterialTheme.typography.headlineLarge,
             color = MaterialTheme.colorScheme.onBackground,
             fontWeight = FontWeight.Bold,
@@ -63,7 +65,7 @@ fun WelcomePage(
         Spacer(modifier = Modifier.height(12.dp))
 
         Text(
-            text = "Your personalized AI radio that turns the latest news, tech, and topics into engaging podcast-style briefings.",
+            text = stringResource(R.string.welcome_description),
             style = MaterialTheme.typography.bodyLarge,
             color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f),
             textAlign = TextAlign.Center,
@@ -84,7 +86,7 @@ fun WelcomePage(
             )
         ) {
             Text(
-                text = "Get Started",
+                text = stringResource(R.string.get_started),
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.SemiBold
             )

@@ -53,10 +53,10 @@ class NotificationService @Inject constructor(
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(
                 CHANNEL_ID_DAILY_BRIEF,
-                CHANNEL_NAME_DAILY_BRIEF,
+                context.getString(R.string.daily_brief),
                 NotificationManager.IMPORTANCE_HIGH
             ).apply {
-                description = "Daily brief reminder notifications"
+                description = context.getString(R.string.daily_brief_channel_description)
                 enableVibration(true)
                 setShowBadge(true)
             }
@@ -167,8 +167,8 @@ class NotificationService @Inject constructor(
 
         val notification = NotificationCompat.Builder(context, CHANNEL_ID_DAILY_BRIEF)
             .setSmallIcon(R.drawable.ic_launcher_foreground)
-            .setContentTitle("Good Morning!")
-            .setContentText("Time for your Daily Brief. Tap to get caught up on emails, calendar, and news.")
+            .setContentTitle(context.getString(R.string.notification_good_morning))
+            .setContentText(context.getString(R.string.notification_daily_brief_text))
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setAutoCancel(true)
             .setContentIntent(pendingIntent)

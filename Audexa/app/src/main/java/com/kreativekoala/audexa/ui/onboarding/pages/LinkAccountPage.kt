@@ -14,11 +14,13 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.common.api.ApiException
+import com.kreativekoala.audexa.R
 import com.kreativekoala.audexa.ui.onboarding.OnboardingUiState
 import com.kreativekoala.audexa.ui.onboarding.OnboardingViewModel
 import com.kreativekoala.audexa.ui.theme.*
@@ -66,7 +68,7 @@ fun LinkAccountPage(
         Spacer(modifier = Modifier.height(48.dp))
 
         Text(
-            text = "Connect Your Account",
+            text = stringResource(R.string.connect_your_account),
             style = MaterialTheme.typography.headlineMedium,
             color = MaterialTheme.colorScheme.onBackground,
             fontWeight = FontWeight.Bold,
@@ -76,7 +78,7 @@ fun LinkAccountPage(
         Spacer(modifier = Modifier.height(8.dp))
 
         Text(
-            text = "Link your Google account to get personalized daily briefings from your email and calendar.",
+            text = stringResource(R.string.connect_account_description),
             style = MaterialTheme.typography.bodyLarge,
             color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f),
             textAlign = TextAlign.Center,
@@ -88,11 +90,11 @@ fun LinkAccountPage(
         // Gmail connect card
         AccountLinkCard(
             icon = { Icon(Icons.Default.Email, contentDescription = null, tint = AccentOrange) },
-            title = "Gmail",
+            title = stringResource(R.string.gmail),
             subtitle = if (uiState.googleLinked) {
-                uiState.linkedEmail ?: "Connected"
+                uiState.linkedEmail ?: stringResource(R.string.connected)
             } else {
-                "Include email highlights in your briefing"
+                stringResource(R.string.include_email_highlights)
             },
             isLinked = uiState.googleLinked,
             isLoading = uiState.isLinkingGoogle,
@@ -107,11 +109,11 @@ fun LinkAccountPage(
         if (uiState.googleLinked) {
             AccountLinkCard(
                 icon = { Icon(Icons.Default.CalendarMonth, contentDescription = null, tint = AccentOrange) },
-                title = "Calendar",
+                title = stringResource(R.string.calendar),
                 subtitle = if (uiState.calendarEnabled) {
-                    "Connected"
+                    stringResource(R.string.connected)
                 } else {
-                    "Include upcoming events in your briefing"
+                    stringResource(R.string.include_calendar_events)
                 },
                 isLinked = uiState.calendarEnabled,
                 isLoading = uiState.isLinkingCalendar,
@@ -150,7 +152,7 @@ fun LinkAccountPage(
             )
         ) {
             Text(
-                text = if (uiState.googleLinked) "Continue" else "Skip for Now",
+                text = if (uiState.googleLinked) stringResource(R.string.continue_button) else stringResource(R.string.skip_for_now),
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.SemiBold
             )
@@ -160,7 +162,7 @@ fun LinkAccountPage(
             Spacer(modifier = Modifier.height(8.dp))
 
             Text(
-                text = "You can always connect later in Settings",
+                text = stringResource(R.string.connect_later_hint),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.5f),
                 textAlign = TextAlign.Center
@@ -230,14 +232,14 @@ private fun AccountLinkCard(
             } else if (isLinked) {
                 Icon(
                     imageVector = Icons.Default.Check,
-                    contentDescription = "Connected",
+                    contentDescription = stringResource(R.string.connected),
                     tint = Success,
                     modifier = Modifier.size(24.dp)
                 )
             } else {
                 TextButton(onClick = onConnect) {
                     Text(
-                        text = "Connect",
+                        text = stringResource(R.string.connect),
                         color = AccentOrange,
                         fontWeight = FontWeight.SemiBold
                     )

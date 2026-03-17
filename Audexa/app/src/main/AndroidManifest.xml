@@ -18,6 +18,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Audexa"
+        android:localeConfig="@xml/locales_config"
         tools:targetApi="34">
         
         <activity

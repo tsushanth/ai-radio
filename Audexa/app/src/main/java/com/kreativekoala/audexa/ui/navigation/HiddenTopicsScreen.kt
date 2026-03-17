@@ -12,10 +12,12 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.kreativekoala.audexa.R
 import com.kreativekoala.audexa.data.model.Topic
 import com.kreativekoala.audexa.ui.theme.*
 
@@ -32,7 +34,7 @@ fun HiddenTopicsScreen(
             TopAppBar(
                 title = {
                     Text(
-                        "Hidden Topics",
+                        stringResource(R.string.hidden_topics),
                         color = PrimaryText,
                         fontWeight = FontWeight.Bold
                     )
@@ -41,7 +43,7 @@ fun HiddenTopicsScreen(
                     IconButton(onClick = onNavigateBack) {
                         Icon(
                             Icons.Default.ArrowBack,
-                            contentDescription = "Back",
+                            contentDescription = stringResource(R.string.back),
                             tint = PrimaryText
                         )
                     }
@@ -73,14 +75,14 @@ fun HiddenTopicsScreen(
                     )
                     Spacer(modifier = Modifier.height(16.dp))
                     Text(
-                        text = "No Hidden Topics",
+                        text = stringResource(R.string.no_hidden_topics),
                         style = MaterialTheme.typography.titleMedium,
                         color = PrimaryText,
                         fontWeight = FontWeight.Bold
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
-                        text = "Topics you hide will appear here. You can unhide them anytime.",
+                        text = stringResource(R.string.no_hidden_topics_description),
                         style = MaterialTheme.typography.bodyMedium,
                         color = SecondaryText,
                         textAlign = TextAlign.Center
@@ -98,7 +100,7 @@ fun HiddenTopicsScreen(
             ) {
                 item {
                     Text(
-                        text = "Tap the eye icon to show a topic again.",
+                        text = stringResource(R.string.unhide_hint),
                         style = MaterialTheme.typography.bodyMedium,
                         color = SecondaryText,
                         modifier = Modifier.padding(bottom = 8.dp)
@@ -169,7 +171,7 @@ private fun HiddenTopicRow(
             IconButton(onClick = onUnhide) {
                 Icon(
                     Icons.Default.Visibility,
-                    contentDescription = "Unhide",
+                    contentDescription = stringResource(R.string.unhide),
                     tint = AccentOrange
                 )
             }

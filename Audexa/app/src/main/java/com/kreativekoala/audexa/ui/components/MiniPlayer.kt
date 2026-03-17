@@ -13,9 +13,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import com.kreativekoala.audexa.R
 import com.kreativekoala.audexa.ui.theme.*
 
 @Composable
@@ -92,7 +94,7 @@ fun MiniPlayer(
 
                         if (isBuffering) {
                             Text(
-                                text = "Buffering...",
+                                text = stringResource(R.string.buffering),
                                 style = MaterialTheme.typography.bodySmall,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
@@ -106,7 +108,7 @@ fun MiniPlayer(
                     ) {
                         Icon(
                             Icons.Default.Replay10,
-                            contentDescription = "Skip back",
+                            contentDescription = stringResource(R.string.skip_back_mini),
                             tint = MaterialTheme.colorScheme.onSurface,
                             modifier = Modifier.size(22.dp)
                         )
@@ -126,7 +128,7 @@ fun MiniPlayer(
                         } else {
                             Icon(
                                 imageVector = if (isPlaying) Icons.Default.Pause else Icons.Default.PlayArrow,
-                                contentDescription = if (isPlaying) "Pause" else "Play",
+                                contentDescription = if (isPlaying) stringResource(R.string.pause) else stringResource(R.string.play),
                                 tint = MaterialTheme.colorScheme.onSurface,
                                 modifier = Modifier.size(28.dp)
                             )
@@ -140,7 +142,7 @@ fun MiniPlayer(
                     ) {
                         Icon(
                             Icons.Default.Forward10,
-                            contentDescription = "Skip forward",
+                            contentDescription = stringResource(R.string.skip_forward_mini),
                             tint = MaterialTheme.colorScheme.onSurface,
                             modifier = Modifier.size(22.dp)
                         )

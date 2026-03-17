@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Audexa</string>
+    <string name="app_tagline">La tua radio personale con IA</string>
+
+    <!-- Auth -->
+    <string name="sign_in_with_google">Accedi con Google</string>
+    <string name="sign_out">Esci</string>
+    <string name="delete_account">Elimina account</string>
+    <string name="auth_description">Ascolta podcast generati dall\'IA su argomenti che ti interessano. Collega la tua e-mail nelle impostazioni per ricevere riepiloghi quotidiani personalizzati.</string>
+    <string name="auth_terms">Continuando, accetti i nostri Termini di servizio e la nostra Informativa sulla privacy</string>
+    <string name="start">Inizia</string>
+
+    <!-- Navigation -->
+    <string name="nav_home">Home</string>
+    <string name="nav_profile">Profilo</string>
+    <string name="back">Indietro</string>
+    <string name="close">Chiudi</string>
+    <string name="cancel">Annulla</string>
+    <string name="ok">OK</string>
+    <string name="delete">Elimina</string>
+    <string name="retry">Riprova</string>
+    <string name="enable">Attiva</string>
+
+    <!-- Tabs -->
+    <string name="tab_for_you">Per te</string>
+    <string name="tab_discover">Scopri</string>
+
+    <!-- Home -->
+    <string name="good_morning">Buongiorno</string>
+    <string name="good_afternoon">Buon pomeriggio</string>
+    <string name="good_evening">Buonasera</string>
+    <string name="daily_brief">Riepilogo quotidiano</string>
+    <string name="daily_brief_subtitle">Riepilogo quotidiano \u2022 %s</string>
+    <string name="keep_listening">Continua ad ascoltare</string>
+    <string name="your_topics">I tuoi argomenti</string>
+    <string name="topic_podcasts">Podcast per argomento</string>
+    <string name="recommended_for_you">Consigliato per te</string>
+    <string name="more_for_you">Altro per te</string>
+    <string name="all_topics">Tutti gli argomenti</string>
+    <string name="matching_topics">Argomenti corrispondenti</string>
+    <string name="tap_to_explore">Tocca per esplorare e riprodurre</string>
+    <string name="link_account_prompt">Collega la tua e-mail per generare riepiloghi personalizzati</string>
+    <string name="link_account">Collega account</string>
+    <string name="find_new_shows">Trova nuovi programmi</string>
+    <string name="search">Cerca</string>
+    <string name="clear">Cancella</string>
+    <string name="no_results_for">Nessun risultato per \"%s\"</string>
+
+    <!-- Profile -->
+    <string name="profile">Profilo</string>
+    <string name="linked_accounts">Account collegati</string>
+    <string name="preferences">Preferenze</string>
+    <string name="podcast_language">Lingua del podcast</string>
+    <string name="briefing_time">Ora del riepilogo</string>
+    <string name="topics">Argomenti</string>
+    <string name="voice_preference">Preferenza vocale</string>
+    <string name="hidden_topics">Argomenti nascosti</string>
+    <string name="about">Informazioni</string>
+    <string name="version">Versione</string>
+    <string name="terms_of_service">Termini di servizio</string>
+    <string name="privacy_policy">Informativa sulla privacy</string>
+    <string name="premium">Premium</string>
+    <string name="go_ad_free">Senza pubblicita</string>
+    <string name="ad_free">Senza pubblicita</string>
+    <string name="active_subscription">Abbonamento attivo</string>
+    <string name="remove_all_ads">Rimuovi tutte le pubblicita</string>
+    <string name="email_accounts">Account e-mail</string>
+    <string name="app_theme">Tema dell\'app</string>
+    <string name="voice_settings">Impostazioni vocali</string>
+    <string name="choose_podcast_voices">Scegli le voci del podcast</string>
+    <string name="hidden_count">%d nascosti</string>
+    <string name="notifications">Notifiche</string>
+    <string name="daily_brief_reminders">Promemoria riepilogo quotidiano</string>
+    <string name="sign_out_confirm">Sei sicuro di voler uscire?</string>
+    <string name="delete_account_confirm">Sei sicuro di voler eliminare il tuo account? Questo eliminera permanentemente tutti i tuoi dati, inclusi podcast, preferenze e account collegati. Questa azione non puo essere annullata.</string>
+
+    <!-- Player -->
+    <string name="playing">In riproduzione</string>
+    <string name="paused">In pausa</string>
+    <string name="play">Riproduci</string>
+    <string name="pause">Pausa</string>
+    <string name="loading">Caricamento\u2026</string>
+    <string name="generating">Generazione\u2026</string>
+    <string name="generating_progress">Generazione\u2026 %d%%</string>
+    <string name="generate_episode">Genera episodio</string>
+    <string name="regenerate">Rigenera</string>
+    <string name="episode_history">Cronologia episodi</string>
+    <string name="skip_back">Indietro di 15 secondi</string>
+    <string name="skip_forward">Avanti di 15 secondi</string>
+    <string name="skip_back_mini">Indietro</string>
+    <string name="skip_forward_mini">Avanti</string>
+    <string name="buffering">Buffering\u2026</string>
+    <string name="sleep_timer">Timer di spegnimento</string>
+    <string name="timer">Timer</string>
+    <string name="sleep_timer_5_min">5 min</string>
+    <string name="sleep_timer_10_min">10 min</string>
+    <string name="sleep_timer_15_min">15 min</string>
+    <string name="sleep_timer_30_min">30 min</string>
+    <string name="sleep_timer_1_hour">1 ora</string>
+    <string name="min_format">%d min</string>
+    <string name="today">Oggi</string>
+    <string name="bookmark">Segnalibro</string>
+    <string name="more">Altro</string>
+    <string name="hide_topic">Nascondi argomento</string>
+    <string name="hide">Nascondi</string>
+
+    <!-- Errors -->
+    <string name="error_generic">Qualcosa e andato storto</string>
+    <string name="error_network">Errore di rete. Controlla la tua connessione.</string>
+    <string name="error_auth">Autenticazione fallita</string>
+    <string name="error_no_internet">Nessuna connessione Internet. Controlla la tua rete e riprova.</string>
+    <string name="generation_failed">Generazione fallita</string>
+
+    <!-- Misc -->
+    <string name="min_daily">%d min al giorno</string>
+    <string name="connected">Collegato</string>
+    <string name="not_connected">Non collegato</string>
+    <string name="not_connected_lower">Non collegato</string>
+    <string name="coming_soon">Prossimamente</string>
+    <string name="microsoft_coming_soon">L\'integrazione Microsoft arrivera presto. Resta sintonizzato!</string>
+
+    <!-- Onboarding -->
+    <string name="welcome_to_audexa">Benvenuto su Audexa</string>
+    <string name="welcome_description">La tua radio IA personalizzata che trasforma le ultime notizie, tecnologia e argomenti in coinvolgenti riepiloghi stile podcast.</string>
+    <string name="get_started">Inizia</string>
+    <string name="connect_your_account">Collega il tuo account</string>
+    <string name="connect_account_description">Collega il tuo account Google per ricevere riepiloghi quotidiani personalizzati da e-mail e calendario.</string>
+    <string name="gmail">Gmail</string>
+    <string name="calendar">Calendario</string>
+    <string name="include_email_highlights">Includi i punti salienti delle e-mail nel tuo riepilogo</string>
+    <string name="include_calendar_events">Includi i prossimi eventi nel tuo riepilogo</string>
+    <string name="continue_button">Continua</string>
+    <string name="skip_for_now">Salta per ora</string>
+    <string name="connect_later_hint">Puoi sempre collegare piu tardi nelle Impostazioni</string>
+    <string name="connect">Collega</string>
+    <string name="choose_your_interests">Scegli i tuoi interessi</string>
+    <string name="choose_interests_description">Seleziona gli argomenti che vorresti ascoltare. Genereremo episodi quotidiani solo per te.</string>
+    <string name="topics_selected">%d argomento%s selezionato/i</string>
+    <string name="topics_selected_plural_suffix">i</string>
+    <string name="complete_setup">Completa la configurazione</string>
+
+    <!-- Linked Accounts -->
+    <string name="enable_daily_brief">Attiva riepilogo quotidiano</string>
+    <string name="enable_daily_brief_description">Collega il tuo Gmail per ricevere riepiloghi quotidiani personalizzati basati sulle tue e-mail. Riassumeremo gli aggiornamenti importanti per farti iniziare la giornata informato.</string>
+    <string name="google_calendar">Google Calendar</string>
+    <string name="outlook">Outlook</string>
+    <string name="daily_brief_sources">Fonti del riepilogo quotidiano</string>
+    <string name="email_summaries">Riepiloghi e-mail</string>
+    <string name="include_email_in_brief">Includi riepiloghi e-mail nel riepilogo quotidiano</string>
+    <string name="calendar_events">Eventi del calendario</string>
+    <string name="include_calendar_in_brief">Includi prossimi eventi nel riepilogo quotidiano</string>
+    <string name="unlink">Scollega</string>
+    <string name="soon">Presto</string>
+    <string name="your_privacy">La tua privacy</string>
+    <string name="privacy_note">Leggiamo solo gli oggetti e i mittenti delle e-mail per creare riepiloghi. Non memorizziamo mai il contenuto delle tue e-mail ne condividiamo i tuoi dati con terze parti.</string>
+    <string name="microsoft_outlook_coming_soon">Il collegamento con Microsoft Outlook sara disponibile in un futuro aggiornamento.</string>
+    <string name="gmail_linking_cancelled">Il collegamento con Gmail e stato annullato</string>
+    <string name="calendar_linking_cancelled">Il collegamento del calendario e stato annullato</string>
+    <string name="reconnect">Riconnetti</string>
+
+    <!-- Hidden Topics -->
+    <string name="no_hidden_topics">Nessun argomento nascosto</string>
+    <string name="no_hidden_topics_description">Gli argomenti che nascondi appariranno qui. Puoi mostrarli in qualsiasi momento.</string>
+    <string name="unhide_hint">Tocca l\'icona dell\'occhio per mostrare un argomento di nuovo.</string>
+    <string name="unhide">Mostra</string>
+
+    <!-- Language Settings -->
+    <string name="language">Lingua</string>
+    <string name="language_description">Scegli la lingua preferita per gli episodi del podcast.</string>
+    <string name="language_note">I nuovi episodi saranno generati nella lingua selezionata. Gli episodi generati in precedenza rimarranno nella loro lingua originale.</string>
+    <string name="selected">Selezionato</string>
+
+    <!-- Voice Settings -->
+    <string name="loading_voices">Caricamento voci\u2026</string>
+    <string name="no_voice_pairs">Nessuna coppia di voci disponibile</string>
+    <string name="no_voices">Nessuna voce disponibile</string>
+    <string name="voice_pairs_description">Seleziona una coppia di voci preconfigurata per i conduttori del tuo podcast.</string>
+    <string name="host_1">Conduttore 1</string>
+    <string name="host_2">Conduttore 2</string>
+    <string name="host_1_voice">Voce conduttore 1</string>
+    <string name="host_2_voice">Voce conduttore 2</string>
+
+    <!-- Theme Settings -->
+    <string name="theme_system">Sistema</string>
+    <string name="theme_system_description">Segui le impostazioni del dispositivo</string>
+    <string name="theme_dark">Scuro</string>
+    <string name="theme_dark_description">Sempre modalita scura</string>
+    <string name="theme_light">Chiaro</string>
+    <string name="theme_light_description">Sempre modalita chiara</string>
+
+    <!-- Notification Settings -->
+    <string name="permission">Permesso</string>
+    <string name="enabled">Attivato</string>
+    <string name="not_enabled">Non attivato</string>
+    <string name="daily_brief_schedule">Programmazione riepilogo quotidiano</string>
+    <string name="daily_brief_notifications">Notifiche riepilogo quotidiano</string>
+    <string name="daily_brief_notify_hint">Ricevi una notifica quando il tuo riepilogo e pronto</string>
+    <string name="daily_brief_content">Contenuto riepilogo quotidiano</string>
+    <string name="include_topic_updates">Includi aggiornamenti argomenti</string>
+    <string name="include_topic_updates_hint">Aggiungi titoli dei tuoi argomenti al riepilogo quotidiano</string>
+    <string name="notification_info">Il tuo riepilogo quotidiano sara generato e pronto all\'ora programmata. Riceverai una notifica quando sara pronto per l\'ascolto.</string>
+    <string name="select_time">Seleziona ora</string>
+
+    <!-- Subscription / Paywall -->
+    <string name="enjoy_uninterrupted">Goditi l\'ascolto senza interruzioni</string>
+    <string name="no_audio_ad_interruptions">Nessuna interruzione pubblicitaria audio</string>
+    <string name="seamless_episode_playback">Riproduzione fluida degli episodi</string>
+    <string name="support_indie_development">Supporta lo sviluppo indipendente</string>
+    <string name="ad_free_subscriber">Sei un abbonato senza pubblicita!</string>
+    <string name="yearly">Annuale</string>
+    <string name="save_percent">Risparmia 58%%</string>
+    <string name="monthly">Mensile</string>
+    <string name="subscribe">Abbonati</string>
+    <string name="restore_purchases">Ripristina acquisti</string>
+    <string name="payment_fine_print">Il pagamento sara addebitato sul tuo account Google Play. L\'abbonamento si rinnova automaticamente a meno che non venga annullato almeno 24 ore prima della fine del periodo corrente.</string>
+    <string name="per_year">/anno</string>
+    <string name="per_month">/mese</string>
+    <string name="per_week">/settimana</string>
+
+    <!-- Ads -->
+    <string name="sponsored">SPONSORIZZATO</string>
+    <string name="skip">Salta</string>
+    <string name="skip_ad">Salta pubblicita</string>
+    <string name="ad_content_description">Pubblicita</string>
+
+    <!-- Splash Screen -->
+    <string name="splash_tagline">Il tuo riepilogo audio con IA</string>
+
+    <!-- Notifications (non-composable) -->
+    <string name="notification_good_morning">Buongiorno!</string>
+    <string name="notification_daily_brief_text">E ora del tuo riepilogo quotidiano. Tocca per aggiornarti su e-mail, calendario e notizie.</string>
+    <string name="daily_brief_channel_description">Notifiche promemoria riepilogo quotidiano</string>
+
+    <!-- Daily Brief Playback -->
+    <string name="daily_brief_title_format">Riepilogo quotidiano - %s</string>
+    <string name="daily_brief_description">Il tuo riepilogo mattutino personalizzato</string>
+</resources>

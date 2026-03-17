@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Audexa</string>
+    <string name="app_tagline">Đài phát thanh AI cá nhân của bạn</string>
+
+    <!-- Auth -->
+    <string name="sign_in_with_google">Đăng nhập bằng Google</string>
+    <string name="sign_out">Đăng xuất</string>
+    <string name="delete_account">Xóa tài khoản</string>
+    <string name="auth_description">Nghe podcast do AI tạo về các chủ đề bạn quan tâm. Liên kết email trong cài đặt để nhận bản tóm tắt hàng ngày được cá nhân hóa.</string>
+    <string name="auth_terms">Bằng cách tiếp tục, bạn đồng ý với Điều khoản dịch vụ và Chính sách bảo mật của chúng tôi</string>
+    <string name="start">Bắt đầu</string>
+
+    <!-- Navigation -->
+    <string name="nav_home">Trang chủ</string>
+    <string name="nav_profile">Hồ sơ</string>
+    <string name="back">Quay lại</string>
+    <string name="close">Đóng</string>
+    <string name="cancel">Hủy</string>
+    <string name="ok">OK</string>
+    <string name="delete">Xóa</string>
+    <string name="retry">Thử lại</string>
+    <string name="enable">Bật</string>
+
+    <!-- Tabs -->
+    <string name="tab_for_you">Dành cho bạn</string>
+    <string name="tab_discover">Khám phá</string>
+
+    <!-- Home -->
+    <string name="good_morning">Chào buổi sáng</string>
+    <string name="good_afternoon">Chào buổi chiều</string>
+    <string name="good_evening">Chào buổi tối</string>
+    <string name="daily_brief">Tóm tắt hàng ngày</string>
+    <string name="daily_brief_subtitle">Tóm tắt hàng ngày \u2022 %s</string>
+    <string name="keep_listening">Tiếp tục nghe</string>
+    <string name="your_topics">Chủ đề của bạn</string>
+    <string name="topic_podcasts">Podcast theo chủ đề</string>
+    <string name="recommended_for_you">Đề xuất cho bạn</string>
+    <string name="more_for_you">Thêm cho bạn</string>
+    <string name="all_topics">Tất cả chủ đề</string>
+    <string name="matching_topics">Chủ đề phù hợp</string>
+    <string name="tap_to_explore">Nhấn để khám phá và phát</string>
+    <string name="link_account_prompt">Liên kết email để tạo bản tóm tắt được cá nhân hóa</string>
+    <string name="link_account">Liên kết tài khoản</string>
+    <string name="find_new_shows">Tìm chương trình mới</string>
+    <string name="search">Tìm kiếm</string>
+    <string name="clear">Xóa</string>
+    <string name="no_results_for">Không có kết quả cho \"%s\"</string>
+
+    <!-- Profile -->
+    <string name="profile">Hồ sơ</string>
+    <string name="linked_accounts">Tài khoản đã liên kết</string>
+    <string name="preferences">Tùy chọn</string>
+    <string name="podcast_language">Ngôn ngữ Podcast</string>
+    <string name="briefing_time">Thời gian tóm tắt</string>
+    <string name="topics">Chủ đề</string>
+    <string name="voice_preference">Tùy chọn giọng nói</string>
+    <string name="hidden_topics">Chủ đề đã ẩn</string>
+    <string name="about">Giới thiệu</string>
+    <string name="version">Phiên bản</string>
+    <string name="terms_of_service">Điều khoản dịch vụ</string>
+    <string name="privacy_policy">Chính sách bảo mật</string>
+    <string name="premium">Premium</string>
+    <string name="go_ad_free">Không quảng cáo</string>
+    <string name="ad_free">Không quảng cáo</string>
+    <string name="active_subscription">Đăng ký đang hoạt động</string>
+    <string name="remove_all_ads">Xóa tất cả quảng cáo</string>
+    <string name="email_accounts">Tài khoản email</string>
+    <string name="app_theme">Giao diện ứng dụng</string>
+    <string name="voice_settings">Cài đặt giọng nói</string>
+    <string name="choose_podcast_voices">Chọn giọng nói podcast</string>
+    <string name="hidden_count">%d đã ẩn</string>
+    <string name="notifications">Thông báo</string>
+    <string name="daily_brief_reminders">Nhắc nhở tóm tắt hàng ngày</string>
+    <string name="sign_out_confirm">Bạn có chắc chắn muốn đăng xuất không?</string>
+    <string name="delete_account_confirm">Bạn có chắc chắn muốn xóa tài khoản không? Thao tác này sẽ xóa vĩnh viễn tất cả dữ liệu của bạn bao gồm podcast, tùy chọn và tài khoản đã liên kết. Hành động này không thể hoàn tác.</string>
+
+    <!-- Player -->
+    <string name="playing">Đang phát</string>
+    <string name="paused">Đã tạm dừng</string>
+    <string name="play">Phát</string>
+    <string name="pause">Tạm dừng</string>
+    <string name="loading">Đang tải\u2026</string>
+    <string name="generating">Đang tạo\u2026</string>
+    <string name="generating_progress">Đang tạo\u2026 %d%%</string>
+    <string name="generate_episode">Tạo tập</string>
+    <string name="regenerate">Tạo lại</string>
+    <string name="episode_history">Lịch sử tập</string>
+    <string name="skip_back">Lùi 15 giây</string>
+    <string name="skip_forward">Tiến 15 giây</string>
+    <string name="skip_back_mini">Lùi lại</string>
+    <string name="skip_forward_mini">Tiến tới</string>
+    <string name="buffering">Đang tải bộ đệm\u2026</string>
+    <string name="sleep_timer">Hẹn giờ ngủ</string>
+    <string name="timer">Hẹn giờ</string>
+    <string name="sleep_timer_5_min">5 phút</string>
+    <string name="sleep_timer_10_min">10 phút</string>
+    <string name="sleep_timer_15_min">15 phút</string>
+    <string name="sleep_timer_30_min">30 phút</string>
+    <string name="sleep_timer_1_hour">1 giờ</string>
+    <string name="min_format">%d phút</string>
+    <string name="today">Hôm nay</string>
+    <string name="bookmark">Đánh dấu</string>
+    <string name="more">Thêm</string>
+    <string name="hide_topic">Ẩn chủ đề</string>
+    <string name="hide">Ẩn</string>
+
+    <!-- Errors -->
+    <string name="error_generic">Đã xảy ra lỗi</string>
+    <string name="error_network">Lỗi mạng. Vui lòng kiểm tra kết nối của bạn.</string>
+    <string name="error_auth">Xác thực thất bại</string>
+    <string name="error_no_internet">Không có kết nối internet. Vui lòng kiểm tra mạng và thử lại.</string>
+    <string name="generation_failed">Tạo thất bại</string>
+
+    <!-- Misc -->
+    <string name="min_daily">%d phút mỗi ngày</string>
+    <string name="connected">Đã kết nối</string>
+    <string name="not_connected">Chưa kết nối</string>
+    <string name="not_connected_lower">Chưa kết nối</string>
+    <string name="coming_soon">Sắp ra mắt</string>
+    <string name="microsoft_coming_soon">Tích hợp tài khoản Microsoft sắp ra mắt. Hãy theo dõi!</string>
+
+    <!-- Onboarding -->
+    <string name="welcome_to_audexa">Chào mừng đến với Audexa</string>
+    <string name="welcome_description">Đài phát thanh AI cá nhân hóa biến tin tức, công nghệ và chủ đề mới nhất thành các bản tóm tắt hấp dẫn theo phong cách podcast.</string>
+    <string name="get_started">Bắt đầu</string>
+    <string name="connect_your_account">Kết nối tài khoản của bạn</string>
+    <string name="connect_account_description">Liên kết tài khoản Google để nhận bản tóm tắt hàng ngày được cá nhân hóa từ email và lịch của bạn.</string>
+    <string name="gmail">Gmail</string>
+    <string name="calendar">Lịch</string>
+    <string name="include_email_highlights">Bao gồm điểm nổi bật email trong bản tóm tắt</string>
+    <string name="include_calendar_events">Bao gồm sự kiện sắp tới trong bản tóm tắt</string>
+    <string name="continue_button">Tiếp tục</string>
+    <string name="skip_for_now">Bỏ qua</string>
+    <string name="connect_later_hint">Bạn luôn có thể kết nối sau trong Cài đặt</string>
+    <string name="connect">Kết nối</string>
+    <string name="choose_your_interests">Chọn sở thích của bạn</string>
+    <string name="choose_interests_description">Chọn chủ đề bạn muốn nghe. Chúng tôi sẽ tạo các tập hàng ngày dành riêng cho bạn.</string>
+    <string name="topics_selected">Đã chọn %d chủ đề</string>
+    <string name="topics_selected_plural_suffix"></string>
+    <string name="complete_setup">Hoàn tất cài đặt</string>
+
+    <!-- Linked Accounts -->
+    <string name="enable_daily_brief">Bật tóm tắt hàng ngày</string>
+    <string name="enable_daily_brief_description">Kết nối Gmail để nhận bản tóm tắt hàng ngày được cá nhân hóa dựa trên email của bạn. Chúng tôi sẽ tóm tắt các cập nhật quan trọng để bạn bắt đầu ngày mới với đầy đủ thông tin.</string>
+    <string name="google_calendar">Google Lịch</string>
+    <string name="outlook">Outlook</string>
+    <string name="daily_brief_sources">Nguồn tóm tắt hàng ngày</string>
+    <string name="email_summaries">Tóm tắt email</string>
+    <string name="include_email_in_brief">Bao gồm tóm tắt email trong Tóm tắt hàng ngày</string>
+    <string name="calendar_events">Sự kiện lịch</string>
+    <string name="include_calendar_in_brief">Bao gồm sự kiện sắp tới trong Tóm tắt hàng ngày</string>
+    <string name="unlink">Hủy liên kết</string>
+    <string name="soon">Sắp có</string>
+    <string name="your_privacy">Quyền riêng tư của bạn</string>
+    <string name="privacy_note">Chúng tôi chỉ đọc tiêu đề email và người gửi để tạo bản tóm tắt. Chúng tôi không bao giờ lưu trữ nội dung email hoặc chia sẻ dữ liệu của bạn với bên thứ ba.</string>
+    <string name="microsoft_outlook_coming_soon">Liên kết Microsoft Outlook sẽ có trong bản cập nhật tương lai.</string>
+    <string name="gmail_linking_cancelled">Liên kết Gmail đã bị hủy</string>
+    <string name="calendar_linking_cancelled">Liên kết lịch đã bị hủy</string>
+    <string name="reconnect">Kết nối lại</string>
+
+    <!-- Hidden Topics -->
+    <string name="no_hidden_topics">Không có chủ đề ẩn</string>
+    <string name="no_hidden_topics_description">Các chủ đề bạn ẩn sẽ xuất hiện ở đây. Bạn có thể hiện lại bất cứ lúc nào.</string>
+    <string name="unhide_hint">Nhấn vào biểu tượng mắt để hiển thị lại chủ đề.</string>
+    <string name="unhide">Hiện lại</string>
+
+    <!-- Language Settings -->
+    <string name="language">Ngôn ngữ</string>
+    <string name="language_description">Chọn ngôn ngữ ưa thích cho các tập podcast.</string>
+    <string name="language_note">Các tập mới sẽ được tạo bằng ngôn ngữ đã chọn. Các tập đã tạo trước đó sẽ giữ nguyên ngôn ngữ gốc.</string>
+    <string name="selected">Đã chọn</string>
+
+    <!-- Voice Settings -->
+    <string name="loading_voices">Đang tải giọng nói\u2026</string>
+    <string name="no_voice_pairs">Không có cặp giọng nói nào</string>
+    <string name="no_voices">Không có giọng nói nào</string>
+    <string name="voice_pairs_description">Chọn cặp giọng nói được cấu hình sẵn cho người dẫn podcast.</string>
+    <string name="host_1">Người dẫn 1</string>
+    <string name="host_2">Người dẫn 2</string>
+    <string name="host_1_voice">Giọng người dẫn 1</string>
+    <string name="host_2_voice">Giọng người dẫn 2</string>
+
+    <!-- Theme Settings -->
+    <string name="theme_system">Hệ thống</string>
+    <string name="theme_system_description">Theo cài đặt thiết bị</string>
+    <string name="theme_dark">Tối</string>
+    <string name="theme_dark_description">Luôn ở chế độ tối</string>
+    <string name="theme_light">Sáng</string>
+    <string name="theme_light_description">Luôn ở chế độ sáng</string>
+
+    <!-- Notification Settings -->
+    <string name="permission">Quyền</string>
+    <string name="enabled">Đã bật</string>
+    <string name="not_enabled">Chưa bật</string>
+    <string name="daily_brief_schedule">Lịch tóm tắt hàng ngày</string>
+    <string name="daily_brief_notifications">Thông báo tóm tắt hàng ngày</string>
+    <string name="daily_brief_notify_hint">Nhận thông báo khi bản tóm tắt sẵn sàng</string>
+    <string name="daily_brief_content">Nội dung tóm tắt hàng ngày</string>
+    <string name="include_topic_updates">Bao gồm cập nhật chủ đề</string>
+    <string name="include_topic_updates_hint">Thêm tiêu đề từ chủ đề của bạn vào Tóm tắt hàng ngày</string>
+    <string name="notification_info">Bản tóm tắt hàng ngày sẽ được tạo và sẵn sàng vào thời gian đã lên lịch. Bạn sẽ nhận được thông báo khi sẵn sàng phát.</string>
+    <string name="select_time">Chọn thời gian</string>
+
+    <!-- Subscription / Paywall -->
+    <string name="enjoy_uninterrupted">Tận hưởng nghe không gián đoạn</string>
+    <string name="no_audio_ad_interruptions">Không có quảng cáo âm thanh gián đoạn</string>
+    <string name="seamless_episode_playback">Phát tập liền mạch</string>
+    <string name="support_indie_development">Hỗ trợ phát triển độc lập</string>
+    <string name="ad_free_subscriber">Bạn là người đăng ký không quảng cáo!</string>
+    <string name="yearly">Hàng năm</string>
+    <string name="save_percent">Tiết kiệm 58%%</string>
+    <string name="monthly">Hàng tháng</string>
+    <string name="subscribe">Đăng ký</string>
+    <string name="restore_purchases">Khôi phục mua hàng</string>
+    <string name="payment_fine_print">Thanh toán sẽ được tính vào tài khoản Google Play của bạn. Đăng ký tự động gia hạn trừ khi bị hủy ít nhất 24 giờ trước khi kết thúc kỳ hiện tại.</string>
+    <string name="per_year">/năm</string>
+    <string name="per_month">/tháng</string>
+    <string name="per_week">/tuần</string>
+
+    <!-- Ads -->
+    <string name="sponsored">TÀI TRỢ</string>
+    <string name="skip">Bỏ qua</string>
+    <string name="skip_ad">Bỏ qua quảng cáo</string>
+    <string name="ad_content_description">Quảng cáo</string>
+
+    <!-- Splash Screen -->
+    <string name="splash_tagline">Bản tóm tắt âm thanh AI của bạn</string>
+
+    <!-- Notifications (non-composable) -->
+    <string name="notification_good_morning">Chào buổi sáng!</string>
+    <string name="notification_daily_brief_text">Đã đến giờ Tóm tắt hàng ngày. Nhấn để cập nhật email, lịch và tin tức.</string>
+    <string name="daily_brief_channel_description">Thông báo nhắc nhở tóm tắt hàng ngày</string>
+
+    <!-- Daily Brief Playback -->
+    <string name="daily_brief_title_format">Tóm tắt hàng ngày - %s</string>
+    <string name="daily_brief_description">Bản tóm tắt buổi sáng được cá nhân hóa</string>
+</resources>

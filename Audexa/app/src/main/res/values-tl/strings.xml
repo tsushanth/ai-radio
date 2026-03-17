@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Audexa</string>
+    <string name="app_tagline">Ang iyong personal na AI radio</string>
+
+    <!-- Auth -->
+    <string name="sign_in_with_google">Mag-sign in gamit ang Google</string>
+    <string name="sign_out">Mag-sign Out</string>
+    <string name="delete_account">I-delete ang Account</string>
+    <string name="auth_description">Makinig ng mga podcast na gawa ng AI tungkol sa mga paksang interesado ka. I-link ang iyong email sa settings para makakuha ng mga personalized na araw-araw na buod.</string>
+    <string name="auth_terms">Sa pagpapatuloy, sumasang-ayon ka sa aming Mga Tuntunin ng Serbisyo at Patakaran sa Privacy</string>
+    <string name="start">Magsimula</string>
+
+    <!-- Navigation -->
+    <string name="nav_home">Home</string>
+    <string name="nav_profile">Profile</string>
+    <string name="back">Bumalik</string>
+    <string name="close">Isara</string>
+    <string name="cancel">Kanselahin</string>
+    <string name="ok">OK</string>
+    <string name="delete">I-delete</string>
+    <string name="retry">Subukan Muli</string>
+    <string name="enable">I-enable</string>
+
+    <!-- Tabs -->
+    <string name="tab_for_you">Para Sa Iyo</string>
+    <string name="tab_discover">Tuklasin</string>
+
+    <!-- Home -->
+    <string name="good_morning">Magandang Umaga</string>
+    <string name="good_afternoon">Magandang Hapon</string>
+    <string name="good_evening">Magandang Gabi</string>
+    <string name="daily_brief">Araw-araw na Buod</string>
+    <string name="daily_brief_subtitle">Araw-araw na Buod \u2022 %s</string>
+    <string name="keep_listening">Magpatuloy sa pakikinig</string>
+    <string name="your_topics">Mga Paksa Mo</string>
+    <string name="topic_podcasts">Mga Podcast ng Paksa</string>
+    <string name="recommended_for_you">Inirerekomenda para sa iyo</string>
+    <string name="more_for_you">Higit pa para sa iyo</string>
+    <string name="all_topics">Lahat ng Paksa</string>
+    <string name="matching_topics">Mga Tumutugmang Paksa</string>
+    <string name="tap_to_explore">I-tap para tuklasin at i-play</string>
+    <string name="link_account_prompt">I-link ang iyong email para gumawa ng mga personalized na buod</string>
+    <string name="link_account">I-link ang Account</string>
+    <string name="find_new_shows">Maghanap ng mga bagong palabas</string>
+    <string name="search">Maghanap</string>
+    <string name="clear">I-clear</string>
+    <string name="no_results_for">Walang resulta para sa \"%s\"</string>
+
+    <!-- Profile -->
+    <string name="profile">Profile</string>
+    <string name="linked_accounts">Mga Naka-link na Account</string>
+    <string name="preferences">Mga Kagustuhan</string>
+    <string name="podcast_language">Wika ng Podcast</string>
+    <string name="briefing_time">Oras ng Buod</string>
+    <string name="topics">Mga Paksa</string>
+    <string name="voice_preference">Kagustuhan sa Boses</string>
+    <string name="hidden_topics">Mga Nakatagong Paksa</string>
+    <string name="about">Tungkol</string>
+    <string name="version">Bersyon</string>
+    <string name="terms_of_service">Mga Tuntunin ng Serbisyo</string>
+    <string name="privacy_policy">Patakaran sa Privacy</string>
+    <string name="premium">Premium</string>
+    <string name="go_ad_free">Walang Ads</string>
+    <string name="ad_free">Walang Ads</string>
+    <string name="active_subscription">Aktibong subscription</string>
+    <string name="remove_all_ads">Alisin lahat ng ads</string>
+    <string name="email_accounts">Mga Email Account</string>
+    <string name="app_theme">Tema ng App</string>
+    <string name="voice_settings">Mga Setting ng Boses</string>
+    <string name="choose_podcast_voices">Pumili ng mga boses ng podcast</string>
+    <string name="hidden_count">%d nakatago</string>
+    <string name="notifications">Mga Notification</string>
+    <string name="daily_brief_reminders">Mga paalala ng araw-araw na buod</string>
+    <string name="sign_out_confirm">Sigurado ka bang gusto mong mag-sign out?</string>
+    <string name="delete_account_confirm">Sigurado ka bang gusto mong i-delete ang iyong account? Permanenteng ide-delete nito ang lahat ng iyong data kasama ang mga podcast, kagustuhan, at naka-link na account. Hindi na maibabalik ang aksyong ito.</string>
+
+    <!-- Player -->
+    <string name="playing">Nagpe-play</string>
+    <string name="paused">Naka-pause</string>
+    <string name="play">I-play</string>
+    <string name="pause">I-pause</string>
+    <string name="loading">Naglo-load\u2026</string>
+    <string name="generating">Gumagawa\u2026</string>
+    <string name="generating_progress">Gumagawa\u2026 %d%%</string>
+    <string name="generate_episode">Gumawa ng Episode</string>
+    <string name="regenerate">Gawing Muli</string>
+    <string name="episode_history">Kasaysayan ng Episode</string>
+    <string name="skip_back">Bumalik ng 15 segundo</string>
+    <string name="skip_forward">Sumulong ng 15 segundo</string>
+    <string name="skip_back_mini">Bumalik</string>
+    <string name="skip_forward_mini">Sumulong</string>
+    <string name="buffering">Nagba-buffer\u2026</string>
+    <string name="sleep_timer">Sleep timer</string>
+    <string name="timer">Timer</string>
+    <string name="sleep_timer_5_min">5 min</string>
+    <string name="sleep_timer_10_min">10 min</string>
+    <string name="sleep_timer_15_min">15 min</string>
+    <string name="sleep_timer_30_min">30 min</string>
+    <string name="sleep_timer_1_hour">1 oras</string>
+    <string name="min_format">%d min</string>
+    <string name="today">Ngayon</string>
+    <string name="bookmark">Bookmark</string>
+    <string name="more">Higit Pa</string>
+    <string name="hide_topic">Itago ang Paksa</string>
+    <string name="hide">Itago</string>
+
+    <!-- Errors -->
+    <string name="error_generic">May nangyaring mali</string>
+    <string name="error_network">Error sa network. Pakisuri ang iyong koneksyon.</string>
+    <string name="error_auth">Nabigo ang pag-authenticate</string>
+    <string name="error_no_internet">Walang koneksyon sa internet. Pakisuri ang iyong network at subukan muli.</string>
+    <string name="generation_failed">Nabigo ang paggawa</string>
+
+    <!-- Misc -->
+    <string name="min_daily">%d min araw-araw</string>
+    <string name="connected">Nakakonekta</string>
+    <string name="not_connected">Hindi Nakakonekta</string>
+    <string name="not_connected_lower">Hindi nakakonekta</string>
+    <string name="coming_soon">Paparating Na</string>
+    <string name="microsoft_coming_soon">Ang pag-integrate ng Microsoft account ay paparating na. Abangan!</string>
+
+    <!-- Onboarding -->
+    <string name="welcome_to_audexa">Maligayang Pagdating sa Audexa</string>
+    <string name="welcome_description">Ang iyong personalized na AI radio na ginagawang mga nakaka-engganyo na podcast-style na buod ang mga pinakabagong balita, tech, at paksa.</string>
+    <string name="get_started">Magsimula</string>
+    <string name="connect_your_account">Ikonekta ang Iyong Account</string>
+    <string name="connect_account_description">I-link ang iyong Google account para makakuha ng mga personalized na araw-araw na buod mula sa iyong email at calendar.</string>
+    <string name="gmail">Gmail</string>
+    <string name="calendar">Calendar</string>
+    <string name="include_email_highlights">Isama ang mga highlight ng email sa iyong buod</string>
+    <string name="include_calendar_events">Isama ang mga paparating na event sa iyong buod</string>
+    <string name="continue_button">Magpatuloy</string>
+    <string name="skip_for_now">Laktawan Muna</string>
+    <string name="connect_later_hint">Maaari kang kumonekta mamaya sa Settings</string>
+    <string name="connect">Ikonekta</string>
+    <string name="choose_your_interests">Piliin ang Iyong mga Interes</string>
+    <string name="choose_interests_description">Pumili ng mga paksang gusto mong marinig. Gagawa kami ng mga araw-araw na episode para sa iyo.</string>
+    <string name="topics_selected">%d na paksa ang napili</string>
+    <string name="topics_selected_plural_suffix"></string>
+    <string name="complete_setup">Kumpletuhin ang Setup</string>
+
+    <!-- Linked Accounts -->
+    <string name="enable_daily_brief">I-enable ang Araw-araw na Buod</string>
+    <string name="enable_daily_brief_description">Ikonekta ang iyong Gmail para makakuha ng mga personalized na araw-araw na buod batay sa iyong mga email. Bubuodin namin ang mga importanteng update para makapagsimula ka ng araw na may kaalaman.</string>
+    <string name="google_calendar">Google Calendar</string>
+    <string name="outlook">Outlook</string>
+    <string name="daily_brief_sources">Mga Pinagmulan ng Araw-araw na Buod</string>
+    <string name="email_summaries">Mga Buod ng Email</string>
+    <string name="include_email_in_brief">Isama ang mga buod ng email sa Araw-araw na Buod</string>
+    <string name="calendar_events">Mga Event sa Calendar</string>
+    <string name="include_calendar_in_brief">Isama ang mga paparating na event sa Araw-araw na Buod</string>
+    <string name="unlink">I-unlink</string>
+    <string name="soon">Sa Lalong Madaling Panahon</string>
+    <string name="your_privacy">Ang Iyong Privacy</string>
+    <string name="privacy_note">Binabasa lang namin ang mga paksa ng email at mga nagpadala para gumawa ng mga buod. Hindi namin kailanman iniimbak ang nilalaman ng iyong email o ibinabahagi ang iyong data sa mga third party.</string>
+    <string name="microsoft_outlook_coming_soon">Ang pag-link ng Microsoft Outlook ay magiging available sa hinaharap na update.</string>
+    <string name="gmail_linking_cancelled">Nakansela ang pag-link ng Gmail</string>
+    <string name="calendar_linking_cancelled">Nakansela ang pag-link ng calendar</string>
+    <string name="reconnect">Muling Ikonekta</string>
+
+    <!-- Hidden Topics -->
+    <string name="no_hidden_topics">Walang Nakatagong Paksa</string>
+    <string name="no_hidden_topics_description">Ang mga paksang itinatago mo ay lalabas dito. Maaari mong ipakita ang mga ito anumang oras.</string>
+    <string name="unhide_hint">I-tap ang icon ng mata para ipakita muli ang isang paksa.</string>
+    <string name="unhide">Ipakita</string>
+
+    <!-- Language Settings -->
+    <string name="language">Wika</string>
+    <string name="language_description">Piliin ang iyong gustong wika para sa mga episode ng podcast.</string>
+    <string name="language_note">Ang mga bagong episode ay gagawin sa napiling wika. Ang mga dating ginawang episode ay mananatili sa kanilang orihinal na wika.</string>
+    <string name="selected">Napili</string>
+
+    <!-- Voice Settings -->
+    <string name="loading_voices">Naglo-load ng mga boses\u2026</string>
+    <string name="no_voice_pairs">Walang available na pares ng boses</string>
+    <string name="no_voices">Walang available na boses</string>
+    <string name="voice_pairs_description">Pumili ng pre-configured na pares ng boses para sa iyong mga host ng podcast.</string>
+    <string name="host_1">Host 1</string>
+    <string name="host_2">Host 2</string>
+    <string name="host_1_voice">Boses ng Host 1</string>
+    <string name="host_2_voice">Boses ng Host 2</string>
+
+    <!-- Theme Settings -->
+    <string name="theme_system">Sistema</string>
+    <string name="theme_system_description">Sundin ang mga setting ng device</string>
+    <string name="theme_dark">Madilim</string>
+    <string name="theme_dark_description">Palaging dark mode</string>
+    <string name="theme_light">Maliwanag</string>
+    <string name="theme_light_description">Palaging light mode</string>
+
+    <!-- Notification Settings -->
+    <string name="permission">Pahintulot</string>
+    <string name="enabled">Naka-enable</string>
+    <string name="not_enabled">Hindi Naka-enable</string>
+    <string name="daily_brief_schedule">Iskedyul ng Araw-araw na Buod</string>
+    <string name="daily_brief_notifications">Mga Notification ng Araw-araw na Buod</string>
+    <string name="daily_brief_notify_hint">Maabisuhan kapag handa na ang iyong buod</string>
+    <string name="daily_brief_content">Nilalaman ng Araw-araw na Buod</string>
+    <string name="include_topic_updates">Isama ang Mga Update ng Paksa</string>
+    <string name="include_topic_updates_hint">Magdagdag ng mga headline mula sa iyong mga paksa sa Araw-araw na Buod</string>
+    <string name="notification_info">Ang iyong araw-araw na buod ay gagawin at magiging handa sa naka-iskedyul na oras. Makakatanggap ka ng notification kapag handa na itong i-play.</string>
+    <string name="select_time">Pumili ng Oras</string>
+
+    <!-- Subscription / Paywall -->
+    <string name="enjoy_uninterrupted">Mag-enjoy ng walang patid na pakikinig</string>
+    <string name="no_audio_ad_interruptions">Walang audio ad na interruption</string>
+    <string name="seamless_episode_playback">Tuloy-tuloy na pag-play ng episode</string>
+    <string name="support_indie_development">Suportahan ang indie development</string>
+    <string name="ad_free_subscriber">Ikaw ay isang Ad-Free subscriber!</string>
+    <string name="yearly">Taunan</string>
+    <string name="save_percent">Makatipid ng 58%%</string>
+    <string name="monthly">Buwanan</string>
+    <string name="subscribe">Mag-subscribe</string>
+    <string name="restore_purchases">Ibalik ang mga Binili</string>
+    <string name="payment_fine_print">Ang bayad ay sisingilin sa iyong Google Play account. Awtomatikong nagre-renew ang subscription maliban kung nakansela nang hindi bababa sa 24 na oras bago matapos ang kasalukuyang panahon.</string>
+    <string name="per_year">/taon</string>
+    <string name="per_month">/buwan</string>
+    <string name="per_week">/linggo</string>
+
+    <!-- Ads -->
+    <string name="sponsored">SPONSORED</string>
+    <string name="skip">Laktawan</string>
+    <string name="skip_ad">Laktawan ang ad</string>
+    <string name="ad_content_description">Ad</string>
+
+    <!-- Splash Screen -->
+    <string name="splash_tagline">Ang iyong AI-powered audio briefing</string>
+
+    <!-- Notifications (non-composable) -->
+    <string name="notification_good_morning">Magandang Umaga!</string>
+    <string name="notification_daily_brief_text">Oras na para sa iyong Araw-araw na Buod. I-tap para malaman ang mga email, calendar, at balita.</string>
+    <string name="daily_brief_channel_description">Mga paalala ng araw-araw na buod</string>
+
+    <!-- Daily Brief Playback -->
+    <string name="daily_brief_title_format">Araw-araw na Buod - %s</string>
+    <string name="daily_brief_description">Ang iyong personalized na umaga na buod</string>
+</resources>

@@ -2,36 +2,53 @@
 <resources>
     <string name="app_name">Audexa</string>
     <string name="app_tagline">Your personal AI radio</string>
-    
+
     <!-- Auth -->
     <string name="sign_in_with_google">Sign in with Google</string>
     <string name="sign_out">Sign Out</string>
     <string name="delete_account">Delete Account</string>
-    
+    <string name="auth_description">Listen to AI-generated podcasts on topics you care about. Link your email in settings to get personalized daily briefings.</string>
+    <string name="auth_terms">By continuing, you agree to our Terms of Service and Privacy Policy</string>
+    <string name="start">Start</string>
+
     <!-- Navigation -->
     <string name="nav_home">Home</string>
     <string name="nav_profile">Profile</string>
-    
+    <string name="back">Back</string>
+    <string name="close">Close</string>
+    <string name="cancel">Cancel</string>
+    <string name="ok">OK</string>
+    <string name="delete">Delete</string>
+    <string name="retry">Retry</string>
+    <string name="enable">Enable</string>
+
     <!-- Tabs -->
     <string name="tab_for_you">For You</string>
     <string name="tab_discover">Discover</string>
-    
+
     <!-- Home -->
     <string name="good_morning">Good Morning</string>
     <string name="good_afternoon">Good Afternoon</string>
     <string name="good_evening">Good Evening</string>
     <string name="daily_brief">Daily Brief</string>
+    <string name="daily_brief_subtitle">Daily Brief \u2022 %s</string>
     <string name="keep_listening">Keep listening</string>
     <string name="your_topics">Your Topics</string>
     <string name="topic_podcasts">Topic Podcasts</string>
     <string name="recommended_for_you">Recommended for you</string>
     <string name="more_for_you">More for you</string>
     <string name="all_topics">All Topics</string>
+    <string name="matching_topics">Matching Topics</string>
     <string name="tap_to_explore">Tap to explore and play</string>
     <string name="link_account_prompt">Link your email to generate personalized briefings</string>
     <string name="link_account">Link Account</string>
-    
+    <string name="find_new_shows">Find new shows</string>
+    <string name="search">Search</string>
+    <string name="clear">Clear</string>
+    <string name="no_results_for">No results for \"%s\"</string>
+
     <!-- Profile -->
+    <string name="profile">Profile</string>
     <string name="linked_accounts">Linked Accounts</string>
     <string name="preferences">Preferences</string>
     <string name="podcast_language">Podcast Language</string>
@@ -43,25 +60,179 @@
     <string name="version">Version</string>
     <string name="terms_of_service">Terms of Service</string>
     <string name="privacy_policy">Privacy Policy</string>
-    
+    <string name="premium">Premium</string>
+    <string name="go_ad_free">Go Ad-Free</string>
+    <string name="ad_free">Ad-Free</string>
+    <string name="active_subscription">Active subscription</string>
+    <string name="remove_all_ads">Remove all ads</string>
+    <string name="email_accounts">Email Accounts</string>
+    <string name="app_theme">App Theme</string>
+    <string name="voice_settings">Voice Settings</string>
+    <string name="choose_podcast_voices">Choose podcast voices</string>
+    <string name="hidden_count">%d hidden</string>
+    <string name="notifications">Notifications</string>
+    <string name="daily_brief_reminders">Daily brief reminders</string>
+    <string name="sign_out_confirm">Are you sure you want to sign out?</string>
+    <string name="delete_account_confirm">Are you sure you want to delete your account? This will permanently delete all your data including podcasts, preferences, and linked accounts. This action cannot be undone.</string>
+
     <!-- Player -->
     <string name="playing">Playing</string>
     <string name="paused">Paused</string>
-    <string name="loading">Loading…</string>
-    <string name="generating">Generating…</string>
+    <string name="play">Play</string>
+    <string name="pause">Pause</string>
+    <string name="loading">Loading\u2026</string>
+    <string name="generating">Generating\u2026</string>
+    <string name="generating_progress">Generating\u2026 %d%%</string>
     <string name="generate_episode">Generate Episode</string>
     <string name="regenerate">Regenerate</string>
     <string name="episode_history">Episode History</string>
-    
+    <string name="skip_back">Skip back 15 seconds</string>
+    <string name="skip_forward">Skip forward 15 seconds</string>
+    <string name="skip_back_mini">Skip back</string>
+    <string name="skip_forward_mini">Skip forward</string>
+    <string name="buffering">Buffering\u2026</string>
+    <string name="sleep_timer">Sleep timer</string>
+    <string name="timer">Timer</string>
+    <string name="sleep_timer_5_min">5 min</string>
+    <string name="sleep_timer_10_min">10 min</string>
+    <string name="sleep_timer_15_min">15 min</string>
+    <string name="sleep_timer_30_min">30 min</string>
+    <string name="sleep_timer_1_hour">1 hour</string>
+    <string name="min_format">%d min</string>
+    <string name="today">Today</string>
+    <string name="bookmark">Bookmark</string>
+    <string name="more">More</string>
+    <string name="hide_topic">Hide Topic</string>
+    <string name="hide">Hide</string>
+
     <!-- Errors -->
     <string name="error_generic">Something went wrong</string>
     <string name="error_network">Network error. Please check your connection.</string>
     <string name="error_auth">Authentication failed</string>
-    
+    <string name="error_no_internet">No internet connection. Please check your network and try again.</string>
+    <string name="generation_failed">Generation failed</string>
+
     <!-- Misc -->
     <string name="min_daily">%d min daily</string>
     <string name="connected">Connected</string>
     <string name="not_connected">Not Connected</string>
+    <string name="not_connected_lower">Not connected</string>
     <string name="coming_soon">Coming Soon</string>
     <string name="microsoft_coming_soon">Microsoft account integration is coming soon. Stay tuned!</string>
+
+    <!-- Onboarding -->
+    <string name="welcome_to_audexa">Welcome to Audexa</string>
+    <string name="welcome_description">Your personalized AI radio that turns the latest news, tech, and topics into engaging podcast-style briefings.</string>
+    <string name="get_started">Get Started</string>
+    <string name="connect_your_account">Connect Your Account</string>
+    <string name="connect_account_description">Link your Google account to get personalized daily briefings from your email and calendar.</string>
+    <string name="gmail">Gmail</string>
+    <string name="calendar">Calendar</string>
+    <string name="include_email_highlights">Include email highlights in your briefing</string>
+    <string name="include_calendar_events">Include upcoming events in your briefing</string>
+    <string name="continue_button">Continue</string>
+    <string name="skip_for_now">Skip for Now</string>
+    <string name="connect_later_hint">You can always connect later in Settings</string>
+    <string name="connect">Connect</string>
+    <string name="choose_your_interests">Choose Your Interests</string>
+    <string name="choose_interests_description">Select topics you\'d like to hear about. We\'ll generate daily episodes just for you.</string>
+    <string name="topics_selected">%d topic%s selected</string>
+    <string name="topics_selected_plural_suffix">s</string>
+    <string name="complete_setup">Complete Setup</string>
+
+    <!-- Linked Accounts -->
+    <string name="enable_daily_brief">Enable Daily Brief</string>
+    <string name="enable_daily_brief_description">Connect your Gmail to get personalized daily briefings based on your emails. We\'ll summarize important updates so you can start your day informed.</string>
+    <string name="google_calendar">Google Calendar</string>
+    <string name="outlook">Outlook</string>
+    <string name="daily_brief_sources">Daily Brief Sources</string>
+    <string name="email_summaries">Email Summaries</string>
+    <string name="include_email_in_brief">Include email summaries in Daily Brief</string>
+    <string name="calendar_events">Calendar Events</string>
+    <string name="include_calendar_in_brief">Include upcoming events in Daily Brief</string>
+    <string name="unlink">Unlink</string>
+    <string name="soon">Soon</string>
+    <string name="your_privacy">Your Privacy</string>
+    <string name="privacy_note">We only read email subjects and senders to create summaries. We never store your email content or share your data with third parties.</string>
+    <string name="microsoft_outlook_coming_soon">Microsoft Outlook linking will be available in a future update.</string>
+    <string name="gmail_linking_cancelled">Gmail linking was cancelled</string>
+    <string name="calendar_linking_cancelled">Calendar linking was cancelled</string>
+    <string name="reconnect">Reconnect</string>
+
+    <!-- Hidden Topics -->
+    <string name="no_hidden_topics">No Hidden Topics</string>
+    <string name="no_hidden_topics_description">Topics you hide will appear here. You can unhide them anytime.</string>
+    <string name="unhide_hint">Tap the eye icon to show a topic again.</string>
+    <string name="unhide">Unhide</string>
+
+    <!-- Language Settings -->
+    <string name="language">Language</string>
+    <string name="language_description">Choose your preferred language for podcast episodes.</string>
+    <string name="language_note">New episodes will be generated in your selected language. Previously generated episodes will remain in their original language.</string>
+    <string name="selected">Selected</string>
+
+    <!-- Voice Settings -->
+    <string name="loading_voices">Loading voices\u2026</string>
+    <string name="no_voice_pairs">No voice pairs available</string>
+    <string name="no_voices">No voices available</string>
+    <string name="voice_pairs_description">Select a pre-configured voice pair for your podcast hosts.</string>
+    <string name="host_1">Host 1</string>
+    <string name="host_2">Host 2</string>
+    <string name="host_1_voice">Host 1 Voice</string>
+    <string name="host_2_voice">Host 2 Voice</string>
+
+    <!-- Theme Settings -->
+    <string name="theme_system">System</string>
+    <string name="theme_system_description">Match device settings</string>
+    <string name="theme_dark">Dark</string>
+    <string name="theme_dark_description">Always dark mode</string>
+    <string name="theme_light">Light</string>
+    <string name="theme_light_description">Always light mode</string>
+
+    <!-- Notification Settings -->
+    <string name="permission">Permission</string>
+    <string name="enabled">Enabled</string>
+    <string name="not_enabled">Not Enabled</string>
+    <string name="daily_brief_schedule">Daily Brief Schedule</string>
+    <string name="daily_brief_notifications">Daily Brief Notifications</string>
+    <string name="daily_brief_notify_hint">Get notified when your brief is ready</string>
+    <string name="daily_brief_content">Daily Brief Content</string>
+    <string name="include_topic_updates">Include Topic Updates</string>
+    <string name="include_topic_updates_hint">Add headlines from your topics to Daily Brief</string>
+    <string name="notification_info">Your daily brief will be generated and ready at the scheduled time. You\'ll receive a notification when it\'s ready to play.</string>
+    <string name="select_time">Select Time</string>
+
+    <!-- Subscription / Paywall -->
+    <string name="enjoy_uninterrupted">Enjoy uninterrupted listening</string>
+    <string name="no_audio_ad_interruptions">No audio ad interruptions</string>
+    <string name="seamless_episode_playback">Seamless episode playback</string>
+    <string name="support_indie_development">Support indie development</string>
+    <string name="ad_free_subscriber">You\'re an Ad-Free subscriber!</string>
+    <string name="yearly">Yearly</string>
+    <string name="save_percent">Save 58%%</string>
+    <string name="monthly">Monthly</string>
+    <string name="subscribe">Subscribe</string>
+    <string name="restore_purchases">Restore Purchases</string>
+    <string name="payment_fine_print">Payment will be charged to your Google Play account. Subscription automatically renews unless cancelled at least 24 hours before the end of the current period.</string>
+    <string name="per_year">/year</string>
+    <string name="per_month">/month</string>
+    <string name="per_week">/week</string>
+
+    <!-- Ads -->
+    <string name="sponsored">SPONSORED</string>
+    <string name="skip">Skip</string>
+    <string name="skip_ad">Skip ad</string>
+    <string name="ad_content_description">Ad</string>
+
+    <!-- Splash Screen -->
+    <string name="splash_tagline">Your AI-powered audio briefing</string>
+
+    <!-- Notifications (non-composable) -->
+    <string name="notification_good_morning">Good Morning!</string>
+    <string name="notification_daily_brief_text">Time for your Daily Brief. Tap to get caught up on emails, calendar, and news.</string>
+    <string name="daily_brief_channel_description">Daily brief reminder notifications</string>
+
+    <!-- Daily Brief Playback -->
+    <string name="daily_brief_title_format">Daily Brief - %s</string>
+    <string name="daily_brief_description">Your personalized morning briefing</string>
 </resources>

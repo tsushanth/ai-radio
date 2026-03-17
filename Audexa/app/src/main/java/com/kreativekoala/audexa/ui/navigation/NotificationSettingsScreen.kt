@@ -17,9 +17,11 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.kreativekoala.audexa.R
 import com.kreativekoala.audexa.ui.theme.AccentOrange
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -47,7 +49,7 @@ fun NotificationSettingsScreen(
             TopAppBar(
                 title = {
                     Text(
-                        "Notifications",
+                        stringResource(R.string.notifications),
                         color = MaterialTheme.colorScheme.onBackground,
                         fontWeight = FontWeight.Bold
                     )
@@ -56,7 +58,7 @@ fun NotificationSettingsScreen(
                     IconButton(onClick = onNavigateBack) {
                         Icon(
                             Icons.Default.ArrowBack,
-                            contentDescription = "Back",
+                            contentDescription = stringResource(R.string.back),
                             tint = MaterialTheme.colorScheme.onBackground
                         )
                     }
@@ -76,7 +78,7 @@ fun NotificationSettingsScreen(
                 .padding(16.dp)
         ) {
             // Permission Section
-            SettingsSectionCard(title = "Permission") {
+            SettingsSectionCard(title = stringResource(R.string.permission)) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -94,12 +96,12 @@ fun NotificationSettingsScreen(
 
                     Column(modifier = Modifier.weight(1f)) {
                         Text(
-                            text = "Notifications",
+                            text = stringResource(R.string.notifications),
                             style = MaterialTheme.typography.bodyLarge,
                             color = MaterialTheme.colorScheme.onSurface
                         )
                         Text(
-                            text = if (uiState.hasNotificationPermission) "Enabled" else "Not Enabled",
+                            text = if (uiState.hasNotificationPermission) stringResource(R.string.enabled) else stringResource(R.string.not_enabled),
                             style = MaterialTheme.typography.bodySmall,
                             color = if (uiState.hasNotificationPermission)
                                 MaterialTheme.colorScheme.primary
@@ -123,7 +125,7 @@ fun NotificationSettingsScreen(
                             },
                             colors = ButtonDefaults.buttonColors(containerColor = AccentOrange)
                         ) {
-                            Text("Enable")
+                            Text(stringResource(R.string.enable))
                         }
                     }
                 }
@@ -132,7 +134,7 @@ fun NotificationSettingsScreen(
             Spacer(modifier = Modifier.height(24.dp))
 
             // Daily Brief Schedule Section
-            SettingsSectionCard(title = "Daily Brief Schedule") {
+            SettingsSectionCard(title = stringResource(R.string.daily_brief_schedule)) {
                 // Enable toggle
                 Row(
                     modifier = Modifier
@@ -151,12 +153,12 @@ fun NotificationSettingsScreen(
 
                     Column(modifier = Modifier.weight(1f)) {
                         Text(
-                            text = "Daily Brief Notifications",
+                            text = stringResource(R.string.daily_brief_notifications),
                             style = MaterialTheme.typography.bodyLarge,
                             color = MaterialTheme.colorScheme.onSurface
                         )
                         Text(
-                            text = "Get notified when your brief is ready",
+                            text = stringResource(R.string.daily_brief_notify_hint),
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -202,7 +204,7 @@ fun NotificationSettingsScreen(
 
                             Column(modifier = Modifier.weight(1f)) {
                                 Text(
-                                    text = "Briefing Time",
+                                    text = stringResource(R.string.briefing_time),
                                     style = MaterialTheme.typography.bodyLarge,
                                     color = MaterialTheme.colorScheme.onSurface
                                 )
@@ -226,7 +228,7 @@ fun NotificationSettingsScreen(
             Spacer(modifier = Modifier.height(24.dp))
 
             // Daily Brief Content Section
-            SettingsSectionCard(title = "Daily Brief Content") {
+            SettingsSectionCard(title = stringResource(R.string.daily_brief_content)) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -244,12 +246,12 @@ fun NotificationSettingsScreen(
 
                     Column(modifier = Modifier.weight(1f)) {
                         Text(
-                            text = "Include Topic Updates",
+                            text = stringResource(R.string.include_topic_updates),
                             style = MaterialTheme.typography.bodyLarge,
                             color = MaterialTheme.colorScheme.onSurface
                         )
                         Text(
-                            text = "Add headlines from your topics to Daily Brief",
+                            text = stringResource(R.string.include_topic_updates_hint),
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -267,7 +269,7 @@ fun NotificationSettingsScreen(
 
             // Info text
             Text(
-                text = "Your daily brief will be generated and ready at the scheduled time. You'll receive a notification when it's ready to play.",
+                text = stringResource(R.string.notification_info),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.padding(horizontal = 4.dp)
@@ -328,7 +330,7 @@ private fun TimePickerDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Select Time") },
+        title = { Text(stringResource(R.string.select_time)) },
         text = {
             TimePicker(state = timePickerState)
         },
@@ -336,12 +338,12 @@ private fun TimePickerDialog(
             TextButton(
                 onClick = { onConfirm(timePickerState.hour, timePickerState.minute) }
             ) {
-                Text("OK", color = AccentOrange)
+                Text(stringResource(R.string.ok), color = AccentOrange)
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text("Cancel", color = MaterialTheme.colorScheme.onSurfaceVariant)
+                Text(stringResource(R.string.cancel), color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
         },
         containerColor = MaterialTheme.colorScheme.surface

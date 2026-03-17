@@ -384,6 +384,20 @@ Create an engaging ${topic.targetDurationMinutes}-minute podcast covering the mo
   }
 
   /**
+   * Get existing episode from database (public access for fetch-only endpoint)
+   */
+  async getExistingEpisode(topicId: string, date: string, language: string = 'en'): Promise<TopicEpisode | null> {
+    return this.getEpisode(topicId, date, language);
+  }
+
+  /**
+   * Increment play count (public access)
+   */
+  async incrementPlayCountPublic(episodeId: string): Promise<void> {
+    return this.incrementPlayCount(episodeId);
+  }
+
+  /**
    * Get existing episode from database
    */
   private async getEpisode(topicId: string, date: string, language: string = 'en'): Promise<TopicEpisode | null> {
@@ -467,7 +481,11 @@ Create an engaging ${topic.targetDurationMinutes}-minute podcast covering the mo
       audioUrl: data.audio_url as string | undefined,
       audioPath: data.audio_path as string | undefined,
       durationSeconds: data.duration_seconds as number | undefined,
-      script: data.script as string | undefined,
+      script: data.script
+        ? (typeof data.script === 'string'
+            ? JSON.parse(data.script)
+            : data.script)
+        : undefined,
       stories: JSON.parse((data.stories as string) || '[]'),
       generatedAt: data.generated_at ? new Date(data.generated_at as string) : undefined,
       generatedBy: data.generated_by as string | undefined,

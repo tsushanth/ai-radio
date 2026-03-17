@@ -719,13 +719,6 @@ class HomeViewModel {
 
             let episode = response.episode
 
-            // Check if episode is still generating
-            if episode.status == .generating {
-                topicPlaybackState = .generating(topic.id)
-                print("⏳ Episode is generating, please wait...")
-                return
-            }
-
             // Check if episode failed
             if episode.status == .failed {
                 topicPlaybackState = .error(episode.error ?? "Generation failed")

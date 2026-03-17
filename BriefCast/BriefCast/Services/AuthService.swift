@@ -207,10 +207,22 @@ class AuthService: ObservableObject {
     func createUserFromSession(_ session: Session) async throws -> User {
         let supabaseUser = session.user
 
-        // Extract name from user metadata
-        var userName: String = supabaseUser.email ?? "User"
-        if case let .string(fullName) = supabaseUser.userMetadata["full_name"] {
+        // Extract name — avoid showing relay emails (privaterelay/testrelay.appleid.com)
+        var userName: String = "User"
+        if case let .string(fullName) = supabaseUser.userMetadata["full_name"],
+           !fullName.isEmpty,
+           !fullName.contains("privaterelay.appleid.com"),
+           !fullName.contains("testrelay.appleid.com") {
             userName = fullName
+        } else if let savedAppleName = UserDefaults.standard.string(forKey: "appleSignInDisplayName"),
+                  !savedAppleName.isEmpty {
+            // Use name saved from Apple Sign-In (only provided on first sign-in)
+            userName = savedAppleName
+        } else if let email = supabaseUser.email,
+                  !email.contains("privaterelay.appleid.com"),
+                  !email.contains("testrelay.appleid.com") {
+            // Fall back to email only if it's not a relay address
+            userName = email
         }
 
         // Fetch user profile from backend

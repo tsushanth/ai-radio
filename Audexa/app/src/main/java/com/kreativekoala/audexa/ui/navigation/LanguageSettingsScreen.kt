@@ -11,9 +11,11 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.kreativekoala.audexa.R
 import com.kreativekoala.audexa.data.model.SupportedLanguage
 import com.kreativekoala.audexa.ui.theme.*
 
@@ -30,7 +32,7 @@ fun LanguageSettingsScreen(
             TopAppBar(
                 title = {
                     Text(
-                        "Language",
+                        stringResource(R.string.language),
                         color = PrimaryText,
                         fontWeight = FontWeight.Bold
                     )
@@ -39,7 +41,7 @@ fun LanguageSettingsScreen(
                     IconButton(onClick = onNavigateBack) {
                         Icon(
                             Icons.Default.ArrowBack,
-                            contentDescription = "Back",
+                            contentDescription = stringResource(R.string.back),
                             tint = PrimaryText
                         )
                     }
@@ -61,7 +63,7 @@ fun LanguageSettingsScreen(
         ) {
             item {
                 Text(
-                    text = "Choose your preferred language for podcast episodes.",
+                    text = stringResource(R.string.language_description),
                     style = MaterialTheme.typography.bodyMedium,
                     color = SecondaryText,
                     modifier = Modifier.padding(bottom = 16.dp)
@@ -79,7 +81,7 @@ fun LanguageSettingsScreen(
             item {
                 Spacer(modifier = Modifier.height(16.dp))
                 Text(
-                    text = "New episodes will be generated in your selected language. Previously generated episodes will remain in their original language.",
+                    text = stringResource(R.string.language_note),
                     style = MaterialTheme.typography.bodySmall,
                     color = SecondaryText.copy(alpha = 0.7f)
                 )
@@ -129,7 +131,7 @@ private fun LanguageRow(
             if (isSelected) {
                 Icon(
                     Icons.Default.Check,
-                    contentDescription = "Selected",
+                    contentDescription = stringResource(R.string.selected),
                     tint = AccentOrange
                 )
             }

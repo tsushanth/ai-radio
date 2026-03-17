@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Audexa</string>
+    <string name="app_tagline">راديو الذكاء الاصطناعي الشخصي</string>
+
+    <!-- Auth -->
+    <string name="sign_in_with_google">تسجيل الدخول بحساب Google</string>
+    <string name="sign_out">تسجيل الخروج</string>
+    <string name="delete_account">حذف الحساب</string>
+    <string name="auth_description">استمع إلى بودكاست مُنشأ بالذكاء الاصطناعي حول المواضيع التي تهمك. اربط بريدك الإلكتروني في الإعدادات للحصول على ملخصات يومية مخصصة.</string>
+    <string name="auth_terms">بالمتابعة، فإنك توافق على شروط الخدمة وسياسة الخصوصية</string>
+    <string name="start">ابدأ</string>
+
+    <!-- Navigation -->
+    <string name="nav_home">الرئيسية</string>
+    <string name="nav_profile">الملف الشخصي</string>
+    <string name="back">رجوع</string>
+    <string name="close">إغلاق</string>
+    <string name="cancel">إلغاء</string>
+    <string name="ok">حسناً</string>
+    <string name="delete">حذف</string>
+    <string name="retry">إعادة المحاولة</string>
+    <string name="enable">تفعيل</string>
+
+    <!-- Tabs -->
+    <string name="tab_for_you">لك</string>
+    <string name="tab_discover">استكشاف</string>
+
+    <!-- Home -->
+    <string name="good_morning">صباح الخير</string>
+    <string name="good_afternoon">مساء الخير</string>
+    <string name="good_evening">مساء الخير</string>
+    <string name="daily_brief">الملخص اليومي</string>
+    <string name="daily_brief_subtitle">الملخص اليومي \u2022 %s</string>
+    <string name="keep_listening">تابع الاستماع</string>
+    <string name="your_topics">مواضيعك</string>
+    <string name="topic_podcasts">بودكاست المواضيع</string>
+    <string name="recommended_for_you">موصى به لك</string>
+    <string name="more_for_you">المزيد لك</string>
+    <string name="all_topics">جميع المواضيع</string>
+    <string name="matching_topics">المواضيع المطابقة</string>
+    <string name="tap_to_explore">اضغط للاستكشاف والتشغيل</string>
+    <string name="link_account_prompt">اربط بريدك الإلكتروني لإنشاء ملخصات مخصصة</string>
+    <string name="link_account">ربط الحساب</string>
+    <string name="find_new_shows">ابحث عن برامج جديدة</string>
+    <string name="search">بحث</string>
+    <string name="clear">مسح</string>
+    <string name="no_results_for">لا توجد نتائج لـ \"%s\"</string>
+
+    <!-- Profile -->
+    <string name="profile">الملف الشخصي</string>
+    <string name="linked_accounts">الحسابات المرتبطة</string>
+    <string name="preferences">التفضيلات</string>
+    <string name="podcast_language">لغة البودكاست</string>
+    <string name="briefing_time">وقت الملخص</string>
+    <string name="topics">المواضيع</string>
+    <string name="voice_preference">تفضيل الصوت</string>
+    <string name="hidden_topics">المواضيع المخفية</string>
+    <string name="about">حول</string>
+    <string name="version">الإصدار</string>
+    <string name="terms_of_service">شروط الخدمة</string>
+    <string name="privacy_policy">سياسة الخصوصية</string>
+    <string name="premium">بريميوم</string>
+    <string name="go_ad_free">إزالة الإعلانات</string>
+    <string name="ad_free">بدون إعلانات</string>
+    <string name="active_subscription">اشتراك نشط</string>
+    <string name="remove_all_ads">إزالة جميع الإعلانات</string>
+    <string name="email_accounts">حسابات البريد الإلكتروني</string>
+    <string name="app_theme">سمة التطبيق</string>
+    <string name="voice_settings">إعدادات الصوت</string>
+    <string name="choose_podcast_voices">اختر أصوات البودكاست</string>
+    <string name="hidden_count">%d مخفي</string>
+    <string name="notifications">الإشعارات</string>
+    <string name="daily_brief_reminders">تذكيرات الملخص اليومي</string>
+    <string name="sign_out_confirm">هل أنت متأكد أنك تريد تسجيل الخروج؟</string>
+    <string name="delete_account_confirm">هل أنت متأكد أنك تريد حذف حسابك؟ سيؤدي ذلك إلى حذف جميع بياناتك نهائياً بما في ذلك البودكاست والتفضيلات والحسابات المرتبطة. لا يمكن التراجع عن هذا الإجراء.</string>
+
+    <!-- Player -->
+    <string name="playing">قيد التشغيل</string>
+    <string name="paused">متوقف مؤقتاً</string>
+    <string name="play">تشغيل</string>
+    <string name="pause">إيقاف مؤقت</string>
+    <string name="loading">جارٍ التحميل\u2026</string>
+    <string name="generating">جارٍ الإنشاء\u2026</string>
+    <string name="generating_progress">جارٍ الإنشاء\u2026 %d%%</string>
+    <string name="generate_episode">إنشاء حلقة</string>
+    <string name="regenerate">إعادة الإنشاء</string>
+    <string name="episode_history">سجل الحلقات</string>
+    <string name="skip_back">تخطي 15 ثانية للخلف</string>
+    <string name="skip_forward">تخطي 15 ثانية للأمام</string>
+    <string name="skip_back_mini">تخطي للخلف</string>
+    <string name="skip_forward_mini">تخطي للأمام</string>
+    <string name="buffering">جارٍ التخزين المؤقت\u2026</string>
+    <string name="sleep_timer">مؤقت النوم</string>
+    <string name="timer">مؤقت</string>
+    <string name="sleep_timer_5_min">5 دقائق</string>
+    <string name="sleep_timer_10_min">10 دقائق</string>
+    <string name="sleep_timer_15_min">15 دقيقة</string>
+    <string name="sleep_timer_30_min">30 دقيقة</string>
+    <string name="sleep_timer_1_hour">ساعة واحدة</string>
+    <string name="min_format">%d دقيقة</string>
+    <string name="today">اليوم</string>
+    <string name="bookmark">إشارة مرجعية</string>
+    <string name="more">المزيد</string>
+    <string name="hide_topic">إخفاء الموضوع</string>
+    <string name="hide">إخفاء</string>
+
+    <!-- Errors -->
+    <string name="error_generic">حدث خطأ ما</string>
+    <string name="error_network">خطأ في الشبكة. يرجى التحقق من اتصالك.</string>
+    <string name="error_auth">فشل المصادقة</string>
+    <string name="error_no_internet">لا يوجد اتصال بالإنترنت. يرجى التحقق من شبكتك والمحاولة مرة أخرى.</string>
+    <string name="generation_failed">فشل الإنشاء</string>
+
+    <!-- Misc -->
+    <string name="min_daily">%d دقيقة يومياً</string>
+    <string name="connected">متصل</string>
+    <string name="not_connected">غير متصل</string>
+    <string name="not_connected_lower">غير متصل</string>
+    <string name="coming_soon">قريباً</string>
+    <string name="microsoft_coming_soon">تكامل حساب Microsoft قادم قريباً. ترقبوا!</string>
+
+    <!-- Onboarding -->
+    <string name="welcome_to_audexa">مرحباً بك في Audexa</string>
+    <string name="welcome_description">راديو الذكاء الاصطناعي المخصص الذي يحول آخر الأخبار والتقنية والمواضيع إلى ملخصات صوتية جذابة بأسلوب البودكاست.</string>
+    <string name="get_started">ابدأ الآن</string>
+    <string name="connect_your_account">اربط حسابك</string>
+    <string name="connect_account_description">اربط حساب Google الخاص بك للحصول على ملخصات يومية مخصصة من بريدك الإلكتروني والتقويم.</string>
+    <string name="gmail">Gmail</string>
+    <string name="calendar">التقويم</string>
+    <string name="include_email_highlights">تضمين أبرز رسائل البريد الإلكتروني في ملخصك</string>
+    <string name="include_calendar_events">تضمين الأحداث القادمة في ملخصك</string>
+    <string name="continue_button">متابعة</string>
+    <string name="skip_for_now">تخطي الآن</string>
+    <string name="connect_later_hint">يمكنك الاتصال لاحقاً في الإعدادات</string>
+    <string name="connect">اتصال</string>
+    <string name="choose_your_interests">اختر اهتماماتك</string>
+    <string name="choose_interests_description">اختر المواضيع التي تود سماعها. سننشئ حلقات يومية مخصصة لك.</string>
+    <string name="topics_selected">%d موضوع محدد</string>
+    <string name="topics_selected_plural_suffix"></string>
+    <string name="complete_setup">إكمال الإعداد</string>
+
+    <!-- Linked Accounts -->
+    <string name="enable_daily_brief">تفعيل الملخص اليومي</string>
+    <string name="enable_daily_brief_description">اربط حساب Gmail للحصول على ملخصات يومية مخصصة بناءً على رسائلك الإلكترونية. سنلخص التحديثات المهمة لتبدأ يومك على اطلاع.</string>
+    <string name="google_calendar">تقويم Google</string>
+    <string name="outlook">Outlook</string>
+    <string name="daily_brief_sources">مصادر الملخص اليومي</string>
+    <string name="email_summaries">ملخصات البريد الإلكتروني</string>
+    <string name="include_email_in_brief">تضمين ملخصات البريد الإلكتروني في الملخص اليومي</string>
+    <string name="calendar_events">أحداث التقويم</string>
+    <string name="include_calendar_in_brief">تضمين الأحداث القادمة في الملخص اليومي</string>
+    <string name="unlink">إلغاء الربط</string>
+    <string name="soon">قريباً</string>
+    <string name="your_privacy">خصوصيتك</string>
+    <string name="privacy_note">نقرأ فقط عناوين البريد الإلكتروني والمرسلين لإنشاء الملخصات. لا نخزن محتوى بريدك الإلكتروني أو نشارك بياناتك مع أطراف ثالثة.</string>
+    <string name="microsoft_outlook_coming_soon">سيكون ربط Microsoft Outlook متاحاً في تحديث مستقبلي.</string>
+    <string name="gmail_linking_cancelled">تم إلغاء ربط Gmail</string>
+    <string name="calendar_linking_cancelled">تم إلغاء ربط التقويم</string>
+    <string name="reconnect">إعادة الاتصال</string>
+
+    <!-- Hidden Topics -->
+    <string name="no_hidden_topics">لا توجد مواضيع مخفية</string>
+    <string name="no_hidden_topics_description">ستظهر المواضيع التي تخفيها هنا. يمكنك إظهارها في أي وقت.</string>
+    <string name="unhide_hint">اضغط على أيقونة العين لإظهار الموضوع مرة أخرى.</string>
+    <string name="unhide">إظهار</string>
+
+    <!-- Language Settings -->
+    <string name="language">اللغة</string>
+    <string name="language_description">اختر لغتك المفضلة لحلقات البودكاست.</string>
+    <string name="language_note">سيتم إنشاء الحلقات الجديدة باللغة المحددة. ستبقى الحلقات المنشأة سابقاً بلغتها الأصلية.</string>
+    <string name="selected">محدد</string>
+
+    <!-- Voice Settings -->
+    <string name="loading_voices">جارٍ تحميل الأصوات\u2026</string>
+    <string name="no_voice_pairs">لا تتوفر أزواج أصوات</string>
+    <string name="no_voices">لا تتوفر أصوات</string>
+    <string name="voice_pairs_description">اختر زوج أصوات مُعد مسبقاً لمقدمي البودكاست.</string>
+    <string name="host_1">المقدم 1</string>
+    <string name="host_2">المقدم 2</string>
+    <string name="host_1_voice">صوت المقدم 1</string>
+    <string name="host_2_voice">صوت المقدم 2</string>
+
+    <!-- Theme Settings -->
+    <string name="theme_system">النظام</string>
+    <string name="theme_system_description">مطابقة إعدادات الجهاز</string>
+    <string name="theme_dark">داكن</string>
+    <string name="theme_dark_description">الوضع الداكن دائماً</string>
+    <string name="theme_light">فاتح</string>
+    <string name="theme_light_description">الوضع الفاتح دائماً</string>
+
+    <!-- Notification Settings -->
+    <string name="permission">الإذن</string>
+    <string name="enabled">مُفعّل</string>
+    <string name="not_enabled">غير مُفعّل</string>
+    <string name="daily_brief_schedule">جدول الملخص اليومي</string>
+    <string name="daily_brief_notifications">إشعارات الملخص اليومي</string>
+    <string name="daily_brief_notify_hint">تلقي إشعار عندما يكون ملخصك جاهزاً</string>
+    <string name="daily_brief_content">محتوى الملخص اليومي</string>
+    <string name="include_topic_updates">تضمين تحديثات المواضيع</string>
+    <string name="include_topic_updates_hint">إضافة عناوين من مواضيعك إلى الملخص اليومي</string>
+    <string name="notification_info">سيتم إنشاء ملخصك اليومي وسيكون جاهزاً في الوقت المحدد. ستتلقى إشعاراً عندما يكون جاهزاً للتشغيل.</string>
+    <string name="select_time">اختر الوقت</string>
+
+    <!-- Subscription / Paywall -->
+    <string name="enjoy_uninterrupted">استمتع بالاستماع بدون انقطاع</string>
+    <string name="no_audio_ad_interruptions">بدون إعلانات صوتية مقاطعة</string>
+    <string name="seamless_episode_playback">تشغيل حلقات سلس</string>
+    <string name="support_indie_development">دعم التطوير المستقل</string>
+    <string name="ad_free_subscriber">أنت مشترك بدون إعلانات!</string>
+    <string name="yearly">سنوي</string>
+    <string name="save_percent">وفر 58%%</string>
+    <string name="monthly">شهري</string>
+    <string name="subscribe">اشترك</string>
+    <string name="restore_purchases">استعادة المشتريات</string>
+    <string name="payment_fine_print">سيتم خصم الدفع من حساب Google Play الخاص بك. يتجدد الاشتراك تلقائياً ما لم يتم إلغاؤه قبل 24 ساعة على الأقل من نهاية الفترة الحالية.</string>
+    <string name="per_year">/سنة</string>
+    <string name="per_month">/شهر</string>
+    <string name="per_week">/أسبوع</string>
+
+    <!-- Ads -->
+    <string name="sponsored">إعلان مدفوع</string>
+    <string name="skip">تخطي</string>
+    <string name="skip_ad">تخطي الإعلان</string>
+    <string name="ad_content_description">إعلان</string>
+
+    <!-- Splash Screen -->
+    <string name="splash_tagline">ملخصك الصوتي بالذكاء الاصطناعي</string>
+
+    <!-- Notifications (non-composable) -->
+    <string name="notification_good_morning">صباح الخير!</string>
+    <string name="notification_daily_brief_text">حان وقت ملخصك اليومي. اضغط لمتابعة آخر رسائل البريد والتقويم والأخبار.</string>
+    <string name="daily_brief_channel_description">إشعارات تذكير الملخص اليومي</string>
+
+    <!-- Daily Brief Playback -->
+    <string name="daily_brief_title_format">الملخص اليومي - %s</string>
+    <string name="daily_brief_description">ملخصك الصباحي المخصص</string>
+</resources>

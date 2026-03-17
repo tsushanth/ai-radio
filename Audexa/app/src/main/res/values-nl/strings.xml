@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Audexa</string>
+    <string name="app_tagline">Jouw persoonlijke AI-radio</string>
+
+    <!-- Auth -->
+    <string name="sign_in_with_google">Inloggen met Google</string>
+    <string name="sign_out">Uitloggen</string>
+    <string name="delete_account">Account verwijderen</string>
+    <string name="auth_description">Luister naar door AI gegenereerde podcasts over onderwerpen die jou interesseren. Koppel je e-mail in de instellingen voor gepersonaliseerde dagelijkse samenvattingen.</string>
+    <string name="auth_terms">Door verder te gaan, ga je akkoord met onze Servicevoorwaarden en ons Privacybeleid</string>
+    <string name="start">Start</string>
+
+    <!-- Navigation -->
+    <string name="nav_home">Home</string>
+    <string name="nav_profile">Profiel</string>
+    <string name="back">Terug</string>
+    <string name="close">Sluiten</string>
+    <string name="cancel">Annuleren</string>
+    <string name="ok">OK</string>
+    <string name="delete">Verwijderen</string>
+    <string name="retry">Opnieuw proberen</string>
+    <string name="enable">Inschakelen</string>
+
+    <!-- Tabs -->
+    <string name="tab_for_you">Voor jou</string>
+    <string name="tab_discover">Ontdekken</string>
+
+    <!-- Home -->
+    <string name="good_morning">Goedemorgen</string>
+    <string name="good_afternoon">Goedemiddag</string>
+    <string name="good_evening">Goedenavond</string>
+    <string name="daily_brief">Dagelijkse Samenvatting</string>
+    <string name="daily_brief_subtitle">Dagelijkse Samenvatting \u2022 %s</string>
+    <string name="keep_listening">Blijf luisteren</string>
+    <string name="your_topics">Jouw onderwerpen</string>
+    <string name="topic_podcasts">Onderwerpspodcasts</string>
+    <string name="recommended_for_you">Aanbevolen voor jou</string>
+    <string name="more_for_you">Meer voor jou</string>
+    <string name="all_topics">Alle onderwerpen</string>
+    <string name="matching_topics">Overeenkomende onderwerpen</string>
+    <string name="tap_to_explore">Tik om te verkennen en af te spelen</string>
+    <string name="link_account_prompt">Koppel je e-mail om gepersonaliseerde samenvattingen te genereren</string>
+    <string name="link_account">Account koppelen</string>
+    <string name="find_new_shows">Nieuwe shows vinden</string>
+    <string name="search">Zoeken</string>
+    <string name="clear">Wissen</string>
+    <string name="no_results_for">Geen resultaten voor \"%s\"</string>
+
+    <!-- Profile -->
+    <string name="profile">Profiel</string>
+    <string name="linked_accounts">Gekoppelde accounts</string>
+    <string name="preferences">Voorkeuren</string>
+    <string name="podcast_language">Podcasttaal</string>
+    <string name="briefing_time">Samenvattingstijd</string>
+    <string name="topics">Onderwerpen</string>
+    <string name="voice_preference">Stemvoorkeur</string>
+    <string name="hidden_topics">Verborgen onderwerpen</string>
+    <string name="about">Over</string>
+    <string name="version">Versie</string>
+    <string name="terms_of_service">Servicevoorwaarden</string>
+    <string name="privacy_policy">Privacybeleid</string>
+    <string name="premium">Premium</string>
+    <string name="go_ad_free">Advertentievrij worden</string>
+    <string name="ad_free">Advertentievrij</string>
+    <string name="active_subscription">Actief abonnement</string>
+    <string name="remove_all_ads">Alle advertenties verwijderen</string>
+    <string name="email_accounts">E-mailaccounts</string>
+    <string name="app_theme">App-thema</string>
+    <string name="voice_settings">Steminstellingen</string>
+    <string name="choose_podcast_voices">Kies podcaststemmen</string>
+    <string name="hidden_count">%d verborgen</string>
+    <string name="notifications">Meldingen</string>
+    <string name="daily_brief_reminders">Herinneringen dagelijkse samenvatting</string>
+    <string name="sign_out_confirm">Weet je zeker dat je wilt uitloggen?</string>
+    <string name="delete_account_confirm">Weet je zeker dat je je account wilt verwijderen? Dit verwijdert permanent al je gegevens inclusief podcasts, voorkeuren en gekoppelde accounts. Deze actie kan niet ongedaan worden gemaakt.</string>
+
+    <!-- Player -->
+    <string name="playing">Speelt af</string>
+    <string name="paused">Gepauzeerd</string>
+    <string name="play">Afspelen</string>
+    <string name="pause">Pauzeren</string>
+    <string name="loading">Laden\u2026</string>
+    <string name="generating">Genereren\u2026</string>
+    <string name="generating_progress">Genereren\u2026 %d%%</string>
+    <string name="generate_episode">Aflevering genereren</string>
+    <string name="regenerate">Opnieuw genereren</string>
+    <string name="episode_history">Afleveringsgeschiedenis</string>
+    <string name="skip_back">15 seconden terug</string>
+    <string name="skip_forward">15 seconden vooruit</string>
+    <string name="skip_back_mini">Terugspoelen</string>
+    <string name="skip_forward_mini">Vooruitspoelen</string>
+    <string name="buffering">Bufferen\u2026</string>
+    <string name="sleep_timer">Slaaptimer</string>
+    <string name="timer">Timer</string>
+    <string name="sleep_timer_5_min">5 min</string>
+    <string name="sleep_timer_10_min">10 min</string>
+    <string name="sleep_timer_15_min">15 min</string>
+    <string name="sleep_timer_30_min">30 min</string>
+    <string name="sleep_timer_1_hour">1 uur</string>
+    <string name="min_format">%d min</string>
+    <string name="today">Vandaag</string>
+    <string name="bookmark">Bladwijzer</string>
+    <string name="more">Meer</string>
+    <string name="hide_topic">Onderwerp verbergen</string>
+    <string name="hide">Verbergen</string>
+
+    <!-- Errors -->
+    <string name="error_generic">Er is iets misgegaan</string>
+    <string name="error_network">Netwerkfout. Controleer je verbinding.</string>
+    <string name="error_auth">Authenticatie mislukt</string>
+    <string name="error_no_internet">Geen internetverbinding. Controleer je netwerk en probeer het opnieuw.</string>
+    <string name="generation_failed">Genereren mislukt</string>
+
+    <!-- Misc -->
+    <string name="min_daily">%d min per dag</string>
+    <string name="connected">Verbonden</string>
+    <string name="not_connected">Niet verbonden</string>
+    <string name="not_connected_lower">Niet verbonden</string>
+    <string name="coming_soon">Binnenkort</string>
+    <string name="microsoft_coming_soon">Microsoft-accountintegratie komt binnenkort. Blijf op de hoogte!</string>
+
+    <!-- Onboarding -->
+    <string name="welcome_to_audexa">Welkom bij Audexa</string>
+    <string name="welcome_description">Jouw gepersonaliseerde AI-radio die het laatste nieuws, tech en onderwerpen omzet in boeiende samenvattingen in podcaststijl.</string>
+    <string name="get_started">Aan de slag</string>
+    <string name="connect_your_account">Koppel je account</string>
+    <string name="connect_account_description">Koppel je Google-account om gepersonaliseerde dagelijkse samenvattingen te ontvangen van je e-mail en agenda.</string>
+    <string name="gmail">Gmail</string>
+    <string name="calendar">Agenda</string>
+    <string name="include_email_highlights">E-mailhoogtepunten opnemen in je samenvatting</string>
+    <string name="include_calendar_events">Aankomende evenementen opnemen in je samenvatting</string>
+    <string name="continue_button">Doorgaan</string>
+    <string name="skip_for_now">Nu overslaan</string>
+    <string name="connect_later_hint">Je kunt later altijd koppelen in Instellingen</string>
+    <string name="connect">Verbinden</string>
+    <string name="choose_your_interests">Kies je interesses</string>
+    <string name="choose_interests_description">Selecteer onderwerpen waar je over wilt horen. We genereren dagelijkse afleveringen speciaal voor jou.</string>
+    <string name="topics_selected">%d onderwerp(en) geselecteerd</string>
+    <string name="topics_selected_plural_suffix"></string>
+    <string name="complete_setup">Setup voltooien</string>
+
+    <!-- Linked Accounts -->
+    <string name="enable_daily_brief">Dagelijkse samenvatting inschakelen</string>
+    <string name="enable_daily_brief_description">Koppel je Gmail om gepersonaliseerde dagelijkse samenvattingen te ontvangen op basis van je e-mails. We vatten belangrijke updates samen zodat je de dag geïnformeerd begint.</string>
+    <string name="google_calendar">Google Agenda</string>
+    <string name="outlook">Outlook</string>
+    <string name="daily_brief_sources">Bronnen dagelijkse samenvatting</string>
+    <string name="email_summaries">E-mailsamenvattingen</string>
+    <string name="include_email_in_brief">E-mailsamenvattingen opnemen in Dagelijkse samenvatting</string>
+    <string name="calendar_events">Agenda-evenementen</string>
+    <string name="include_calendar_in_brief">Aankomende evenementen opnemen in Dagelijkse samenvatting</string>
+    <string name="unlink">Ontkoppelen</string>
+    <string name="soon">Binnenkort</string>
+    <string name="your_privacy">Jouw privacy</string>
+    <string name="privacy_note">We lezen alleen e-mailonderwerpen en afzenders om samenvattingen te maken. We slaan nooit je e-mailinhoud op en delen je gegevens niet met derden.</string>
+    <string name="microsoft_outlook_coming_soon">Microsoft Outlook-koppeling wordt beschikbaar in een toekomstige update.</string>
+    <string name="gmail_linking_cancelled">Gmail-koppeling is geannuleerd</string>
+    <string name="calendar_linking_cancelled">Agendakoppeling is geannuleerd</string>
+    <string name="reconnect">Opnieuw verbinden</string>
+
+    <!-- Hidden Topics -->
+    <string name="no_hidden_topics">Geen verborgen onderwerpen</string>
+    <string name="no_hidden_topics_description">Onderwerpen die je verbergt verschijnen hier. Je kunt ze op elk moment weer zichtbaar maken.</string>
+    <string name="unhide_hint">Tik op het oogpictogram om een onderwerp weer te tonen.</string>
+    <string name="unhide">Zichtbaar maken</string>
+
+    <!-- Language Settings -->
+    <string name="language">Taal</string>
+    <string name="language_description">Kies je voorkeurstaal voor podcastafleveringen.</string>
+    <string name="language_note">Nieuwe afleveringen worden gegenereerd in de geselecteerde taal. Eerder gegenereerde afleveringen blijven in hun oorspronkelijke taal.</string>
+    <string name="selected">Geselecteerd</string>
+
+    <!-- Voice Settings -->
+    <string name="loading_voices">Stemmen laden\u2026</string>
+    <string name="no_voice_pairs">Geen stemparen beschikbaar</string>
+    <string name="no_voices">Geen stemmen beschikbaar</string>
+    <string name="voice_pairs_description">Selecteer een vooraf geconfigureerd stempaar voor je podcastpresentatoren.</string>
+    <string name="host_1">Presentator 1</string>
+    <string name="host_2">Presentator 2</string>
+    <string name="host_1_voice">Stem presentator 1</string>
+    <string name="host_2_voice">Stem presentator 2</string>
+
+    <!-- Theme Settings -->
+    <string name="theme_system">Systeem</string>
+    <string name="theme_system_description">Apparaatinstellingen volgen</string>
+    <string name="theme_dark">Donker</string>
+    <string name="theme_dark_description">Altijd donkere modus</string>
+    <string name="theme_light">Licht</string>
+    <string name="theme_light_description">Altijd lichte modus</string>
+
+    <!-- Notification Settings -->
+    <string name="permission">Toestemming</string>
+    <string name="enabled">Ingeschakeld</string>
+    <string name="not_enabled">Niet ingeschakeld</string>
+    <string name="daily_brief_schedule">Schema dagelijkse samenvatting</string>
+    <string name="daily_brief_notifications">Meldingen dagelijkse samenvatting</string>
+    <string name="daily_brief_notify_hint">Ontvang een melding wanneer je samenvatting klaar is</string>
+    <string name="daily_brief_content">Inhoud dagelijkse samenvatting</string>
+    <string name="include_topic_updates">Onderwerpupdates opnemen</string>
+    <string name="include_topic_updates_hint">Koppen van je onderwerpen toevoegen aan Dagelijkse samenvatting</string>
+    <string name="notification_info">Je dagelijkse samenvatting wordt gegenereerd en is klaar op het geplande tijdstip. Je ontvangt een melding wanneer deze klaar is om af te spelen.</string>
+    <string name="select_time">Tijd selecteren</string>
+
+    <!-- Subscription / Paywall -->
+    <string name="enjoy_uninterrupted">Geniet van ononderbroken luisteren</string>
+    <string name="no_audio_ad_interruptions">Geen audio-advertentieonderbrekingen</string>
+    <string name="seamless_episode_playback">Naadloos afleveringen afspelen</string>
+    <string name="support_indie_development">Steun onafhankelijke ontwikkeling</string>
+    <string name="ad_free_subscriber">Je bent een advertentievrij abonnee!</string>
+    <string name="yearly">Jaarlijks</string>
+    <string name="save_percent">Bespaar 58%%</string>
+    <string name="monthly">Maandelijks</string>
+    <string name="subscribe">Abonneren</string>
+    <string name="restore_purchases">Aankopen herstellen</string>
+    <string name="payment_fine_print">Betaling wordt in rekening gebracht op je Google Play-account. Abonnement wordt automatisch verlengd tenzij minstens 24 uur voor het einde van de huidige periode wordt opgezegd.</string>
+    <string name="per_year">/jaar</string>
+    <string name="per_month">/maand</string>
+    <string name="per_week">/week</string>
+
+    <!-- Ads -->
+    <string name="sponsored">GESPONSORD</string>
+    <string name="skip">Overslaan</string>
+    <string name="skip_ad">Advertentie overslaan</string>
+    <string name="ad_content_description">Advertentie</string>
+
+    <!-- Splash Screen -->
+    <string name="splash_tagline">Jouw AI-aangedreven audiooverzicht</string>
+
+    <!-- Notifications (non-composable) -->
+    <string name="notification_good_morning">Goedemorgen!</string>
+    <string name="notification_daily_brief_text">Tijd voor je Dagelijkse Samenvatting. Tik om bij te praten over e-mails, agenda en nieuws.</string>
+    <string name="daily_brief_channel_description">Herinneringsmeldingen dagelijkse samenvatting</string>
+
+    <!-- Daily Brief Playback -->
+    <string name="daily_brief_title_format">Dagelijkse Samenvatting - %s</string>
+    <string name="daily_brief_description">Jouw gepersonaliseerde ochtendsamenvatting</string>
+</resources>

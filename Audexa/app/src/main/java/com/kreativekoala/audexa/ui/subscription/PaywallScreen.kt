@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -25,6 +26,7 @@ import com.revenuecat.purchases.PackageType
 import com.revenuecat.purchases.models.StoreProduct
 import com.revenuecat.purchases.ui.revenuecatui.PaywallDialog
 import com.revenuecat.purchases.ui.revenuecatui.PaywallDialogOptions
+import com.kreativekoala.audexa.R
 import com.kreativekoala.audexa.billing.BillingManager
 import com.kreativekoala.audexa.ui.theme.*
 
@@ -34,19 +36,11 @@ fun PaywallScreen(
     billingManager: BillingManager,
     onNavigateBack: () -> Unit
 ) {
-    // Try RevenueCat remote paywall first (design controlled from dashboard)
-    var showRemotePaywall by remember { mutableStateOf(true) }
-
-    if (showRemotePaywall) {
-        PaywallDialog(
-            PaywallDialogOptions.Builder()
-                .setDismissRequest {
-                    showRemotePaywall = false
-                    onNavigateBack()
-                }
-                .build()
-        )
-    }
+    // Use custom paywall directly (remote paywall may not be configured)
+    CustomPaywallScreen(
+        billingManager = billingManager,
+        onNavigateBack = onNavigateBack
+    )
 }
 
 // Fallback custom paywall (kept for reference or if remote paywall is not configured)
@@ -76,7 +70,7 @@ fun CustomPaywallScreen(
                     IconButton(onClick = onNavigateBack) {
                         Icon(
                             Icons.Default.Close,
-                            contentDescription = "Close",
+                            contentDescription = stringResource(R.string.close),
                             tint = MaterialTheme.colorScheme.onBackground
                         )
                     }
@@ -100,7 +94,7 @@ fun CustomPaywallScreen(
 
             // Header
             Text(
-                text = "Go Ad-Free",
+                text = stringResource(R.string.go_ad_free),
                 style = MaterialTheme.typography.headlineLarge,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onBackground
@@ -109,7 +103,7 @@ fun CustomPaywallScreen(
             Spacer(modifier = Modifier.height(8.dp))
 
             Text(
-                text = "Enjoy uninterrupted listening",
+                text = stringResource(R.string.enjoy_uninterrupted),
                 style = MaterialTheme.typography.bodyLarge,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
@@ -117,11 +111,11 @@ fun CustomPaywallScreen(
             Spacer(modifier = Modifier.height(32.dp))
 
             // Features
-            FeatureRow(icon = Icons.Default.MusicOff, text = "No audio ad interruptions")
+            FeatureRow(icon = Icons.Default.MusicOff, text = stringResource(R.string.no_audio_ad_interruptions))
             Spacer(modifier = Modifier.height(12.dp))
-            FeatureRow(icon = Icons.Default.Speed, text = "Seamless episode playback")
+            FeatureRow(icon = Icons.Default.Speed, text = stringResource(R.string.seamless_episode_playback))
             Spacer(modifier = Modifier.height(12.dp))
-            FeatureRow(icon = Icons.Default.Favorite, text = "Support indie development")
+            FeatureRow(icon = Icons.Default.Favorite, text = stringResource(R.string.support_indie_development))
 
             Spacer(modifier = Modifier.height(32.dp))
 
@@ -144,7 +138,7 @@ fun CustomPaywallScreen(
                         )
                         Spacer(modifier = Modifier.width(12.dp))
                         Text(
-                            text = "You're an Ad-Free subscriber!",
+                            text = stringResource(R.string.ad_free_subscriber),
                             style = MaterialTheme.typography.titleMedium,
                             color = MaterialTheme.colorScheme.onBackground,
                             fontWeight = FontWeight.SemiBold
@@ -156,8 +150,8 @@ fun CustomPaywallScreen(
                 if (yearlyPackage != null) {
                     PricingCard(
                         pkg = yearlyPackage,
-                        label = "Yearly",
-                        badge = "Save 58%",
+                        label = stringResource(R.string.yearly),
+                        badge = stringResource(R.string.save_percent),
                         isSelected = selectedPackage == yearlyPackage,
                         onClick = { selectedPackage = yearlyPackage }
                     )
@@ -168,7 +162,7 @@ fun CustomPaywallScreen(
                 if (monthlyPackage != null) {
                     PricingCard(
                         pkg = monthlyPackage,
-                        label = "Monthly",
+                        label = stringResource(R.string.monthly),
                         badge = null,
                         isSelected = selectedPackage == monthlyPackage,
                         onClick = { selectedPackage = monthlyPackage }
@@ -201,7 +195,7 @@ fun CustomPaywallScreen(
                         )
                     } else {
                         Text(
-                            text = "Subscribe",
+                            text = stringResource(R.string.subscribe),
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold,
                             color = PrimaryTextDark
@@ -214,7 +208,7 @@ fun CustomPaywallScreen(
                 // Restore purchases
                 TextButton(onClick = { billingManager.restorePurchases() }) {
                     Text(
-                        text = "Restore Purchases",
+                        text = stringResource(R.string.restore_purchases),
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
@@ -223,8 +217,7 @@ fun CustomPaywallScreen(
 
                 // Fine print
                 Text(
-                    text = "Payment will be charged to your Google Play account. " +
-                        "Subscription automatically renews unless cancelled at least 24 hours before the end of the current period.",
+                    text = stringResource(R.string.payment_fine_print),
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f),
                     textAlign = TextAlign.Center,
@@ -269,9 +262,9 @@ private fun PricingCard(
     val product = pkg.product
     val price = product.price.formatted
     val periodLabel = when (pkg.packageType) {
-        PackageType.ANNUAL -> "/year"
-        PackageType.MONTHLY -> "/month"
-        PackageType.WEEKLY -> "/week"
+        PackageType.ANNUAL -> stringResource(R.string.per_year)
+        PackageType.MONTHLY -> stringResource(R.string.per_month)
+        PackageType.WEEKLY -> stringResource(R.string.per_week)
         else -> ""
     }
 

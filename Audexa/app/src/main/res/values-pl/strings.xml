@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Audexa</string>
+    <string name="app_tagline">Twoje osobiste radio AI</string>
+
+    <!-- Auth -->
+    <string name="sign_in_with_google">Zaloguj się przez Google</string>
+    <string name="sign_out">Wyloguj się</string>
+    <string name="delete_account">Usuń konto</string>
+    <string name="auth_description">Słuchaj podcastów tworzonych przez AI na tematy, które Cię interesują. Połącz swój e-mail w ustawieniach, aby otrzymywać spersonalizowane codzienne podsumowania.</string>
+    <string name="auth_terms">Kontynuując, akceptujesz nasze Warunki korzystania z usługi i Politykę prywatności</string>
+    <string name="start">Rozpocznij</string>
+
+    <!-- Navigation -->
+    <string name="nav_home">Strona główna</string>
+    <string name="nav_profile">Profil</string>
+    <string name="back">Wstecz</string>
+    <string name="close">Zamknij</string>
+    <string name="cancel">Anuluj</string>
+    <string name="ok">OK</string>
+    <string name="delete">Usuń</string>
+    <string name="retry">Ponów</string>
+    <string name="enable">Włącz</string>
+
+    <!-- Tabs -->
+    <string name="tab_for_you">Dla Ciebie</string>
+    <string name="tab_discover">Odkrywaj</string>
+
+    <!-- Home -->
+    <string name="good_morning">Dzień dobry</string>
+    <string name="good_afternoon">Dzień dobry</string>
+    <string name="good_evening">Dobry wieczór</string>
+    <string name="daily_brief">Codzienny skrót</string>
+    <string name="daily_brief_subtitle">Codzienny skrót \u2022 %s</string>
+    <string name="keep_listening">Kontynuuj słuchanie</string>
+    <string name="your_topics">Twoje tematy</string>
+    <string name="topic_podcasts">Podcasty tematyczne</string>
+    <string name="recommended_for_you">Polecane dla Ciebie</string>
+    <string name="more_for_you">Więcej dla Ciebie</string>
+    <string name="all_topics">Wszystkie tematy</string>
+    <string name="matching_topics">Pasujące tematy</string>
+    <string name="tap_to_explore">Dotknij, aby przeglądać i odtwarzać</string>
+    <string name="link_account_prompt">Połącz swój e-mail, aby generować spersonalizowane podsumowania</string>
+    <string name="link_account">Połącz konto</string>
+    <string name="find_new_shows">Znajdź nowe programy</string>
+    <string name="search">Szukaj</string>
+    <string name="clear">Wyczyść</string>
+    <string name="no_results_for">Brak wyników dla \"%s\"</string>
+
+    <!-- Profile -->
+    <string name="profile">Profil</string>
+    <string name="linked_accounts">Połączone konta</string>
+    <string name="preferences">Preferencje</string>
+    <string name="podcast_language">Język podcastu</string>
+    <string name="briefing_time">Godzina podsumowania</string>
+    <string name="topics">Tematy</string>
+    <string name="voice_preference">Preferencje głosu</string>
+    <string name="hidden_topics">Ukryte tematy</string>
+    <string name="about">O aplikacji</string>
+    <string name="version">Wersja</string>
+    <string name="terms_of_service">Warunki korzystania z usługi</string>
+    <string name="privacy_policy">Polityka prywatności</string>
+    <string name="premium">Premium</string>
+    <string name="go_ad_free">Usuń reklamy</string>
+    <string name="ad_free">Bez reklam</string>
+    <string name="active_subscription">Aktywna subskrypcja</string>
+    <string name="remove_all_ads">Usuń wszystkie reklamy</string>
+    <string name="email_accounts">Konta e-mail</string>
+    <string name="app_theme">Motyw aplikacji</string>
+    <string name="voice_settings">Ustawienia głosu</string>
+    <string name="choose_podcast_voices">Wybierz głosy podcastu</string>
+    <string name="hidden_count">Ukrytych: %d</string>
+    <string name="notifications">Powiadomienia</string>
+    <string name="daily_brief_reminders">Przypomnienia o codziennym skrócie</string>
+    <string name="sign_out_confirm">Czy na pewno chcesz się wylogować?</string>
+    <string name="delete_account_confirm">Czy na pewno chcesz usunąć swoje konto? Spowoduje to trwałe usunięcie wszystkich danych, w tym podcastów, preferencji i połączonych kont. Tej czynności nie można cofnąć.</string>
+
+    <!-- Player -->
+    <string name="playing">Odtwarzanie</string>
+    <string name="paused">Wstrzymano</string>
+    <string name="play">Odtwórz</string>
+    <string name="pause">Wstrzymaj</string>
+    <string name="loading">Ładowanie\u2026</string>
+    <string name="generating">Generowanie\u2026</string>
+    <string name="generating_progress">Generowanie\u2026 %d%%</string>
+    <string name="generate_episode">Wygeneruj odcinek</string>
+    <string name="regenerate">Wygeneruj ponownie</string>
+    <string name="episode_history">Historia odcinków</string>
+    <string name="skip_back">Cofnij o 15 sekund</string>
+    <string name="skip_forward">Przewiń o 15 sekund</string>
+    <string name="skip_back_mini">Cofnij</string>
+    <string name="skip_forward_mini">Przewiń</string>
+    <string name="buffering">Buforowanie\u2026</string>
+    <string name="sleep_timer">Wyłącznik czasowy</string>
+    <string name="timer">Minutnik</string>
+    <string name="sleep_timer_5_min">5 min</string>
+    <string name="sleep_timer_10_min">10 min</string>
+    <string name="sleep_timer_15_min">15 min</string>
+    <string name="sleep_timer_30_min">30 min</string>
+    <string name="sleep_timer_1_hour">1 godz.</string>
+    <string name="min_format">%d min</string>
+    <string name="today">Dzisiaj</string>
+    <string name="bookmark">Zakładka</string>
+    <string name="more">Więcej</string>
+    <string name="hide_topic">Ukryj temat</string>
+    <string name="hide">Ukryj</string>
+
+    <!-- Errors -->
+    <string name="error_generic">Coś poszło nie tak</string>
+    <string name="error_network">Błąd sieci. Sprawdź połączenie.</string>
+    <string name="error_auth">Uwierzytelnianie nie powiodło się</string>
+    <string name="error_no_internet">Brak połączenia z internetem. Sprawdź sieć i spróbuj ponownie.</string>
+    <string name="generation_failed">Generowanie nie powiodło się</string>
+
+    <!-- Misc -->
+    <string name="min_daily">%d min dziennie</string>
+    <string name="connected">Połączono</string>
+    <string name="not_connected">Nie połączono</string>
+    <string name="not_connected_lower">Nie połączono</string>
+    <string name="coming_soon">Wkrótce</string>
+    <string name="microsoft_coming_soon">Integracja z kontem Microsoft wkrótce. Bądź na bieżąco!</string>
+
+    <!-- Onboarding -->
+    <string name="welcome_to_audexa">Witaj w Audexa</string>
+    <string name="welcome_description">Twoje spersonalizowane radio AI, które zamienia najnowsze wiadomości, technologie i tematy w angażujące podsumowania w stylu podcastu.</string>
+    <string name="get_started">Zacznij</string>
+    <string name="connect_your_account">Połącz swoje konto</string>
+    <string name="connect_account_description">Połącz konto Google, aby otrzymywać spersonalizowane codzienne podsumowania z e-maila i kalendarza.</string>
+    <string name="gmail">Gmail</string>
+    <string name="calendar">Kalendarz</string>
+    <string name="include_email_highlights">Uwzględnij najważniejsze wiadomości e-mail w podsumowaniu</string>
+    <string name="include_calendar_events">Uwzględnij nadchodzące wydarzenia w podsumowaniu</string>
+    <string name="continue_button">Kontynuuj</string>
+    <string name="skip_for_now">Pomiń na razie</string>
+    <string name="connect_later_hint">Zawsze możesz połączyć później w Ustawieniach</string>
+    <string name="connect">Połącz</string>
+    <string name="choose_your_interests">Wybierz swoje zainteresowania</string>
+    <string name="choose_interests_description">Wybierz tematy, o których chcesz słuchać. Będziemy generować codzienne odcinki specjalnie dla Ciebie.</string>
+    <string name="topics_selected">Wybrano tematów: %d</string>
+    <string name="topics_selected_plural_suffix"></string>
+    <string name="complete_setup">Zakończ konfigurację</string>
+
+    <!-- Linked Accounts -->
+    <string name="enable_daily_brief">Włącz codzienny skrót</string>
+    <string name="enable_daily_brief_description">Połącz Gmail, aby otrzymywać spersonalizowane codzienne podsumowania na podstawie e-maili. Podsumujemy ważne aktualizacje, abyś mógł rozpocząć dzień dobrze poinformowany.</string>
+    <string name="google_calendar">Kalendarz Google</string>
+    <string name="outlook">Outlook</string>
+    <string name="daily_brief_sources">Źródła codziennego skrótu</string>
+    <string name="email_summaries">Podsumowania e-maili</string>
+    <string name="include_email_in_brief">Uwzględnij podsumowania e-maili w Codziennym skrócie</string>
+    <string name="calendar_events">Wydarzenia z kalendarza</string>
+    <string name="include_calendar_in_brief">Uwzględnij nadchodzące wydarzenia w Codziennym skrócie</string>
+    <string name="unlink">Odłącz</string>
+    <string name="soon">Wkrótce</string>
+    <string name="your_privacy">Twoja prywatność</string>
+    <string name="privacy_note">Odczytujemy tylko tematy e-maili i nadawców w celu tworzenia podsumowań. Nigdy nie przechowujemy treści e-maili ani nie udostępniamy danych osobom trzecim.</string>
+    <string name="microsoft_outlook_coming_soon">Łączenie z Microsoft Outlook będzie dostępne w przyszłej aktualizacji.</string>
+    <string name="gmail_linking_cancelled">Łączenie z Gmail zostało anulowane</string>
+    <string name="calendar_linking_cancelled">Łączenie z kalendarzem zostało anulowane</string>
+    <string name="reconnect">Połącz ponownie</string>
+
+    <!-- Hidden Topics -->
+    <string name="no_hidden_topics">Brak ukrytych tematów</string>
+    <string name="no_hidden_topics_description">Tematy, które ukryjesz, pojawią się tutaj. Możesz je odkryć w dowolnym momencie.</string>
+    <string name="unhide_hint">Dotknij ikony oka, aby ponownie pokazać temat.</string>
+    <string name="unhide">Odkryj</string>
+
+    <!-- Language Settings -->
+    <string name="language">Język</string>
+    <string name="language_description">Wybierz preferowany język odcinków podcastu.</string>
+    <string name="language_note">Nowe odcinki będą generowane w wybranym języku. Wcześniej wygenerowane odcinki pozostaną w oryginalnym języku.</string>
+    <string name="selected">Wybrano</string>
+
+    <!-- Voice Settings -->
+    <string name="loading_voices">Ładowanie głosów\u2026</string>
+    <string name="no_voice_pairs">Brak dostępnych par głosów</string>
+    <string name="no_voices">Brak dostępnych głosów</string>
+    <string name="voice_pairs_description">Wybierz wstępnie skonfigurowaną parę głosów dla prowadzących podcast.</string>
+    <string name="host_1">Prowadzący 1</string>
+    <string name="host_2">Prowadzący 2</string>
+    <string name="host_1_voice">Głos prowadzącego 1</string>
+    <string name="host_2_voice">Głos prowadzącego 2</string>
+
+    <!-- Theme Settings -->
+    <string name="theme_system">Systemowy</string>
+    <string name="theme_system_description">Dopasuj do ustawień urządzenia</string>
+    <string name="theme_dark">Ciemny</string>
+    <string name="theme_dark_description">Zawsze tryb ciemny</string>
+    <string name="theme_light">Jasny</string>
+    <string name="theme_light_description">Zawsze tryb jasny</string>
+
+    <!-- Notification Settings -->
+    <string name="permission">Uprawnienie</string>
+    <string name="enabled">Włączono</string>
+    <string name="not_enabled">Nie włączono</string>
+    <string name="daily_brief_schedule">Harmonogram codziennego skrótu</string>
+    <string name="daily_brief_notifications">Powiadomienia o codziennym skrócie</string>
+    <string name="daily_brief_notify_hint">Otrzymuj powiadomienie, gdy skrót jest gotowy</string>
+    <string name="daily_brief_content">Treść codziennego skrótu</string>
+    <string name="include_topic_updates">Uwzględnij aktualizacje tematów</string>
+    <string name="include_topic_updates_hint">Dodaj nagłówki z Twoich tematów do Codziennego skrótu</string>
+    <string name="notification_info">Twój codzienny skrót zostanie wygenerowany i będzie gotowy o zaplanowanej godzinie. Otrzymasz powiadomienie, gdy będzie gotowy do odtworzenia.</string>
+    <string name="select_time">Wybierz godzinę</string>
+
+    <!-- Subscription / Paywall -->
+    <string name="enjoy_uninterrupted">Ciesz się nieprzerwanym słuchaniem</string>
+    <string name="no_audio_ad_interruptions">Bez przerw na reklamy audio</string>
+    <string name="seamless_episode_playback">Płynne odtwarzanie odcinków</string>
+    <string name="support_indie_development">Wspieraj niezależnych deweloperów</string>
+    <string name="ad_free_subscriber">Jesteś subskrybentem bez reklam!</string>
+    <string name="yearly">Roczna</string>
+    <string name="save_percent">Oszczędź 58%%</string>
+    <string name="monthly">Miesięczna</string>
+    <string name="subscribe">Subskrybuj</string>
+    <string name="restore_purchases">Przywróć zakupy</string>
+    <string name="payment_fine_print">Płatność zostanie pobrana z Twojego konta Google Play. Subskrypcja odnawia się automatycznie, chyba że zostanie anulowana co najmniej 24 godziny przed końcem bieżącego okresu.</string>
+    <string name="per_year">/rok</string>
+    <string name="per_month">/mies.</string>
+    <string name="per_week">/tydz.</string>
+
+    <!-- Ads -->
+    <string name="sponsored">SPONSOROWANE</string>
+    <string name="skip">Pomiń</string>
+    <string name="skip_ad">Pomiń reklamę</string>
+    <string name="ad_content_description">Reklama</string>
+
+    <!-- Splash Screen -->
+    <string name="splash_tagline">Twoje podsumowanie audio oparte na AI</string>
+
+    <!-- Notifications (non-composable) -->
+    <string name="notification_good_morning">Dzień dobry!</string>
+    <string name="notification_daily_brief_text">Czas na Twój Codzienny Skrót. Dotknij, aby dowiedzieć się o e-mailach, kalendarzu i wiadomościach.</string>
+    <string name="daily_brief_channel_description">Powiadomienia przypominające o codziennym skrócie</string>
+
+    <!-- Daily Brief Playback -->
+    <string name="daily_brief_title_format">Codzienny Skrót - %s</string>
+    <string name="daily_brief_description">Twoje spersonalizowane poranne podsumowanie</string>
+</resources>

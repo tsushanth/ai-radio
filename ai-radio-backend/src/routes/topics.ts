@@ -76,31 +76,69 @@ router.get('/:topicId', async (req: Request, res: Response) => {
 router.get('/:topicId/episode', async (req: Request, res: Response) => {
   try {
     const { topicId } = req.params;
-    const userId = req.query.userId as string | undefined;
     const language = (req.query.lang as string) || 'en';
-    const forceRegenerate = req.query.regenerate === 'true';
 
-    const result = await topicPodcastGenerator.getOrGenerateEpisode(
-      topicId,
-      userId,
-      forceRegenerate,
-      language
-    );
+    const topic = topicPodcastGenerator.getTopic(topicId);
+    if (!topic) {
+      res.status(404).json({ success: false, error: 'Topic not found' });
+      return;
+    }
 
-    // Select ads for completed episodes (non-blocking, returns [] on error)
-    const ads = result.episode.status === 'completed'
+    // Fetch-only: return existing episode, never trigger generation
+    const today = new Date().toISOString().split('T')[0];
+    const episode = await topicPodcastGenerator.getExistingEpisode(topicId, today, language);
+
+    if (!episode) {
+      // No episode generated yet for today
+      res.json({
+        success: true,
+        data: {
+          episode: {
+            id: `${topicId}-${today}-${language}`,
+            topicId,
+            date: today,
+            status: 'not_generated',
+            title: `${topic.name} - Episode Coming Soon`,
+            description: topic.description,
+            language,
+            playCount: 0,
+            stories: [],
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
+          },
+          isNew: false,
+          message: 'Today\'s episode has not been generated yet. It will be available shortly.',
+          ads: [],
+        },
+      });
+      return;
+    }
+
+    // Increment play count for completed episodes
+    if (episode.status === 'completed') {
+      await topicPodcastGenerator.incrementPlayCountPublic(episode.id);
+    }
+
+    // Select ads for completed episodes
+    const ads = episode.status === 'completed'
       ? await adService.selectAdsForEpisode(topicId, language, 2)
       : [];
 
     res.json({
       success: true,
       data: {
-        ...result,
+        episode,
+        isNew: false,
+        message: episode.status === 'completed'
+          ? 'Today\'s episode is ready!'
+          : episode.status === 'generating'
+            ? 'Episode is currently being generated. Please check back in 30-60 seconds.'
+            : `Generation failed: ${episode.error || 'Unknown error'}. Tap regenerate to try again.`,
         ads,
       },
     });
   } catch (error) {
-    console.error('Error getting/generating episode:', error);
+    console.error('Error getting episode:', error);
     res.status(500).json({
       success: false,
       error: error instanceof Error ? error.message : 'Failed to get episode',

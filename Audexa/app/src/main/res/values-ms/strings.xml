@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Audexa</string>
+    <string name="app_tagline">Radio AI peribadi anda</string>
+
+    <!-- Auth -->
+    <string name="sign_in_with_google">Log masuk dengan Google</string>
+    <string name="sign_out">Log Keluar</string>
+    <string name="delete_account">Padam Akaun</string>
+    <string name="auth_description">Dengar podcast yang dijana oleh AI mengenai topik yang anda minati. Pautkan e-mel anda dalam tetapan untuk mendapatkan ringkasan harian yang diperibadikan.</string>
+    <string name="auth_terms">Dengan meneruskan, anda bersetuju dengan Syarat Perkhidmatan dan Dasar Privasi kami</string>
+    <string name="start">Mula</string>
+
+    <!-- Navigation -->
+    <string name="nav_home">Laman Utama</string>
+    <string name="nav_profile">Profil</string>
+    <string name="back">Kembali</string>
+    <string name="close">Tutup</string>
+    <string name="cancel">Batal</string>
+    <string name="ok">OK</string>
+    <string name="delete">Padam</string>
+    <string name="retry">Cuba Semula</string>
+    <string name="enable">Dayakan</string>
+
+    <!-- Tabs -->
+    <string name="tab_for_you">Untuk Anda</string>
+    <string name="tab_discover">Terokai</string>
+
+    <!-- Home -->
+    <string name="good_morning">Selamat Pagi</string>
+    <string name="good_afternoon">Selamat Tengah Hari</string>
+    <string name="good_evening">Selamat Petang</string>
+    <string name="daily_brief">Ringkasan Harian</string>
+    <string name="daily_brief_subtitle">Ringkasan Harian \u2022 %s</string>
+    <string name="keep_listening">Teruskan mendengar</string>
+    <string name="your_topics">Topik Anda</string>
+    <string name="topic_podcasts">Podcast Topik</string>
+    <string name="recommended_for_you">Disyorkan untuk anda</string>
+    <string name="more_for_you">Lebih banyak untuk anda</string>
+    <string name="all_topics">Semua Topik</string>
+    <string name="matching_topics">Topik Sepadan</string>
+    <string name="tap_to_explore">Ketik untuk meneroka dan mainkan</string>
+    <string name="link_account_prompt">Pautkan e-mel anda untuk menjana ringkasan yang diperibadikan</string>
+    <string name="link_account">Pautkan Akaun</string>
+    <string name="find_new_shows">Cari rancangan baharu</string>
+    <string name="search">Cari</string>
+    <string name="clear">Kosongkan</string>
+    <string name="no_results_for">Tiada hasil untuk \"%s\"</string>
+
+    <!-- Profile -->
+    <string name="profile">Profil</string>
+    <string name="linked_accounts">Akaun Dipautkan</string>
+    <string name="preferences">Keutamaan</string>
+    <string name="podcast_language">Bahasa Podcast</string>
+    <string name="briefing_time">Masa Ringkasan</string>
+    <string name="topics">Topik</string>
+    <string name="voice_preference">Keutamaan Suara</string>
+    <string name="hidden_topics">Topik Tersembunyi</string>
+    <string name="about">Perihal</string>
+    <string name="version">Versi</string>
+    <string name="terms_of_service">Syarat Perkhidmatan</string>
+    <string name="privacy_policy">Dasar Privasi</string>
+    <string name="premium">Premium</string>
+    <string name="go_ad_free">Tanpa Iklan</string>
+    <string name="ad_free">Tanpa Iklan</string>
+    <string name="active_subscription">Langganan aktif</string>
+    <string name="remove_all_ads">Buang semua iklan</string>
+    <string name="email_accounts">Akaun E-mel</string>
+    <string name="app_theme">Tema Aplikasi</string>
+    <string name="voice_settings">Tetapan Suara</string>
+    <string name="choose_podcast_voices">Pilih suara podcast</string>
+    <string name="hidden_count">%d tersembunyi</string>
+    <string name="notifications">Pemberitahuan</string>
+    <string name="daily_brief_reminders">Peringatan ringkasan harian</string>
+    <string name="sign_out_confirm">Adakah anda pasti mahu log keluar?</string>
+    <string name="delete_account_confirm">Adakah anda pasti mahu memadam akaun anda? Ini akan memadam semua data anda secara kekal termasuk podcast, keutamaan dan akaun yang dipautkan. Tindakan ini tidak boleh dibuat asal.</string>
+
+    <!-- Player -->
+    <string name="playing">Sedang Bermain</string>
+    <string name="paused">Dijeda</string>
+    <string name="play">Main</string>
+    <string name="pause">Jeda</string>
+    <string name="loading">Memuatkan\u2026</string>
+    <string name="generating">Menjana\u2026</string>
+    <string name="generating_progress">Menjana\u2026 %d%%</string>
+    <string name="generate_episode">Jana Episod</string>
+    <string name="regenerate">Jana Semula</string>
+    <string name="episode_history">Sejarah Episod</string>
+    <string name="skip_back">Undur 15 saat</string>
+    <string name="skip_forward">Maju 15 saat</string>
+    <string name="skip_back_mini">Undur</string>
+    <string name="skip_forward_mini">Maju</string>
+    <string name="buffering">Menimbal\u2026</string>
+    <string name="sleep_timer">Pemasa tidur</string>
+    <string name="timer">Pemasa</string>
+    <string name="sleep_timer_5_min">5 min</string>
+    <string name="sleep_timer_10_min">10 min</string>
+    <string name="sleep_timer_15_min">15 min</string>
+    <string name="sleep_timer_30_min">30 min</string>
+    <string name="sleep_timer_1_hour">1 jam</string>
+    <string name="min_format">%d min</string>
+    <string name="today">Hari Ini</string>
+    <string name="bookmark">Penanda Halaman</string>
+    <string name="more">Lagi</string>
+    <string name="hide_topic">Sembunyikan Topik</string>
+    <string name="hide">Sembunyikan</string>
+
+    <!-- Errors -->
+    <string name="error_generic">Sesuatu telah berlaku</string>
+    <string name="error_network">Ralat rangkaian. Sila semak sambungan anda.</string>
+    <string name="error_auth">Pengesahan gagal</string>
+    <string name="error_no_internet">Tiada sambungan internet. Sila semak rangkaian anda dan cuba semula.</string>
+    <string name="generation_failed">Penjanaan gagal</string>
+
+    <!-- Misc -->
+    <string name="min_daily">%d min sehari</string>
+    <string name="connected">Disambungkan</string>
+    <string name="not_connected">Tidak Disambungkan</string>
+    <string name="not_connected_lower">Tidak disambungkan</string>
+    <string name="coming_soon">Akan Datang</string>
+    <string name="microsoft_coming_soon">Integrasi akaun Microsoft akan datang tidak lama lagi. Nantikan!</string>
+
+    <!-- Onboarding -->
+    <string name="welcome_to_audexa">Selamat Datang ke Audexa</string>
+    <string name="welcome_description">Radio AI peribadi anda yang menukarkan berita terkini, teknologi dan topik menjadi ringkasan bergaya podcast yang menarik.</string>
+    <string name="get_started">Mulakan</string>
+    <string name="connect_your_account">Sambungkan Akaun Anda</string>
+    <string name="connect_account_description">Pautkan akaun Google anda untuk mendapatkan ringkasan harian yang diperibadikan daripada e-mel dan kalendar anda.</string>
+    <string name="gmail">Gmail</string>
+    <string name="calendar">Kalendar</string>
+    <string name="include_email_highlights">Sertakan sorotan e-mel dalam ringkasan anda</string>
+    <string name="include_calendar_events">Sertakan acara akan datang dalam ringkasan anda</string>
+    <string name="continue_button">Teruskan</string>
+    <string name="skip_for_now">Langkau Buat Masa Ini</string>
+    <string name="connect_later_hint">Anda boleh menyambung kemudian dalam Tetapan</string>
+    <string name="connect">Sambung</string>
+    <string name="choose_your_interests">Pilih Minat Anda</string>
+    <string name="choose_interests_description">Pilih topik yang anda ingin dengar. Kami akan menjana episod harian khas untuk anda.</string>
+    <string name="topics_selected">%d topik dipilih</string>
+    <string name="topics_selected_plural_suffix"></string>
+    <string name="complete_setup">Selesaikan Persediaan</string>
+
+    <!-- Linked Accounts -->
+    <string name="enable_daily_brief">Dayakan Ringkasan Harian</string>
+    <string name="enable_daily_brief_description">Sambungkan Gmail anda untuk mendapatkan ringkasan harian yang diperibadikan berdasarkan e-mel anda. Kami akan meringkaskan kemas kini penting supaya anda memulakan hari dengan maklumat terkini.</string>
+    <string name="google_calendar">Google Kalendar</string>
+    <string name="outlook">Outlook</string>
+    <string name="daily_brief_sources">Sumber Ringkasan Harian</string>
+    <string name="email_summaries">Ringkasan E-mel</string>
+    <string name="include_email_in_brief">Sertakan ringkasan e-mel dalam Ringkasan Harian</string>
+    <string name="calendar_events">Acara Kalendar</string>
+    <string name="include_calendar_in_brief">Sertakan acara akan datang dalam Ringkasan Harian</string>
+    <string name="unlink">Nyahpaut</string>
+    <string name="soon">Tidak Lama Lagi</string>
+    <string name="your_privacy">Privasi Anda</string>
+    <string name="privacy_note">Kami hanya membaca subjek e-mel dan penghantar untuk membuat ringkasan. Kami tidak pernah menyimpan kandungan e-mel anda atau berkongsi data anda dengan pihak ketiga.</string>
+    <string name="microsoft_outlook_coming_soon">Pautan Microsoft Outlook akan tersedia dalam kemas kini akan datang.</string>
+    <string name="gmail_linking_cancelled">Pautan Gmail dibatalkan</string>
+    <string name="calendar_linking_cancelled">Pautan kalendar dibatalkan</string>
+    <string name="reconnect">Sambung Semula</string>
+
+    <!-- Hidden Topics -->
+    <string name="no_hidden_topics">Tiada Topik Tersembunyi</string>
+    <string name="no_hidden_topics_description">Topik yang anda sembunyikan akan muncul di sini. Anda boleh menyahsembunyikannya pada bila-bila masa.</string>
+    <string name="unhide_hint">Ketik ikon mata untuk menunjukkan topik semula.</string>
+    <string name="unhide">Nyahsembunyi</string>
+
+    <!-- Language Settings -->
+    <string name="language">Bahasa</string>
+    <string name="language_description">Pilih bahasa pilihan anda untuk episod podcast.</string>
+    <string name="language_note">Episod baharu akan dijana dalam bahasa yang dipilih. Episod yang dijana sebelumnya akan kekal dalam bahasa asalnya.</string>
+    <string name="selected">Dipilih</string>
+
+    <!-- Voice Settings -->
+    <string name="loading_voices">Memuat suara\u2026</string>
+    <string name="no_voice_pairs">Tiada pasangan suara tersedia</string>
+    <string name="no_voices">Tiada suara tersedia</string>
+    <string name="voice_pairs_description">Pilih pasangan suara pra-konfigurasi untuk hos podcast anda.</string>
+    <string name="host_1">Hos 1</string>
+    <string name="host_2">Hos 2</string>
+    <string name="host_1_voice">Suara Hos 1</string>
+    <string name="host_2_voice">Suara Hos 2</string>
+
+    <!-- Theme Settings -->
+    <string name="theme_system">Sistem</string>
+    <string name="theme_system_description">Ikut tetapan peranti</string>
+    <string name="theme_dark">Gelap</string>
+    <string name="theme_dark_description">Sentiasa mod gelap</string>
+    <string name="theme_light">Terang</string>
+    <string name="theme_light_description">Sentiasa mod terang</string>
+
+    <!-- Notification Settings -->
+    <string name="permission">Kebenaran</string>
+    <string name="enabled">Didayakan</string>
+    <string name="not_enabled">Tidak Didayakan</string>
+    <string name="daily_brief_schedule">Jadual Ringkasan Harian</string>
+    <string name="daily_brief_notifications">Pemberitahuan Ringkasan Harian</string>
+    <string name="daily_brief_notify_hint">Dapatkan pemberitahuan apabila ringkasan anda sedia</string>
+    <string name="daily_brief_content">Kandungan Ringkasan Harian</string>
+    <string name="include_topic_updates">Sertakan Kemas Kini Topik</string>
+    <string name="include_topic_updates_hint">Tambah tajuk berita daripada topik anda ke Ringkasan Harian</string>
+    <string name="notification_info">Ringkasan harian anda akan dijana dan sedia pada masa yang dijadualkan. Anda akan menerima pemberitahuan apabila ia sedia untuk dimainkan.</string>
+    <string name="select_time">Pilih Masa</string>
+
+    <!-- Subscription / Paywall -->
+    <string name="enjoy_uninterrupted">Nikmati pendengaran tanpa gangguan</string>
+    <string name="no_audio_ad_interruptions">Tanpa gangguan iklan audio</string>
+    <string name="seamless_episode_playback">Main balik episod tanpa gangguan</string>
+    <string name="support_indie_development">Sokong pembangunan bebas</string>
+    <string name="ad_free_subscriber">Anda pelanggan Tanpa Iklan!</string>
+    <string name="yearly">Tahunan</string>
+    <string name="save_percent">Jimat 58%%</string>
+    <string name="monthly">Bulanan</string>
+    <string name="subscribe">Langgan</string>
+    <string name="restore_purchases">Pulihkan Pembelian</string>
+    <string name="payment_fine_print">Pembayaran akan dicaj ke akaun Google Play anda. Langganan diperbaharui secara automatik melainkan dibatalkan sekurang-kurangnya 24 jam sebelum tamat tempoh semasa.</string>
+    <string name="per_year">/tahun</string>
+    <string name="per_month">/bulan</string>
+    <string name="per_week">/minggu</string>
+
+    <!-- Ads -->
+    <string name="sponsored">DITAJA</string>
+    <string name="skip">Langkau</string>
+    <string name="skip_ad">Langkau iklan</string>
+    <string name="ad_content_description">Iklan</string>
+
+    <!-- Splash Screen -->
+    <string name="splash_tagline">Ringkasan audio berkuasa AI anda</string>
+
+    <!-- Notifications (non-composable) -->
+    <string name="notification_good_morning">Selamat Pagi!</string>
+    <string name="notification_daily_brief_text">Masa untuk Ringkasan Harian anda. Ketik untuk mengetahui tentang e-mel, kalendar dan berita.</string>
+    <string name="daily_brief_channel_description">Pemberitahuan peringatan ringkasan harian</string>
+
+    <!-- Daily Brief Playback -->
+    <string name="daily_brief_title_format">Ringkasan Harian - %s</string>
+    <string name="daily_brief_description">Ringkasan pagi yang diperibadikan untuk anda</string>
+</resources>

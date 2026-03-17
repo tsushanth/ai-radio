@@ -1,0 +1,34 @@
+Audexa est votre radio IA personnelle qui transforme les dernieres nouvelles, la technologie, les affaires et plus encore en resumes audio captivants au format podcast, concus specialement pour vous.
+
+FONCTIONNALITES PRINCIPALES :
+
+Resumes Quotidiens
+Connectez votre Gmail pour recevoir un resume matinal personnalise de vos e-mails importants, evenements de calendrier et actualites. Commencez chaque journee informe et prepare.
+
+Podcasts Generes par IA
+Choisissez parmi des dizaines de sujets : Technologie, Finance, Sports, Science, Divertissement et plus. Audexa genere quotidiennement des episodes de podcast de haute qualite avec des voix IA avancees.
+
+Conversations a Deux Presentateurs
+Profitez de discussions naturelles entre deux presentateurs IA. Choisissez parmi plusieurs paires de voix OpenAI et ElevenLabs pour trouver le son parfait.
+
+Personnalise Pour Vous
+Selectionnez vos interets et Audexa adapte le contenu pour vous. Mettez en favoris vos sujets preferes, masquez ce que vous ne voulez pas et decouvrez de nouvelles emissions dans l\'onglet Decouvrir.
+
+Support Multi-Langues
+Ecoutez des podcasts dans votre langue preferee. Audexa prend en charge l\'anglais, l\'espagnol, le francais, l\'allemand, le japonais, le chinois, le coreen, le portugais, l\'italien et l\'hindi.
+
+Minuterie et Controles de Lecture
+Configurez une minuterie de sommeil, avancez ou reculez, et profitez d\'une lecture fluide avec le support audio en arriere-plan et les controles sur l\'ecran de verrouillage.
+
+Option Sans Publicite
+Passez a la version premium pour une ecoute ininterrompue sans coupures publicitaires. Soutenez le developpement independant tout en profitant de la meilleure experience d\'ecoute.
+
+COMMENT CA MARCHE :
+1. Connectez-vous avec Google
+2. Choisissez vos sujets d\'interet
+3. Liez optionnellement votre e-mail pour des resumes personnalises
+4. Ecoutez des episodes generes par IA a la demande
+
+Votre vie privee compte. Nous ne lisons que les objets et expediteurs des e-mails pour creer des resumes. Nous ne stockons jamais le contenu de vos e-mails et ne partageons pas vos donnees avec des tiers.
+
+Telechargez Audexa aujourd\'hui et decouvrez le futur de l\'audio personnalise.

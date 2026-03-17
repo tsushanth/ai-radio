@@ -15,11 +15,13 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.common.api.ApiException
+import com.kreativekoala.audexa.R
 import com.kreativekoala.audexa.ui.theme.*
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -31,8 +33,6 @@ fun LinkedAccountsScreen(
     val uiState by viewModel.uiState.collectAsState()
 
     // Gmail OAuth launcher
-    // Note: Google Sign-In with sensitive scopes may not return RESULT_OK
-    // We need to try parsing the intent regardless of result code
     val gmailLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartActivityForResult()
     ) { result ->
@@ -41,10 +41,8 @@ fun LinkedAccountsScreen(
             val account = task.getResult(ApiException::class.java)
             viewModel.handleGmailLinkResult(account)
         } catch (e: ApiException) {
-            // ApiException code 12501 means user cancelled
-            // ApiException code 12500 means sign-in failed
             if (e.statusCode == 12501) {
-                viewModel.handleLinkError("Gmail linking was cancelled")
+                viewModel.handleLinkError("Gmail linking cancelled")
             } else {
                 viewModel.handleLinkError("Gmail linking failed: ${e.statusCode} - ${e.message}")
             }
@@ -61,7 +59,7 @@ fun LinkedAccountsScreen(
             viewModel.handleCalendarLinkResult(account)
         } catch (e: ApiException) {
             if (e.statusCode == 12501) {
-                viewModel.handleLinkError("Calendar linking was cancelled")
+                viewModel.handleLinkError("Calendar linking cancelled")
             } else {
                 viewModel.handleLinkError("Calendar linking failed: ${e.statusCode} - ${e.message}")
             }
@@ -89,7 +87,7 @@ fun LinkedAccountsScreen(
             TopAppBar(
                 title = {
                     Text(
-                        "Linked Accounts",
+                        stringResource(R.string.linked_accounts),
                         color = PrimaryText,
                         fontWeight = FontWeight.Bold
                     )
@@ -98,7 +96,7 @@ fun LinkedAccountsScreen(
                     IconButton(onClick = onNavigateBack) {
                         Icon(
                             Icons.Default.ArrowBack,
-                            contentDescription = "Back",
+                            contentDescription = stringResource(R.string.back),
                             tint = PrimaryText
                         )
                     }
@@ -125,14 +123,14 @@ fun LinkedAccountsScreen(
             ) {
                 Column(modifier = Modifier.padding(16.dp)) {
                     Text(
-                        text = "Enable Daily Brief",
+                        text = stringResource(R.string.enable_daily_brief),
                         style = MaterialTheme.typography.titleMedium,
                         color = PrimaryText,
                         fontWeight = FontWeight.Bold
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
-                        text = "Connect your Gmail to get personalized daily briefings based on your emails. We'll summarize important updates so you can start your day informed.",
+                        text = stringResource(R.string.enable_daily_brief_description),
                         style = MaterialTheme.typography.bodyMedium,
                         color = SecondaryText
                     )
@@ -144,8 +142,8 @@ fun LinkedAccountsScreen(
             // Gmail Account
             AccountRow(
                 icon = { GoogleIcon() },
-                title = "Gmail",
-                subtitle = uiState.linkedGoogleEmail ?: "Not connected",
+                title = stringResource(R.string.gmail),
+                subtitle = uiState.linkedGoogleEmail ?: stringResource(R.string.not_connected_lower),
                 isConnected = uiState.hasLinkedGoogle,
                 isLoading = uiState.isLinkingGoogle,
                 onConnect = {
@@ -159,8 +157,8 @@ fun LinkedAccountsScreen(
             // Google Calendar (separate permission)
             AccountRow(
                 icon = { CalendarIcon() },
-                title = "Google Calendar",
-                subtitle = if (uiState.hasLinkedCalendar) "Connected" else "Not connected",
+                title = stringResource(R.string.google_calendar),
+                subtitle = if (uiState.hasLinkedCalendar) stringResource(R.string.connected) else stringResource(R.string.not_connected_lower),
                 isConnected = uiState.hasLinkedCalendar,
                 isLoading = uiState.isLinkingCalendar,
                 onConnect = {
@@ -174,8 +172,8 @@ fun LinkedAccountsScreen(
             // Microsoft Account
             AccountRow(
                 icon = { MicrosoftIcon() },
-                title = "Outlook",
-                subtitle = uiState.linkedMicrosoftEmail ?: "Coming Soon",
+                title = stringResource(R.string.outlook),
+                subtitle = uiState.linkedMicrosoftEmail ?: stringResource(R.string.coming_soon),
                 isConnected = uiState.hasLinkedMicrosoft,
                 isLoading = uiState.isLinkingMicrosoft,
                 onConnect = { viewModel.showMicrosoftComingSoon() },
@@ -188,7 +186,7 @@ fun LinkedAccountsScreen(
                 Spacer(modifier = Modifier.height(24.dp))
 
                 Text(
-                    text = "Daily Brief Sources",
+                    text = stringResource(R.string.daily_brief_sources),
                     style = MaterialTheme.typography.titleMedium,
                     color = PrimaryText,
                     fontWeight = FontWeight.Bold,
@@ -197,8 +195,8 @@ fun LinkedAccountsScreen(
 
                 IntegrationToggleRow(
                     icon = Icons.Default.Email,
-                    title = "Email Summaries",
-                    subtitle = "Include email summaries in Daily Brief",
+                    title = stringResource(R.string.email_summaries),
+                    subtitle = stringResource(R.string.include_email_in_brief),
                     isEnabled = uiState.emailEnabled,
                     onToggle = { viewModel.setEmailEnabled(it) }
                 )
@@ -208,9 +206,9 @@ fun LinkedAccountsScreen(
                     Spacer(modifier = Modifier.height(8.dp))
 
                     IntegrationToggleRow(
-                        iconText = "📅",
-                        title = "Calendar Events",
-                        subtitle = "Include upcoming events in Daily Brief",
+                        iconText = "\uD83D\uDCC5",
+                        title = stringResource(R.string.calendar_events),
+                        subtitle = stringResource(R.string.include_calendar_in_brief),
                         isEnabled = uiState.calendarEnabled,
                         onToggle = { viewModel.setCalendarEnabled(it) }
                     )
@@ -259,14 +257,14 @@ fun LinkedAccountsScreen(
             ) {
                 Column(modifier = Modifier.padding(12.dp)) {
                     Text(
-                        text = "🔒 Your Privacy",
+                        text = stringResource(R.string.your_privacy),
                         style = MaterialTheme.typography.labelLarge,
                         color = PrimaryText,
                         fontWeight = FontWeight.Medium
                     )
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
-                        text = "We only read email subjects and senders to create summaries. We never store your email content or share your data with third parties.",
+                        text = stringResource(R.string.privacy_note),
                         style = MaterialTheme.typography.bodySmall,
                         color = SecondaryText.copy(alpha = 0.7f)
                     )
@@ -281,16 +279,16 @@ fun LinkedAccountsScreen(
     if (uiState.showComingSoonDialog) {
         AlertDialog(
             onDismissRequest = { viewModel.dismissComingSoon() },
-            title = { Text("Coming Soon", color = PrimaryText) },
+            title = { Text(stringResource(R.string.coming_soon), color = PrimaryText) },
             text = {
                 Text(
-                    "Microsoft Outlook linking will be available in a future update.",
+                    stringResource(R.string.microsoft_outlook_coming_soon),
                     color = SecondaryText
                 )
             },
             confirmButton = {
                 TextButton(onClick = { viewModel.dismissComingSoon() }) {
-                    Text("OK", color = AccentOrange)
+                    Text(stringResource(R.string.ok), color = AccentOrange)
                 }
             },
             containerColor = CardBackground
@@ -357,13 +355,13 @@ private fun AccountRow(
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(
                         Icons.Default.Check,
-                        contentDescription = "Connected",
+                        contentDescription = stringResource(R.string.connected),
                         tint = Color(0xFF4CAF50),
                         modifier = Modifier.size(20.dp)
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     TextButton(onClick = onDisconnect) {
-                        Text("Unlink", color = Error)
+                        Text(stringResource(R.string.unlink), color = Error)
                     }
                 }
             } else {
@@ -376,7 +374,7 @@ private fun AccountRow(
                     enabled = !isComingSoon,
                     shape = RoundedCornerShape(8.dp)
                 ) {
-                    Text(if (isComingSoon) "Soon" else "Connect")
+                    Text(if (isComingSoon) stringResource(R.string.soon) else stringResource(R.string.connect))
                 }
             }
         }
@@ -396,7 +394,7 @@ private fun GoogleIcon() {
 @Composable
 private fun MicrosoftIcon() {
     Text(
-        text = "⊞",
+        text = "\u229E",
         style = MaterialTheme.typography.titleLarge,
         color = Color(0xFF00A4EF)
     )
@@ -405,7 +403,7 @@ private fun MicrosoftIcon() {
 @Composable
 private fun CalendarIcon() {
     Text(
-        text = "📅",
+        text = "\uD83D\uDCC5",
         style = MaterialTheme.typography.titleLarge
     )
 }

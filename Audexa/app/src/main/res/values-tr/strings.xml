@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Audexa</string>
+    <string name="app_tagline">Kişisel yapay zeka radyonuz</string>
+
+    <!-- Auth -->
+    <string name="sign_in_with_google">Google ile giriş yap</string>
+    <string name="sign_out">Çıkış Yap</string>
+    <string name="delete_account">Hesabı Sil</string>
+    <string name="auth_description">İlgilendiğiniz konularda yapay zeka tarafından oluşturulan podcast\'leri dinleyin. Kişiselleştirilmiş günlük özetler almak için e-postanızı ayarlardan bağlayın.</string>
+    <string name="auth_terms">Devam ederek Hizmet Şartlarını ve Gizlilik Politikasını kabul etmiş olursunuz</string>
+    <string name="start">Başla</string>
+
+    <!-- Navigation -->
+    <string name="nav_home">Ana Sayfa</string>
+    <string name="nav_profile">Profil</string>
+    <string name="back">Geri</string>
+    <string name="close">Kapat</string>
+    <string name="cancel">İptal</string>
+    <string name="ok">Tamam</string>
+    <string name="delete">Sil</string>
+    <string name="retry">Tekrar Dene</string>
+    <string name="enable">Etkinleştir</string>
+
+    <!-- Tabs -->
+    <string name="tab_for_you">Sizin İçin</string>
+    <string name="tab_discover">Keşfet</string>
+
+    <!-- Home -->
+    <string name="good_morning">Günaydın</string>
+    <string name="good_afternoon">İyi Öğlenler</string>
+    <string name="good_evening">İyi Akşamlar</string>
+    <string name="daily_brief">Günlük Özet</string>
+    <string name="daily_brief_subtitle">Günlük Özet \u2022 %s</string>
+    <string name="keep_listening">Dinlemeye devam et</string>
+    <string name="your_topics">Konularınız</string>
+    <string name="topic_podcasts">Konu Podcast\'leri</string>
+    <string name="recommended_for_you">Sizin için önerilen</string>
+    <string name="more_for_you">Sizin için daha fazla</string>
+    <string name="all_topics">Tüm Konular</string>
+    <string name="matching_topics">Eşleşen Konular</string>
+    <string name="tap_to_explore">Keşfetmek ve dinlemek için dokunun</string>
+    <string name="link_account_prompt">Kişiselleştirilmiş özetler oluşturmak için e-postanızı bağlayın</string>
+    <string name="link_account">Hesap Bağla</string>
+    <string name="find_new_shows">Yeni programlar bul</string>
+    <string name="search">Ara</string>
+    <string name="clear">Temizle</string>
+    <string name="no_results_for">\"%s\" için sonuç bulunamadı</string>
+
+    <!-- Profile -->
+    <string name="profile">Profil</string>
+    <string name="linked_accounts">Bağlı Hesaplar</string>
+    <string name="preferences">Tercihler</string>
+    <string name="podcast_language">Podcast Dili</string>
+    <string name="briefing_time">Özet Saati</string>
+    <string name="topics">Konular</string>
+    <string name="voice_preference">Ses Tercihi</string>
+    <string name="hidden_topics">Gizli Konular</string>
+    <string name="about">Hakkında</string>
+    <string name="version">Sürüm</string>
+    <string name="terms_of_service">Hizmet Şartları</string>
+    <string name="privacy_policy">Gizlilik Politikası</string>
+    <string name="premium">Premium</string>
+    <string name="go_ad_free">Reklamsız Geç</string>
+    <string name="ad_free">Reklamsız</string>
+    <string name="active_subscription">Aktif abonelik</string>
+    <string name="remove_all_ads">Tüm reklamları kaldır</string>
+    <string name="email_accounts">E-posta Hesapları</string>
+    <string name="app_theme">Uygulama Teması</string>
+    <string name="voice_settings">Ses Ayarları</string>
+    <string name="choose_podcast_voices">Podcast seslerini seçin</string>
+    <string name="hidden_count">%d gizli</string>
+    <string name="notifications">Bildirimler</string>
+    <string name="daily_brief_reminders">Günlük özet hatırlatıcıları</string>
+    <string name="sign_out_confirm">Çıkış yapmak istediğinizden emin misiniz?</string>
+    <string name="delete_account_confirm">Hesabınızı silmek istediğinizden emin misiniz? Bu işlem podcast\'ler, tercihler ve bağlı hesaplar dahil tüm verilerinizi kalıcı olarak silecektir. Bu işlem geri alınamaz.</string>
+
+    <!-- Player -->
+    <string name="playing">Çalıyor</string>
+    <string name="paused">Duraklatıldı</string>
+    <string name="play">Çal</string>
+    <string name="pause">Duraklat</string>
+    <string name="loading">Yükleniyor\u2026</string>
+    <string name="generating">Oluşturuluyor\u2026</string>
+    <string name="generating_progress">Oluşturuluyor\u2026 %d%%</string>
+    <string name="generate_episode">Bölüm Oluştur</string>
+    <string name="regenerate">Yeniden Oluştur</string>
+    <string name="episode_history">Bölüm Geçmişi</string>
+    <string name="skip_back">15 saniye geri sar</string>
+    <string name="skip_forward">15 saniye ileri sar</string>
+    <string name="skip_back_mini">Geri sar</string>
+    <string name="skip_forward_mini">İleri sar</string>
+    <string name="buffering">Arabelleğe alınıyor\u2026</string>
+    <string name="sleep_timer">Uyku zamanlayıcısı</string>
+    <string name="timer">Zamanlayıcı</string>
+    <string name="sleep_timer_5_min">5 dk</string>
+    <string name="sleep_timer_10_min">10 dk</string>
+    <string name="sleep_timer_15_min">15 dk</string>
+    <string name="sleep_timer_30_min">30 dk</string>
+    <string name="sleep_timer_1_hour">1 saat</string>
+    <string name="min_format">%d dk</string>
+    <string name="today">Bugün</string>
+    <string name="bookmark">Yer İmi</string>
+    <string name="more">Daha Fazla</string>
+    <string name="hide_topic">Konuyu Gizle</string>
+    <string name="hide">Gizle</string>
+
+    <!-- Errors -->
+    <string name="error_generic">Bir şeyler ters gitti</string>
+    <string name="error_network">Ağ hatası. Lütfen bağlantınızı kontrol edin.</string>
+    <string name="error_auth">Kimlik doğrulama başarısız</string>
+    <string name="error_no_internet">İnternet bağlantısı yok. Lütfen ağınızı kontrol edip tekrar deneyin.</string>
+    <string name="generation_failed">Oluşturma başarısız</string>
+
+    <!-- Misc -->
+    <string name="min_daily">Günlük %d dk</string>
+    <string name="connected">Bağlandı</string>
+    <string name="not_connected">Bağlı Değil</string>
+    <string name="not_connected_lower">Bağlı değil</string>
+    <string name="coming_soon">Yakında</string>
+    <string name="microsoft_coming_soon">Microsoft hesap entegrasyonu yakında geliyor. Takipte kalın!</string>
+
+    <!-- Onboarding -->
+    <string name="welcome_to_audexa">Audexa\'ya Hoş Geldiniz</string>
+    <string name="welcome_description">En son haberleri, teknolojiyi ve konuları ilgi çekici podcast tarzı özetlere dönüştüren kişiselleştirilmiş yapay zeka radyonuz.</string>
+    <string name="get_started">Başlayın</string>
+    <string name="connect_your_account">Hesabınızı Bağlayın</string>
+    <string name="connect_account_description">E-postanızdan ve takviminizden kişiselleştirilmiş günlük özetler almak için Google hesabınızı bağlayın.</string>
+    <string name="gmail">Gmail</string>
+    <string name="calendar">Takvim</string>
+    <string name="include_email_highlights">E-posta önemli noktalarını özetinize ekleyin</string>
+    <string name="include_calendar_events">Yaklaşan etkinlikleri özetinize ekleyin</string>
+    <string name="continue_button">Devam</string>
+    <string name="skip_for_now">Şimdilik Atla</string>
+    <string name="connect_later_hint">Daha sonra Ayarlar\'dan bağlanabilirsiniz</string>
+    <string name="connect">Bağlan</string>
+    <string name="choose_your_interests">İlgi Alanlarınızı Seçin</string>
+    <string name="choose_interests_description">Dinlemek istediğiniz konuları seçin. Sizin için günlük bölümler oluşturacağız.</string>
+    <string name="topics_selected">%d konu seçildi</string>
+    <string name="topics_selected_plural_suffix"></string>
+    <string name="complete_setup">Kurulumu Tamamla</string>
+
+    <!-- Linked Accounts -->
+    <string name="enable_daily_brief">Günlük Özeti Etkinleştir</string>
+    <string name="enable_daily_brief_description">E-postalarınıza dayalı kişiselleştirilmiş günlük özetler almak için Gmail\'inizi bağlayın. Önemli güncellemeleri özetleyerek güne bilgili başlamanızı sağlayacağız.</string>
+    <string name="google_calendar">Google Takvim</string>
+    <string name="outlook">Outlook</string>
+    <string name="daily_brief_sources">Günlük Özet Kaynakları</string>
+    <string name="email_summaries">E-posta Özetleri</string>
+    <string name="include_email_in_brief">E-posta özetlerini Günlük Özete ekle</string>
+    <string name="calendar_events">Takvim Etkinlikleri</string>
+    <string name="include_calendar_in_brief">Yaklaşan etkinlikleri Günlük Özete ekle</string>
+    <string name="unlink">Bağlantıyı Kaldır</string>
+    <string name="soon">Yakında</string>
+    <string name="your_privacy">Gizliliğiniz</string>
+    <string name="privacy_note">Özetler oluşturmak için yalnızca e-posta konularını ve gönderenlerini okuyoruz. E-posta içeriğinizi asla saklamaz veya verilerinizi üçüncü taraflarla paylaşmayız.</string>
+    <string name="microsoft_outlook_coming_soon">Microsoft Outlook bağlantısı gelecek bir güncellemede kullanılabilir olacaktır.</string>
+    <string name="gmail_linking_cancelled">Gmail bağlantısı iptal edildi</string>
+    <string name="calendar_linking_cancelled">Takvim bağlantısı iptal edildi</string>
+    <string name="reconnect">Yeniden Bağlan</string>
+
+    <!-- Hidden Topics -->
+    <string name="no_hidden_topics">Gizli Konu Yok</string>
+    <string name="no_hidden_topics_description">Gizlediğiniz konular burada görünecektir. İstediğiniz zaman gösterebilirsiniz.</string>
+    <string name="unhide_hint">Bir konuyu tekrar göstermek için göz simgesine dokunun.</string>
+    <string name="unhide">Göster</string>
+
+    <!-- Language Settings -->
+    <string name="language">Dil</string>
+    <string name="language_description">Podcast bölümleri için tercih ettiğiniz dili seçin.</string>
+    <string name="language_note">Yeni bölümler seçtiğiniz dilde oluşturulacaktır. Daha önce oluşturulan bölümler orijinal dillerinde kalacaktır.</string>
+    <string name="selected">Seçili</string>
+
+    <!-- Voice Settings -->
+    <string name="loading_voices">Sesler yükleniyor\u2026</string>
+    <string name="no_voice_pairs">Ses çifti mevcut değil</string>
+    <string name="no_voices">Ses mevcut değil</string>
+    <string name="voice_pairs_description">Podcast sunucularınız için önceden yapılandırılmış bir ses çifti seçin.</string>
+    <string name="host_1">Sunucu 1</string>
+    <string name="host_2">Sunucu 2</string>
+    <string name="host_1_voice">Sunucu 1 Sesi</string>
+    <string name="host_2_voice">Sunucu 2 Sesi</string>
+
+    <!-- Theme Settings -->
+    <string name="theme_system">Sistem</string>
+    <string name="theme_system_description">Cihaz ayarlarını eşleştir</string>
+    <string name="theme_dark">Koyu</string>
+    <string name="theme_dark_description">Her zaman koyu mod</string>
+    <string name="theme_light">Açık</string>
+    <string name="theme_light_description">Her zaman açık mod</string>
+
+    <!-- Notification Settings -->
+    <string name="permission">İzin</string>
+    <string name="enabled">Etkin</string>
+    <string name="not_enabled">Etkin Değil</string>
+    <string name="daily_brief_schedule">Günlük Özet Programı</string>
+    <string name="daily_brief_notifications">Günlük Özet Bildirimleri</string>
+    <string name="daily_brief_notify_hint">Özetiniz hazır olduğunda bildirim alın</string>
+    <string name="daily_brief_content">Günlük Özet İçeriği</string>
+    <string name="include_topic_updates">Konu Güncellemelerini Ekle</string>
+    <string name="include_topic_updates_hint">Konularınızdan başlıkları Günlük Özete ekleyin</string>
+    <string name="notification_info">Günlük özetiniz planlanan zamanda oluşturulacak ve hazır olacaktır. Dinlemeye hazır olduğunda bir bildirim alacaksınız.</string>
+    <string name="select_time">Saat Seçin</string>
+
+    <!-- Subscription / Paywall -->
+    <string name="enjoy_uninterrupted">Kesintisiz dinlemenin keyfini çıkarın</string>
+    <string name="no_audio_ad_interruptions">Sesli reklam kesintisi yok</string>
+    <string name="seamless_episode_playback">Kesintisiz bölüm oynatma</string>
+    <string name="support_indie_development">Bağımsız geliştirmeyi destekleyin</string>
+    <string name="ad_free_subscriber">Reklamsız abonesiniz!</string>
+    <string name="yearly">Yıllık</string>
+    <string name="save_percent">%%58 Tasarruf</string>
+    <string name="monthly">Aylık</string>
+    <string name="subscribe">Abone Ol</string>
+    <string name="restore_purchases">Satın Alımları Geri Yükle</string>
+    <string name="payment_fine_print">Ödeme Google Play hesabınızdan tahsil edilecektir. Abonelik, mevcut dönemin bitiminden en az 24 saat önce iptal edilmediği sürece otomatik olarak yenilenir.</string>
+    <string name="per_year">/yıl</string>
+    <string name="per_month">/ay</string>
+    <string name="per_week">/hafta</string>
+
+    <!-- Ads -->
+    <string name="sponsored">SPONSORLU</string>
+    <string name="skip">Atla</string>
+    <string name="skip_ad">Reklamı atla</string>
+    <string name="ad_content_description">Reklam</string>
+
+    <!-- Splash Screen -->
+    <string name="splash_tagline">Yapay zeka destekli sesli özetiniz</string>
+
+    <!-- Notifications (non-composable) -->
+    <string name="notification_good_morning">Günaydın!</string>
+    <string name="notification_daily_brief_text">Günlük özetinizin zamanı geldi. E-postalar, takvim ve haberlerden haberdar olmak için dokunun.</string>
+    <string name="daily_brief_channel_description">Günlük özet hatırlatma bildirimleri</string>
+
+    <!-- Daily Brief Playback -->
+    <string name="daily_brief_title_format">Günlük Özet - %s</string>
+    <string name="daily_brief_description">Kişiselleştirilmiş sabah özetiniz</string>
+</resources>

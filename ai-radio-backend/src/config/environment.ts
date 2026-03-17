@@ -97,6 +97,10 @@ const envSchema = z.object({
   // Batch Generation
   BATCH_SECRET: z.string().optional().default(''),
   ENABLE_TOPIC_BATCH: z.string().transform(val => val === 'true').default('true'),
+
+  // Subscription Verification (optional)
+  APPLE_SHARED_SECRET: z.string().optional(),
+  GOOGLE_PLAY_SERVICE_ACCOUNT_KEY: z.string().optional(),
 });
 
 export type Environment = z.infer<typeof envSchema>;

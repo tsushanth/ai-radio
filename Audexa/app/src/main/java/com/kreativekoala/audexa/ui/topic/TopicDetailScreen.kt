@@ -18,6 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -25,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
+import com.kreativekoala.audexa.R
 import com.kreativekoala.audexa.data.model.AdSegment
 import com.kreativekoala.audexa.data.model.Topic
 import com.kreativekoala.audexa.data.model.SupportedLanguage
@@ -66,7 +68,7 @@ fun TopicDetailScreen(
                 IconButton(onClick = onDismiss) {
                     Icon(
                         Icons.Default.Close,
-                        contentDescription = "Close",
+                        contentDescription = stringResource(R.string.close),
                         tint = PrimaryText
                     )
                 }
@@ -75,21 +77,21 @@ fun TopicDetailScreen(
                 IconButton(onClick = { viewModel.toggleBookmark() }) {
                     Icon(
                         imageVector = if (uiState.isBookmarked) Icons.Default.Bookmark else Icons.Default.BookmarkBorder,
-                        contentDescription = "Bookmark",
+                        contentDescription = stringResource(R.string.bookmark),
                         tint = if (uiState.isBookmarked) AccentOrange else PrimaryText
                     )
                 }
-                
+
                 var showMenu by remember { mutableStateOf(false) }
                 IconButton(onClick = { showMenu = true }) {
-                    Icon(Icons.Default.MoreVert, contentDescription = "More", tint = PrimaryText)
+                    Icon(Icons.Default.MoreVert, contentDescription = stringResource(R.string.more), tint = PrimaryText)
                 }
                 DropdownMenu(
                     expanded = showMenu,
                     onDismissRequest = { showMenu = false }
                 ) {
                     DropdownMenuItem(
-                        text = { Text("Hide Topic") },
+                        text = { Text(stringResource(R.string.hide_topic)) },
                         onClick = {
                             showMenu = false
                             onHide()
@@ -150,7 +152,7 @@ fun TopicDetailScreen(
 
             // Date
             Text(
-                text = uiState.currentEpisode?.date ?: "Today",
+                text = uiState.currentEpisode?.date ?: stringResource(R.string.today),
                 style = MaterialTheme.typography.bodyMedium,
                 color = SecondaryText
             )
@@ -158,7 +160,7 @@ fun TopicDetailScreen(
             // Duration
             if (uiState.currentEpisode?.durationSeconds != null) {
                 Text(
-                    text = "${uiState.currentEpisode!!.durationSeconds!! / 60} min",
+                    text = stringResource(R.string.min_format, uiState.currentEpisode!!.durationSeconds!! / 60),
                     style = MaterialTheme.typography.bodyMedium,
                     color = AccentOrange
                 )
@@ -202,7 +204,7 @@ fun TopicDetailScreen(
                     shape = RoundedCornerShape(12.dp),
                     colors = ButtonDefaults.buttonColors(containerColor = AccentOrange)
                 ) {
-                    Text("Generate Episode")
+                    Text(stringResource(R.string.generate_episode))
                 }
             } else if (uiState.currentEpisode != null) {
                 OutlinedButton(
@@ -212,7 +214,7 @@ fun TopicDetailScreen(
                 ) {
                     Icon(Icons.Default.Refresh, contentDescription = null)
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text("Regenerate")
+                    Text(stringResource(R.string.regenerate))
                 }
             }
 
@@ -237,15 +239,15 @@ fun TopicDetailScreen(
             // Episode History
             if (uiState.episodeHistory.isNotEmpty()) {
                 Text(
-                    text = "Episode History",
+                    text = stringResource(R.string.episode_history),
                     style = MaterialTheme.typography.titleMedium,
                     color = PrimaryText,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.fillMaxWidth()
                 )
-                
+
                 Spacer(modifier = Modifier.height(12.dp))
-                
+
                 uiState.episodeHistory.forEach { episode ->
                     EpisodeHistoryRow(
                         title = episode.title,
@@ -287,7 +289,7 @@ private fun LanguageSelector(
     onLanguageSelected: (SupportedLanguage) -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
-    
+
     Surface(
         onClick = { expanded = true },
         shape = RoundedCornerShape(8.dp),
@@ -309,7 +311,7 @@ private fun LanguageSelector(
                 tint = SecondaryText
             )
         }
-        
+
         DropdownMenu(
             expanded = expanded,
             onDismissRequest = { expanded = false }
@@ -392,7 +394,7 @@ private fun PlayerControls(
             IconButton(onClick = onSkipBack, enabled = isSeekEnabled) {
                 Icon(
                     Icons.Default.Replay10,
-                    contentDescription = "Skip back 15 seconds",
+                    contentDescription = stringResource(R.string.skip_back),
                     tint = if (isSeekEnabled) PrimaryText else SecondaryText,
                     modifier = Modifier.size(32.dp)
                 )
@@ -415,7 +417,7 @@ private fun PlayerControls(
                     } else {
                         Icon(
                             imageVector = if (isPlaying) Icons.Default.Pause else Icons.Default.PlayArrow,
-                            contentDescription = if (isPlaying) "Pause" else "Play",
+                            contentDescription = if (isPlaying) stringResource(R.string.pause) else stringResource(R.string.play),
                             tint = PrimaryText,
                             modifier = Modifier.size(32.dp)
                         )
@@ -427,7 +429,7 @@ private fun PlayerControls(
             IconButton(onClick = onSkipForward, enabled = isSeekEnabled) {
                 Icon(
                     Icons.Default.Forward10,
-                    contentDescription = "Skip forward 15 seconds",
+                    contentDescription = stringResource(R.string.skip_forward),
                     tint = if (isSeekEnabled) PrimaryText else SecondaryText,
                     modifier = Modifier.size(32.dp)
                 )
@@ -496,7 +498,7 @@ private fun PlayerControls(
                 ) {
                     Icon(
                         imageVector = Icons.Default.Timer,
-                        contentDescription = "Sleep timer",
+                        contentDescription = stringResource(R.string.sleep_timer),
                         tint = if (sleepTimerRemaining != null) AccentOrange else SecondaryText,
                         modifier = Modifier.size(16.dp)
                     )
@@ -505,7 +507,7 @@ private fun PlayerControls(
                             val mins = sleepTimerRemaining / 60000
                             val secs = (sleepTimerRemaining % 60000) / 1000
                             "${mins}:${String.format("%02d", secs)}"
-                        } else "Timer",
+                        } else stringResource(R.string.timer),
                         style = MaterialTheme.typography.labelMedium,
                         color = if (sleepTimerRemaining != null) AccentOrange else SecondaryText,
                         fontWeight = FontWeight.SemiBold
@@ -516,7 +518,13 @@ private fun PlayerControls(
                 expanded = showTimerMenu,
                 onDismissRequest = { showTimerMenu = false }
             ) {
-                listOf(5 to "5 min", 10 to "10 min", 15 to "15 min", 30 to "30 min", 60 to "1 hour").forEach { (mins, label) ->
+                listOf(
+                    5 to stringResource(R.string.sleep_timer_5_min),
+                    10 to stringResource(R.string.sleep_timer_10_min),
+                    15 to stringResource(R.string.sleep_timer_15_min),
+                    30 to stringResource(R.string.sleep_timer_30_min),
+                    60 to stringResource(R.string.sleep_timer_1_hour)
+                ).forEach { (mins, label) ->
                     DropdownMenuItem(
                         text = { Text(label) },
                         onClick = {
@@ -557,18 +565,18 @@ private fun EpisodeHistoryRow(
                     fontWeight = FontWeight.Medium
                 )
                 Text(
-                    text = "$date • $duration",
+                    text = "$date \u2022 $duration",
                     style = MaterialTheme.typography.bodySmall,
                     color = SecondaryText
                 )
             }
-            
+
             if (isPlaying) {
                 NowPlayingIndicator()
             } else {
                 Icon(
                     Icons.Default.PlayArrow,
-                    contentDescription = "Play",
+                    contentDescription = stringResource(R.string.play),
                     tint = AccentOrange
                 )
             }
@@ -632,7 +640,7 @@ private fun AdCompanionOverlay(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "SPONSORED",
+                    text = stringResource(R.string.sponsored),
                     style = MaterialTheme.typography.labelSmall,
                     color = SecondaryText,
                     letterSpacing = 0.5.sp
@@ -649,13 +657,13 @@ private fun AdCompanionOverlay(
                         horizontalArrangement = Arrangement.spacedBy(4.dp)
                     ) {
                         Text(
-                            text = "Skip",
+                            text = stringResource(R.string.skip),
                             style = MaterialTheme.typography.labelMedium,
                             color = PrimaryText
                         )
                         Icon(
                             Icons.Default.SkipNext,
-                            contentDescription = "Skip ad",
+                            contentDescription = stringResource(R.string.skip_ad),
                             tint = PrimaryText,
                             modifier = Modifier.size(14.dp)
                         )
@@ -669,7 +677,7 @@ private fun AdCompanionOverlay(
             if (ad.companionImageUrl != null) {
                 AsyncImage(
                     model = ad.companionImageUrl,
-                    contentDescription = "Ad",
+                    contentDescription = stringResource(R.string.ad_content_description),
                     modifier = Modifier
                         .fillMaxWidth()
                         .heightIn(max = 200.dp)

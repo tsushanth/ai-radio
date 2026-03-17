@@ -1,0 +1,71 @@
+# ReadAloud AI TTS Service Dependencies
+# Supports: Kokoro-82M (regular TTS) and Chatterbox (voice cloning)
+#
+# IMPORTANT: All dependencies are pinned to exact versions to prevent
+# transitive dependency updates from breaking the service.
+# Last updated: 2026-02-01
+
+# FastAPI + Uvicorn
+fastapi==0.109.0
+uvicorn[standard]==0.27.0
+pydantic==2.5.3
+
+# Kokoro-82M - Fast, lightweight, Apache 2.0 license (commercial OK)
+kokoro==0.9.4
+
+# NOTE: Chatterbox TTS is installed separately in Dockerfile with --no-build-isolation
+# to avoid pkuseg build issues
+
+# Audio processing - CRITICAL: numpy must stay <2.0 for librosa compatibility
+soundfile==0.12.1
+librosa==0.10.2.post1
+numpy>=1.24.0,<2.0.0  # NumPy 2.0 breaks librosa's _phasor_angles ufunc
+
+# PyTorch (CUDA version for GPU)
+# Use torch 2.6.0 for Chatterbox compatibility
+torch==2.6.0
+
+# Transformers for Chatterbox model loading
+transformers==4.44.0
+
+# Utilities
+python-multipart==0.0.6
+aiofiles==23.2.1
+
+# HTTP client for downloading voice files from Supabase
+httpx==0.27.0
+
+# XTTS v2 (Coqui TTS) dependencies
+# TTS==0.22.0 is installed with --no-deps in Dockerfile to avoid its
+# strict numpy==1.22.0 pin on Python 3.10. Its deps are listed here instead.
+scipy>=1.11.2
+scikit-learn>=1.3.0
+inflect>=5.6.0
+tqdm>=4.64.1
+anyascii>=0.3.0
+pyyaml>=6.0
+fsspec>=2023.6.0
+aiohttp>=3.8.1
+packaging>=23.1
+flask>=2.0.1
+pysbd>=0.3.4
+umap-learn>=0.5.1
+pandas>=1.4,<2.0
+matplotlib>=3.7.0
+trainer>=0.0.32
+coqpit>=0.0.16
+jieba
+pypinyin
+hangul-romanize
+gruut[de,es,fr]==2.2.3
+jamo
+nltk
+g2pkk>=0.1.1
+bangla
+bnnumerizer
+bnunicodenormalizer
+encodec>=0.1.1
+unidecode>=1.3.2
+num2words
+spacy[ja]>=3
+numba>=0.57.0

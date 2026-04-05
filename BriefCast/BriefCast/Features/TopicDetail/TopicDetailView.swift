@@ -15,6 +15,7 @@ struct TopicDetailView: View {
     @State private var viewModel: TopicDetailViewModel
     @State private var showLanguagePicker: Bool = false
     @State private var playbackTimer: Timer?
+    @State private var showBookmarkLimitPaywall = false
 
     init(topic: Topic, onDismiss: @escaping () -> Void, onHide: @escaping () -> Void) {
         self.topic = topic
@@ -34,7 +35,7 @@ struct TopicDetailView: View {
                         // Language selector
                         languageSelector
 
-                        // Player controls (if episode available and not regenerating)
+                        // Player controls based on episode state
                         if viewModel.isGenerating {
                             generatingView
                         } else if viewModel.hasEpisodeForCurrentLanguage {
@@ -49,8 +50,12 @@ struct TopicDetailView: View {
                             )
                         } else if viewModel.isLoading {
                             loadingView
+                        } else if viewModel.currentEpisode?.status == .notGenerated {
+                            episodeComingSoonView
+                        } else if viewModel.currentEpisode?.status == .failed {
+                            episodeFailedView
                         } else {
-                            generateButton
+                            episodeComingSoonView
                         }
 
                         // Regenerate button (when episode exists and not generating)
@@ -151,6 +156,12 @@ struct TopicDetailView: View {
             )
             .presentationDetents([.medium])
         }
+        .onReceive(NotificationCenter.default.publisher(for: .showBookmarkLimitPaywall)) { _ in
+            showBookmarkLimitPaywall = true
+        }
+        .sheet(isPresented: $showBookmarkLimitPaywall) {
+            RemotePaywallView(triggerSource: "bookmark_limit")
+        }
     }
 
     // MARK: - Playback Timer
@@ -247,27 +258,85 @@ struct TopicDetailView: View {
         }
     }
 
-    // MARK: - Generate Button
+    // MARK: - Episode Coming Soon View
 
-    private var generateButton: some View {
-        Button(action: {
-            Task {
-                await viewModel.regenerateEpisode()
-            }
-        }) {
-            HStack(spacing: 8) {
-                Image(systemName: "wand.and.stars")
-                    .font(.system(size: 16, weight: .medium))
+    private var episodeComingSoonView: some View {
+        VStack(spacing: 12) {
+            Image(systemName: "clock.badge.checkmark")
+                .font(.system(size: 32))
+                .foregroundColor(topic.swiftUIColor.opacity(0.7))
 
-                Text("Generate Episode")
-                    .font(.system(size: 16, weight: .semibold))
+            Text("Today's episode is on its way")
+                .font(.system(size: 15, weight: .medium))
+                .foregroundColor(Theme.Colors.primaryText)
+
+            Text("Episodes are auto-generated daily. Check back shortly!")
+                .font(.system(size: 13))
+                .foregroundColor(Theme.Colors.secondaryText)
+                .multilineTextAlignment(.center)
+
+            Button(action: {
+                Task {
+                    await viewModel.loadInitialData()
+                }
+            }) {
+                HStack(spacing: 6) {
+                    Image(systemName: "arrow.clockwise")
+                        .font(.system(size: 13, weight: .medium))
+                    Text("Refresh")
+                        .font(.system(size: 14, weight: .medium))
+                }
+                .foregroundColor(topic.swiftUIColor)
+                .padding(.horizontal, 16)
+                .padding(.vertical, 8)
+                .background(topic.swiftUIColor.opacity(0.1))
+                .cornerRadius(16)
             }
-            .foregroundColor(.white)
-            .padding(.horizontal, 32)
-            .padding(.vertical, 14)
-            .background(topic.swiftUIColor)
-            .cornerRadius(25)
+            .padding(.top, 4)
         }
+        .padding(.vertical, 24)
+        .padding(.horizontal, Theme.Spacing.screenPadding)
+    }
+
+    // MARK: - Episode Failed View
+
+    private var episodeFailedView: some View {
+        VStack(spacing: 12) {
+            Image(systemName: "exclamationmark.triangle")
+                .font(.system(size: 32))
+                .foregroundColor(.orange)
+
+            Text("Episode generation failed")
+                .font(.system(size: 15, weight: .medium))
+                .foregroundColor(Theme.Colors.primaryText)
+
+            if let error = viewModel.currentEpisode?.error {
+                Text(error)
+                    .font(.system(size: 13))
+                    .foregroundColor(Theme.Colors.secondaryText)
+                    .multilineTextAlignment(.center)
+            }
+
+            Button(action: {
+                Task {
+                    await viewModel.regenerateEpisode()
+                }
+            }) {
+                HStack(spacing: 6) {
+                    Image(systemName: "arrow.clockwise")
+                        .font(.system(size: 14, weight: .medium))
+                    Text("Retry")
+                        .font(.system(size: 14, weight: .semibold))
+                }
+                .foregroundColor(.white)
+                .padding(.horizontal, 24)
+                .padding(.vertical, 10)
+                .background(topic.swiftUIColor)
+                .cornerRadius(20)
+            }
+            .padding(.top, 4)
+        }
+        .padding(.vertical, 24)
         .padding(.horizontal, Theme.Spacing.screenPadding)
     }
 
@@ -284,7 +353,7 @@ struct TopicDetailView: View {
                     Image(systemName: "arrow.clockwise")
                         .font(.system(size: 14, weight: .medium))
 
-                    Text("Generate New Episode")
+                    Text("Don't like this one? Regenerate")
                         .font(.system(size: 14, weight: .medium))
                 }
                 .foregroundColor(Theme.Colors.secondaryText)

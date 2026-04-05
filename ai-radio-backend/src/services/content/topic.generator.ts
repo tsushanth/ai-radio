@@ -6,7 +6,7 @@
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import OpenAI from 'openai';
 import { env } from '../../config/environment';
-import { getTopicById, getActiveTopics, getCategoriesWithCounts } from '../../config/topics';
+import { topicsService } from '../supabase/topics.service';
 import { contentAggregator } from './aggregator.service';
 import { openaiTTS, type VoiceConfig } from '../tts/openai.tts';
 import { concatenateBuffers } from '../tts/audio.utils';
@@ -72,7 +72,7 @@ export class TopicPodcastGenerator {
     forceRegenerate: boolean = false,
     language: string = 'en'
   ): Promise<TopicEpisodeResponse> {
-    const topic = getTopicById(topicId);
+    const topic = await topicsService.getTopicById(topicId);
     if (!topic) {
       throw new Error(`Topic not found: ${topicId}`);
     }
@@ -503,20 +503,17 @@ Create an engaging ${topic.targetDurationMinutes}-minute podcast covering the mo
   }
 
   /**
-   * Get all topics list
+   * Get all topics list (delegates to Supabase topics service)
    */
-  getTopicsList(): TopicListResponse {
-    return {
-      topics: getActiveTopics(),
-      categories: getCategoriesWithCounts(),
-    };
+  async getTopicsList(language: string = 'en'): Promise<TopicListResponse> {
+    return topicsService.getTopicsList(language);
   }
 
   /**
-   * Get topic by ID
+   * Get topic by ID (async, uses Supabase topics service)
    */
-  getTopic(topicId: string): TopicDefinition | undefined {
-    return getTopicById(topicId);
+  async getTopic(topicId: string): Promise<TopicDefinition | undefined> {
+    return topicsService.getTopicById(topicId);
   }
 
   /**

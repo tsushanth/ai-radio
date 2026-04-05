@@ -1,0 +1,16 @@
+default_platform(:android)
+
+platform :android do
+  desc "Deploy to Google Play"
+  lane :deploy do
+    gradle(task: "bundleRelease")
+    upload_to_play_store(
+      track: 'production',
+      release_status: 'completed',
+      aab: '/Users/sushanthtiruvaipati/Documents/GitHub/Audexa/Audexa/app/build/outputs/bundle/release/app-release.aab',
+      json_key: '/Users/sushanthtiruvaipati/Downloads/summaryai-483115-a27fc5121150.json',
+      package_name: 'com.kreativekoala.audexa',
+      skip_upload_apk: true
+    )
+  end
+end

@@ -4,18 +4,267 @@
  */
 
 import { Router, Request, Response } from 'express';
+import { createClient } from '@supabase/supabase-js';
 import { topicPodcastGenerator } from '../services/content/topic.generator';
 import { adService } from '../services/ads/ad.service';
+import { env } from '../config/environment';
 
 const router = Router();
+
+// Supabase client for topic_requests operations
+const supabase = env.SUPABASE_URL && env.SUPABASE_SERVICE_KEY
+  ? createClient(env.SUPABASE_URL, env.SUPABASE_SERVICE_KEY)
+  : null;
+
+// ─── Topic Suggestion Routes ───────────────────────────────────────────────────
+
+/**
+ * GET /topics/suggest/pending
+ * Returns all pending suggestion requests (for the worker to poll)
+ */
+router.get('/suggest/pending', async (_req: Request, res: Response) => {
+  try {
+    if (!supabase) {
+      res.status(503).json({ success: false, error: 'Supabase not configured' });
+      return;
+    }
+
+    const { data, error } = await supabase
+      .from('topic_requests')
+      .select('*')
+      .eq('status', 'pending')
+      .order('created_at', { ascending: true });
+
+    if (error) {
+      console.error('Error fetching pending topic requests:', error);
+      res.status(500).json({ success: false, error: 'Failed to fetch pending requests' });
+      return;
+    }
+
+    res.json({
+      success: true,
+      data: data || [],
+    });
+  } catch (error) {
+    console.error('Error fetching pending topic requests:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Failed to fetch pending requests',
+    });
+  }
+});
+
+/**
+ * POST /topics/suggest
+ * Submit a topic suggestion
+ * Body: { topicName: string, language?: string, description?: string }
+ */
+router.post('/suggest', async (req: Request, res: Response) => {
+  try {
+    if (!supabase) {
+      res.status(503).json({ success: false, error: 'Supabase not configured' });
+      return;
+    }
+
+    const { topicName, language, description } = req.body;
+
+    if (!topicName || typeof topicName !== 'string' || topicName.trim().length === 0) {
+      res.status(400).json({ success: false, error: 'topicName is required' });
+      return;
+    }
+
+    const { data, error } = await supabase
+      .from('topic_requests')
+      .insert({
+        topic_name: topicName.trim(),
+        language: language || 'en',
+        description: description || null,
+        user_id: req.body.userId || null,
+      })
+      .select('id, status, created_at')
+      .single();
+
+    if (error) {
+      console.error('Error inserting topic request:', error);
+      res.status(500).json({ success: false, error: 'Failed to submit suggestion' });
+      return;
+    }
+
+    // Fire webhook to worker VM (fire-and-forget)
+    const webhookUrl = process.env.WORKER_WEBHOOK_URL;
+    const webhookSecret = process.env.WORKER_WEBHOOK_SECRET;
+    if (webhookUrl && webhookSecret) {
+      fetch(`${webhookUrl}/webhook/topic-suggest`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-webhook-secret': webhookSecret,
+        },
+        body: JSON.stringify({ requestId: data.id }),
+      }).catch((err: unknown) => {
+        console.error('Failed to fire topic-suggest webhook:', err);
+      });
+    } else {
+      console.warn('WORKER_WEBHOOK_URL or WORKER_WEBHOOK_SECRET not set; skipping webhook');
+    }
+
+    res.status(201).json({
+      success: true,
+      data: {
+        requestId: data.id,
+        status: data.status,
+        createdAt: data.created_at,
+      },
+    });
+  } catch (error) {
+    console.error('Error submitting topic suggestion:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Failed to submit suggestion',
+    });
+  }
+});
+
+/**
+ * GET /topics/suggest/:requestId
+ * Get the status of a topic suggestion request
+ */
+router.get('/suggest/:requestId', async (req: Request, res: Response) => {
+  try {
+    if (!supabase) {
+      res.status(503).json({ success: false, error: 'Supabase not configured' });
+      return;
+    }
+
+    const { requestId } = req.params;
+
+    const { data, error } = await supabase
+      .from('topic_requests')
+      .select('*')
+      .eq('id', requestId)
+      .single();
+
+    if (error || !data) {
+      res.status(404).json({ success: false, error: 'Request not found' });
+      return;
+    }
+
+    res.json({
+      success: true,
+      data,
+    });
+  } catch (error) {
+    console.error('Error fetching topic request:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Failed to fetch request status',
+    });
+  }
+});
+
+/**
+ * POST /topics/suggest/:requestId/complete
+ * Worker marks a suggestion as completed with the new topic ID
+ * Body: { topicId: string }
+ */
+router.post('/suggest/:requestId/complete', async (req: Request, res: Response) => {
+  try {
+    if (!supabase) {
+      res.status(503).json({ success: false, error: 'Supabase not configured' });
+      return;
+    }
+
+    const { requestId } = req.params;
+    const { topicId } = req.body;
+
+    if (!topicId || typeof topicId !== 'string') {
+      res.status(400).json({ success: false, error: 'topicId is required' });
+      return;
+    }
+
+    const { data, error } = await supabase
+      .from('topic_requests')
+      .update({
+        status: 'completed',
+        result_topic_id: topicId,
+      })
+      .eq('id', requestId)
+      .select('*')
+      .single();
+
+    if (error || !data) {
+      console.error('Error completing topic request:', error);
+      res.status(404).json({ success: false, error: 'Request not found or update failed' });
+      return;
+    }
+
+    res.json({
+      success: true,
+      data,
+    });
+  } catch (error) {
+    console.error('Error completing topic request:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Failed to complete request',
+    });
+  }
+});
+
+/**
+ * POST /topics/suggest/:requestId/fail
+ * Worker marks a suggestion as failed with an error message
+ * Body: { error: string }
+ */
+router.post('/suggest/:requestId/fail', async (req: Request, res: Response) => {
+  try {
+    if (!supabase) {
+      res.status(503).json({ success: false, error: 'Supabase not configured' });
+      return;
+    }
+
+    const { requestId } = req.params;
+    const { error: errorMessage } = req.body;
+
+    const { data, error } = await supabase
+      .from('topic_requests')
+      .update({
+        status: 'failed',
+        error: errorMessage || 'Unknown error',
+      })
+      .eq('id', requestId)
+      .select('*')
+      .single();
+
+    if (error || !data) {
+      console.error('Error failing topic request:', error);
+      res.status(404).json({ success: false, error: 'Request not found or update failed' });
+      return;
+    }
+
+    res.json({
+      success: true,
+      data,
+    });
+  } catch (error) {
+    console.error('Error failing topic request:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Failed to update request',
+    });
+  }
+});
+
+// ─── Existing Topic Routes ─────────────────────────────────────────────────────
 
 /**
  * GET /topics
  * List all available topics
  */
-router.get('/', async (_req: Request, res: Response) => {
+router.get('/', async (req: Request, res: Response) => {
   try {
-    const result = topicPodcastGenerator.getTopicsList();
+    const language = (req.query.lang as string) || 'en';
+    const result = await topicPodcastGenerator.getTopicsList(language);
 
     res.json({
       success: true,
@@ -37,7 +286,7 @@ router.get('/', async (_req: Request, res: Response) => {
 router.get('/:topicId', async (req: Request, res: Response) => {
   try {
     const { topicId } = req.params;
-    const topic = topicPodcastGenerator.getTopic(topicId);
+    const topic = await topicPodcastGenerator.getTopic(topicId);
 
     if (!topic) {
       res.status(404).json({
@@ -78,7 +327,7 @@ router.get('/:topicId/episode', async (req: Request, res: Response) => {
     const { topicId } = req.params;
     const language = (req.query.lang as string) || 'en';
 
-    const topic = topicPodcastGenerator.getTopic(topicId);
+    const topic = await topicPodcastGenerator.getTopic(topicId);
     if (!topic) {
       res.status(404).json({ success: false, error: 'Topic not found' });
       return;
@@ -196,7 +445,7 @@ router.get('/:topicId/episodes', async (req: Request, res: Response) => {
     const limit = parseInt(req.query.limit as string) || 7;
     const language = (req.query.lang as string) || 'en';
 
-    const topic = topicPodcastGenerator.getTopic(topicId);
+    const topic = await topicPodcastGenerator.getTopic(topicId);
     if (!topic) {
       res.status(404).json({
         success: false,

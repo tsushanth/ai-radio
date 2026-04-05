@@ -18,6 +18,7 @@ data class ProfileUiState(
     val hasLinkedGoogle: Boolean = false,
     val appTheme: String = "System",
     val preferredLanguage: String = "English",
+    val radioLanguagesSummary: String = "English",
     val hiddenTopicsCount: Int = 0,
     val isSubscribed: Boolean = false,
     val isSignedOut: Boolean = false,
@@ -74,6 +75,20 @@ class ProfileViewModel @Inject constructor(
         viewModelScope.launch {
             preferencesManager.isSubscribed.collect { subscribed ->
                 _uiState.value = _uiState.value.copy(isSubscribed = subscribed)
+            }
+        }
+
+        // Radio languages summary
+        viewModelScope.launch {
+            preferencesManager.radioLanguages.collect { codes ->
+                val summary = codes
+                    .map { SupportedLanguage.fromCode(it) }
+                    .joinToString(", ") { lang ->
+                        lang.radioStationName
+                            .replace("Audexa Radio ", "")
+                            .replace("Audexa Radio", "English")
+                    }
+                _uiState.value = _uiState.value.copy(radioLanguagesSummary = summary)
             }
         }
     }

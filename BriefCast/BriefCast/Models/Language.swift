@@ -71,6 +71,40 @@ enum SupportedLanguage: String, Codable, CaseIterable, Identifiable {
         "\(flagEmoji) \(displayName)"
     }
 
+    /// Station name for Audexa Radio in this language
+    var radioStationName: String {
+        switch self {
+        case .en: return "Audexa Radio"
+        case .es: return "Audexa Radio Español"
+        case .hi: return "Audexa Radio हिन्दी"
+        case .pt: return "Audexa Radio Português"
+        case .fr: return "Audexa Radio Français"
+        case .de: return "Audexa Radio Deutsch"
+        case .ja: return "Audexa Radio 日本語"
+        case .zh: return "Audexa Radio 中文"
+        case .ko: return "Audexa Radio 한국어"
+        case .it: return "Audexa Radio Italiano"
+        }
+    }
+
+    /// Base URL for Icecast radio streams — fetched from backend, falls back to hardcoded
+    static var radioBaseURL: String {
+        RadioConfig.shared.baseURL
+    }
+
+    /// Stream URL path for this language's radio station
+    var radioStreamURL: String {
+        switch self {
+        case .en: return "\(Self.radioBaseURL)/stream"
+        default: return "\(Self.radioBaseURL)/stream-\(rawValue)"
+        }
+    }
+
+    /// Languages available for radio streaming
+    static var radioAvailable: [SupportedLanguage] {
+        [.en, .es, .hi, .pt, .fr, .de, .ja, .ko, .zh, .it]
+    }
+
     /// Initialize from string, defaulting to English
     init(from code: String) {
         self = SupportedLanguage(rawValue: code) ?? .en

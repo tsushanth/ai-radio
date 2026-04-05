@@ -112,10 +112,13 @@ class HomeViewModel {
         hiddenTopicIds.contains(topicId)
     }
 
-    func toggleBookmark(for topicId: String) {
-        preferencesService.toggleBookmark(for: topicId)
+    /// Returns `false` if blocked by the free-user bookmark limit.
+    @discardableResult
+    func toggleBookmark(for topicId: String) -> Bool {
+        let allowed = preferencesService.toggleBookmark(for: topicId)
         // Update local observable copy to trigger UI update
         bookmarkedTopicIds = preferencesService.bookmarkedTopicIds
+        return allowed
     }
 
     func hideTopic(_ topicId: String) {
@@ -845,6 +848,39 @@ class HomeViewModel {
         }
 
         print("🎵 Queue now has \(AudioService.shared.queue.count) episodes")
+    }
+
+    // MARK: - Topic Suggestion
+
+    var showSuggestTopicSheet = false
+    var suggestTopicLoading = false
+    var suggestTopicSuccess = false
+    var suggestTopicError: String?
+
+    func suggestTopic(topicName: String, description: String?) async {
+        suggestTopicLoading = true
+        suggestTopicError = nil
+
+        let language = preferencesService.preferredLanguage
+
+        do {
+            try await topicService.suggestTopic(
+                topicName: topicName,
+                language: language,
+                description: description
+            )
+            suggestTopicLoading = false
+            suggestTopicSuccess = true
+            showSuggestTopicSheet = false
+        } catch {
+            suggestTopicLoading = false
+            suggestTopicError = error.localizedDescription
+        }
+    }
+
+    func resetSuggestTopicState() {
+        suggestTopicSuccess = false
+        suggestTopicError = nil
     }
 
     // MARK: - Mock Data

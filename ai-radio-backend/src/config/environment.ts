@@ -98,6 +98,9 @@ const envSchema = z.object({
   BATCH_SECRET: z.string().optional().default(''),
   ENABLE_TOPIC_BATCH: z.string().transform(val => val === 'true').default('true'),
 
+  // Radio Stream
+  RADIO_STREAM_BASE_URL: z.string().default('http://178.156.192.31:8000'),
+
   // Subscription Verification (optional)
   APPLE_SHARED_SECRET: z.string().optional(),
   GOOGLE_PLAY_SERVICE_ACCOUNT_KEY: z.string().optional(),

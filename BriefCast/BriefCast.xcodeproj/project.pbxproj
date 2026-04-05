@@ -7,7 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		5A3909BFB61200D7D5C8C354 /* RevenueCatUI in Frameworks */ = {isa = PBXBuildFile; productRef = E135063CEB7EFAE24CD5F0C4 /* RevenueCatUI */; };
+		1E56BAE8569D8A12EC16EB69 /* SnapshotHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = B07BA525E95057DFE5BA7437 /* SnapshotHelper.swift */; };
+		36383DB7960EEA3693C9F19E /* ScreenshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21325DC96DB64CC6490C9AA8 /* ScreenshotTests.swift */; };
 		881B33AD2EEA0167003270AA /* Auth in Frameworks */ = {isa = PBXBuildFile; productRef = 881B33AC2EEA0167003270AA /* Auth */; };
 		881B33AF2EEA0167003270AA /* Functions in Frameworks */ = {isa = PBXBuildFile; productRef = 881B33AE2EEA0167003270AA /* Functions */; };
 		881B33B12EEA0167003270AA /* PostgREST in Frameworks */ = {isa = PBXBuildFile; productRef = 881B33B02EEA0167003270AA /* PostgREST */; };
@@ -16,11 +17,28 @@
 		881B33B72EEA0167003270AA /* Supabase in Frameworks */ = {isa = PBXBuildFile; productRef = 881B33B62EEA0167003270AA /* Supabase */; };
 		881B33BA2EEA019B003270AA /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = 881B33B92EEA019B003270AA /* GoogleSignIn */; };
 		881B33BC2EEA019B003270AA /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 881B33BB2EEA019B003270AA /* GoogleSignInSwift */; };
-		881B33BD2EEA01A0003270AA /* RevenueCat in Frameworks */ = {isa = PBXBuildFile; productRef = 881B33BE2EEA01A0003270AA /* RevenueCat */; };
+		88CE60892F6F781000D8F36E /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 40AD34D43873B64461C0D6B7 /* FirebaseAnalytics */; };
+		A1B2C3D4E5F60001 /* PaywallKit in Frameworks */ = {isa = PBXBuildFile; productRef = A1B2C3D4E5F60002 /* PaywallKit */; };
+		D42F8F426882710680F9E448 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 97BB906C960EE20ABBFC217A /* Foundation.framework */; };
+		GAD_BUILD_001 /* GoogleMobileAds in Frameworks */ = {isa = PBXBuildFile; productRef = GAD_REF_001 /* GoogleMobileAds */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		2911D2EDE4AF3C176D62D9A6 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 881B32DA2EE8AE52003270AA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 881B32E12EE8AE52003270AA;
+			remoteInfo = BriefCast;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
+		21325DC96DB64CC6490C9AA8 /* ScreenshotTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ScreenshotTests.swift; sourceTree = "<group>"; };
 		881B32E22EE8AE52003270AA /* BriefCast.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BriefCast.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		9453BAE1ECCC432690688EBD /* BriefCastUITests */ = {isa = PBXFileReference; includeInIndex = 0; path = BriefCastUITests; sourceTree = BUILT_PRODUCTS_DIR; };
+		97BB906C960EE20ABBFC217A /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS18.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
+		B07BA525E95057DFE5BA7437 /* SnapshotHelper.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SnapshotHelper.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -45,10 +63,19 @@
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		7622E3EB9155173EB62C07E0 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D42F8F426882710680F9E448 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		881B32DF2EE8AE52003270AA /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				88CE60892F6F781000D8F36E /* FirebaseAnalytics in Frameworks */,
 				881B33B12EEA0167003270AA /* PostgREST in Frameworks */,
 				881B33AF2EEA0167003270AA /* Functions in Frameworks */,
 				881B33B72EEA0167003270AA /* Supabase in Frameworks */,
@@ -57,19 +84,29 @@
 				881B33B52EEA0167003270AA /* Storage in Frameworks */,
 				881B33B32EEA0167003270AA /* Realtime in Frameworks */,
 				881B33BA2EEA019B003270AA /* GoogleSignIn in Frameworks */,
-				881B33BD2EEA01A0003270AA /* RevenueCat in Frameworks */,
-				5A3909BFB61200D7D5C8C354 /* RevenueCatUI in Frameworks */,
+				A1B2C3D4E5F60001 /* PaywallKit in Frameworks */,
+				GAD_BUILD_001 /* GoogleMobileAds in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		84E99ADDFE6AF644FF2FADAE /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				C96BE52FA8CA2F1419DF2962 /* iOS */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		881B32D92EE8AE52003270AA = {
 			isa = PBXGroup;
 			children = (
 				881B32E42EE8AE52003270AA /* BriefCast */,
 				881B32E32EE8AE52003270AA /* Products */,
+				84E99ADDFE6AF644FF2FADAE /* Frameworks */,
+				F3F8E856DE2DFB27F7B697C8 /* BriefCastUITests */,
 			);
 			sourceTree = "<group>";
 		};
@@ -77,8 +114,27 @@
 			isa = PBXGroup;
 			children = (
 				881B32E22EE8AE52003270AA /* BriefCast.app */,
+				9453BAE1ECCC432690688EBD /* BriefCastUITests */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		C96BE52FA8CA2F1419DF2962 /* iOS */ = {
+			isa = PBXGroup;
+			children = (
+				97BB906C960EE20ABBFC217A /* Foundation.framework */,
+			);
+			name = iOS;
+			sourceTree = "<group>";
+		};
+		F3F8E856DE2DFB27F7B697C8 /* BriefCastUITests */ = {
+			isa = PBXGroup;
+			children = (
+				B07BA525E95057DFE5BA7437 /* SnapshotHelper.swift */,
+				21325DC96DB64CC6490C9AA8 /* ScreenshotTests.swift */,
+			);
+			name = BriefCastUITests;
+			path = BriefCastUITests;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -109,13 +165,30 @@
 				881B33B62EEA0167003270AA /* Supabase */,
 				881B33B92EEA019B003270AA /* GoogleSignIn */,
 				881B33BB2EEA019B003270AA /* GoogleSignInSwift */,
-				881B33BE2EEA01A0003270AA /* RevenueCat */,
 				40AD34D43873B64461C0D6B7 /* FirebaseAnalytics */,
-				E135063CEB7EFAE24CD5F0C4 /* RevenueCatUI */,
+				A1B2C3D4E5F60002 /* PaywallKit */,
 			);
 			productName = BriefCast;
 			productReference = 881B32E22EE8AE52003270AA /* BriefCast.app */;
 			productType = "com.apple.product-type.application";
+		};
+		EE00F7F010698C5F2EA57192 /* BriefCastUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 6B31C8B3E159FD48CB086279 /* Build configuration list for PBXNativeTarget "BriefCastUITests" */;
+			buildPhases = (
+				7142A5E5C8DDB5A1E3534988 /* Sources */,
+				7622E3EB9155173EB62C07E0 /* Frameworks */,
+				6BC649636D75343645C52CB6 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				10823B8C322548B19762B984 /* PBXTargetDependency */,
+			);
+			name = BriefCastUITests;
+			productName = BriefCastUITests;
+			productReference = 9453BAE1ECCC432690688EBD /* BriefCastUITests */;
+			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 /* End PBXNativeTarget section */
 
@@ -138,14 +211,24 @@
 			knownRegions = (
 				en,
 				Base,
+				hi,
+				fr,
+				de,
+				"pt-BR",
+				ja,
+				it,
+				"zh-Hans",
+				ko,
+				es,
 			);
 			mainGroup = 881B32D92EE8AE52003270AA;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				881B33AB2EEA0167003270AA /* XCRemoteSwiftPackageReference "supabase-swift" */,
 				881B33B82EEA019B003270AA /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
-				881B33BF2EEA01A0003270AA /* XCRemoteSwiftPackageReference "purchases-ios" */,
 				4248B23A2A8836B7D53FE1D1 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				A1B2C3D4E5F60003 /* XCLocalSwiftPackageReference "PaywallKit" */,
+				GAD_PACKAGE /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 881B32E32EE8AE52003270AA /* Products */;
@@ -153,11 +236,19 @@
 			projectRoot = "";
 			targets = (
 				881B32E12EE8AE52003270AA /* BriefCast */,
+				EE00F7F010698C5F2EA57192 /* BriefCastUITests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		6BC649636D75343645C52CB6 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		881B32E02EE8AE52003270AA /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -168,6 +259,15 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		7142A5E5C8DDB5A1E3534988 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1E56BAE8569D8A12EC16EB69 /* SnapshotHelper.swift in Sources */,
+				36383DB7960EEA3693C9F19E /* ScreenshotTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		881B32DE2EE8AE52003270AA /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -177,7 +277,32 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		10823B8C322548B19762B984 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = BriefCast;
+			target = 881B32E12EE8AE52003270AA /* BriefCast */;
+			targetProxy = 2911D2EDE4AF3C176D62D9A6 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin XCBuildConfiguration section */
+		037C67D2E8B76E9E3318F44A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 7RS696YC75;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.kreativekoala.briefcast.UITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				TEST_TARGET_NAME = BriefCast;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
 		881B32EE2EE8AE54003270AA /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -304,7 +429,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = BriefCast/BriefCast.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 17;
+				CURRENT_PROJECT_VERSION = 29;
 				DEVELOPMENT_ASSET_PATHS = "\"BriefCast/Preview Content\"";
 				DEVELOPMENT_TEAM = 7RS696YC75;
 				ENABLE_PREVIEWS = YES;
@@ -322,7 +447,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 14.0;
+				MARKETING_VERSION = 16.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.kreativekoala.briefcast;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -340,7 +465,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = BriefCast/BriefCast.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 17;
+				CURRENT_PROJECT_VERSION = 29;
 				DEVELOPMENT_ASSET_PATHS = "\"BriefCast/Preview Content\"";
 				DEVELOPMENT_TEAM = 7RS696YC75;
 				ENABLE_PREVIEWS = YES;
@@ -358,7 +483,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 14.0;
+				MARKETING_VERSION = 16.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.kreativekoala.briefcast;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -369,9 +494,33 @@
 			};
 			name = Release;
 		};
+		EA4FCB234DFCA03AE3CDA81B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 7RS696YC75;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.kreativekoala.briefcast.UITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				TEST_TARGET_NAME = BriefCast;
+			};
+			name = Debug;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		6B31C8B3E159FD48CB086279 /* Build configuration list for PBXNativeTarget "BriefCastUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				037C67D2E8B76E9E3318F44A /* Release */,
+				EA4FCB234DFCA03AE3CDA81B /* Debug */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		881B32DD2EE8AE52003270AA /* Build configuration list for PBXProject "BriefCast" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -391,6 +540,13 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		A1B2C3D4E5F60003 /* XCLocalSwiftPackageReference "PaywallKit" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../../PaywallKit;
+		};
+/* End XCLocalSwiftPackageReference section */
 
 /* Begin XCRemoteSwiftPackageReference section */
 		4248B23A2A8836B7D53FE1D1 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
@@ -417,12 +573,12 @@
 				minimumVersion = 9.0.0;
 			};
 		};
-		881B33BF2EEA01A0003270AA /* XCRemoteSwiftPackageReference "purchases-ios" */ = {
+		GAD_PACKAGE /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/RevenueCat/purchases-ios";
+			repositoryURL = "https://github.com/googleads/swift-package-manager-google-mobile-ads";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 5.0.0;
+				minimumVersion = 11.0.0;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
@@ -473,15 +629,14 @@
 			package = 881B33B82EEA019B003270AA /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
 			productName = GoogleSignInSwift;
 		};
-		881B33BE2EEA01A0003270AA /* RevenueCat */ = {
+		A1B2C3D4E5F60002 /* PaywallKit */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 881B33BF2EEA01A0003270AA /* XCRemoteSwiftPackageReference "purchases-ios" */;
-			productName = RevenueCat;
+			productName = PaywallKit;
 		};
-		E135063CEB7EFAE24CD5F0C4 /* RevenueCatUI */ = {
+		GAD_REF_001 /* GoogleMobileAds */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 881B33BF2EEA01A0003270AA /* XCRemoteSwiftPackageReference "purchases-ios" */;
-			productName = RevenueCatUI;
+			package = GAD_PACKAGE /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */;
+			productName = GoogleMobileAds;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

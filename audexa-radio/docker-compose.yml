@@ -58,11 +58,17 @@ services:
     depends_on:
       tts-service:
         condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8081/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
     deploy:
       resources:
         limits:
-          memory: 2G
-          cpus: "1.0"
+          memory: 8G
+          cpus: "4.0"
     networks:
       - radio-net
 
@@ -81,8 +87,8 @@ services:
     deploy:
       resources:
         limits:
-          memory: 1G
-          cpus: "0.5"
+          memory: 2G
+          cpus: "1.0"
     networks:
       - radio-net
 
@@ -91,14 +97,20 @@ services:
     container_name: audexa-icecast
     restart: unless-stopped
     volumes:
-      - ./icecast/icecast.xml:/etc/icecast2/icecast.xml:ro
+      - ./icecast/icecast.xml:/etc/icecast.xml:ro
     ports:
       - "8000:8000"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/status.xsl"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
     deploy:
       resources:
         limits:
-          memory: 512M
-          cpus: "0.5"
+          memory: 1G
+          cpus: "1.0"
     networks:
       - radio-net
 

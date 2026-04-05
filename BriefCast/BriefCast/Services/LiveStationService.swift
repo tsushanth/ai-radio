@@ -13,6 +13,9 @@ class LiveStationService {
     static let shared = LiveStationService()
 
     private let baseURL = "https://ai-radio-backend-917362189743.us-central1.run.app/api"
+
+    /// Live Icecast stream for Audexa Radio — injected into any station whose name contains "Audexa"
+    static let audexaStreamURL = "http://radio.audexa.fm/stream"
     private let jsonDecoder: JSONDecoder
     private let jsonEncoder: JSONEncoder
     private let standardSession: URLSession
@@ -67,8 +70,9 @@ class LiveStationService {
         do {
             let data = try await performRequest(endpoint: endpoint)
             let response = try jsonDecoder.decode(LiveStationsResponse.self, from: data)
-            cacheStations(response.data.stations)
-            return response.data.stations
+            let stations = Self.injectStreamURLs(response.data.stations)
+            cacheStations(stations)
+            return stations
         } catch {
             if !cachedStations.isEmpty {
                 print("⚠️ Network failed, using cached stations")
@@ -124,6 +128,22 @@ class LiveStationService {
 
         let response = try jsonDecoder.decode(RefreshResponse.self, from: data)
         return response.data.station
+    }
+
+    // MARK: - Stream URL Injection
+
+    /// Inject the Audexa Radio stream URL for any station whose name contains "Audexa".
+    /// This bridges the old backend (which returns episode audioUrls) with the new Icecast stack.
+    private static func injectStreamURLs(_ stations: [LiveStation]) -> [LiveStation] {
+        stations.map { station in
+            guard station.streamUrl == nil,
+                  station.name.localizedCaseInsensitiveContains("audexa") else {
+                return station
+            }
+            var updated = station
+            updated.streamUrl = audexaStreamURL
+            return updated
+        }
     }
 
     // MARK: - Network

@@ -20,10 +20,12 @@ import contextRoutes from './context';
 import notificationsRoutes from './notifications';
 import batchRoutes from './batch';
 import adsRoutes from './ads';
+import configRoutes from './config';
 
 const router = express.Router();
 
 // Mount routes
+router.use('/config', configRoutes);
 router.use('/auth', authRoutes);
 router.use('/podcast', podcastRoutes);
 router.use('/user', userRoutes);

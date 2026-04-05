@@ -1,5 +1,6 @@
 package com.kreativekoala.audexa
 
+import android.app.Activity
 import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Build
@@ -10,10 +11,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.*
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.lifecycleScope
@@ -30,6 +33,10 @@ import com.kreativekoala.audexa.ui.navigation.Screen
 import com.kreativekoala.audexa.ui.theme.AppTheme
 import com.kreativekoala.audexa.ui.theme.AudexaTheme
 import com.kreativekoala.audexa.ui.topic.TopicDetailScreen
+import com.kreativekoala.paywallkit.models.PaywallFeature
+import com.kreativekoala.paywallkit.models.PaywallProduct
+import com.kreativekoala.paywallkit.models.PaywallTheme
+import com.kreativekoala.paywallkit.view.PaywallView
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.map
@@ -73,13 +80,20 @@ class MainActivity : AppCompatActivity() {
         // Request notification permission on Android 13+ and restore scheduled notifications
         requestNotificationPermissionIfNeeded()
 
+        // Increment app open count once per session (only on fresh create, not config changes)
+        if (savedInstanceState == null) {
+            lifecycleScope.launch {
+                preferencesManager.incrementAppOpenCount()
+            }
+        }
+
         setContent {
             val appTheme by preferencesManager.appTheme
                 .map { AppTheme.fromValue(it) }
                 .collectAsState(initial = AppTheme.SYSTEM)
 
             AudexaTheme(appTheme = appTheme) {
-                AudexaApp(audioManager = audioManager, billingManager = billingManager, appTheme = appTheme)
+                AudexaApp(audioManager = audioManager, billingManager = billingManager, preferencesManager = preferencesManager, appTheme = appTheme)
             }
         }
     }
@@ -120,6 +134,7 @@ class MainActivity : AppCompatActivity() {
 fun AudexaApp(
     audioManager: AudioManager,
     billingManager: BillingManager,
+    preferencesManager: PreferencesManager,
     appTheme: AppTheme = AppTheme.SYSTEM,
     mainViewModel: MainViewModel = hiltViewModel()
 ) {
@@ -130,6 +145,12 @@ fun AudexaApp(
     val currentPosition by audioManager.currentPosition.collectAsState()
     val duration by audioManager.duration.collectAsState()
     val isBuffering by audioManager.isBuffering.collectAsState()
+
+    // Paywall gate: track app opens and subscription status
+    val appOpenCount by preferencesManager.appOpenCount.collectAsState(initial = 0)
+    val isSubscribed by billingManager.isSubscribed.collectAsState()
+    var paywallDismissed by remember { mutableStateOf(false) }
+    val shouldShowPaywall = appOpenCount > BillingManager.FREE_OPEN_LIMIT && !isSubscribed && !paywallDismissed
 
     // Topic detail sheet state
     var selectedTopic by remember { mutableStateOf<Topic?>(null) }
@@ -187,6 +208,67 @@ fun AudexaApp(
             exit = fadeOut(animationSpec = tween(400))
         ) {
             SplashScreen()
+        }
+
+        // Soft paywall gate - shown after FREE_OPEN_LIMIT opens for non-subscribers
+        if (shouldShowPaywall && !showSplash && startDestinationDetermined) {
+            val packages by billingManager.packages.collectAsState()
+            val activity = LocalContext.current as? Activity
+
+            if (packages.isEmpty()) {
+                Box(
+                    modifier = Modifier.fillMaxSize().background(androidx.compose.ui.graphics.Color(0xFF0A0A0F)),
+                    contentAlignment = androidx.compose.ui.Alignment.Center
+                ) {
+                    CircularProgressIndicator(color = androidx.compose.ui.graphics.Color(0xFFFF6D00))
+                }
+            } else {
+                val paywallProducts = packages.map { pkg ->
+                    val product = pkg.product
+                    PaywallProduct(
+                        id = product.id,
+                        localizedPrice = product.price.formatted,
+                        price = product.price.amountMicros.let { it / 1_000_000.0 },
+                        currencyCode = product.price.currencyCode,
+                        trialDays = 3,
+                        period = when (pkg.packageType) {
+                            com.revenuecat.purchases.PackageType.WEEKLY -> PaywallProduct.Period.WEEKLY
+                            com.revenuecat.purchases.PackageType.MONTHLY -> PaywallProduct.Period.MONTHLY
+                            com.revenuecat.purchases.PackageType.ANNUAL -> PaywallProduct.Period.YEARLY
+                            else -> PaywallProduct.Period.MONTHLY
+                        }
+                    )
+                }
+
+                val features = listOf(
+                    PaywallFeature("\uD83C\uDFB5", "Unlimited Streaming", "Stream without limits"),
+                    PaywallFeature("\uD83D\uDEAB", "No Ads", "Ad-free experience"),
+                    PaywallFeature("\uD83D\uDCE5", "Offline Mode", "Download for offline"),
+                    PaywallFeature("\uD83C\uDFA7", "HD Audio", "Premium sound quality"),
+                    PaywallFeature("\uD83D\uDCFB", "All Stations", "Access every station")
+                )
+
+                PaywallView(
+                    appId = "audexa",
+                    appName = "Audexa",
+                    features = features,
+                    products = paywallProducts,
+                    theme = PaywallTheme(
+                        accent = androidx.compose.ui.graphics.Color(0xFFFF6D00),
+                        accent2 = androidx.compose.ui.graphics.Color(0xFFFF9100)
+                    ),
+                    showWinback = true,
+                    isDismissible = true,
+                    onPurchase = { productId ->
+                        val pkg = packages.firstOrNull { it.product.id == productId }
+                        if (pkg != null && activity != null) {
+                            billingManager.launchPurchaseFlow(activity, pkg)
+                        }
+                    },
+                    onRestore = { billingManager.restorePurchases() },
+                    onDismiss = { paywallDismissed = true }
+                )
+            }
         }
     }
 }
@@ -267,3 +349,4 @@ private fun MainContent(
         }
     }
 }
+

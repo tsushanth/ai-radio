@@ -1,0 +1,353 @@
+/* Localizable.strings (Hindi)
+   BriefCast / Audexa
+   Comprehensive localization for the Audexa iOS app */
+
+// MARK: - Auth View
+"Your personal AI radio" = "आपका निजी AI रेडियो";
+"Sign in with Google" = "Google से साइन इन करें";
+"Continue without sign in" = "बिना साइन इन किए जारी रखें";
+"You can link your email later to enable personalized Daily Brief" = "आप बाद में अपना ईमेल लिंक करके व्यक्तिगत Daily Brief सक्रिय कर सकते हैं";
+"By continuing, you agree to our" = "जारी रखकर, आप हमारी";
+"Terms of Service" = "सेवा की शर्तें";
+"and" = "और";
+"Privacy Policy" = "गोपनीयता नीति";
+
+// MARK: - Home View
+"For You" = "आपके लिए";
+"Discover" = "खोजें";
+"Good Morning" = "सुप्रभात";
+"Good Afternoon" = "नमस्कार";
+"Good Evening" = "शुभ संध्या";
+"Live Stations" = "लाइव स्टेशन";
+"LIVE" = "लाइव";
+"Your Deep Dives" = "आपकी गहन खोज";
+"Keep listening" = "सुनते रहें";
+"Your Topics" = "आपके विषय";
+"Topic Podcasts" = "विषय पॉडकास्ट";
+"Tap to explore and play" = "एक्सप्लोर करने और चलाने के लिए टैप करें";
+"Recommended for you" = "आपके लिए सुझाव";
+"More for you" = "आपके लिए और";
+"Playing" = "चल रहा है";
+"Hide" = "छिपाएं";
+"All Topics" = "सभी विषय";
+"Matching Topics" = "मिलते-जुलते विषय";
+"Popular Shows" = "लोकप्रिय शो";
+
+// MARK: - Search
+"Find new shows" = "नए शो खोजें";
+"No results for \"%@\"" = "\"%@\" के लिए कोई परिणाम नहीं";
+
+// MARK: - Profile View
+"Profile" = "प्रोफ़ाइल";
+"User" = "उपयोगकर्ता";
+"Premium" = "प्रीमियम";
+"Ad-Free" = "विज्ञापन-मुक्त";
+"Go Ad-Free" = "विज्ञापन-मुक्त करें";
+"Active subscription" = "सक्रिय सदस्यता";
+"Remove all ads" = "सभी विज्ञापन हटाएं";
+"Linked Accounts" = "लिंक किए गए खाते";
+"Add Account" = "खाता जोड़ें";
+"Daily Brief Sources" = "Daily Brief के स्रोत";
+"Email" = "ईमेल";
+"Include email summaries in Daily Brief" = "Daily Brief में ईमेल सारांश शामिल करें";
+"Calendar" = "कैलेंडर";
+"Include upcoming events in Daily Brief" = "Daily Brief में आगामी कार्यक्रम शामिल करें";
+"Preferences" = "प्राथमिकताएं";
+"App Theme" = "ऐप थीम";
+"Podcast Language" = "पॉडकास्ट भाषा";
+"Hidden Topics" = "छिपे हुए विषय";
+"About" = "के बारे में";
+"Version" = "संस्करण";
+"Share Audexa" = "Audexa शेयर करें";
+"Tell your friends" = "अपने दोस्तों को बताएं";
+"Sign Out" = "साइन आउट";
+"Delete Account" = "खाता हटाएं";
+"Are you sure you want to sign out?" = "क्या आप वाकई साइन आउट करना चाहते हैं?";
+"Are you sure you want to delete your account? This will permanently delete all your data including podcasts, preferences, and linked accounts. This action cannot be undone." = "क्या आप वाकई अपना खाता हटाना चाहते हैं? इससे पॉडकास्ट, प्राथमिकताएं और लिंक किए गए खातों सहित आपका सारा डेटा स्थायी रूप से हट जाएगा। यह क्रिया पूर्ववत नहीं की जा सकती।";
+"Error" = "त्रुटि";
+"OK" = "ठीक है";
+"Failed to delete account. Please try again." = "खाता हटाने में विफल। कृपया पुनः प्रयास करें।";
+"Deleting account..." = "खाता हटाया जा रहा है...";
+"Cancel" = "रद्द करें";
+"Delete" = "हटाएं";
+"Connected" = "कनेक्ट है";
+"Disconnected" = "डिस्कनेक्ट है";
+"Match device settings" = "डिवाइस सेटिंग्स का पालन करें";
+"Always dark mode" = "हमेशा डार्क मोड";
+"Always light mode" = "हमेशा लाइट मोड";
+"Check out Audexa - Your personalized AI-powered daily briefing podcast!" = "Audexa देखें - आपका व्यक्तिगत AI-संचालित दैनिक ब्रीफिंग पॉडकास्ट!";
+
+// MARK: - Hidden Topics View
+"No Hidden Topics" = "कोई छिपा हुआ विषय नहीं";
+"Topics you hide will appear here" = "आपके छिपाए गए विषय यहां दिखाई देंगे";
+"Unhide" = "दिखाएं";
+"Done" = "हो गया";
+
+// MARK: - Player View
+"Voice" = "आवाज़";
+"Cancel Timer" = "टाइमर रद्द करें";
+"5 min" = "5 मिनट";
+"10 min" = "10 मिनट";
+"15 min" = "15 मिनट";
+"30 min" = "30 मिनट";
+"60 min" = "60 मिनट";
+"Skip" = "छोड़ें";
+"Tell Me More" = "और बताएं";
+"Tap to ask a question" = "सवाल पूछने के लिए टैप करें";
+"Live Transcript" = "लाइव ट्रांसक्रिप्ट";
+"More Details" = "अधिक विवरण";
+"Listen to Expansion" = "विस्तार सुनें";
+"Sources" = "स्रोत";
+"Expanded Content" = "विस्तारित सामग्री";
+
+// MARK: - Voice Picker View
+"Voice Settings" = "आवाज़ सेटिंग्स";
+"Pairs" = "जोड़ी";
+"Individual" = "व्यक्तिगत";
+"Voice Selection" = "आवाज़ चयन";
+"Host 1 Voice" = "होस्ट 1 की आवाज़";
+"Host 2 Voice" = "होस्ट 2 की आवाज़";
+"No voices available" = "कोई आवाज़ उपलब्ध नहीं";
+"Loading voices..." = "आवाज़ें लोड हो रही हैं...";
+"No voice pairs available for %@" = "%@ के लिए कोई आवाज़ जोड़ी उपलब्ध नहीं";
+"Host 1" = "होस्ट 1";
+"Host 2" = "होस्ट 2";
+
+// MARK: - Onboarding
+"Welcome to Audexa" = "Audexa में आपका स्वागत है";
+"Your personalized AI radio. Get caught up on your emails, calendar, and favorite topics in just a few minutes." = "आपका व्यक्तिगत AI रेडियो। बस कुछ ही मिनटों में अपने ईमेल, कैलेंडर और पसंदीदा विषयों से अपडेट रहें।";
+"Get Started" = "शुरू करें";
+"Connect Your Account" = "अपना खाता कनेक्ट करें";
+"Link your Google account to get personalized briefings from your email and calendar." = "अपने ईमेल और कैलेंडर से व्यक्तिगत ब्रीफिंग पाने के लिए अपना Google खाता लिंक करें।";
+"Connect Google" = "Google कनेक्ट करें";
+"Include email summaries in briefings" = "ब्रीफिंग में ईमेल सारांश शामिल करें";
+"(Optional)" = "(वैकल्पिक)";
+"Include upcoming events in briefings" = "ब्रीफिंग में आगामी कार्यक्रम शामिल करें";
+"Connect" = "कनेक्ट करें";
+"Continue" = "जारी रखें";
+"Skip for now" = "अभी के लिए छोड़ें";
+"Connection Error" = "कनेक्शन त्रुटि";
+"Failed to connect account" = "खाता कनेक्ट करने में विफल";
+"Choose Your Interests" = "अपनी रुचियां चुनें";
+"Select topics to personalize your Daily Brief." = "अपने Daily Brief को व्यक्तिगत बनाने के लिए विषय चुनें।";
+"Daily Brief Options" = "Daily Brief विकल्प";
+"Include Topic Updates" = "विषय अपडेट शामिल करें";
+"Add headlines from your topics to Daily Brief" = "अपने विषयों की सुर्खियां Daily Brief में जोड़ें";
+"Daily Reminder" = "दैनिक रिमाइंडर";
+"Notifications blocked. Tap Settings to enable." = "सूचनाएं ब्लॉक हैं। सक्षम करने के लिए सेटिंग्स टैप करें।";
+"Get notified when your brief is ready" = "जब आपका ब्रीफ तैयार हो तो सूचना पाएं";
+"Settings" = "सेटिंग्स";
+"Reminder Time" = "रिमाइंडर समय";
+"Select at least one topic" = "कम से कम एक विषय चुनें";
+"Complete Setup" = "सेटअप पूरा करें";
+"Access not granted" = "पहुंच प्रदान नहीं की गई";
+"Without access, we can only create general topic briefings. To get personalized briefings, please try again and grant the requested permissions." = "पहुंच के बिना, हम केवल सामान्य विषय ब्रीफिंग बना सकते हैं। व्यक्तिगत ब्रीफिंग के लिए, कृपया पुनः प्रयास करें और अनुरोधित अनुमतियां प्रदान करें।";
+"Try Again" = "पुनः प्रयास करें";
+"\"Unverified App\" Warning" = "\"असत्यापित ऐप\" चेतावनी";
+"Google may show an \"unverified app\" screen because our calendar access is pending verification. This is safe to proceed." = "Google \"असत्यापित ऐप\" स्क्रीन दिखा सकता है क्योंकि हमारी कैलेंडर पहुंच सत्यापन की प्रतीक्षा में है। आगे बढ़ना सुरक्षित है।";
+"To connect:" = "कनेक्ट करने के लिए:";
+"Tap \"Advanced\" on the warning screen" = "चेतावनी स्क्रीन पर \"उन्नत\" टैप करें";
+"Tap \"Go to Audexa (unsafe)\"" = "\"Audexa पर जाएं (असुरक्षित)\" टैप करें";
+"Grant calendar access" = "कैलेंडर पहुंच प्रदान करें";
+
+// MARK: - Create View
+"Create" = "बनाएं";
+"Create Daily Brief" = "Daily Brief बनाएं";
+"Generate your personalized podcast from today's emails and calendar events" = "आज के ईमेल और कैलेंडर इवेंट से अपना व्यक्तिगत पॉडकास्ट बनाएं";
+"Generate Now" = "अभी बनाएं";
+
+// MARK: - Paywall View
+"Enjoy uninterrupted listening" = "बिना रुकावट सुनने का आनंद लें";
+"No audio ad interruptions" = "कोई ऑडियो विज्ञापन बाधा नहीं";
+"Seamless episode playback" = "निर्बाध एपिसोड प्लेबैक";
+"Support indie development" = "स्वतंत्र विकास का समर्थन करें";
+"You're an Ad-Free subscriber!" = "आप विज्ञापन-मुक्त सदस्य हैं!";
+"Yearly" = "वार्षिक";
+"Save 58%" = "58% बचाएं";
+"Monthly" = "मासिक";
+"Subscribe" = "सदस्यता लें";
+"Restore Purchases" = "खरीदारी पुनर्स्थापित करें";
+"Payment will be charged to your Apple ID account. Subscription automatically renews unless cancelled at least 24 hours before the end of the current period." = "भुगतान आपके Apple ID खाते से लिया जाएगा। वर्तमान अवधि समाप्त होने से कम से कम 24 घंटे पहले रद्द न करने पर सदस्यता स्वचालित रूप से नवीनीकृत हो जाती है।";
+
+// MARK: - Linked Accounts View
+"Connect your accounts to personalize your daily briefings with relevant information from your emails." = "अपने ईमेल की प्रासंगिक जानकारी से अपनी दैनिक ब्रीफिंग को व्यक्तिगत बनाने के लिए अपने खाते कनेक्ट करें।";
+"Connected Accounts" = "कनेक्टेड खाते";
+"Available Accounts" = "उपलब्ध खाते";
+"Add Another Account" = "एक और खाता जोड़ें";
+"Not connected" = "कनेक्ट नहीं है";
+"We'll access:" = "हम एक्सेस करेंगे:";
+"Read your Gmail messages" = "आपके Gmail संदेश पढ़ें";
+"Basic profile information" = "बुनियादी प्रोफ़ाइल जानकारी";
+"Read your calendar events" = "आपके कैलेंडर इवेंट पढ़ें";
+"Your data is secure" = "आपका डेटा सुरक्षित है";
+"We only access the information you explicitly allow and use it solely to create your personalized briefings. You can revoke access at any time." = "हम केवल वही जानकारी एक्सेस करते हैं जिसकी आप स्पष्ट रूप से अनुमति देते हैं और इसका उपयोग केवल आपकी व्यक्तिगत ब्रीफिंग बनाने के लिए करते हैं। आप किसी भी समय पहुंच रद्द कर सकते हैं।";
+"Access Permissions" = "पहुंच अनुमतियां";
+"Email Access" = "ईमेल पहुंच";
+"Read emails to include in briefings" = "ब्रीफिंग में शामिल करने के लिए ईमेल पढ़ें";
+"Disconnect Account" = "खाता डिस्कनेक्ट करें";
+"Disconnect" = "डिस्कनेक्ट करें";
+"Connected Calendar" = "कनेक्टेड कैलेंडर";
+"Google Calendar" = "Google कैलेंडर";
+"Disconnect Calendar" = "कैलेंडर डिस्कनेक्ट करें";
+"Are you sure you want to disconnect your Google Calendar? Your Daily Brief will no longer include upcoming events." = "क्या आप वाकई अपना Google कैलेंडर डिस्कनेक्ट करना चाहते हैं? आपके Daily Brief में अब आगामी कार्यक्रम शामिल नहीं होंगे।";
+
+// MARK: - Topic Detail View
+"Generate Episode" = "एपिसोड बनाएं";
+"Generate New Episode" = "नया एपिसोड बनाएं";
+"Creates a fresh episode with the latest content" = "नवीनतम सामग्री के साथ एक नया एपिसोड बनाता है";
+"Loading episode..." = "एपिसोड लोड हो रहा है...";
+"Generating your podcast..." = "आपका पॉडकास्ट बन रहा है...";
+"This may take a minute" = "इसमें एक मिनट लग सकता है";
+"Previous Episodes" = "पिछले एपिसोड";
+"No previous episodes available" = "कोई पिछला एपिसोड उपलब्ध नहीं";
+"Hide Topic" = "विषय छिपाएं";
+"Select Language" = "भाषा चुनें";
+
+// MARK: - Deep Dive
+"Deep Dive" = "गहन अध्ययन";
+"What do you want to learn about?" = "आप किस बारे में जानना चाहते हैं?";
+"Enter any topic and we'll create a research podcast for you" = "कोई भी विषय दर्ज करें और हम आपके लिए एक शोध पॉडकास्ट बनाएंगे";
+"Try asking about..." = "इसके बारे में पूछकर देखें...";
+"Generate Deep Dive" = "गहन अध्ययन बनाएं";
+"This may take a few minutes" = "इसमें कुछ मिनट लग सकते हैं";
+"Generation Failed" = "निर्माण विफल";
+"Regenerate" = "फिर से बनाएं";
+"Generate a fresh take on this topic" = "इस विषय पर एक नया दृष्टिकोण बनाएं";
+"Regenerating..." = "फिर से बनाया जा रहा है...";
+
+// MARK: - Q&A View
+"Ask a Question" = "सवाल पूछें";
+"Close" = "बंद करें";
+"Ask a question" = "एक सवाल पूछें";
+"Get more context about what you just heard" = "आपने अभी जो सुना उसके बारे में और जानें";
+"Ask a question..." = "सवाल पूछें...";
+"Follow-up questions" = "अनुवर्ती प्रश्न";
+"Play answer" = "उत्तर चलाएं";
+"Q&A Answer" = "प्रश्नोत्तर उत्तर";
+
+// MARK: - Queue View
+"Your Queue" = "आपकी कतार";
+"Clear Queue" = "कतार साफ़ करें";
+"Clear All" = "सब हटाएं";
+"This will remove all topics from your queue." = "इससे आपकी कतार से सभी विषय हट जाएंगे।";
+"Your queue is empty" = "आपकी कतार खाली है";
+"Add topics from the home screen" = "होम स्क्रीन से विषय जोड़ें";
+"Play All" = "सभी चलाएं";
+
+// MARK: - Gradient Header / Daily Brief States
+"Connect your email" = "अपना ईमेल कनेक्ट करें";
+"to generate your personalized brief" = "अपना व्यक्तिगत ब्रीफ बनाने के लिए";
+"Generate Today's Brief" = "आज का ब्रीफ बनाएं";
+"Generating your brief..." = "आपका ब्रीफ बन रहा है...";
+"Fetching your emails and calendar..." = "आपके ईमेल और कैलेंडर ला रहे हैं...";
+"Analyzing content..." = "सामग्री का विश्लेषण हो रहा है...";
+"Creating your personalized script..." = "आपकी व्यक्तिगत स्क्रिप्ट बन रही है...";
+"Generating audio..." = "ऑडियो बन रहा है...";
+"Almost done..." = "लगभग हो गया...";
+"Now Playing" = "अभी चल रहा है";
+"Generation failed" = "निर्माण विफल";
+"Retry" = "पुनः प्रयास करें";
+"Reconnect your email" = "अपना ईमेल फिर से कनेक्ट करें";
+"Reconnect" = "फिर से कनेक्ट करें";
+"No new emails" = "कोई नया ईमेल नहीं";
+"Try Again Later" = "बाद में पुनः प्रयास करें";
+
+// MARK: - Splash Screen
+"Your AI-powered audio briefing" = "आपकी AI-संचालित ऑडियो ब्रीफिंग";
+
+// MARK: - Tab Router
+"Home" = "होम";
+
+// MARK: - Notification Settings
+"Notifications" = "सूचनाएं";
+"Enabled" = "सक्षम";
+"Open Settings" = "सेटिंग्स खोलें";
+"Enable" = "सक्षम करें";
+"Not Available" = "उपलब्ध नहीं";
+"Permission" = "अनुमति";
+"Allow notifications to receive your daily brief when it's ready." = "जब आपका Daily Brief तैयार हो तो सूचना पाने के लिए अनुमति दें।";
+"Daily Brief Notifications" = "Daily Brief सूचनाएं";
+"Briefing Time" = "ब्रीफिंग समय";
+"Timezone" = "समय क्षेत्र";
+"Daily Brief Schedule" = "Daily Brief शेड्यूल";
+"Daily Brief Content" = "Daily Brief सामग्री";
+"When enabled, your Daily Brief will include headlines and updates from your selected topics of interest." = "सक्षम होने पर, आपके Daily Brief में आपके चयनित रुचि विषयों की सुर्खियां और अपडेट शामिल होंगे।";
+"Notification Preview" = "सूचना पूर्वावलोकन";
+"Your Daily Brief is Ready" = "आपका Daily Brief तैयार है";
+"Your personalized briefing is ready to play." = "आपकी व्यक्तिगत ब्रीफिंग चलाने के लिए तैयार है।";
+"Manual" = "मैन्युअल";
+"Generate your daily brief immediately instead of waiting for the scheduled time." = "निर्धारित समय की प्रतीक्षा करने के बजाय तुरंत अपना Daily Brief बनाएं।";
+"Enable to have your daily brief automatically generated each morning." = "हर सुबह अपना Daily Brief स्वचालित रूप से बनाने के लिए सक्षम करें।";
+
+// MARK: - Location & Weather Settings
+"Location & Weather" = "स्थान और मौसम";
+"Use Current Location" = "वर्तमान स्थान का उपयोग करें";
+"Weather Location" = "मौसम स्थान";
+"Home Address" = "घर का पता";
+"Enter your home address" = "अपने घर का पता दर्ज करें";
+"Work Address" = "कार्यालय का पता";
+"Enter your work address" = "अपने कार्यालय का पता दर्ज करें";
+"Traffic Route" = "ट्रैफ़िक मार्ग";
+"Set both addresses to get commute time in your daily briefing" = "अपनी दैनिक ब्रीफिंग में यात्रा का समय पाने के लिए दोनों पते सेट करें";
+"Temperature Unit" = "तापमान इकाई";
+"Fahrenheit (°F)" = "फ़ारेनहाइट (°F)";
+"Celsius (°C)" = "सेल्सियस (°C)";
+"Units" = "इकाइयां";
+"Weather and traffic information will be included in your morning daily briefing when available." = "उपलब्ध होने पर मौसम और ट्रैफ़िक जानकारी आपकी सुबह की दैनिक ब्रीफिंग में शामिल की जाएगी।";
+"Save" = "सहेजें";
+
+// MARK: - Custom Sources
+"Add Source" = "स्रोत जोड़ें";
+"Source Type" = "स्रोत प्रकार";
+"URL" = "URL";
+"Validating..." = "सत्यापित हो रहा है...";
+"Invalid source" = "अमान्य स्रोत";
+"Name (Optional)" = "नाम (वैकल्पिक)";
+"Auto-detect name" = "नाम स्वतः पहचानें";
+"Leave blank to use the detected name" = "पहचाने गए नाम का उपयोग करने के लिए खाली छोड़ें";
+"Validate" = "सत्यापित करें";
+"My Sources" = "मेरे स्रोत";
+"No Custom Sources" = "कोई कस्टम स्रोत नहीं";
+"Add RSS feeds, newsletters, or websites to include their content in your daily brief." = "अपने Daily Brief में सामग्री शामिल करने के लिए RSS फ़ीड, न्यूज़लेटर या वेबसाइट जोड़ें।";
+"Add Your First Source" = "अपना पहला स्रोत जोड़ें";
+"Paused" = "रुका हुआ";
+"Source Info" = "स्रोत जानकारी";
+"Type" = "प्रकार";
+"Status" = "स्थिति";
+"Last Updated" = "अंतिम अपडेट";
+"Items" = "आइटम";
+"Recent Items" = "हाल के आइटम";
+"No items yet" = "अभी तक कोई आइटम नहीं";
+"Refresh" = "रिफ़्रेश";
+"Pause" = "रोकें";
+"Resume" = "जारी रखें";
+
+// MARK: - Live Station Player
+"Now Covering" = "अभी कवर हो रहा है";
+"listening" = "सुन रहे हैं";
+
+// MARK: - Ad Companion
+"Sponsored" = "प्रायोजित";
+"Ad" = "विज्ञापन";
+
+// MARK: - Episode History
+"Generating..." = "बन रहा है...";
+"Failed" = "विफल";
+"Not generated" = "नहीं बना";
+
+// MARK: - Misc / Duration formats
+"min daily" = "मिनट दैनिक";
+"min" = "मिनट";
+"episodes" = "एपिसोड";
+"items found" = "आइटम मिले";
+"sources" = "स्रोत";
+"topic" = "विषय";
+"topics" = "विषय";
+"selected" = "चयनित";
+"hidden" = "छिपा हुआ";
+"added to For You" = "आपके लिए में जोड़ा गया";
+"removed from For You" = "आपके लिए से हटाया गया";
+"/year" = "/वर्ष";
+"/month" = "/माह";
+"/week" = "/सप्ताह";
+"/day" = "/दिन";

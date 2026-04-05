@@ -72,6 +72,7 @@ class HomeViewModel @Inject constructor(
     val bookmarkedTopicIds = preferencesManager.bookmarkedTopics
     val hiddenTopicIds = preferencesManager.hiddenTopics
     val hasLinkedGoogle = preferencesManager.hasLinkedGoogle
+    val radioLanguages = preferencesManager.radioLanguages
 
     // Visible topics (filter out hidden)
     val visibleTopics: Flow<List<Topic>> = combine(
@@ -308,9 +309,13 @@ class HomeViewModel @Inject constructor(
 
             // Fetch topics from server (will update cache automatically)
             // Topics are already loaded from cache in init, so this updates in background
-            topicRepository.getTopics()
+            val language = preferencesManager.preferredLanguage.first()
+            val bookmarked = preferencesManager.bookmarkedTopics.first()
+            Log.d(TAG, "Loading topics with lang=$language, bookmarked=$bookmarked")
+            topicRepository.getTopics(language)
                 .onSuccess { response ->
                     val serverTopics = response.data?.topics ?: emptyList()
+                    Log.d(TAG, "Server returned ${serverTopics.size} topics: ${serverTopics.map { it.id }}")
                     val currentTopicIds = _topics.value.map { it.id }.toSet()
                     val newTopicIds = serverTopics.map { it.id }.toSet()
 
@@ -542,4 +547,37 @@ class HomeViewModel @Inject constructor(
     fun playEpisode(episode: Episode) {
         audioManager.play(episode)
     }
+
+    // Topic suggestion
+    private val _suggestTopicResult = MutableStateFlow<SuggestTopicResult>(SuggestTopicResult.Idle)
+    val suggestTopicResult = _suggestTopicResult.asStateFlow()
+
+    fun suggestTopic(topicName: String, description: String?) {
+        viewModelScope.launch {
+            _suggestTopicResult.value = SuggestTopicResult.Loading
+            val language = preferencesManager.preferredLanguage.first()
+            topicRepository.suggestTopic(
+                com.kreativekoala.audexa.data.remote.SuggestTopicRequest(
+                    topicName = topicName,
+                    language = language,
+                    description = description?.takeIf { it.isNotBlank() }
+                )
+            ).onSuccess {
+                _suggestTopicResult.value = SuggestTopicResult.Success
+            }.onFailure { e ->
+                _suggestTopicResult.value = SuggestTopicResult.Error(e.message ?: "Failed to suggest topic")
+            }
+        }
+    }
+
+    fun resetSuggestTopicResult() {
+        _suggestTopicResult.value = SuggestTopicResult.Idle
+    }
+}
+
+sealed class SuggestTopicResult {
+    object Idle : SuggestTopicResult()
+    object Loading : SuggestTopicResult()
+    object Success : SuggestTopicResult()
+    data class Error(val message: String) : SuggestTopicResult()
 }

@@ -1,24 +1,32 @@
 package com.kreativekoala.audexa.ui.home
 
+import android.widget.Toast
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.outlined.Lightbulb
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.kreativekoala.audexa.R
 import com.kreativekoala.audexa.data.model.DiscoverCategory
+import com.kreativekoala.audexa.data.model.SupportedLanguage
 import com.kreativekoala.audexa.data.model.Topic
 import com.kreativekoala.audexa.ui.components.*
 import com.kreativekoala.audexa.ui.theme.*
@@ -29,6 +37,7 @@ fun HomeScreen(
     onNavigateToProfile: () -> Unit,
     onNavigateToLinkedAccounts: () -> Unit,
     onTopicClick: (Topic) -> Unit,
+    onNavigateToLiveRadio: (streamUrl: String, stationName: String) -> Unit = { _, _ -> },
     viewModel: HomeViewModel = hiltViewModel()
 ) {
     val selectedTab by viewModel.selectedTab.collectAsState()
@@ -41,9 +50,45 @@ fun HomeScreen(
     val bookmarkedIds by viewModel.bookmarkedTopicIds.collectAsState(initial = emptySet())
     val playingTopicId by viewModel.playingTopicId.collectAsState(initial = null)
     val discoverCategories by viewModel.discoverCategories.collectAsState()
+    val radioLanguages by viewModel.radioLanguages.collectAsState(initial = emptySet())
 
     // Search state for Discover tab
     var searchText by remember { mutableStateOf("") }
+
+    // Suggest topic state
+    var showSuggestTopicSheet by remember { mutableStateOf(false) }
+    val suggestTopicResult by viewModel.suggestTopicResult.collectAsState()
+    val context = LocalContext.current
+
+    // Handle suggest topic result
+    LaunchedEffect(suggestTopicResult) {
+        when (suggestTopicResult) {
+            is SuggestTopicResult.Success -> {
+                showSuggestTopicSheet = false
+                Toast.makeText(context, "Topic suggested! We'll add it soon.", Toast.LENGTH_LONG).show()
+                viewModel.resetSuggestTopicResult()
+            }
+            is SuggestTopicResult.Error -> {
+                Toast.makeText(context, (suggestTopicResult as SuggestTopicResult.Error).message, Toast.LENGTH_LONG).show()
+                viewModel.resetSuggestTopicResult()
+            }
+            else -> {}
+        }
+    }
+
+    // Suggest Topic Bottom Sheet
+    if (showSuggestTopicSheet) {
+        SuggestTopicBottomSheet(
+            isLoading = suggestTopicResult is SuggestTopicResult.Loading,
+            onDismiss = {
+                showSuggestTopicSheet = false
+                viewModel.resetSuggestTopicResult()
+            },
+            onSubmit = { topicName, description ->
+                viewModel.suggestTopic(topicName, description)
+            }
+        )
+    }
 
     Column(
         modifier = Modifier
@@ -72,7 +117,17 @@ fun HomeScreen(
                 onCancelTapped = { viewModel.cancelGeneration() }
             )
 
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // Audexa Radio live banners (multilingual)
+            RadioStationBanners(
+                radioLanguages = radioLanguages,
+                onStationClick = { streamUrl, stationName ->
+                    onNavigateToLiveRadio(streamUrl, stationName)
+                }
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
 
             // Tab Selector
             TabSelector(
@@ -106,7 +161,8 @@ fun HomeScreen(
                     playingTopicId = playingTopicId,
                     onTopicClick = onTopicClick,
                     onBookmarkToggle = { viewModel.toggleBookmark(it) },
-                    onHideTopic = { viewModel.hideTopic(it) }
+                    onHideTopic = { viewModel.hideTopic(it) },
+                    onSuggestTopic = { showSuggestTopicSheet = true }
                 )
             }
 
@@ -286,7 +342,8 @@ private fun DiscoverTabContent(
     playingTopicId: String?,
     onTopicClick: (Topic) -> Unit,
     onBookmarkToggle: (String) -> Unit,
-    onHideTopic: (String) -> Unit
+    onHideTopic: (String) -> Unit,
+    onSuggestTopic: () -> Unit = {}
 ) {
     // Filter categories and topics based on search
     val filteredCategories = remember(searchText, discoverCategories) {
@@ -395,6 +452,31 @@ private fun DiscoverTabContent(
                     }
                 }
             }
+
+            // Suggest a Topic button
+            OutlinedButton(
+                onClick = onSuggestTopic,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = Spacing.screenPadding.dp),
+                shape = RoundedCornerShape(12.dp),
+                colors = ButtonDefaults.outlinedButtonColors(
+                    contentColor = AccentOrange
+                ),
+                border = androidx.compose.foundation.BorderStroke(1.dp, AccentOrange.copy(alpha = 0.5f))
+            ) {
+                Icon(
+                    imageVector = Icons.Outlined.Lightbulb,
+                    contentDescription = null,
+                    modifier = Modifier.size(18.dp)
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = "Suggest a Topic",
+                    style = MaterialTheme.typography.bodyLarge,
+                    fontWeight = FontWeight.Medium
+                )
+            }
         }
     }
 }
@@ -501,5 +583,188 @@ private fun getGreeting(): String {
         in 0..11 -> stringResource(R.string.good_morning)
         in 12..16 -> stringResource(R.string.good_afternoon)
         else -> stringResource(R.string.good_evening)
+    }
+}
+
+@Composable
+private fun RadioStationBanners(
+    radioLanguages: Set<String>,
+    onStationClick: (streamUrl: String, stationName: String) -> Unit
+) {
+    val stations = remember(radioLanguages) {
+        val availableCodes = SupportedLanguage.radioAvailable.map { it.code }.toSet()
+        radioLanguages
+            .filter { it in availableCodes }
+            .map { SupportedLanguage.fromCode(it) }
+            .ifEmpty { listOf(SupportedLanguage.ENGLISH) }
+    }
+
+    if (stations.size == 1) {
+        // Single station — full-width banner
+        val lang = stations.first()
+        RadioBannerItem(
+            language = lang,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = Spacing.screenPadding.dp),
+            onClick = { onStationClick(lang.radioStreamURL, lang.radioStationName) }
+        )
+    } else {
+        // Multiple stations — horizontal scroll
+        LazyRow(
+            contentPadding = PaddingValues(horizontal = Spacing.screenPadding.dp),
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            items(stations, key = { it.code }) { lang ->
+                RadioBannerItem(
+                    language = lang,
+                    modifier = Modifier.width(260.dp),
+                    onClick = { onStationClick(lang.radioStreamURL, lang.radioStationName) }
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun RadioBannerItem(
+    language: SupportedLanguage,
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit
+) {
+    Surface(
+        modifier = modifier.clickable { onClick() },
+        shape = RoundedCornerShape(12.dp),
+        color = Color(0xFF1A0A0A)
+    ) {
+        Row(
+            modifier = Modifier.padding(horizontal = 16.dp, vertical = 14.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            Text(text = language.flagEmoji, fontSize = 28.sp)
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = language.radioStationName,
+                    style = MaterialTheme.typography.titleMedium,
+                    color = Color.White,
+                    fontWeight = FontWeight.Bold,
+                    maxLines = 1
+                )
+                Text(
+                    text = "AI-powered 24/7 news · LIVE",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = Color(0xFFEF4444)
+                )
+            }
+            Surface(
+                shape = RoundedCornerShape(4.dp),
+                color = Color(0xFFEF4444)
+            ) {
+                Text(
+                    text = "● LIVE",
+                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 3.dp),
+                    color = Color.White,
+                    style = MaterialTheme.typography.labelSmall,
+                    fontWeight = FontWeight.Bold
+                )
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun SuggestTopicBottomSheet(
+    isLoading: Boolean,
+    onDismiss: () -> Unit,
+    onSubmit: (topicName: String, description: String?) -> Unit
+) {
+    var topicName by remember { mutableStateOf("") }
+    var description by remember { mutableStateOf("") }
+
+    ModalBottomSheet(
+        onDismissRequest = onDismiss,
+        containerColor = MaterialTheme.colorScheme.surface,
+        shape = RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp)
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 24.dp)
+                .padding(bottom = 32.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            Text(
+                text = "Suggest a Topic",
+                style = MaterialTheme.typography.headlineSmall,
+                color = MaterialTheme.colorScheme.onSurface,
+                fontWeight = FontWeight.Bold
+            )
+
+            Text(
+                text = "Tell us what you'd like to listen to and we'll consider adding it.",
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+
+            OutlinedTextField(
+                value = topicName,
+                onValueChange = { topicName = it },
+                label = { Text("Topic name") },
+                placeholder = { Text("e.g. Quantum Computing") },
+                modifier = Modifier.fillMaxWidth(),
+                singleLine = true,
+                shape = RoundedCornerShape(12.dp),
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = AccentOrange,
+                    focusedLabelColor = AccentOrange,
+                    cursorColor = AccentOrange
+                )
+            )
+
+            OutlinedTextField(
+                value = description,
+                onValueChange = { description = it },
+                label = { Text("Description (optional)") },
+                placeholder = { Text("What should this topic cover?") },
+                modifier = Modifier.fillMaxWidth(),
+                minLines = 2,
+                maxLines = 4,
+                shape = RoundedCornerShape(12.dp),
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = AccentOrange,
+                    focusedLabelColor = AccentOrange,
+                    cursorColor = AccentOrange
+                )
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Button(
+                onClick = { onSubmit(topicName, description) },
+                modifier = Modifier.fillMaxWidth(),
+                enabled = topicName.isNotBlank() && !isLoading,
+                shape = RoundedCornerShape(12.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = AccentOrange
+                )
+            ) {
+                if (isLoading) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(20.dp),
+                        color = Color.White,
+                        strokeWidth = 2.dp
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                }
+                Text(
+                    text = if (isLoading) "Submitting..." else "Submit",
+                    style = MaterialTheme.typography.bodyLarge,
+                    fontWeight = FontWeight.SemiBold,
+                    modifier = Modifier.padding(vertical = 4.dp)
+                )
+            }
+        }
     }
 }

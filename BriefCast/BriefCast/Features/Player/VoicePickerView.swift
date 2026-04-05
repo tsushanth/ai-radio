@@ -17,6 +17,7 @@ struct VoicePickerView: View {
     @State private var selectedProvider: TTSProvider = .openai
     @State private var isLoading = false
     @State private var selectedTab: VoiceTab = .pairs
+    @State private var showPremiumVoicesPaywall = false
 
     enum VoiceTab: String, CaseIterable {
         case pairs = "Pairs"
@@ -59,6 +60,9 @@ struct VoicePickerView: View {
         .task {
             await loadVoices()
         }
+        .sheet(isPresented: $showPremiumVoicesPaywall) {
+            RemotePaywallView(triggerSource: "premium_voices")
+        }
     }
 
     // MARK: - Provider Selector
@@ -71,6 +75,11 @@ struct VoicePickerView: View {
                         provider: provider,
                         isSelected: selectedProvider == provider
                     ) {
+                        // Gate ElevenLabs (premium) voices behind subscription
+                        if provider == .elevenlabs && !SubscriptionManager.shared.isSubscribed {
+                            showPremiumVoicesPaywall = true
+                            return
+                        }
                         withAnimation(.easeInOut(duration: 0.2)) {
                             selectedProvider = provider
                         }

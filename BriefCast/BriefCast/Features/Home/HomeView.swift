@@ -18,6 +18,10 @@ struct HomeView: View {
     @State private var selectedLiveStation: LiveStation?
     @State private var toastMessage: String?
     @State private var showToast = false
+    @State private var showSuggestTopicConfirmation = false
+    @State private var selectedRadioLanguage: SupportedLanguage?
+    @State private var showBookmarkLimitPaywall = false
+    @StateObject private var preferencesService = PreferencesService.shared
 
     var body: some View {
         ZStack(alignment: .top) {
@@ -53,9 +57,13 @@ struct HomeView: View {
                         }
                     )
 
+                    // Audexa Radio banner(s)
+                    radioStationBanners
+                        .padding(.top, 16)
+
                     // Tab selector
                     TabSelector(selectedTab: $viewModel.selectedTab, tabs: ["For You", "Discover"])
-                        .padding(.top, 24)
+                        .padding(.top, 16)
                         .padding(.bottom, 16)
 
                     // Content based on selected tab
@@ -84,6 +92,9 @@ struct HomeView: View {
                             },
                             onBookmarkToggled: { topic, isNowBookmarked in
                                 showBookmarkToast(topic: topic, isBookmarked: isNowBookmarked)
+                            },
+                            onSuggestTopic: {
+                                viewModel.showSuggestTopicSheet = true
                             }
                         )
                     }
@@ -139,6 +150,28 @@ struct HomeView: View {
             LiveStationPlayerView(station: station)
                 .environment(AudioService.shared)
         }
+        .fullScreenCover(item: $selectedRadioLanguage) { lang in
+            LiveRadioView(streamURL: lang.radioStreamURL, stationName: lang.radioStationName)
+                .environment(AudioService.shared)
+                .environmentObject(authService)
+        }
+        .sheet(isPresented: $viewModel.showSuggestTopicSheet) {
+            SuggestTopicSheet(viewModel: viewModel) {
+                showSuggestTopicConfirmation = true
+            }
+        }
+        .alert("Topic Suggested!", isPresented: $showSuggestTopicConfirmation) {
+            Button("OK") {
+                viewModel.resetSuggestTopicState()
+            }
+        } message: {
+            Text("Thanks for your suggestion! We'll review it and add it soon.")
+        }
+        .onChange(of: viewModel.suggestTopicSuccess) { _, success in
+            if success {
+                showSuggestTopicConfirmation = true
+            }
+        }
         .overlay(alignment: .top) {
             if showToast, let message = toastMessage {
                 BookmarkToast(message: message)
@@ -147,6 +180,12 @@ struct HomeView: View {
             }
         }
         .animation(.spring(response: 0.3, dampingFraction: 0.8), value: showToast)
+        .onReceive(NotificationCenter.default.publisher(for: .showBookmarkLimitPaywall)) { _ in
+            showBookmarkLimitPaywall = true
+        }
+        .sheet(isPresented: $showBookmarkLimitPaywall) {
+            RemotePaywallView(triggerSource: "bookmark_limit")
+        }
     }
 
     // MARK: - Helpers
@@ -163,6 +202,73 @@ struct HomeView: View {
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
             showToast = false
         }
+    }
+
+    // MARK: - Radio Station Banners
+
+    private var radioStations: [SupportedLanguage] {
+        let preferred = preferencesService.preferredSupportedLanguage
+        return preferred == .en ? [.en] : [preferred, .en]
+    }
+
+    @ViewBuilder
+    private var radioStationBanners: some View {
+        let stations = radioStations
+        if stations.count == 1, let lang = stations.first {
+            radioStationBanner(language: lang)
+                .padding(.horizontal, Theme.Spacing.screenPadding)
+        } else {
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 12) {
+                    ForEach(stations) { lang in
+                        radioStationBanner(language: lang)
+                            .frame(width: 260)
+                    }
+                }
+                .padding(.horizontal, Theme.Spacing.screenPadding)
+            }
+        }
+    }
+
+    private func radioStationBanner(language: SupportedLanguage) -> some View {
+        Button {
+            selectedRadioLanguage = language
+        } label: {
+            HStack(spacing: 12) {
+                Text(language.flagEmoji)
+                    .font(.system(size: 28))
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(language.radioStationName)
+                        .font(.headline)
+                        .foregroundColor(.white)
+                        .lineLimit(1)
+                    Text("AI-powered 24/7 news")
+                        .font(.caption)
+                        .foregroundColor(.red)
+                    HStack(spacing: 4) {
+                        Image(systemName: "phone.fill")
+                            .font(.system(size: 9))
+                            .foregroundColor(.green.opacity(0.8))
+                        Text("Call in: (833) 398-1230")
+                            .font(.system(size: 10))
+                            .foregroundColor(.white.opacity(0.5))
+                    }
+                }
+                Spacer()
+                Text("● LIVE")
+                    .font(.caption2.bold())
+                    .foregroundColor(.white)
+                    .padding(.horizontal, 8)
+                    .padding(.vertical, 3)
+                    .background(Color.red)
+                    .cornerRadius(4)
+            }
+            .padding(.horizontal, 16)
+            .padding(.vertical, 14)
+            .background(Color(red: 0.1, green: 0.04, blue: 0.04))
+            .cornerRadius(12)
+        }
+        .buttonStyle(.plain)
     }
 
     private var greeting: String {
@@ -189,47 +295,9 @@ struct ForYouTabContent: View {
 
     var body: some View {
         VStack(spacing: 32) {
-            // Live Stations section (new feature)
-            if !viewModel.liveStations.isEmpty {
-                VStack(alignment: .leading, spacing: 16) {
-                    HStack {
-                        Text("Live Stations")
-                            .font(.system(size: 22, weight: .bold))
-                            .foregroundColor(Theme.Colors.primaryText)
-
-                        // Live indicator
-                        HStack(spacing: 4) {
-                            Circle()
-                                .fill(.red)
-                                .frame(width: 6, height: 6)
-
-                            Text("LIVE")
-                                .font(.caption2)
-                                .fontWeight(.bold)
-                                .foregroundColor(.red)
-                        }
-                        .padding(.horizontal, 6)
-                        .padding(.vertical, 3)
-                        .background(.red.opacity(0.1))
-                        .cornerRadius(8)
-                    }
-                    .padding(.horizontal, Theme.Spacing.screenPadding)
-
-                    ScrollView(.horizontal, showsIndicators: false) {
-                        HStack(spacing: 16) {
-                            ForEach(viewModel.liveStations.prefix(5)) { station in
-                                LiveStationCard(
-                                    station: station,
-                                    onTap: {
-                                        onLiveStationTapped?(station)
-                                    }
-                                )
-                            }
-                        }
-                        .padding(.horizontal, Theme.Spacing.screenPadding)
-                    }
-                }
-            }
+            // Live Stations — hidden until event-driven breaking news detection is built
+            // Will resurface when orchestrator detects developing stories and creates
+            // temporary live stations. The 24/7 radio banners above replace the static version.
 
             // Deep Dives history section
             if !viewModel.deepDiveHistory.isEmpty {
@@ -602,6 +670,7 @@ struct DiscoverTabContent: View {
     @Binding var searchText: String
     let onTopicTapped: (Topic) -> Void
     var onBookmarkToggled: ((Topic, Bool) -> Void)? = nil
+    var onSuggestTopic: (() -> Void)? = nil
 
     // Observe AudioService for now playing indicator
     private let audioService = AudioService.shared
@@ -714,6 +783,26 @@ struct DiscoverTabContent: View {
                             .padding(.horizontal, Theme.Spacing.screenPadding)
                         }
                     }
+                }
+
+                // Suggest a Topic button
+                if let onSuggestTopic = onSuggestTopic {
+                    Button(action: onSuggestTopic) {
+                        HStack(spacing: 8) {
+                            Image(systemName: "lightbulb")
+                                .font(.system(size: 16, weight: .medium))
+                            Text("Suggest a Topic")
+                                .font(.system(size: 16, weight: .medium))
+                        }
+                        .foregroundColor(Theme.Colors.accent)
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 14)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 12)
+                                .stroke(Theme.Colors.accent.opacity(0.5), lineWidth: 1)
+                        )
+                    }
+                    .padding(.horizontal, Theme.Spacing.screenPadding)
                 }
             }
         }
@@ -859,6 +948,93 @@ struct BookmarkToast: View {
                 .shadow(color: .black.opacity(0.3), radius: 10, x: 0, y: 5)
         )
         .padding(.top, 60) // Below status bar / notch
+    }
+}
+
+// MARK: - Suggest Topic Sheet
+
+struct SuggestTopicSheet: View {
+    @Bindable var viewModel: HomeViewModel
+    let onSuccess: () -> Void
+
+    @State private var topicName = ""
+    @State private var description = ""
+    @Environment(\.dismiss) private var dismiss
+
+    var body: some View {
+        NavigationStack {
+            VStack(alignment: .leading, spacing: 20) {
+                Text("Tell us what you'd like to listen to and we'll consider adding it.")
+                    .font(.system(size: 15))
+                    .foregroundColor(Theme.Colors.secondaryText)
+
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("Topic name")
+                        .font(.system(size: 14, weight: .medium))
+                        .foregroundColor(Theme.Colors.secondaryText)
+
+                    TextField("e.g. Quantum Computing", text: $topicName)
+                        .textFieldStyle(.roundedBorder)
+                        .font(.system(size: 16))
+                }
+
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("Description (optional)")
+                        .font(.system(size: 14, weight: .medium))
+                        .foregroundColor(Theme.Colors.secondaryText)
+
+                    TextField("What should this topic cover?", text: $description, axis: .vertical)
+                        .textFieldStyle(.roundedBorder)
+                        .font(.system(size: 16))
+                        .lineLimit(2...4)
+                }
+
+                if let error = viewModel.suggestTopicError {
+                    Text(error)
+                        .font(.system(size: 14))
+                        .foregroundColor(.red)
+                }
+
+                Button(action: {
+                    Task {
+                        await viewModel.suggestTopic(
+                            topicName: topicName,
+                            description: description.isEmpty ? nil : description
+                        )
+                    }
+                }) {
+                    HStack {
+                        if viewModel.suggestTopicLoading {
+                            ProgressView()
+                                .progressViewStyle(CircularProgressViewStyle(tint: .white))
+                                .scaleEffect(0.8)
+                        }
+                        Text(viewModel.suggestTopicLoading ? "Submitting..." : "Submit")
+                            .font(.system(size: 16, weight: .semibold))
+                    }
+                    .foregroundColor(.white)
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 14)
+                    .background(topicName.isEmpty ? Theme.Colors.accent.opacity(0.4) : Theme.Colors.accent)
+                    .cornerRadius(12)
+                }
+                .disabled(topicName.isEmpty || viewModel.suggestTopicLoading)
+
+                Spacer()
+            }
+            .padding(24)
+            .background(Theme.Colors.background)
+            .navigationTitle("Suggest a Topic")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Cancel") {
+                        dismiss()
+                    }
+                    .foregroundColor(Theme.Colors.accent)
+                }
+            }
+        }
     }
 }
 

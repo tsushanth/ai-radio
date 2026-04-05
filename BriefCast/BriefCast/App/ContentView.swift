@@ -14,6 +14,8 @@ struct ContentView: View {
     @State private var showOnboarding: Bool = false
     @State private var showFullPlayer: Bool = false
     @State private var showDeepDiveInput: Bool = false
+    @State private var showDeepDivePaywall: Bool = false
+    @State private var showDeepDiveAdChoice: Bool = false
     @State private var deepDiveToShow: DeepDiveEpisode?
 
     // HomeViewModel is owned here so it survives tab navigation
@@ -27,9 +29,13 @@ struct ContentView: View {
         UserDefaults.standard.bool(forKey: "hasCompletedOnboarding")
     }
 
+    private var isFastlaneSnapshot: Bool {
+        ProcessInfo.processInfo.arguments.contains("-FASTLANE_SNAPSHOT")
+    }
+
     var body: some View {
         Group {
-            if authService.isAuthenticated {
+            if isFastlaneSnapshot || authService.isAuthenticated {
                 mainAppView
             } else {
                 AuthView()
@@ -51,8 +57,11 @@ struct ContentView: View {
         .fullScreenCover(isPresented: $showOnboarding, onDismiss: {
             // Ensure user lands on Home screen after completing onboarding
             selectedTab = .home
+            // Reload topics with the language selected during onboarding
+            Task { await homeViewModel.loadTopics() }
         }) {
             OnboardingView()
+                .interactiveDismissDisabled()
                 .onOpenURL { url in
                     // Handle Google OAuth callback even when fullScreenCover is presented
                     print("📱 Received URL in OnboardingView: \(url)")
@@ -113,7 +122,11 @@ struct ContentView: View {
                 HStack {
                     Spacer()
                     DeepDiveFAB {
-                        showDeepDiveInput = true
+                        if SubscriptionManager.shared.isSubscribed {
+                            showDeepDiveInput = true
+                        } else {
+                            showDeepDiveAdChoice = true
+                        }
                     }
                     .padding(.trailing, 20)
                     .padding(.bottom, audioService.currentEpisode != nil ? 180 : 100) // Adjust for mini player
@@ -143,6 +156,26 @@ struct ContentView: View {
                     deepDiveToShow = nil
                 }
             )
+        }
+        .fullScreenCover(isPresented: $showDeepDivePaywall) {
+            RemotePaywallView(triggerSource: "deep_dive")
+        }
+        .sheet(isPresented: $showDeepDiveAdChoice) {
+            DeepDiveAdChoiceSheet(
+                onWatchAd: {
+                    showDeepDiveAdChoice = false
+                    AdManager.shared.showRewarded { earned in
+                        if earned {
+                            showDeepDiveInput = true
+                        }
+                    }
+                },
+                onSubscribe: {
+                    showDeepDiveAdChoice = false
+                    showDeepDivePaywall = true
+                }
+            )
+            .presentationDetents([.height(320)])
         }
     }
 }

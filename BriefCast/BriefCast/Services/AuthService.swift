@@ -37,11 +37,8 @@ class AuthService: ObservableObject {
         // Save auth token
         await saveAuthToken(session.accessToken)
 
-        // Identify user with RevenueCat for cross-platform subscription tracking
+        // Link user to Apple Search Ads attribution for bid optimization
         if let email = currentUser?.email, !email.isEmpty {
-            await SubscriptionManager.shared.identifyUser(email)
-            
-            // Link user to Apple Search Ads attribution for bid optimization
             await SearchAdsAttributionService.shared.linkUserToAttribution(userId: email)
         }
     }
@@ -61,11 +58,8 @@ class AuthService: ObservableObject {
         // Save auth token
         await saveAuthToken(session.accessToken)
 
-        // Identify user with RevenueCat for cross-platform subscription tracking
+        // Link user to Apple Search Ads attribution for bid optimization
         if let email = currentUser?.email, !email.isEmpty {
-            await SubscriptionManager.shared.identifyUser(email)
-            
-            // Link user to Apple Search Ads attribution for bid optimization
             await SearchAdsAttributionService.shared.linkUserToAttribution(userId: email)
         }
 
@@ -80,9 +74,6 @@ class AuthService: ObservableObject {
 
         // Sign out from Google if needed
         googleSignInHelper.signOut()
-
-        // Log out from RevenueCat
-        await SubscriptionManager.shared.logOutRevenueCat()
 
         // Clear local state
         isAuthenticated = false
@@ -184,10 +175,8 @@ class AuthService: ObservableObject {
             isAuthenticated = true
             await saveAuthToken(session.accessToken)
 
-            // Re-identify user with RevenueCat on session restore
-            if let email = currentUser?.email, !email.isEmpty {
-                await SubscriptionManager.shared.identifyUser(email)
-            }
+            // Refresh subscription state on session restore
+            await SubscriptionManager.shared.checkCurrentEntitlements()
         } catch {
             print("Failed to restore session: \(error)")
             // Clear invalid session

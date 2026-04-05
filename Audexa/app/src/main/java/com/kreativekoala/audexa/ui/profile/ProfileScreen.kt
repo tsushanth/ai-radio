@@ -22,8 +22,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.compose.ui.graphics.Color
 import com.kreativekoala.audexa.R
 import com.kreativekoala.audexa.ui.theme.*
+import com.kreativekoala.paywallkit.models.PaywallFeature
+import com.kreativekoala.paywallkit.models.PaywallTheme
+import com.kreativekoala.paywallkit.view.PaywallPreview
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -36,6 +40,7 @@ fun ProfileScreen(
     onNavigateToVoiceSettings: () -> Unit = {},
     onNavigateToNotificationSettings: () -> Unit = {},
     onNavigateToSubscription: () -> Unit = {},
+    onNavigateToRadioLanguages: () -> Unit = {},
     onSignOut: () -> Unit,
     viewModel: ProfileViewModel = hiltViewModel()
 ) {
@@ -43,11 +48,30 @@ fun ProfileScreen(
     val context = LocalContext.current
     var showSignOutDialog by remember { mutableStateOf(false) }
     var showDeleteDialog by remember { mutableStateOf(false) }
+    var tapCount by remember { mutableIntStateOf(0) }
+    var showPaywallPreview by remember { mutableStateOf(false) }
 
     LaunchedEffect(uiState.isSignedOut) {
         if (uiState.isSignedOut) {
             onSignOut()
         }
+    }
+
+    if (showPaywallPreview) {
+        PaywallPreview(
+            appId = "audexa",
+            appName = "Audexa",
+            features = listOf(
+                PaywallFeature("\uD83C\uDFB5", "Unlimited Streaming"),
+                PaywallFeature("\uD83D\uDEAB", "No Ads"),
+                PaywallFeature("\uD83D\uDCE5", "Offline Mode"),
+                PaywallFeature("\uD83C\uDFA7", "HD Audio"),
+                PaywallFeature("\uD83D\uDCFB", "All Stations")
+            ),
+            theme = PaywallTheme(accent = Color(0xFFFF6D00), accent2 = Color(0xFFFF9100)),
+            onDone = { showPaywallPreview = false }
+        )
+        return
     }
 
     Scaffold(
@@ -132,6 +156,13 @@ fun ProfileScreen(
                 )
                 HorizontalDivider(color = MaterialTheme.colorScheme.surfaceVariant)
                 SettingsRow(
+                    icon = Icons.Default.Radio,
+                    title = "Radio Languages",
+                    subtitle = uiState.radioLanguagesSummary,
+                    onClick = onNavigateToRadioLanguages
+                )
+                HorizontalDivider(color = MaterialTheme.colorScheme.surfaceVariant)
+                SettingsRow(
                     icon = Icons.Default.RecordVoiceOver,
                     title = stringResource(R.string.voice_settings),
                     subtitle = stringResource(R.string.choose_podcast_voices),
@@ -162,8 +193,18 @@ fun ProfileScreen(
                     title = stringResource(R.string.version),
                     subtitle = "1.0.0",
                     showChevron = false,
-                    onClick = { }
+                    onClick = { tapCount++ }
                 )
+                if (tapCount >= 5) {
+                    Button(
+                        onClick = { showPaywallPreview = true },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp, vertical = 8.dp)
+                    ) {
+                        Text("Preview Paywalls")
+                    }
+                }
                 HorizontalDivider(color = MaterialTheme.colorScheme.surfaceVariant)
                 SettingsRow(
                     icon = Icons.Default.Description,

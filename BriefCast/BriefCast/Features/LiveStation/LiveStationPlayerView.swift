@@ -10,6 +10,7 @@ import SwiftUI
 struct LiveStationPlayerView: View {
     @Environment(\.dismiss) private var dismiss
     @StateObject private var viewModel: LiveStationPlayerViewModel
+    @StateObject private var reactionViewModel = LiveReactionViewModel()
     @Environment(AudioService.self) private var audioService
 
     init(station: LiveStation) {
@@ -18,6 +19,10 @@ struct LiveStationPlayerView: View {
 
     var body: some View {
         ZStack {
+            // Reaction overlay — full-screen, sits above all content
+            LiveReactionOverlay(viewModel: reactionViewModel)
+                .zIndex(10)
+
             // Background gradient
             LinearGradient(
                 colors: [
@@ -205,6 +210,10 @@ struct LiveStationPlayerView: View {
         }
         .task {
             await viewModel.tuneIn()
+            await reactionViewModel.connect()
+        }
+        .onDisappear {
+            Task { await reactionViewModel.disconnect() }
         }
         .onChange(of: audioService.isPlaying) { _, isPlaying in
             viewModel.updatePlayingState(isPlaying)
@@ -287,16 +296,22 @@ class LiveStationPlayerViewModel: ObservableObject {
     }
 
     func play() {
-        guard let episode = currentEpisode,
-              let audioUrl = episode.audioUrl else { return }
+        // Prefer: station's stream URL → user's Icecast radio stream → episode audio
+        let audioUrl: String
+        if let streamUrl = station.streamUrl, !streamUrl.isEmpty {
+            audioUrl = streamUrl
+        } else {
+            // Fall back to user's preferred language Icecast stream
+            audioUrl = PreferencesService.shared.preferredSupportedLanguage.radioStreamURL
+        }
 
         let playableEpisode = Episode(
-            id: episode.id,
+            id: currentEpisode?.id ?? station.id,
             userId: "",
-            title: episode.title,
-            description: episode.description,
+            title: currentEpisode?.title ?? station.name,
+            description: currentEpisode?.description ?? station.description,
             audioUrl: audioUrl,
-            durationSeconds: episode.durationSeconds,
+            durationSeconds: station.streamUrl != nil ? nil : currentEpisode?.durationSeconds,
             status: .completed,
             errorMessage: nil,
             generatedAt: Date(),

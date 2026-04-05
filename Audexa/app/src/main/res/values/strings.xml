@@ -224,6 +224,12 @@
     <string name="skip_ad">Skip ad</string>
     <string name="ad_content_description">Ad</string>
 
+    <!-- Radio Call-In -->
+    <string name="call_in_phone_number">+1 (833) 398-1230</string>
+    <string name="call_in_phone_uri">tel:+18333981230</string>
+    <string name="call_to_request">Call to request a topic</string>
+    <string name="call_in_label">Call in: (833) 398-1230</string>
+
     <!-- Splash Screen -->
     <string name="splash_tagline">Your AI-powered audio briefing</string>
 

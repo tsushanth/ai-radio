@@ -43,7 +43,7 @@ interface ApiService {
     
     // Topic endpoints
     @GET("topics")
-    suspend fun getTopics(): TopicsResponse
+    suspend fun getTopics(@Query("lang") language: String = "en"): TopicsResponse
     
     @GET("topics/{topicId}")
     suspend fun getTopic(@Path("topicId") topicId: String): TopicResponse
@@ -110,6 +110,10 @@ interface ApiService {
 
     @POST("ads/click")
     suspend fun trackAdClick(@Body request: AdClickRequest): AdTrackingResponse
+
+    // Topic suggestion
+    @POST("topics/suggest")
+    suspend fun suggestTopic(@Body request: SuggestTopicRequest): SuggestTopicResponse
 }
 
 // Request/Response models
@@ -353,6 +357,20 @@ data class AdClickRequest(
 
 @Serializable
 data class AdTrackingResponse(
+    val success: Boolean,
+    val message: String? = null
+)
+
+// Topic suggestion models
+@Serializable
+data class SuggestTopicRequest(
+    val topicName: String,
+    val language: String,
+    val description: String? = null
+)
+
+@Serializable
+data class SuggestTopicResponse(
     val success: Boolean,
     val message: String? = null
 )

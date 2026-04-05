@@ -13,7 +13,9 @@ import com.kreativekoala.audexa.ui.auth.AuthScreen
 import com.kreativekoala.audexa.ui.home.HomeScreen
 import com.kreativekoala.audexa.ui.home.HomeViewModel
 import com.kreativekoala.audexa.billing.BillingManager
+import com.kreativekoala.audexa.ui.radio.LiveRadioScreen
 import com.kreativekoala.audexa.ui.profile.ProfileScreen
+import com.kreativekoala.audexa.ui.profile.RadioLanguagesScreen
 import com.kreativekoala.audexa.ui.profile.ThemeSettingsScreen
 import com.kreativekoala.audexa.ui.onboarding.OnboardingScreen
 import com.kreativekoala.audexa.ui.subscription.PaywallScreen
@@ -23,6 +25,7 @@ sealed class Screen(val route: String) {
     data object Auth : Screen("auth")
     data object Home : Screen("home")
     data object Profile : Screen("profile")
+    data object RadioLanguages : Screen("radio_languages")
     data object TopicDetail : Screen("topic/{topicJson}") {
         fun createRoute(topic: Topic): String {
             val json = Json.encodeToString(Topic.serializer(), topic)
@@ -37,6 +40,13 @@ sealed class Screen(val route: String) {
     data object VoiceSettings : Screen("voice_settings")
     data object NotificationSettings : Screen("notification_settings")
     data object Subscription : Screen("subscription")
+    data object LiveRadio : Screen("live_radio/{streamUrl}/{stationName}") {
+        fun createRoute(streamUrl: String, stationName: String): String {
+            val encodedUrl = java.net.URLEncoder.encode(streamUrl, "UTF-8")
+            val encodedName = java.net.URLEncoder.encode(stationName, "UTF-8")
+            return "live_radio/$encodedUrl/$encodedName"
+        }
+    }
 }
 
 @Composable
@@ -87,7 +97,24 @@ fun AudexaNavGraph(
                 onTopicClick = { topic ->
                     onShowTopicDetail(topic)
                 },
+                onNavigateToLiveRadio = { streamUrl, stationName ->
+                    navController.navigate(Screen.LiveRadio.createRoute(streamUrl, stationName))
+                },
                 viewModel = homeViewModel  // Pass the shared ViewModel
+            )
+        }
+
+        composable(
+            route = Screen.LiveRadio.route,
+            arguments = listOf(
+                navArgument("streamUrl") { type = NavType.StringType },
+                navArgument("stationName") { type = NavType.StringType }
+            )
+        ) {
+            LiveRadioScreen(
+                onDismiss = {
+                    navController.popBackStack()
+                }
             )
         }
 
@@ -117,10 +144,21 @@ fun AudexaNavGraph(
                 onNavigateToSubscription = {
                     navController.navigate(Screen.Subscription.route)
                 },
+                onNavigateToRadioLanguages = {
+                    navController.navigate(Screen.RadioLanguages.route)
+                },
                 onSignOut = {
                     navController.navigate(Screen.Auth.route) {
                         popUpTo(0) { inclusive = true }
                     }
+                }
+            )
+        }
+
+        composable(Screen.RadioLanguages.route) {
+            RadioLanguagesScreen(
+                onNavigateBack = {
+                    navController.popBackStack()
                 }
             )
         }

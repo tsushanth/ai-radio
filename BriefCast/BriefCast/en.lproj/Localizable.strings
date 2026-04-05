@@ -1,0 +1,356 @@
+/* Localizable.strings (English - Base)
+   BriefCast / Audexa
+   Comprehensive localization for the Audexa iOS app */
+
+// MARK: - Auth View
+"Your personal AI radio" = "Your personal AI radio";
+"Sign in with Google" = "Sign in with Google";
+"Continue without sign in" = "Continue without sign in";
+"You can link your email later to enable personalized Daily Brief" = "You can link your email later to enable personalized Daily Brief";
+"By continuing, you agree to our" = "By continuing, you agree to our";
+"Terms of Service" = "Terms of Service";
+"and" = "and";
+"Privacy Policy" = "Privacy Policy";
+
+// MARK: - Home View
+"For You" = "For You";
+"Discover" = "Discover";
+"Good Morning" = "Good Morning";
+"Good Afternoon" = "Good Afternoon";
+"Good Evening" = "Good Evening";
+"Live Stations" = "Live Stations";
+"LIVE" = "LIVE";
+"Your Deep Dives" = "Your Deep Dives";
+"Keep listening" = "Keep listening";
+"Your Topics" = "Your Topics";
+"Topic Podcasts" = "Topic Podcasts";
+"Tap to explore and play" = "Tap to explore and play";
+"Recommended for you" = "Recommended for you";
+"More for you" = "More for you";
+"Playing" = "Playing";
+"Hide" = "Hide";
+"All Topics" = "All Topics";
+"Matching Topics" = "Matching Topics";
+"Popular Shows" = "Popular Shows";
+
+// MARK: - Search
+"Find new shows" = "Find new shows";
+"No results for \"%@\"" = "No results for \"%@\"";
+
+// MARK: - Profile View
+"Profile" = "Profile";
+"User" = "User";
+"Premium" = "Premium";
+"Ad-Free" = "Ad-Free";
+"Go Ad-Free" = "Go Ad-Free";
+"Active subscription" = "Active subscription";
+"Remove all ads" = "Remove all ads";
+"Linked Accounts" = "Linked Accounts";
+"Add Account" = "Add Account";
+"Daily Brief Sources" = "Daily Brief Sources";
+"Email" = "Email";
+"Include email summaries in Daily Brief" = "Include email summaries in Daily Brief";
+"Calendar" = "Calendar";
+"Include upcoming events in Daily Brief" = "Include upcoming events in Daily Brief";
+"Preferences" = "Preferences";
+"App Theme" = "App Theme";
+"Podcast Language" = "Podcast Language";
+"Hidden Topics" = "Hidden Topics";
+"About" = "About";
+"Version" = "Version";
+"Share Audexa" = "Share Audexa";
+"Tell your friends" = "Tell your friends";
+"Sign Out" = "Sign Out";
+"Delete Account" = "Delete Account";
+"Are you sure you want to sign out?" = "Are you sure you want to sign out?";
+"Are you sure you want to delete your account? This will permanently delete all your data including podcasts, preferences, and linked accounts. This action cannot be undone." = "Are you sure you want to delete your account? This will permanently delete all your data including podcasts, preferences, and linked accounts. This action cannot be undone.";
+"Error" = "Error";
+"OK" = "OK";
+"Failed to delete account. Please try again." = "Failed to delete account. Please try again.";
+"Deleting account..." = "Deleting account...";
+"Cancel" = "Cancel";
+"Delete" = "Delete";
+"Connected" = "Connected";
+"Disconnected" = "Disconnected";
+"Match device settings" = "Match device settings";
+"Always dark mode" = "Always dark mode";
+"Always light mode" = "Always light mode";
+"Check out Audexa - Your personalized AI-powered daily briefing podcast!" = "Check out Audexa - Your personalized AI-powered daily briefing podcast!";
+
+// MARK: - Hidden Topics View
+"No Hidden Topics" = "No Hidden Topics";
+"Topics you hide will appear here" = "Topics you hide will appear here";
+"Unhide" = "Unhide";
+"Done" = "Done";
+
+// MARK: - Player View
+"Voice" = "Voice";
+"Cancel Timer" = "Cancel Timer";
+"5 min" = "5 min";
+"10 min" = "10 min";
+"15 min" = "15 min";
+"30 min" = "30 min";
+"60 min" = "60 min";
+"Skip" = "Skip";
+"Tell Me More" = "Tell Me More";
+"Tap to ask a question" = "Tap to ask a question";
+"Live Transcript" = "Live Transcript";
+"More Details" = "More Details";
+"Listen to Expansion" = "Listen to Expansion";
+"Sources" = "Sources";
+"Expanded Content" = "Expanded Content";
+"Tell Me More" = "Tell Me More";
+
+// MARK: - Voice Picker View
+"Voice Settings" = "Voice Settings";
+"Pairs" = "Pairs";
+"Individual" = "Individual";
+"Voice Selection" = "Voice Selection";
+"Host 1 Voice" = "Host 1 Voice";
+"Host 2 Voice" = "Host 2 Voice";
+"No voices available" = "No voices available";
+"Loading voices..." = "Loading voices...";
+"No voice pairs available for %@" = "No voice pairs available for %@";
+"Host 1" = "Host 1";
+"Host 2" = "Host 2";
+
+// MARK: - Onboarding
+"Welcome to Audexa" = "Welcome to Audexa";
+"Your personalized AI radio. Get caught up on your emails, calendar, and favorite topics in just a few minutes." = "Your personalized AI radio. Get caught up on your emails, calendar, and favorite topics in just a few minutes.";
+"Get Started" = "Get Started";
+"Connect Your Account" = "Connect Your Account";
+"Link your Google account to get personalized briefings from your email and calendar." = "Link your Google account to get personalized briefings from your email and calendar.";
+"Connect Google" = "Connect Google";
+"Sign in with Google" = "Sign in with Google";
+"Include email summaries in briefings" = "Include email summaries in briefings";
+"(Optional)" = "(Optional)";
+"Include upcoming events in briefings" = "Include upcoming events in briefings";
+"Connect" = "Connect";
+"Continue" = "Continue";
+"Skip for now" = "Skip for now";
+"Connection Error" = "Connection Error";
+"Failed to connect account" = "Failed to connect account";
+"Choose Your Interests" = "Choose Your Interests";
+"Select topics to personalize your Daily Brief." = "Select topics to personalize your Daily Brief.";
+"Daily Brief Options" = "Daily Brief Options";
+"Include Topic Updates" = "Include Topic Updates";
+"Add headlines from your topics to Daily Brief" = "Add headlines from your topics to Daily Brief";
+"Daily Reminder" = "Daily Reminder";
+"Notifications blocked. Tap Settings to enable." = "Notifications blocked. Tap Settings to enable.";
+"Get notified when your brief is ready" = "Get notified when your brief is ready";
+"Settings" = "Settings";
+"Reminder Time" = "Reminder Time";
+"Select at least one topic" = "Select at least one topic";
+"Complete Setup" = "Complete Setup";
+"Access not granted" = "Access not granted";
+"Without access, we can only create general topic briefings. To get personalized briefings, please try again and grant the requested permissions." = "Without access, we can only create general topic briefings. To get personalized briefings, please try again and grant the requested permissions.";
+"Try Again" = "Try Again";
+"\"Unverified App\" Warning" = "\"Unverified App\" Warning";
+"Google may show an \"unverified app\" screen because our calendar access is pending verification. This is safe to proceed." = "Google may show an \"unverified app\" screen because our calendar access is pending verification. This is safe to proceed.";
+"To connect:" = "To connect:";
+"Tap \"Advanced\" on the warning screen" = "Tap \"Advanced\" on the warning screen";
+"Tap \"Go to Audexa (unsafe)\"" = "Tap \"Go to Audexa (unsafe)\"";
+"Grant calendar access" = "Grant calendar access";
+
+// MARK: - Create View
+"Create" = "Create";
+"Create Daily Brief" = "Create Daily Brief";
+"Generate your personalized podcast from today's emails and calendar events" = "Generate your personalized podcast from today's emails and calendar events";
+"Generate Now" = "Generate Now";
+
+// MARK: - Paywall View
+"Enjoy uninterrupted listening" = "Enjoy uninterrupted listening";
+"No audio ad interruptions" = "No audio ad interruptions";
+"Seamless episode playback" = "Seamless episode playback";
+"Support indie development" = "Support indie development";
+"You're an Ad-Free subscriber!" = "You're an Ad-Free subscriber!";
+"Yearly" = "Yearly";
+"Save 58%" = "Save 58%";
+"Monthly" = "Monthly";
+"Subscribe" = "Subscribe";
+"Restore Purchases" = "Restore Purchases";
+"Payment will be charged to your Apple ID account. Subscription automatically renews unless cancelled at least 24 hours before the end of the current period." = "Payment will be charged to your Apple ID account. Subscription automatically renews unless cancelled at least 24 hours before the end of the current period.";
+
+// MARK: - Linked Accounts View
+"Connect your accounts to personalize your daily briefings with relevant information from your emails." = "Connect your accounts to personalize your daily briefings with relevant information from your emails.";
+"Connected Accounts" = "Connected Accounts";
+"Available Accounts" = "Available Accounts";
+"Add Another Account" = "Add Another Account";
+"Not connected" = "Not connected";
+"We'll access:" = "We'll access:";
+"Read your Gmail messages" = "Read your Gmail messages";
+"Basic profile information" = "Basic profile information";
+"Read your calendar events" = "Read your calendar events";
+"Your data is secure" = "Your data is secure";
+"We only access the information you explicitly allow and use it solely to create your personalized briefings. You can revoke access at any time." = "We only access the information you explicitly allow and use it solely to create your personalized briefings. You can revoke access at any time.";
+"Access Permissions" = "Access Permissions";
+"Email Access" = "Email Access";
+"Read emails to include in briefings" = "Read emails to include in briefings";
+"Disconnect Account" = "Disconnect Account";
+"Disconnect" = "Disconnect";
+"Connected Calendar" = "Connected Calendar";
+"Google Calendar" = "Google Calendar";
+"Disconnect Calendar" = "Disconnect Calendar";
+"Are you sure you want to disconnect your Google Calendar? Your Daily Brief will no longer include upcoming events." = "Are you sure you want to disconnect your Google Calendar? Your Daily Brief will no longer include upcoming events.";
+
+// MARK: - Topic Detail View
+"Generate Episode" = "Generate Episode";
+"Generate New Episode" = "Generate New Episode";
+"Creates a fresh episode with the latest content" = "Creates a fresh episode with the latest content";
+"Loading episode..." = "Loading episode...";
+"Generating your podcast..." = "Generating your podcast...";
+"This may take a minute" = "This may take a minute";
+"Previous Episodes" = "Previous Episodes";
+"No previous episodes available" = "No previous episodes available";
+"Hide Topic" = "Hide Topic";
+"Select Language" = "Select Language";
+
+// MARK: - Deep Dive
+"Deep Dive" = "Deep Dive";
+"What do you want to learn about?" = "What do you want to learn about?";
+"Enter any topic and we'll create a research podcast for you" = "Enter any topic and we'll create a research podcast for you";
+"Try asking about..." = "Try asking about...";
+"Generate Deep Dive" = "Generate Deep Dive";
+"This may take a few minutes" = "This may take a few minutes";
+"Generation Failed" = "Generation Failed";
+"Regenerate" = "Regenerate";
+"Generate a fresh take on this topic" = "Generate a fresh take on this topic";
+"Regenerating..." = "Regenerating...";
+
+// MARK: - Q&A View
+"Ask a Question" = "Ask a Question";
+"Close" = "Close";
+"Ask a question" = "Ask a question";
+"Get more context about what you just heard" = "Get more context about what you just heard";
+"Ask a question..." = "Ask a question...";
+"Follow-up questions" = "Follow-up questions";
+"Play answer" = "Play answer";
+"Q&A Answer" = "Q&A Answer";
+
+// MARK: - Queue View
+"Your Queue" = "Your Queue";
+"Clear Queue" = "Clear Queue";
+"Clear All" = "Clear All";
+"This will remove all topics from your queue." = "This will remove all topics from your queue.";
+"Your queue is empty" = "Your queue is empty";
+"Add topics from the home screen" = "Add topics from the home screen";
+"Play All" = "Play All";
+
+// MARK: - Gradient Header / Daily Brief States
+"Connect your email" = "Connect your email";
+"to generate your personalized brief" = "to generate your personalized brief";
+"Generate Today's Brief" = "Generate Today's Brief";
+"Generating your brief..." = "Generating your brief...";
+"Fetching your emails and calendar..." = "Fetching your emails and calendar...";
+"Analyzing content..." = "Analyzing content...";
+"Creating your personalized script..." = "Creating your personalized script...";
+"Generating audio..." = "Generating audio...";
+"Almost done..." = "Almost done...";
+"Now Playing" = "Now Playing";
+"Generation failed" = "Generation failed";
+"Retry" = "Retry";
+"Reconnect your email" = "Reconnect your email";
+"Reconnect" = "Reconnect";
+"No new emails" = "No new emails";
+"Try Again Later" = "Try Again Later";
+
+// MARK: - Splash Screen
+"Your AI-powered audio briefing" = "Your AI-powered audio briefing";
+
+// MARK: - Tab Router
+"Home" = "Home";
+
+// MARK: - Notification Settings
+"Notifications" = "Notifications";
+"Enabled" = "Enabled";
+"Open Settings" = "Open Settings";
+"Enable" = "Enable";
+"Not Available" = "Not Available";
+"Permission" = "Permission";
+"Allow notifications to receive your daily brief when it's ready." = "Allow notifications to receive your daily brief when it's ready.";
+"Daily Brief Notifications" = "Daily Brief Notifications";
+"Briefing Time" = "Briefing Time";
+"Timezone" = "Timezone";
+"Daily Brief Schedule" = "Daily Brief Schedule";
+"Daily Brief Content" = "Daily Brief Content";
+"When enabled, your Daily Brief will include headlines and updates from your selected topics of interest." = "When enabled, your Daily Brief will include headlines and updates from your selected topics of interest.";
+"Notification Preview" = "Notification Preview";
+"Your Daily Brief is Ready" = "Your Daily Brief is Ready";
+"Your personalized briefing is ready to play." = "Your personalized briefing is ready to play.";
+"Generate Now" = "Generate Now";
+"Manual" = "Manual";
+"Generate your daily brief immediately instead of waiting for the scheduled time." = "Generate your daily brief immediately instead of waiting for the scheduled time.";
+"Enable to have your daily brief automatically generated each morning." = "Enable to have your daily brief automatically generated each morning.";
+
+// MARK: - Location & Weather Settings
+"Location & Weather" = "Location & Weather";
+"Use Current Location" = "Use Current Location";
+"Weather Location" = "Weather Location";
+"Home Address" = "Home Address";
+"Enter your home address" = "Enter your home address";
+"Work Address" = "Work Address";
+"Enter your work address" = "Enter your work address";
+"Traffic Route" = "Traffic Route";
+"Set both addresses to get commute time in your daily briefing" = "Set both addresses to get commute time in your daily briefing";
+"Temperature Unit" = "Temperature Unit";
+"Fahrenheit (°F)" = "Fahrenheit (°F)";
+"Celsius (°C)" = "Celsius (°C)";
+"Units" = "Units";
+"Weather and traffic information will be included in your morning daily briefing when available." = "Weather and traffic information will be included in your morning daily briefing when available.";
+"Save" = "Save";
+
+// MARK: - Custom Sources
+"Add Source" = "Add Source";
+"Source Type" = "Source Type";
+"URL" = "URL";
+"Validating..." = "Validating...";
+"Invalid source" = "Invalid source";
+"Name (Optional)" = "Name (Optional)";
+"Auto-detect name" = "Auto-detect name";
+"Leave blank to use the detected name" = "Leave blank to use the detected name";
+"Validate" = "Validate";
+"My Sources" = "My Sources";
+"No Custom Sources" = "No Custom Sources";
+"Add RSS feeds, newsletters, or websites to include their content in your daily brief." = "Add RSS feeds, newsletters, or websites to include their content in your daily brief.";
+"Add Your First Source" = "Add Your First Source";
+"Paused" = "Paused";
+"Source Info" = "Source Info";
+"Type" = "Type";
+"Status" = "Status";
+"Last Updated" = "Last Updated";
+"Items" = "Items";
+"Recent Items" = "Recent Items";
+"No items yet" = "No items yet";
+"Refresh" = "Refresh";
+"Pause" = "Pause";
+"Resume" = "Resume";
+
+// MARK: - Live Station Player
+"Now Covering" = "Now Covering";
+"listening" = "listening";
+
+// MARK: - Ad Companion
+"Sponsored" = "Sponsored";
+"Ad" = "Ad";
+
+// MARK: - Episode History
+"Generating..." = "Generating...";
+"Failed" = "Failed";
+"Not generated" = "Not generated";
+
+// MARK: - Misc / Duration formats
+"min daily" = "min daily";
+"min" = "min";
+"episodes" = "episodes";
+"items found" = "items found";
+"sources" = "sources";
+"topic" = "topic";
+"topics" = "topics";
+"selected" = "selected";
+"hidden" = "hidden";
+"added to For You" = "added to For You";
+"removed from For You" = "removed from For You";
+"/year" = "/year";
+"/month" = "/month";
+"/week" = "/week";
+"/day" = "/day";

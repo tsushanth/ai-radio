@@ -6,7 +6,7 @@
 
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { env } from '../../config/environment';
-import { getActiveTopics } from '../../config/topics';
+import { topicsService } from '../supabase/topics.service';
 import { topicPodcastGenerator } from '../content/topic.generator';
 import type { TopicDefinition } from '../../types/topics';
 
@@ -53,7 +53,7 @@ export class TopicBatchScheduler {
     triggerSource: string = 'scheduler'
   ): Promise<BatchResult> {
     const startedAt = new Date();
-    const topics = getActiveTopics();
+    const topics = await topicsService.getTopics();
     const results: TopicResult[] = [];
 
     console.log(`[BatchScheduler] Starting batch ${batchId}: ${topics.length} topics`);
@@ -148,20 +148,29 @@ export class TopicBatchScheduler {
    */
   private async generateForTopic(topic: TopicDefinition): Promise<TopicResult> {
     try {
-      const result = await topicPodcastGenerator.getOrGenerateEpisode(
-        topic.id,
-        'batch-scheduler',
-        false, // Don't force regenerate -- skip if already exists
-        'en'   // English only for batch
-      );
+      // Determine which languages to generate for this topic
+      const languages = topic.languages?.includes('all')
+        ? ['en'] // Universal topics generate in English
+        : (topic.languages || ['en']); // Locale topics generate in their specific languages
 
+      let lastResult: any;
+      for (const lang of languages) {
+        lastResult = await topicPodcastGenerator.getOrGenerateEpisode(
+          topic.id,
+          'batch-scheduler',
+          false, // Don't force regenerate -- skip if already exists
+          lang
+        );
+      }
+
+      const result = lastResult;
       const isNew = result.isNew;
       const skipped = !isNew && result.episode.status === 'completed';
 
       if (skipped) {
         console.log(`[BatchScheduler] Skipped ${topic.name} (already generated today)`);
       } else {
-        console.log(`[BatchScheduler] Generated ${topic.name} (${result.episode.durationSeconds}s)`);
+        console.log(`[BatchScheduler] Generated ${topic.name} (${result.episode.durationSeconds}s, langs: ${languages.join(',')})`);
       }
 
       return {

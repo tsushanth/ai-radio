@@ -36,6 +36,9 @@ export interface TopicDefinition {
   promptContext: string; // Additional context for LLM
   targetDurationMinutes: number;
   isActive: boolean;
+  languages: string[]; // ISO codes this topic is relevant for. ['all'] = universal
+  localizedNames?: Record<string, string>; // lang code -> localized name
+  localizedDescriptions?: Record<string, string>; // lang code -> localized description
 }
 
 /**

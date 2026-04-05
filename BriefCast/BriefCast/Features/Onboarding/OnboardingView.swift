@@ -12,6 +12,8 @@ import UserNotifications
 struct OnboardingView: View {
     @Environment(\.dismiss) private var dismiss
     @StateObject private var viewModel = OnboardingViewModel()
+    @State private var selectedLanguage: SupportedLanguage = .en
+    @State private var fetchedTopics: [Topic] = []
 
     var body: some View {
         ZStack {
@@ -21,9 +23,16 @@ struct OnboardingView: View {
 
             // Page content
             TabView(selection: $viewModel.currentPage) {
-                // Page 1: Welcome
+                // Page 0: Welcome
                 WelcomePage(onContinue: viewModel.nextPage)
                     .tag(0)
+
+                // Page 1: Language Selection
+                LanguageSelectionPage(
+                    selectedLanguage: $selectedLanguage,
+                    onContinue: viewModel.nextPage
+                )
+                .tag(1)
 
                 // Page 2: Link Account (with email/calendar options)
                 LinkAccountPage(
@@ -31,14 +40,16 @@ struct OnboardingView: View {
                     onSkip: viewModel.nextPage,
                     onContinue: viewModel.nextPage
                 )
-                .tag(1)
+                .tag(2)
 
                 // Page 3: Topic Selection
                 TopicSelectionPage(
                     viewModel: viewModel,
-                    onComplete: completeOnboarding
+                    onComplete: completeOnboarding,
+                    language: selectedLanguage.rawValue,
+                    onTopicsFetched: { fetchedTopics = $0 }
                 )
-                .tag(2)
+                .tag(3)
             }
             .tabViewStyle(.page(indexDisplayMode: .never))
             .animation(.easeInOut, value: viewModel.currentPage)
@@ -48,7 +59,7 @@ struct OnboardingView: View {
                 Spacer()
 
                 HStack(spacing: 8) {
-                    ForEach(0..<3) { index in
+                    ForEach(0..<4) { index in
                         Circle()
                             .fill(index == viewModel.currentPage ? Theme.Colors.accent : Color.white.opacity(0.3))
                             .frame(width: 8, height: 8)
@@ -58,14 +69,36 @@ struct OnboardingView: View {
                 .padding(.bottom, 40)
             }
         }
+        .onAppear {
+            let deviceLang = Locale.current.language.languageCode?.identifier ?? "en"
+            if let matched = SupportedLanguage(rawValue: deviceLang) {
+                selectedLanguage = matched
+            }
+        }
     }
 
     private func completeOnboarding() {
+        // Save selected language
+        PreferencesService.shared.preferredLanguage = selectedLanguage.rawValue
+
         // Mark onboarding as complete
         UserDefaults.standard.set(true, forKey: "hasCompletedOnboarding")
 
         // Save selected topics
         UserDefaults.standard.set(viewModel.selectedTopics, forKey: "selectedTopics")
+
+        // Bookmark the selected topics by ID so they show in "Your Topics"
+        let topicPool = !fetchedTopics.isEmpty ? fetchedTopics : (TopicService.shared.getCachedTopics()?.topics ?? [])
+        NSLog("🔖 completeOnboarding: selected=\(viewModel.selectedTopics), pool=\(topicPool.count) topics, fetchedTopics=\(fetchedTopics.count)")
+        for topicName in viewModel.selectedTopics {
+            if let topic = topicPool.first(where: { $0.name == topicName }) {
+                NSLog("🔖 Bookmarking \(topicName) -> \(topic.id)")
+                PreferencesService.shared.addBookmark(for: topic.id)
+            } else {
+                NSLog("⚠️ No match for \(topicName) in pool")
+            }
+        }
+        NSLog("🔖 Final bookmarks: \(PreferencesService.shared.bookmarkedTopicIds)")
 
         // Save email/calendar preferences
         UserDefaults.standard.set(viewModel.emailEnabled, forKey: "emailEnabled")
@@ -166,6 +199,103 @@ struct WelcomePage: View {
             }
             .padding(.top, 60)
             .padding(.bottom, 80)
+        }
+    }
+}
+
+// MARK: - Language Selection Page
+
+struct LanguageSelectionPage: View {
+    @Binding var selectedLanguage: SupportedLanguage
+    let onContinue: () -> Void
+
+    let columns = [GridItem(.flexible()), GridItem(.flexible())]
+
+    var body: some View {
+        VStack(spacing: 20) {
+            // Title
+            VStack(spacing: 12) {
+                ZStack {
+                    Circle()
+                        .fill(Color.white.opacity(0.1))
+                        .frame(width: 100, height: 100)
+
+                    Image(systemName: "globe")
+                        .font(.system(size: 50))
+                        .foregroundColor(Theme.Colors.accent)
+                }
+
+                Text("Choose Your Language")
+                    .font(.system(size: 28, weight: .bold))
+                    .foregroundColor(Theme.Colors.primaryText)
+                    .multilineTextAlignment(.center)
+
+                Text("Select the language for your audio briefings.")
+                    .font(.system(size: 16, weight: .regular))
+                    .foregroundColor(Theme.Colors.secondaryText)
+                    .multilineTextAlignment(.center)
+                    .padding(.horizontal, 32)
+            }
+            .padding(.top, 32)
+
+            // Language grid
+            ScrollView(showsIndicators: false) {
+                LazyVGrid(columns: columns, spacing: 12) {
+                    ForEach(SupportedLanguage.allCases) { language in
+                        Button {
+                            selectedLanguage = language
+                        } label: {
+                            VStack(spacing: 6) {
+                                Text(language.flagEmoji)
+                                    .font(.system(size: 32))
+
+                                Text(language.nativeName)
+                                    .font(.system(size: 15, weight: .semibold))
+                                    .foregroundColor(Theme.Colors.primaryText)
+                                    .lineLimit(1)
+
+                                Text(language.displayName)
+                                    .font(.system(size: 12, weight: .regular))
+                                    .foregroundColor(Theme.Colors.secondaryText)
+                                    .lineLimit(1)
+                            }
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 14)
+                            .background(
+                                selectedLanguage == language
+                                    ? Theme.Colors.accent.opacity(0.15)
+                                    : Theme.Colors.cardBackground
+                            )
+                            .cornerRadius(12)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 12)
+                                    .stroke(
+                                        selectedLanguage == language
+                                            ? Theme.Colors.accent
+                                            : Color.white.opacity(0.1),
+                                        lineWidth: selectedLanguage == language ? 2 : 1
+                                    )
+                            )
+                        }
+                        .buttonStyle(ScaleButtonStyle())
+                    }
+                }
+                .padding(.horizontal, 24)
+                .padding(.bottom, 16)
+            }
+
+            // Continue button
+            Button(action: onContinue) {
+                Text("Continue")
+                    .font(.system(size: 18, weight: .semibold))
+                    .foregroundColor(.white)
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 16)
+                    .background(Theme.Colors.accent)
+                    .cornerRadius(12)
+            }
+            .padding(.horizontal, 24)
+            .padding(.bottom, 60)
         }
     }
 }
@@ -628,8 +758,11 @@ struct AccountLinkButton: View {
 struct TopicSelectionPage: View {
     @ObservedObject var viewModel: OnboardingViewModel
     let onComplete: () -> Void
+    let language: String
+    var onTopicsFetched: (([Topic]) -> Void)? = nil
 
-    let allTopics = [
+    // Fallback hardcoded topics in case API fails
+    private let fallbackTopics = [
         ("Technology", "laptopcomputer", "#4A90E2"),
         ("AI & Machine Learning", "cpu", "#9B59B6"),
         ("Business", "chart.line.uptrend.xyaxis", "#50C878"),
@@ -641,6 +774,9 @@ struct TopicSelectionPage: View {
         ("Health", "heart", "#E91E63"),
         ("Politics", "building.columns", "#607D8B")
     ]
+
+    @State private var apiTopics: [Topic] = []
+    @State private var isLoading = true
 
     var body: some View {
         VStack(spacing: 20) {
@@ -662,19 +798,43 @@ struct TopicSelectionPage: View {
             // Topic grid
             ScrollView(showsIndicators: false) {
                 VStack(spacing: 16) {
-                    LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 12) {
-                        ForEach(allTopics, id: \.0) { topic in
-                            TopicChip(
-                                title: topic.0,
-                                icon: topic.1,
-                                color: Color(hex: topic.2),
-                                isSelected: viewModel.selectedTopics.contains(topic.0)
-                            ) {
-                                viewModel.toggleTopic(topic.0)
+                    if isLoading {
+                        ProgressView()
+                            .tint(Theme.Colors.accent)
+                            .padding(.top, 40)
+                    } else if !apiTopics.isEmpty {
+                        LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 12) {
+                            ForEach(apiTopics) { topic in
+                                TopicChip(
+                                    title: topic.name,
+                                    icon: topic.icon,
+                                    color: Color(hex: topic.color),
+                                    isSelected: viewModel.selectedTopics.contains(topic.name)
+                                ) {
+                                    viewModel.toggleTopic(topic.name)
+                                }
                             }
                         }
+                        .padding(.horizontal, 24)
+                    } else {
+                        LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 12) {
+                            ForEach(fallbackTopics, id: \.0) { topic in
+                                TopicChip(
+                                    title: topic.0,
+                                    icon: topic.1,
+                                    color: Color(hex: topic.2),
+                                    isSelected: viewModel.selectedTopics.contains(topic.0)
+                                ) {
+                                    viewModel.toggleTopic(topic.0)
+                                }
+                            }
+                        }
+                        .padding(.horizontal, 24)
                     }
-                    .padding(.horizontal, 24)
+
+                    // Suggest a Topic
+                    SuggestTopicOnboarding(language: language)
+                        .padding(.horizontal, 24)
 
                     // Daily Brief Options
                     if viewModel.googleLinked {
@@ -764,6 +924,16 @@ struct TopicSelectionPage: View {
             }
             .padding(.horizontal, 24)
             .padding(.bottom, 60)
+        }
+        .task {
+            do {
+                let data = try await TopicService.shared.fetchTopics(language: language)
+                apiTopics = data.topics.filter { $0.isActive }
+                onTopicsFetched?(apiTopics)
+            } catch {
+                print("Failed to fetch topics for onboarding: \(error)")
+            }
+            isLoading = false
         }
     }
 }
@@ -882,7 +1052,7 @@ class OnboardingViewModel: ObservableObject {
     }
 
     func nextPage() {
-        if currentPage < 2 {
+        if currentPage < 3 {
             currentPage += 1
         }
     }
@@ -1026,6 +1196,107 @@ class OnboardingViewModel: ObservableObject {
 
 extension Notification.Name {
     static let startDailyBriefGeneration = Notification.Name("startDailyBriefGeneration")
+}
+
+// MARK: - Suggest Topic (Onboarding)
+
+struct SuggestTopicOnboarding: View {
+    let language: String
+    @State private var showSheet = false
+    @State private var topicName = ""
+    @State private var isSubmitting = false
+    @State private var showConfirmation = false
+
+    var body: some View {
+        Button {
+            showSheet = true
+        } label: {
+            HStack(spacing: 8) {
+                Image(systemName: "lightbulb.fill")
+                    .font(.system(size: 14))
+                    .foregroundColor(.orange)
+                Text("Don't see your topic? Suggest one")
+                    .font(.system(size: 14, weight: .medium))
+                    .foregroundColor(.orange)
+            }
+            .padding(.vertical, 10)
+        }
+        .sheet(isPresented: $showSheet) {
+            NavigationStack {
+                VStack(spacing: 20) {
+                    Text("What topic would you like?")
+                        .font(.headline)
+                        .foregroundColor(Theme.Colors.primaryText)
+                        .padding(.top, 20)
+
+                    TextField("", text: $topicName, prompt: Text("e.g. Crypto, Formula 1, Bollywood...").foregroundColor(.gray))
+                        .font(.system(size: 16))
+                        .foregroundColor(.white)
+                        .padding(14)
+                        .background(Color.white.opacity(0.15))
+                        .cornerRadius(10)
+                        .padding(.horizontal, 24)
+
+                    Button {
+                        submitTopic()
+                    } label: {
+                        HStack {
+                            if isSubmitting {
+                                ProgressView().tint(.white)
+                            }
+                            Text("Submit")
+                                .font(.system(size: 16, weight: .semibold))
+                                .foregroundColor(.white)
+                        }
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 14)
+                        .background(topicName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? Color.gray : Theme.Colors.accent)
+                        .cornerRadius(10)
+                    }
+                    .disabled(topicName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || isSubmitting)
+                    .padding(.horizontal, 24)
+
+                    Text("We'll research sources and add it within minutes!")
+                        .font(.caption)
+                        .foregroundColor(Theme.Colors.secondaryText)
+
+                    Spacer()
+                }
+                .background(Theme.Colors.background)
+                .navigationTitle("Suggest a Topic")
+                .navigationBarTitleDisplayMode(.inline)
+                .toolbar {
+                    ToolbarItem(placement: .cancellationAction) {
+                        Button("Cancel") { showSheet = false }
+                    }
+                }
+            }
+            .presentationDetents([.medium])
+            .preferredColorScheme(.dark)
+        }
+        .alert("Topic Suggested!", isPresented: $showConfirmation) {
+            Button("OK") {}
+        } message: {
+            Text("We'll add \"\(topicName)\" soon. It will appear in your topics on the next app refresh.")
+        }
+    }
+
+    private func submitTopic() {
+        let name = topicName.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !name.isEmpty else { return }
+        isSubmitting = true
+
+        Task {
+            do {
+                try await TopicService.shared.suggestTopic(topicName: name, language: language, description: nil)
+                showSheet = false
+                showConfirmation = true
+            } catch {
+                print("Failed to suggest topic: \(error)")
+            }
+            isSubmitting = false
+        }
+    }
 }
 
 #Preview {

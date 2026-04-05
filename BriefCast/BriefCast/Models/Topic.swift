@@ -150,7 +150,17 @@ struct TopicEpisode: Identifiable, Codable {
         error = try container.decodeIfPresent(String.self, forKey: .error)
         language = try container.decodeIfPresent(String.self, forKey: .language) ?? "en"
         segmentTimings = try container.decodeIfPresent([SegmentTiming].self, forKey: .segmentTimings)
-        script = try container.decodeIfPresent(PodcastScript.self, forKey: .script)
+
+        // Script can come as a JSON object or a JSON-encoded string from the backend
+        if let scriptObj = try? container.decodeIfPresent(PodcastScript.self, forKey: .script) {
+            script = scriptObj
+        } else if let scriptString = try? container.decodeIfPresent(String.self, forKey: .script),
+                  let scriptData = scriptString.data(using: .utf8),
+                  let scriptObj = try? JSONDecoder().decode(PodcastScript.self, from: scriptData) {
+            script = scriptObj
+        } else {
+            script = nil
+        }
     }
 
     var formattedDate: String {

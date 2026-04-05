@@ -1,0 +1,37 @@
+Audexa is your personal AI radio that transforms the latest news, technology, business, and more into engaging podcast-style audio briefings tailored just for you.
+
+KEY FEATURES:
+
+Daily Briefings
+Connect your Gmail to receive a personalized morning briefing that summarizes your important emails, calendar events, and top news. Start every day informed and ready.
+
+AI-Generated Podcasts
+Choose from dozens of topics including Technology, Finance, Sports, Science, Entertainment, and more. Audexa generates fresh, high-quality podcast episodes daily using advanced AI voices.
+
+Dual-Host Conversations
+Enjoy natural-sounding discussions between two AI hosts. Choose from multiple voice pairs powered by advanced AI to find the perfect sound for your listening experience.
+
+Personalized For You
+Select your interests and Audexa curates content specifically for you. Bookmark your favorite topics, hide what you don't want, and discover new shows in the Discover tab.
+
+Multi-Language Support
+Listen to podcasts in your preferred language. Audexa supports English, Spanish, French, German, Japanese, Chinese, Korean, Portuguese, Italian, and Hindi.
+
+Sleep Timer & Playback Controls
+Set a sleep timer, skip forward or back, and enjoy seamless playback with background audio support and lock screen controls.
+
+Ad-Free Option
+Upgrade to enjoy uninterrupted listening without audio ad breaks. Support indie development while getting the cleanest listening experience.
+
+HOW IT WORKS:
+1. Sign in with Google
+2. Choose your topics of interest
+3. Optionally link your email for personalized briefings
+4. Listen to AI-generated episodes on demand
+
+Your privacy matters. We only read email subjects and senders to create briefing summaries. We never store your email content or share your data with third parties.
+
+Download Audexa today and experience the future of personalized audio.
+
+Terms of Use: https://www.sendsmiles.biz/terms-of-service
+Privacy Policy: https://www.sendsmiles.biz/privacy-policy

@@ -1,0 +1,352 @@
+/* Localizable.strings (Spanish)
+   BriefCast / Audexa */
+
+// MARK: - Auth View
+"Your personal AI radio" = "Tu radio personal con IA";
+"Sign in with Google" = "Iniciar sesión con Google";
+"Continue without sign in" = "Continuar sin iniciar sesión";
+"You can link your email later to enable personalized Daily Brief" = "Puedes vincular tu correo más tarde para activar el Resumen Diario personalizado";
+"By continuing, you agree to our" = "Al continuar, aceptas nuestros";
+"Terms of Service" = "Términos de servicio";
+"and" = "y";
+"Privacy Policy" = "Política de privacidad";
+
+// MARK: - Home View
+"For You" = "Para ti";
+"Discover" = "Descubrir";
+"Good Morning" = "Buenos días";
+"Good Afternoon" = "Buenas tardes";
+"Good Evening" = "Buenas noches";
+"Live Stations" = "Estaciones en vivo";
+"LIVE" = "EN VIVO";
+"Your Deep Dives" = "Tus análisis profundos";
+"Keep listening" = "Seguir escuchando";
+"Your Topics" = "Tus temas";
+"Topic Podcasts" = "Podcasts por tema";
+"Tap to explore and play" = "Toca para explorar y reproducir";
+"Recommended for you" = "Recomendado para ti";
+"More for you" = "Más para ti";
+"Playing" = "Reproduciendo";
+"Hide" = "Ocultar";
+"All Topics" = "Todos los temas";
+"Matching Topics" = "Temas coincidentes";
+"Popular Shows" = "Programas populares";
+
+// MARK: - Search
+"Find new shows" = "Buscar nuevos programas";
+"No results for \"%@\"" = "Sin resultados para \"%@\"";
+
+// MARK: - Profile View
+"Profile" = "Perfil";
+"User" = "Usuario";
+"Premium" = "Premium";
+"Ad-Free" = "Sin anuncios";
+"Go Ad-Free" = "Eliminar anuncios";
+"Active subscription" = "Suscripción activa";
+"Remove all ads" = "Eliminar todos los anuncios";
+"Linked Accounts" = "Cuentas vinculadas";
+"Add Account" = "Agregar cuenta";
+"Daily Brief Sources" = "Fuentes del Resumen Diario";
+"Email" = "Correo electrónico";
+"Include email summaries in Daily Brief" = "Incluir resúmenes de correo en el Resumen Diario";
+"Calendar" = "Calendario";
+"Include upcoming events in Daily Brief" = "Incluir próximos eventos en el Resumen Diario";
+"Preferences" = "Preferencias";
+"App Theme" = "Tema de la app";
+"Podcast Language" = "Idioma del podcast";
+"Hidden Topics" = "Temas ocultos";
+"About" = "Acerca de";
+"Version" = "Versión";
+"Share Audexa" = "Compartir Audexa";
+"Tell your friends" = "Cuéntale a tus amigos";
+"Sign Out" = "Cerrar sesión";
+"Delete Account" = "Eliminar cuenta";
+"Are you sure you want to sign out?" = "¿Estás seguro de que quieres cerrar sesión?";
+"Are you sure you want to delete your account? This will permanently delete all your data including podcasts, preferences, and linked accounts. This action cannot be undone." = "¿Estás seguro de que quieres eliminar tu cuenta? Esto eliminará permanentemente todos tus datos, incluyendo podcasts, preferencias y cuentas vinculadas. Esta acción no se puede deshacer.";
+"Error" = "Error";
+"OK" = "OK";
+"Failed to delete account. Please try again." = "No se pudo eliminar la cuenta. Por favor, inténtalo de nuevo.";
+"Deleting account..." = "Eliminando cuenta...";
+"Cancel" = "Cancelar";
+"Delete" = "Eliminar";
+"Connected" = "Conectado";
+"Disconnected" = "Desconectado";
+"Match device settings" = "Seguir ajustes del dispositivo";
+"Always dark mode" = "Siempre modo oscuro";
+"Always light mode" = "Siempre modo claro";
+"Check out Audexa - Your personalized AI-powered daily briefing podcast!" = "Descubre Audexa: ¡tu podcast personalizado de resúmenes diarios con IA!";
+
+// MARK: - Hidden Topics View
+"No Hidden Topics" = "Sin temas ocultos";
+"Topics you hide will appear here" = "Los temas que ocultes aparecerán aquí";
+"Unhide" = "Mostrar";
+"Done" = "Listo";
+
+// MARK: - Player View
+"Voice" = "Voz";
+"Cancel Timer" = "Cancelar temporizador";
+"5 min" = "5 min";
+"10 min" = "10 min";
+"15 min" = "15 min";
+"30 min" = "30 min";
+"60 min" = "60 min";
+"Skip" = "Saltar";
+"Tell Me More" = "Cuéntame más";
+"Tap to ask a question" = "Toca para hacer una pregunta";
+"Live Transcript" = "Transcripción en vivo";
+"More Details" = "Más detalles";
+"Listen to Expansion" = "Escuchar ampliación";
+"Sources" = "Fuentes";
+"Expanded Content" = "Contenido ampliado";
+
+// MARK: - Voice Picker View
+"Voice Settings" = "Configuración de voz";
+"Pairs" = "Parejas";
+"Individual" = "Individual";
+"Voice Selection" = "Selección de voz";
+"Host 1 Voice" = "Voz del presentador 1";
+"Host 2 Voice" = "Voz del presentador 2";
+"No voices available" = "No hay voces disponibles";
+"Loading voices..." = "Cargando voces...";
+"No voice pairs available for %@" = "No hay parejas de voces disponibles para %@";
+"Host 1" = "Presentador 1";
+"Host 2" = "Presentador 2";
+
+// MARK: - Onboarding
+"Welcome to Audexa" = "Bienvenido a Audexa";
+"Your personalized AI radio. Get caught up on your emails, calendar, and favorite topics in just a few minutes." = "Tu radio personalizada con IA. Ponte al día con tus correos, calendario y temas favoritos en solo unos minutos.";
+"Get Started" = "Comenzar";
+"Connect Your Account" = "Conecta tu cuenta";
+"Link your Google account to get personalized briefings from your email and calendar." = "Vincula tu cuenta de Google para obtener resúmenes personalizados de tu correo y calendario.";
+"Connect Google" = "Conectar Google";
+"Include email summaries in briefings" = "Incluir resúmenes de correo en los informes";
+"(Optional)" = "(Opcional)";
+"Include upcoming events in briefings" = "Incluir próximos eventos en los informes";
+"Connect" = "Conectar";
+"Continue" = "Continuar";
+"Skip for now" = "Omitir por ahora";
+"Connection Error" = "Error de conexión";
+"Failed to connect account" = "No se pudo conectar la cuenta";
+"Choose Your Interests" = "Elige tus intereses";
+"Select topics to personalize your Daily Brief." = "Selecciona temas para personalizar tu Resumen Diario.";
+"Daily Brief Options" = "Opciones del Resumen Diario";
+"Include Topic Updates" = "Incluir actualizaciones de temas";
+"Add headlines from your topics to Daily Brief" = "Agregar titulares de tus temas al Resumen Diario";
+"Daily Reminder" = "Recordatorio diario";
+"Notifications blocked. Tap Settings to enable." = "Notificaciones bloqueadas. Toca Ajustes para activarlas.";
+"Get notified when your brief is ready" = "Recibe una notificación cuando tu resumen esté listo";
+"Settings" = "Ajustes";
+"Reminder Time" = "Hora del recordatorio";
+"Select at least one topic" = "Selecciona al menos un tema";
+"Complete Setup" = "Completar configuración";
+"Access not granted" = "Acceso no concedido";
+"Without access, we can only create general topic briefings. To get personalized briefings, please try again and grant the requested permissions." = "Sin acceso, solo podemos crear informes generales. Para obtener informes personalizados, inténtalo de nuevo y concede los permisos solicitados.";
+"Try Again" = "Intentar de nuevo";
+"\"Unverified App\" Warning" = "Aviso de \"App no verificada\"";
+"Google may show an \"unverified app\" screen because our calendar access is pending verification. This is safe to proceed." = "Google puede mostrar una pantalla de \"app no verificada\" porque nuestro acceso al calendario está pendiente de verificación. Es seguro continuar.";
+"To connect:" = "Para conectar:";
+"Tap \"Advanced\" on the warning screen" = "Toca \"Avanzado\" en la pantalla de advertencia";
+"Tap \"Go to Audexa (unsafe)\"" = "Toca \"Ir a Audexa (no seguro)\"";
+"Grant calendar access" = "Conceder acceso al calendario";
+
+// MARK: - Create View
+"Create" = "Crear";
+"Create Daily Brief" = "Crear Resumen Diario";
+"Generate your personalized podcast from today's emails and calendar events" = "Genera tu podcast personalizado con los correos y eventos del calendario de hoy";
+"Generate Now" = "Generar ahora";
+
+// MARK: - Paywall View
+"Enjoy uninterrupted listening" = "Disfruta escuchar sin interrupciones";
+"No audio ad interruptions" = "Sin interrupciones de anuncios de audio";
+"Seamless episode playback" = "Reproducción de episodios sin interrupciones";
+"Support indie development" = "Apoya el desarrollo independiente";
+"You're an Ad-Free subscriber!" = "¡Eres suscriptor sin anuncios!";
+"Yearly" = "Anual";
+"Save 58%" = "Ahorra 58%";
+"Monthly" = "Mensual";
+"Subscribe" = "Suscribirse";
+"Restore Purchases" = "Restaurar compras";
+"Payment will be charged to your Apple ID account. Subscription automatically renews unless cancelled at least 24 hours before the end of the current period." = "El pago se cargará a tu cuenta de Apple ID. La suscripción se renueva automáticamente a menos que se cancele al menos 24 horas antes del final del período actual.";
+
+// MARK: - Linked Accounts View
+"Connect your accounts to personalize your daily briefings with relevant information from your emails." = "Conecta tus cuentas para personalizar tus resúmenes diarios con información relevante de tus correos.";
+"Connected Accounts" = "Cuentas conectadas";
+"Available Accounts" = "Cuentas disponibles";
+"Add Another Account" = "Agregar otra cuenta";
+"Not connected" = "No conectado";
+"We'll access:" = "Accederemos a:";
+"Read your Gmail messages" = "Leer tus mensajes de Gmail";
+"Basic profile information" = "Información básica del perfil";
+"Read your calendar events" = "Leer tus eventos del calendario";
+"Your data is secure" = "Tus datos están seguros";
+"We only access the information you explicitly allow and use it solely to create your personalized briefings. You can revoke access at any time." = "Solo accedemos a la información que permites explícitamente y la usamos únicamente para crear tus resúmenes personalizados. Puedes revocar el acceso en cualquier momento.";
+"Access Permissions" = "Permisos de acceso";
+"Email Access" = "Acceso al correo";
+"Read emails to include in briefings" = "Leer correos para incluir en los informes";
+"Disconnect Account" = "Desconectar cuenta";
+"Disconnect" = "Desconectar";
+"Connected Calendar" = "Calendario conectado";
+"Google Calendar" = "Google Calendar";
+"Disconnect Calendar" = "Desconectar calendario";
+"Are you sure you want to disconnect your Google Calendar? Your Daily Brief will no longer include upcoming events." = "¿Estás seguro de que quieres desconectar tu Google Calendar? Tu Resumen Diario ya no incluirá los próximos eventos.";
+
+// MARK: - Topic Detail View
+"Generate Episode" = "Generar episodio";
+"Generate New Episode" = "Generar nuevo episodio";
+"Creates a fresh episode with the latest content" = "Crea un episodio nuevo con el contenido más reciente";
+"Loading episode..." = "Cargando episodio...";
+"Generating your podcast..." = "Generando tu podcast...";
+"This may take a minute" = "Esto puede tardar un minuto";
+"Previous Episodes" = "Episodios anteriores";
+"No previous episodes available" = "No hay episodios anteriores disponibles";
+"Hide Topic" = "Ocultar tema";
+"Select Language" = "Seleccionar idioma";
+
+// MARK: - Deep Dive
+"Deep Dive" = "Análisis profundo";
+"What do you want to learn about?" = "¿Sobre qué quieres aprender?";
+"Enter any topic and we'll create a research podcast for you" = "Ingresa cualquier tema y crearemos un podcast de investigación para ti";
+"Try asking about..." = "Intenta preguntar sobre...";
+"Generate Deep Dive" = "Generar análisis profundo";
+"This may take a few minutes" = "Esto puede tardar unos minutos";
+"Generation Failed" = "Error en la generación";
+"Regenerate" = "Regenerar";
+"Generate a fresh take on this topic" = "Genera una nueva perspectiva sobre este tema";
+"Regenerating..." = "Regenerando...";
+
+// MARK: - Q&A View
+"Ask a Question" = "Hacer una pregunta";
+"Close" = "Cerrar";
+"Ask a question" = "Haz una pregunta";
+"Get more context about what you just heard" = "Obtén más contexto sobre lo que acabas de escuchar";
+"Ask a question..." = "Haz una pregunta...";
+"Follow-up questions" = "Preguntas de seguimiento";
+"Play answer" = "Reproducir respuesta";
+"Q&A Answer" = "Respuesta";
+
+// MARK: - Queue View
+"Your Queue" = "Tu cola";
+"Clear Queue" = "Vaciar cola";
+"Clear All" = "Eliminar todo";
+"This will remove all topics from your queue." = "Esto eliminará todos los temas de tu cola.";
+"Your queue is empty" = "Tu cola está vacía";
+"Add topics from the home screen" = "Agrega temas desde la pantalla principal";
+"Play All" = "Reproducir todo";
+
+// MARK: - Gradient Header / Daily Brief States
+"Connect your email" = "Conecta tu correo";
+"to generate your personalized brief" = "para generar tu resumen personalizado";
+"Generate Today's Brief" = "Generar el resumen de hoy";
+"Generating your brief..." = "Generando tu resumen...";
+"Fetching your emails and calendar..." = "Obteniendo tus correos y calendario...";
+"Analyzing content..." = "Analizando contenido...";
+"Creating your personalized script..." = "Creando tu guión personalizado...";
+"Generating audio..." = "Generando audio...";
+"Almost done..." = "Casi listo...";
+"Now Playing" = "Reproduciendo ahora";
+"Generation failed" = "Error en la generación";
+"Retry" = "Reintentar";
+"Reconnect your email" = "Reconecta tu correo";
+"Reconnect" = "Reconectar";
+"No new emails" = "No hay correos nuevos";
+"Try Again Later" = "Intentar más tarde";
+
+// MARK: - Splash Screen
+"Your AI-powered audio briefing" = "Tu resumen de audio con inteligencia artificial";
+
+// MARK: - Tab Router
+"Home" = "Inicio";
+
+// MARK: - Notification Settings
+"Notifications" = "Notificaciones";
+"Enabled" = "Activado";
+"Open Settings" = "Abrir Ajustes";
+"Enable" = "Activar";
+"Not Available" = "No disponible";
+"Permission" = "Permiso";
+"Allow notifications to receive your daily brief when it's ready." = "Permite las notificaciones para recibir tu resumen diario cuando esté listo.";
+"Daily Brief Notifications" = "Notificaciones del Resumen Diario";
+"Briefing Time" = "Hora del resumen";
+"Timezone" = "Zona horaria";
+"Daily Brief Schedule" = "Horario del Resumen Diario";
+"Daily Brief Content" = "Contenido del Resumen Diario";
+"When enabled, your Daily Brief will include headlines and updates from your selected topics of interest." = "Cuando está activado, tu Resumen Diario incluirá titulares y actualizaciones de tus temas de interés seleccionados.";
+"Notification Preview" = "Vista previa de notificación";
+"Your Daily Brief is Ready" = "Tu Resumen Diario está listo";
+"Your personalized briefing is ready to play." = "Tu resumen personalizado está listo para reproducirse.";
+"Manual" = "Manual";
+"Generate your daily brief immediately instead of waiting for the scheduled time." = "Genera tu resumen diario inmediatamente en lugar de esperar la hora programada.";
+"Enable to have your daily brief automatically generated each morning." = "Activa para que tu resumen diario se genere automáticamente cada mañana.";
+
+// MARK: - Location & Weather Settings
+"Location & Weather" = "Ubicación y clima";
+"Use Current Location" = "Usar ubicación actual";
+"Weather Location" = "Ubicación del clima";
+"Home Address" = "Dirección de casa";
+"Enter your home address" = "Ingresa tu dirección de casa";
+"Work Address" = "Dirección del trabajo";
+"Enter your work address" = "Ingresa tu dirección del trabajo";
+"Traffic Route" = "Ruta de tráfico";
+"Set both addresses to get commute time in your daily briefing" = "Configura ambas direcciones para obtener el tiempo de trayecto en tu resumen diario";
+"Temperature Unit" = "Unidad de temperatura";
+"Fahrenheit (°F)" = "Fahrenheit (°F)";
+"Celsius (°C)" = "Celsius (°C)";
+"Units" = "Unidades";
+"Weather and traffic information will be included in your morning daily briefing when available." = "La información del clima y tráfico se incluirá en tu resumen diario matutino cuando esté disponible.";
+"Save" = "Guardar";
+
+// MARK: - Custom Sources
+"Add Source" = "Agregar fuente";
+"Source Type" = "Tipo de fuente";
+"URL" = "URL";
+"Validating..." = "Validando...";
+"Invalid source" = "Fuente inválida";
+"Name (Optional)" = "Nombre (Opcional)";
+"Auto-detect name" = "Detectar nombre automáticamente";
+"Leave blank to use the detected name" = "Deja en blanco para usar el nombre detectado";
+"Validate" = "Validar";
+"My Sources" = "Mis fuentes";
+"No Custom Sources" = "Sin fuentes personalizadas";
+"Add RSS feeds, newsletters, or websites to include their content in your daily brief." = "Agrega fuentes RSS, boletines o sitios web para incluir su contenido en tu resumen diario.";
+"Add Your First Source" = "Agrega tu primera fuente";
+"Paused" = "Pausado";
+"Source Info" = "Información de la fuente";
+"Type" = "Tipo";
+"Status" = "Estado";
+"Last Updated" = "Última actualización";
+"Items" = "Elementos";
+"Recent Items" = "Elementos recientes";
+"No items yet" = "Aún no hay elementos";
+"Refresh" = "Actualizar";
+"Pause" = "Pausar";
+"Resume" = "Reanudar";
+
+// MARK: - Live Station Player
+"Now Covering" = "Cubriendo ahora";
+"listening" = "escuchando";
+
+// MARK: - Ad Companion
+"Sponsored" = "Patrocinado";
+"Ad" = "Anuncio";
+
+// MARK: - Episode History
+"Generating..." = "Generando...";
+"Failed" = "Fallido";
+"Not generated" = "No generado";
+
+// MARK: - Misc
+"min daily" = "min diarios";
+"min" = "min";
+"episodes" = "episodios";
+"items found" = "elementos encontrados";
+"sources" = "fuentes";
+"topic" = "tema";
+"topics" = "temas";
+"selected" = "seleccionados";
+"hidden" = "ocultos";
+"added to For You" = "agregado a Para ti";
+"removed from For You" = "eliminado de Para ti";
+"/year" = "/año";
+"/month" = "/mes";
+"/week" = "/semana";
+"/day" = "/día";

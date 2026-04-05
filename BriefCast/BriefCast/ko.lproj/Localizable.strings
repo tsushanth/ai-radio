@@ -1,0 +1,353 @@
+/* Localizable.strings (Korean)
+   BriefCast / Audexa
+   Comprehensive localization for the Audexa iOS app */
+
+// MARK: - Auth View
+"Your personal AI radio" = "당신만의 AI 라디오";
+"Sign in with Google" = "Google로 로그인";
+"Continue without sign in" = "로그인 없이 계속";
+"You can link your email later to enable personalized Daily Brief" = "나중에 이메일을 연결하여 맞춤형 Daily Brief를 활성화할 수 있습니다";
+"By continuing, you agree to our" = "계속하면 다음에 동의하는 것입니다";
+"Terms of Service" = "서비스 약관";
+"and" = "및";
+"Privacy Policy" = "개인정보 처리방침";
+
+// MARK: - Home View
+"For You" = "추천";
+"Discover" = "탐색";
+"Good Morning" = "좋은 아침이에요";
+"Good Afternoon" = "좋은 오후예요";
+"Good Evening" = "좋은 저녁이에요";
+"Live Stations" = "라이브 스테이션";
+"LIVE" = "라이브";
+"Your Deep Dives" = "나의 심층 탐구";
+"Keep listening" = "계속 듣기";
+"Your Topics" = "내 주제";
+"Topic Podcasts" = "주제 팟캐스트";
+"Tap to explore and play" = "탭하여 탐색 및 재생";
+"Recommended for you" = "추천 콘텐츠";
+"More for you" = "더 많은 추천";
+"Playing" = "재생 중";
+"Hide" = "숨기기";
+"All Topics" = "모든 주제";
+"Matching Topics" = "일치하는 주제";
+"Popular Shows" = "인기 프로그램";
+
+// MARK: - Search
+"Find new shows" = "새 프로그램 찾기";
+"No results for \"%@\"" = "\"%@\"에 대한 결과 없음";
+
+// MARK: - Profile View
+"Profile" = "프로필";
+"User" = "사용자";
+"Premium" = "프리미엄";
+"Ad-Free" = "광고 없음";
+"Go Ad-Free" = "광고 없애기";
+"Active subscription" = "활성 구독";
+"Remove all ads" = "모든 광고 제거";
+"Linked Accounts" = "연결된 계정";
+"Add Account" = "계정 추가";
+"Daily Brief Sources" = "Daily Brief 소스";
+"Email" = "이메일";
+"Include email summaries in Daily Brief" = "Daily Brief에 이메일 요약 포함";
+"Calendar" = "캘린더";
+"Include upcoming events in Daily Brief" = "Daily Brief에 예정된 일정 포함";
+"Preferences" = "환경설정";
+"App Theme" = "앱 테마";
+"Podcast Language" = "팟캐스트 언어";
+"Hidden Topics" = "숨겨진 주제";
+"About" = "정보";
+"Version" = "버전";
+"Share Audexa" = "Audexa 공유";
+"Tell your friends" = "친구에게 알리기";
+"Sign Out" = "로그아웃";
+"Delete Account" = "계정 삭제";
+"Are you sure you want to sign out?" = "로그아웃하시겠습니까?";
+"Are you sure you want to delete your account? This will permanently delete all your data including podcasts, preferences, and linked accounts. This action cannot be undone." = "계정을 삭제하시겠습니까? 팟캐스트, 환경설정, 연결된 계정을 포함한 모든 데이터가 영구 삭제됩니다. 이 작업은 되돌릴 수 없습니다.";
+"Error" = "오류";
+"OK" = "확인";
+"Failed to delete account. Please try again." = "계정 삭제에 실패했습니다. 다시 시도해 주세요.";
+"Deleting account..." = "계정 삭제 중...";
+"Cancel" = "취소";
+"Delete" = "삭제";
+"Connected" = "연결됨";
+"Disconnected" = "연결 해제됨";
+"Match device settings" = "기기 설정에 맞춤";
+"Always dark mode" = "항상 다크 모드";
+"Always light mode" = "항상 라이트 모드";
+"Check out Audexa - Your personalized AI-powered daily briefing podcast!" = "Audexa를 확인하세요 - 맞춤형 AI 데일리 브리핑 팟캐스트!";
+
+// MARK: - Hidden Topics View
+"No Hidden Topics" = "숨겨진 주제 없음";
+"Topics you hide will appear here" = "숨긴 주제가 여기에 표시됩니다";
+"Unhide" = "숨기기 해제";
+"Done" = "완료";
+
+// MARK: - Player View
+"Voice" = "음성";
+"Cancel Timer" = "타이머 취소";
+"5 min" = "5분";
+"10 min" = "10분";
+"15 min" = "15분";
+"30 min" = "30분";
+"60 min" = "60분";
+"Skip" = "건너뛰기";
+"Tell Me More" = "더 알려주세요";
+"Tap to ask a question" = "탭하여 질문하기";
+"Live Transcript" = "실시간 자막";
+"More Details" = "자세히 보기";
+"Listen to Expansion" = "확장 콘텐츠 듣기";
+"Sources" = "출처";
+"Expanded Content" = "확장 콘텐츠";
+
+// MARK: - Voice Picker View
+"Voice Settings" = "음성 설정";
+"Pairs" = "쌍";
+"Individual" = "개별";
+"Voice Selection" = "음성 선택";
+"Host 1 Voice" = "호스트 1 음성";
+"Host 2 Voice" = "호스트 2 음성";
+"No voices available" = "사용 가능한 음성 없음";
+"Loading voices..." = "음성 로딩 중...";
+"No voice pairs available for %@" = "%@에 사용 가능한 음성 쌍 없음";
+"Host 1" = "호스트 1";
+"Host 2" = "호스트 2";
+
+// MARK: - Onboarding
+"Welcome to Audexa" = "Audexa에 오신 것을 환영합니다";
+"Your personalized AI radio. Get caught up on your emails, calendar, and favorite topics in just a few minutes." = "맞춤형 AI 라디오. 몇 분 만에 이메일, 캘린더, 관심 주제를 확인하세요.";
+"Get Started" = "시작하기";
+"Connect Your Account" = "계정 연결";
+"Link your Google account to get personalized briefings from your email and calendar." = "Google 계정을 연결하여 이메일과 캘린더에서 맞춤 브리핑을 받으세요.";
+"Connect Google" = "Google 연결";
+"Include email summaries in briefings" = "브리핑에 이메일 요약 포함";
+"(Optional)" = "(선택사항)";
+"Include upcoming events in briefings" = "브리핑에 예정된 일정 포함";
+"Connect" = "연결";
+"Continue" = "계속";
+"Skip for now" = "지금은 건너뛰기";
+"Connection Error" = "연결 오류";
+"Failed to connect account" = "계정 연결 실패";
+"Choose Your Interests" = "관심사 선택";
+"Select topics to personalize your Daily Brief." = "주제를 선택하여 Daily Brief를 맞춤 설정하세요.";
+"Daily Brief Options" = "Daily Brief 옵션";
+"Include Topic Updates" = "주제 업데이트 포함";
+"Add headlines from your topics to Daily Brief" = "주제의 헤드라인을 Daily Brief에 추가";
+"Daily Reminder" = "일일 알림";
+"Notifications blocked. Tap Settings to enable." = "알림이 차단되었습니다. 설정을 탭하여 활성화하세요.";
+"Get notified when your brief is ready" = "브리핑이 준비되면 알림 받기";
+"Settings" = "설정";
+"Reminder Time" = "알림 시간";
+"Select at least one topic" = "최소 하나의 주제를 선택하세요";
+"Complete Setup" = "설정 완료";
+"Access not granted" = "접근 권한 미부여";
+"Without access, we can only create general topic briefings. To get personalized briefings, please try again and grant the requested permissions." = "접근 권한 없이는 일반 주제 브리핑만 생성할 수 있습니다. 맞춤 브리핑을 받으려면 다시 시도하고 요청된 권한을 부여해 주세요.";
+"Try Again" = "다시 시도";
+"\"Unverified App\" Warning" = "\"확인되지 않은 앱\" 경고";
+"Google may show an \"unverified app\" screen because our calendar access is pending verification. This is safe to proceed." = "캘린더 접근 권한 확인이 보류 중이므로 Google에서 \"확인되지 않은 앱\" 화면을 표시할 수 있습니다. 안전하게 진행할 수 있습니다.";
+"To connect:" = "연결하려면:";
+"Tap \"Advanced\" on the warning screen" = "경고 화면에서 \"고급\"을 탭하세요";
+"Tap \"Go to Audexa (unsafe)\"" = "\"Audexa(안전하지 않음)로 이동\"을 탭하세요";
+"Grant calendar access" = "캘린더 접근 권한 부여";
+
+// MARK: - Create View
+"Create" = "만들기";
+"Create Daily Brief" = "Daily Brief 만들기";
+"Generate your personalized podcast from today's emails and calendar events" = "오늘의 이메일과 캘린더 일정으로 맞춤 팟캐스트 생성";
+"Generate Now" = "지금 생성";
+
+// MARK: - Paywall View
+"Enjoy uninterrupted listening" = "끊김 없는 청취 즐기기";
+"No audio ad interruptions" = "오디오 광고 중단 없음";
+"Seamless episode playback" = "원활한 에피소드 재생";
+"Support indie development" = "인디 개발 지원";
+"You're an Ad-Free subscriber!" = "광고 없는 구독자입니다!";
+"Yearly" = "연간";
+"Save 58%" = "58% 절약";
+"Monthly" = "월간";
+"Subscribe" = "구독";
+"Restore Purchases" = "구매 복원";
+"Payment will be charged to your Apple ID account. Subscription automatically renews unless cancelled at least 24 hours before the end of the current period." = "결제는 Apple ID 계정으로 청구됩니다. 현재 기간 종료 최소 24시간 전에 취소하지 않으면 구독이 자동 갱신됩니다.";
+
+// MARK: - Linked Accounts View
+"Connect your accounts to personalize your daily briefings with relevant information from your emails." = "계정을 연결하여 이메일의 관련 정보로 일일 브리핑을 맞춤 설정하세요.";
+"Connected Accounts" = "연결된 계정";
+"Available Accounts" = "사용 가능한 계정";
+"Add Another Account" = "다른 계정 추가";
+"Not connected" = "연결되지 않음";
+"We'll access:" = "다음에 접근합니다:";
+"Read your Gmail messages" = "Gmail 메시지 읽기";
+"Basic profile information" = "기본 프로필 정보";
+"Read your calendar events" = "캘린더 일정 읽기";
+"Your data is secure" = "데이터는 안전합니다";
+"We only access the information you explicitly allow and use it solely to create your personalized briefings. You can revoke access at any time." = "명시적으로 허용한 정보에만 접근하며, 맞춤 브리핑 생성에만 사용합니다. 언제든지 접근을 취소할 수 있습니다.";
+"Access Permissions" = "접근 권한";
+"Email Access" = "이메일 접근";
+"Read emails to include in briefings" = "브리핑에 포함할 이메일 읽기";
+"Disconnect Account" = "계정 연결 해제";
+"Disconnect" = "연결 해제";
+"Connected Calendar" = "연결된 캘린더";
+"Google Calendar" = "Google 캘린더";
+"Disconnect Calendar" = "캘린더 연결 해제";
+"Are you sure you want to disconnect your Google Calendar? Your Daily Brief will no longer include upcoming events." = "Google 캘린더 연결을 해제하시겠습니까? Daily Brief에 예정된 일정이 더 이상 포함되지 않습니다.";
+
+// MARK: - Topic Detail View
+"Generate Episode" = "에피소드 생성";
+"Generate New Episode" = "새 에피소드 생성";
+"Creates a fresh episode with the latest content" = "최신 콘텐츠로 새 에피소드 생성";
+"Loading episode..." = "에피소드 로딩 중...";
+"Generating your podcast..." = "팟캐스트 생성 중...";
+"This may take a minute" = "1분 정도 걸릴 수 있습니다";
+"Previous Episodes" = "이전 에피소드";
+"No previous episodes available" = "이전 에피소드 없음";
+"Hide Topic" = "주제 숨기기";
+"Select Language" = "언어 선택";
+
+// MARK: - Deep Dive
+"Deep Dive" = "심층 탐구";
+"What do you want to learn about?" = "무엇에 대해 알고 싶으신가요?";
+"Enter any topic and we'll create a research podcast for you" = "주제를 입력하면 리서치 팟캐스트를 만들어 드립니다";
+"Try asking about..." = "이런 것을 물어보세요...";
+"Generate Deep Dive" = "심층 탐구 생성";
+"This may take a few minutes" = "몇 분 걸릴 수 있습니다";
+"Generation Failed" = "생성 실패";
+"Regenerate" = "다시 생성";
+"Generate a fresh take on this topic" = "이 주제에 대한 새로운 관점 생성";
+"Regenerating..." = "다시 생성 중...";
+
+// MARK: - Q&A View
+"Ask a Question" = "질문하기";
+"Close" = "닫기";
+"Ask a question" = "질문하기";
+"Get more context about what you just heard" = "방금 들은 내용에 대해 더 알아보기";
+"Ask a question..." = "질문을 입력하세요...";
+"Follow-up questions" = "후속 질문";
+"Play answer" = "답변 재생";
+"Q&A Answer" = "Q&A 답변";
+
+// MARK: - Queue View
+"Your Queue" = "내 대기열";
+"Clear Queue" = "대기열 비우기";
+"Clear All" = "모두 지우기";
+"This will remove all topics from your queue." = "대기열에서 모든 주제가 제거됩니다.";
+"Your queue is empty" = "대기열이 비어 있습니다";
+"Add topics from the home screen" = "홈 화면에서 주제 추가";
+"Play All" = "모두 재생";
+
+// MARK: - Gradient Header / Daily Brief States
+"Connect your email" = "이메일 연결";
+"to generate your personalized brief" = "맞춤 브리핑 생성";
+"Generate Today's Brief" = "오늘의 브리핑 생성";
+"Generating your brief..." = "브리핑 생성 중...";
+"Fetching your emails and calendar..." = "이메일과 캘린더를 가져오는 중...";
+"Analyzing content..." = "콘텐츠 분석 중...";
+"Creating your personalized script..." = "맞춤 스크립트 작성 중...";
+"Generating audio..." = "오디오 생성 중...";
+"Almost done..." = "거의 완료...";
+"Now Playing" = "지금 재생 중";
+"Generation failed" = "생성 실패";
+"Retry" = "다시 시도";
+"Reconnect your email" = "이메일 재연결";
+"Reconnect" = "재연결";
+"No new emails" = "새 이메일 없음";
+"Try Again Later" = "나중에 다시 시도";
+
+// MARK: - Splash Screen
+"Your AI-powered audio briefing" = "AI 기반 오디오 브리핑";
+
+// MARK: - Tab Router
+"Home" = "홈";
+
+// MARK: - Notification Settings
+"Notifications" = "알림";
+"Enabled" = "활성화됨";
+"Open Settings" = "설정 열기";
+"Enable" = "활성화";
+"Not Available" = "사용 불가";
+"Permission" = "권한";
+"Allow notifications to receive your daily brief when it's ready." = "Daily Brief가 준비되면 알림을 받을 수 있도록 알림을 허용하세요.";
+"Daily Brief Notifications" = "Daily Brief 알림";
+"Briefing Time" = "브리핑 시간";
+"Timezone" = "시간대";
+"Daily Brief Schedule" = "Daily Brief 일정";
+"Daily Brief Content" = "Daily Brief 콘텐츠";
+"When enabled, your Daily Brief will include headlines and updates from your selected topics of interest." = "활성화하면 Daily Brief에 선택한 관심 주제의 헤드라인과 업데이트가 포함됩니다.";
+"Notification Preview" = "알림 미리보기";
+"Your Daily Brief is Ready" = "Daily Brief가 준비되었습니다";
+"Your personalized briefing is ready to play." = "맞춤 브리핑이 재생 준비되었습니다.";
+"Manual" = "수동";
+"Generate your daily brief immediately instead of waiting for the scheduled time." = "예약 시간을 기다리지 않고 즉시 Daily Brief를 생성합니다.";
+"Enable to have your daily brief automatically generated each morning." = "매일 아침 Daily Brief를 자동 생성하려면 활성화하세요.";
+
+// MARK: - Location & Weather Settings
+"Location & Weather" = "위치 및 날씨";
+"Use Current Location" = "현재 위치 사용";
+"Weather Location" = "날씨 위치";
+"Home Address" = "집 주소";
+"Enter your home address" = "집 주소를 입력하세요";
+"Work Address" = "직장 주소";
+"Enter your work address" = "직장 주소를 입력하세요";
+"Traffic Route" = "교통 경로";
+"Set both addresses to get commute time in your daily briefing" = "두 주소를 모두 설정하여 일일 브리핑에서 출퇴근 시간을 확인하세요";
+"Temperature Unit" = "온도 단위";
+"Fahrenheit (°F)" = "화씨 (°F)";
+"Celsius (°C)" = "섭씨 (°C)";
+"Units" = "단위";
+"Weather and traffic information will be included in your morning daily briefing when available." = "날씨 및 교통 정보는 이용 가능한 경우 아침 일일 브리핑에 포함됩니다.";
+"Save" = "저장";
+
+// MARK: - Custom Sources
+"Add Source" = "소스 추가";
+"Source Type" = "소스 유형";
+"URL" = "URL";
+"Validating..." = "검증 중...";
+"Invalid source" = "잘못된 소스";
+"Name (Optional)" = "이름 (선택사항)";
+"Auto-detect name" = "이름 자동 감지";
+"Leave blank to use the detected name" = "감지된 이름을 사용하려면 비워두세요";
+"Validate" = "검증";
+"My Sources" = "내 소스";
+"No Custom Sources" = "맞춤 소스 없음";
+"Add RSS feeds, newsletters, or websites to include their content in your daily brief." = "RSS 피드, 뉴스레터 또는 웹사이트를 추가하여 Daily Brief에 콘텐츠를 포함하세요.";
+"Add Your First Source" = "첫 번째 소스 추가";
+"Paused" = "일시 중지됨";
+"Source Info" = "소스 정보";
+"Type" = "유형";
+"Status" = "상태";
+"Last Updated" = "마지막 업데이트";
+"Items" = "항목";
+"Recent Items" = "최근 항목";
+"No items yet" = "아직 항목 없음";
+"Refresh" = "새로고침";
+"Pause" = "일시 중지";
+"Resume" = "재개";
+
+// MARK: - Live Station Player
+"Now Covering" = "현재 다루는 주제";
+"listening" = "청취 중";
+
+// MARK: - Ad Companion
+"Sponsored" = "후원";
+"Ad" = "광고";
+
+// MARK: - Episode History
+"Generating..." = "생성 중...";
+"Failed" = "실패";
+"Not generated" = "미생성";
+
+// MARK: - Misc / Duration formats
+"min daily" = "분/일";
+"min" = "분";
+"episodes" = "에피소드";
+"items found" = "개 항목 발견";
+"sources" = "소스";
+"topic" = "주제";
+"topics" = "주제";
+"selected" = "선택됨";
+"hidden" = "숨겨짐";
+"added to For You" = "추천에 추가됨";
+"removed from For You" = "추천에서 제거됨";
+"/year" = "/년";
+"/month" = "/월";
+"/week" = "/주";
+"/day" = "/일";

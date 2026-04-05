@@ -132,36 +132,22 @@ export interface LiveStation {
   description: string;
   icon: string;
   color: string;
-  category: string;
-  refreshIntervalMinutes: number;
-  isActive: boolean;
-  listenerCount: number;
-  currentEpisode?: {
-    id: string;
-    title: string;
-    audioUrl: string;
-    durationSeconds: number;
-    generatedAt: string;
-  };
+  streamUrl: string;
+  language: string;
 }
 
-interface LiveStationsResponse {
-  success: boolean;
-  data: {
-    stations: LiveStation[];
-  };
-}
-
-export async function getLiveStations(): Promise<LiveStation[]> {
-  const response = await apiClient<LiveStationsResponse>('/livestation');
-  return response.data.stations || [];
-}
-
-export async function tuneIntoStation(stationId: string): Promise<{ episode: Episode }> {
-  return apiClient(`/livestation/${stationId}/tune-in`, {
-    method: 'POST',
-  });
-}
+export const LIVE_STATIONS: LiveStation[] = [
+  { id: 'en', name: 'Audexa Radio', description: 'English \u2022 News, Talk & Advice', icon: '\u{1F1FA}\u{1F1F8}', color: '#EF4444', streamUrl: 'https://radio.audexa.app/stream', language: 'en' },
+  { id: 'es', name: 'Audexa Espa\u00f1ol', description: 'Spanish \u2022 Noticias y Consejos', icon: '\u{1F1EA}\u{1F1F8}', color: '#F59E0B', streamUrl: 'https://radio.audexa.app/stream-es', language: 'es' },
+  { id: 'hi', name: 'Audexa Hindi', description: 'Hindi \u2022 \u0938\u092E\u093E\u091A\u093E\u0930 \u0914\u0930 \u091A\u0930\u094D\u091A\u093E', icon: '\u{1F1EE}\u{1F1F3}', color: '#F97316', streamUrl: 'https://radio.audexa.app/stream-hi', language: 'hi' },
+  { id: 'pt', name: 'Audexa Portugu\u00eas', description: 'Portuguese \u2022 Not\u00edcias e Dicas', icon: '\u{1F1E7}\u{1F1F7}', color: '#10B981', streamUrl: 'https://radio.audexa.app/stream-pt', language: 'pt' },
+  { id: 'fr', name: 'Audexa Fran\u00e7ais', description: 'French \u2022 Actualit\u00e9s et Conseils', icon: '\u{1F1EB}\u{1F1F7}', color: '#3B82F6', streamUrl: 'https://radio.audexa.app/stream-fr', language: 'fr' },
+  { id: 'de', name: 'Audexa Deutsch', description: 'German \u2022 Nachrichten und Tipps', icon: '\u{1F1E9}\u{1F1EA}', color: '#6366F1', streamUrl: 'https://radio.audexa.app/stream-de', language: 'de' },
+  { id: 'ja', name: 'Audexa Japanese', description: 'Japanese \u2022 \u30CB\u30E5\u30FC\u30B9\u3068\u30C8\u30FC\u30AF', icon: '\u{1F1EF}\u{1F1F5}', color: '#EC4899', streamUrl: 'https://radio.audexa.app/stream-ja', language: 'ja' },
+  { id: 'ko', name: 'Audexa Korean', description: 'Korean \u2022 \uB274\uC2A4\uC640 \uD1A0\uD06C', icon: '\u{1F1F0}\u{1F1F7}', color: '#8B5CF6', streamUrl: 'https://radio.audexa.app/stream-ko', language: 'ko' },
+  { id: 'zh', name: 'Audexa Chinese', description: 'Chinese \u2022 \u65B0\u95FB\u4E0E\u8BA8\u8BBA', icon: '\u{1F1E8}\u{1F1F3}', color: '#DC2626', streamUrl: 'https://radio.audexa.app/stream-zh', language: 'zh' },
+  { id: 'it', name: 'Audexa Italiano', description: 'Italian \u2022 Notizie e Consigli', icon: '\u{1F1EE}\u{1F1F9}', color: '#059669', streamUrl: 'https://radio.audexa.app/stream-it', language: 'it' },
+];
 
 // Deep Dive
 export interface DeepDiveEpisode {

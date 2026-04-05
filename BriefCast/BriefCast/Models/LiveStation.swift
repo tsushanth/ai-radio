@@ -23,6 +23,8 @@ struct LiveStation: Identifiable, Codable, Hashable {
     let currentEpisode: LiveStationEpisode?
     let createdAt: String
     let updatedAt: String
+    /// Direct Icecast/HLS stream URL — when set, played instead of episode audioUrl
+    var streamUrl: String?
 
     enum CodingKeys: String, CodingKey {
         case id, name, description, icon, color, category
@@ -32,6 +34,7 @@ struct LiveStation: Identifiable, Codable, Hashable {
         case currentEpisode = "currentEpisode"
         case createdAt = "createdAt"
         case updatedAt = "updatedAt"
+        case streamUrl = "streamUrl"
     }
 
     init(from decoder: Decoder) throws {
@@ -48,6 +51,7 @@ struct LiveStation: Identifiable, Codable, Hashable {
         currentEpisode = try container.decodeIfPresent(LiveStationEpisode.self, forKey: .currentEpisode)
         createdAt = try container.decodeIfPresent(String.self, forKey: .createdAt) ?? ""
         updatedAt = try container.decodeIfPresent(String.self, forKey: .updatedAt) ?? ""
+        streamUrl = try container.decodeIfPresent(String.self, forKey: .streamUrl)
     }
 
     init(
@@ -62,7 +66,8 @@ struct LiveStation: Identifiable, Codable, Hashable {
         listenerCount: Int,
         currentEpisode: LiveStationEpisode?,
         createdAt: String,
-        updatedAt: String
+        updatedAt: String,
+        streamUrl: String? = nil
     ) {
         self.id = id
         self.name = name
@@ -76,6 +81,7 @@ struct LiveStation: Identifiable, Codable, Hashable {
         self.currentEpisode = currentEpisode
         self.createdAt = createdAt
         self.updatedAt = updatedAt
+        self.streamUrl = streamUrl
     }
 
     // MARK: - Computed Properties

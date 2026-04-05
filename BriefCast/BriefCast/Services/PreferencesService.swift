@@ -8,6 +8,12 @@
 import Foundation
 import SwiftUI
 
+// MARK: - Bookmark Paywall Notification
+
+extension Notification.Name {
+    static let showBookmarkLimitPaywall = Notification.Name("showBookmarkLimitPaywall")
+}
+
 // MARK: - App Theme
 
 enum AppTheme: String, CaseIterable, Identifiable {
@@ -60,6 +66,7 @@ class PreferencesService: ObservableObject {
         static let isSubscribed = "isSubscribed"
         static let episodesListened = "episodesListened"
         static let lastReviewPromptDate = "lastReviewPromptDate"
+        static let radioLanguages = "radioLanguages"
     }
 
     private let defaults = UserDefaults.standard
@@ -83,20 +90,40 @@ class PreferencesService: ObservableObject {
         bookmarkedTopicIds.contains(topicId)
     }
 
-    func toggleBookmark(for topicId: String) {
+    /// Returns `false` if the bookmark was blocked by the free-user limit (5 bookmarks).
+    /// Posts `.showBookmarkLimitPaywall` notification when blocked.
+    @discardableResult
+    func toggleBookmark(for topicId: String) -> Bool {
         var bookmarks = bookmarkedTopicIds
         if bookmarks.contains(topicId) {
             bookmarks.remove(topicId)
+            bookmarkedTopicIds = bookmarks
+            return true
         } else {
+            // Enforce 5-bookmark limit for free users
+            if !SubscriptionManager.shared.isSubscribed && bookmarks.count >= 5 {
+                NotificationCenter.default.post(name: .showBookmarkLimitPaywall, object: nil)
+                return false
+            }
             bookmarks.insert(topicId)
+            bookmarkedTopicIds = bookmarks
+            return true
         }
-        bookmarkedTopicIds = bookmarks
     }
 
-    func addBookmark(for topicId: String) {
+    /// Returns `false` if the bookmark was blocked by the free-user limit (5 bookmarks).
+    /// Posts `.showBookmarkLimitPaywall` notification when blocked.
+    @discardableResult
+    func addBookmark(for topicId: String) -> Bool {
         var bookmarks = bookmarkedTopicIds
+        // Enforce 5-bookmark limit for free users
+        if !bookmarks.contains(topicId) && !SubscriptionManager.shared.isSubscribed && bookmarks.count >= 5 {
+            NotificationCenter.default.post(name: .showBookmarkLimitPaywall, object: nil)
+            return false
+        }
         bookmarks.insert(topicId)
         bookmarkedTopicIds = bookmarks
+        return true
     }
 
     func removeBookmark(for topicId: String) {
@@ -261,6 +288,48 @@ class PreferencesService: ObservableObject {
 
     func recordReviewPrompt() {
         lastReviewPromptDate = Date()
+    }
+
+    // MARK: - Radio Languages
+
+    /// Languages the user wants to see radio stations for.
+    /// Defaults to English + the user's preferred podcast language.
+    var radioLanguages: [String] {
+        get {
+            if let stored = defaults.stringArray(forKey: Keys.radioLanguages) {
+                return stored
+            }
+            // Default: English + preferred language (deduplicated)
+            var langs = ["en"]
+            let pref = preferredLanguage
+            if pref != "en" { langs.append(pref) }
+            return langs
+        }
+        set {
+            defaults.set(newValue, forKey: Keys.radioLanguages)
+            objectWillChange.send()
+        }
+    }
+
+    /// Resolved SupportedLanguage objects for selected radio languages,
+    /// filtered to only those available for radio.
+    var radioSupportedLanguages: [SupportedLanguage] {
+        let available = Set(SupportedLanguage.radioAvailable.map { $0.rawValue })
+        return radioLanguages
+            .filter { available.contains($0) }
+            .compactMap { SupportedLanguage(rawValue: $0) }
+    }
+
+    func toggleRadioLanguage(_ code: String) {
+        var langs = radioLanguages
+        if langs.contains(code) {
+            // Don't allow removing the last language
+            guard langs.count > 1 else { return }
+            langs.removeAll { $0 == code }
+        } else {
+            langs.append(code)
+        }
+        radioLanguages = langs
     }
 
     // MARK: - Reset

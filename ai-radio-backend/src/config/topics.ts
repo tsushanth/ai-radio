@@ -53,6 +53,7 @@ export const TOPICS: TopicDefinition[] = [
     promptContext: 'Focus on the most impactful global stories. Be objective and balanced.',
     targetDurationMinutes: 4,
     isActive: true,
+    languages: ['all'],
   },
   {
     id: 'us-politics',
@@ -84,6 +85,7 @@ export const TOPICS: TopicDefinition[] = [
     promptContext: 'Cover US political news objectively. Explain policy implications for everyday people.',
     targetDurationMinutes: 4,
     isActive: true,
+    languages: ['en'],
   },
   {
     id: 'world-update',
@@ -115,6 +117,7 @@ export const TOPICS: TopicDefinition[] = [
     promptContext: 'Provide balanced international coverage. Explain context for complex geopolitical situations.',
     targetDurationMinutes: 4,
     isActive: true,
+    languages: ['all'],
   },
 
   // TECHNOLOGY
@@ -154,6 +157,7 @@ export const TOPICS: TopicDefinition[] = [
     promptContext: 'Make AI news accessible to tech-savvy listeners. Explain implications of new models and research.',
     targetDurationMinutes: 5,
     isActive: true,
+    languages: ['all'],
   },
   {
     id: 'tech-news',
@@ -191,6 +195,7 @@ export const TOPICS: TopicDefinition[] = [
     promptContext: 'Cover major tech industry moves, product launches, and company news. Be engaging and slightly playful.',
     targetDurationMinutes: 4,
     isActive: true,
+    languages: ['all'],
   },
   {
     id: 'coding-dev',
@@ -228,6 +233,7 @@ export const TOPICS: TopicDefinition[] = [
     promptContext: 'Cover developer news with enthusiasm. Mention interesting open source projects and language updates.',
     targetDurationMinutes: 4,
     isActive: true,
+    languages: ['all'],
   },
 
   // BUSINESS
@@ -267,6 +273,7 @@ export const TOPICS: TopicDefinition[] = [
     promptContext: 'Cover startup ecosystem news. Highlight interesting funding rounds and founder insights.',
     targetDurationMinutes: 4,
     isActive: true,
+    languages: ['all'],
   },
   {
     id: 'markets-finance',
@@ -304,6 +311,7 @@ export const TOPICS: TopicDefinition[] = [
     promptContext: 'Provide clear market updates without financial advice. Explain market movements in plain terms.',
     targetDurationMinutes: 4,
     isActive: true,
+    languages: ['all'],
   },
 
   // SCIENCE
@@ -343,6 +351,7 @@ export const TOPICS: TopicDefinition[] = [
     promptContext: 'Cover space news with wonder and excitement. Explain scientific concepts clearly.',
     targetDurationMinutes: 4,
     isActive: true,
+    languages: ['all'],
   },
   {
     id: 'science-discoveries',
@@ -380,6 +389,7 @@ export const TOPICS: TopicDefinition[] = [
     promptContext: 'Make scientific discoveries accessible and exciting. Explain implications for everyday life.',
     targetDurationMinutes: 4,
     isActive: true,
+    languages: ['all'],
   },
 
   // LIFESTYLE
@@ -419,6 +429,7 @@ export const TOPICS: TopicDefinition[] = [
     promptContext: 'Share health news responsibly. Cite sources and avoid giving medical advice.',
     targetDurationMinutes: 4,
     isActive: true,
+    languages: ['all'],
   },
 
   // ENTERTAINMENT
@@ -458,6 +469,7 @@ export const TOPICS: TopicDefinition[] = [
     promptContext: 'Cover gaming news with enthusiasm. Balance AAA and indie game coverage.',
     targetDurationMinutes: 4,
     isActive: true,
+    languages: ['all'],
   },
 
   // SPORTS
@@ -489,6 +501,223 @@ export const TOPICS: TopicDefinition[] = [
       },
     ],
     promptContext: 'Cover major sports stories with energy. Include scores and highlight key performances.',
+    targetDurationMinutes: 4,
+    isActive: true,
+    languages: ['en'],
+  },
+
+  // SPANISH
+  {
+    id: 'noticias-latinoamerica',
+    name: 'Latinoamérica Hoy',
+    description: 'Noticias principales de América Latina',
+    icon: 'globe.americas.fill',
+    color: '#E74C3C',
+    category: 'news',
+    languages: ['es'],
+    localizedNames: { es: 'Latinoamérica Hoy' },
+    localizedDescriptions: { es: 'Noticias principales de América Latina' },
+    sources: [
+      { type: 'rss', name: 'BBC Mundo', url: 'https://feeds.bbci.co.uk/mundo/rss.xml', maxItems: 12 },
+      { type: 'rss', name: 'El País', url: 'https://feeds.elpais.com/mrss-s/pages/ep/site/elpais.com/portada', maxItems: 10 },
+    ],
+    promptContext: 'Cover Latin American news. Focus on regional politics, economy, and culture.',
+    targetDurationMinutes: 4,
+    isActive: true,
+  },
+  {
+    id: 'futbol-mundial',
+    name: 'Fútbol Mundial',
+    description: 'Resultados y noticias del fútbol mundial',
+    icon: 'sportscourt.fill',
+    color: '#27AE60',
+    category: 'sports',
+    languages: ['es', 'pt'],
+    localizedNames: { es: 'Fútbol Mundial', pt: 'Futebol Mundial' },
+    localizedDescriptions: { es: 'Resultados y noticias del fútbol mundial', pt: 'Resultados e notícias do futebol mundial' },
+    sources: [
+      { type: 'rss', name: 'Marca', url: 'https://e00-marca.uecdn.es/rss/futbol/futbol-internacional.xml', maxItems: 12 },
+      { type: 'rss', name: 'AS', url: 'https://as.com/rss/tags/ultimas_noticias.xml', maxItems: 10 },
+    ],
+    promptContext: 'Cover world football/soccer news with passion. Include La Liga, Premier League, Champions League, and Latin American leagues.',
+    targetDurationMinutes: 4,
+    isActive: true,
+  },
+
+  // FRENCH
+  {
+    id: 'actualites-france',
+    name: 'Actualités France',
+    description: "L'essentiel de l'actualité française",
+    icon: 'newspaper.fill',
+    color: '#3498DB',
+    category: 'news',
+    languages: ['fr'],
+    localizedNames: { fr: 'Actualités France' },
+    localizedDescriptions: { fr: "L'essentiel de l'actualité française" },
+    sources: [
+      { type: 'rss', name: 'Le Monde', url: 'https://www.lemonde.fr/rss/une.xml', maxItems: 12 },
+      { type: 'rss', name: 'France 24', url: 'https://www.france24.com/fr/rss', maxItems: 10 },
+    ],
+    promptContext: 'Cover French news comprehensively. Include politics, culture, and society.',
+    targetDurationMinutes: 4,
+    isActive: true,
+  },
+
+  // GERMAN
+  {
+    id: 'nachrichten-deutschland',
+    name: 'Nachrichten Deutschland',
+    description: 'Die wichtigsten Nachrichten aus Deutschland',
+    icon: 'newspaper.fill',
+    color: '#F39C12',
+    category: 'news',
+    languages: ['de'],
+    localizedNames: { de: 'Nachrichten Deutschland' },
+    localizedDescriptions: { de: 'Die wichtigsten Nachrichten aus Deutschland' },
+    sources: [
+      { type: 'rss', name: 'Tagesschau', url: 'https://www.tagesschau.de/xml/rss2/', maxItems: 12 },
+      { type: 'rss', name: 'Spiegel', url: 'https://www.spiegel.de/schlagzeilen/index.rss', maxItems: 10 },
+    ],
+    promptContext: 'Cover German news. Include politics, economy, and European affairs.',
+    targetDurationMinutes: 4,
+    isActive: true,
+  },
+
+  // PORTUGUESE (Brazil)
+  {
+    id: 'noticias-brasil',
+    name: 'Notícias do Brasil',
+    description: 'As principais notícias do Brasil',
+    icon: 'newspaper.fill',
+    color: '#2ECC71',
+    category: 'news',
+    languages: ['pt'],
+    localizedNames: { pt: 'Notícias do Brasil' },
+    localizedDescriptions: { pt: 'As principais notícias do Brasil' },
+    sources: [
+      { type: 'rss', name: 'G1 Globo', url: 'https://g1.globo.com/rss/g1/', maxItems: 12 },
+      { type: 'rss', name: 'Folha', url: 'https://feeds.folha.uol.com.br/folha/emcimadahora/rss091.xml', maxItems: 10 },
+    ],
+    promptContext: 'Cover Brazilian news. Include politics, economy, culture, and sports.',
+    targetDurationMinutes: 4,
+    isActive: true,
+  },
+
+  // JAPANESE
+  {
+    id: 'nihon-news',
+    name: '日本ニュース',
+    description: '日本の最新ニュース',
+    icon: 'newspaper.fill',
+    color: '#E74C3C',
+    category: 'news',
+    languages: ['ja'],
+    localizedNames: { ja: '日本ニュース' },
+    localizedDescriptions: { ja: '日本の最新ニュース' },
+    sources: [
+      { type: 'rss', name: 'NHK News', url: 'https://www3.nhk.or.jp/rss/news/cat0.xml', maxItems: 12 },
+      { type: 'rss', name: 'Japan Times', url: 'https://www.japantimes.co.jp/feed/', maxItems: 10 },
+    ],
+    promptContext: 'Cover Japanese news. Include domestic politics, economy, technology, and culture.',
+    targetDurationMinutes: 4,
+    isActive: true,
+  },
+
+  // KOREAN
+  {
+    id: 'hanguk-news',
+    name: '한국 뉴스',
+    description: '한국의 주요 뉴스',
+    icon: 'newspaper.fill',
+    color: '#1E3A5F',
+    category: 'news',
+    languages: ['ko'],
+    localizedNames: { ko: '한국 뉴스' },
+    localizedDescriptions: { ko: '한국의 주요 뉴스' },
+    sources: [
+      { type: 'rss', name: 'Yonhap News', url: 'https://en.yna.co.kr/RSS/news.xml', maxItems: 12 },
+      { type: 'rss', name: 'Korea Herald', url: 'http://www.koreaherald.com/common/rss_xml.php?ct=102', maxItems: 10 },
+    ],
+    promptContext: 'Cover Korean news. Include domestic politics, K-culture, technology, and economy.',
+    targetDurationMinutes: 4,
+    isActive: true,
+  },
+
+  // HINDI
+  {
+    id: 'bharat-samachar',
+    name: 'भारत समाचार',
+    description: 'भारत की ताज़ा खबरें',
+    icon: 'newspaper.fill',
+    color: '#FF9933',
+    category: 'news',
+    languages: ['hi'],
+    localizedNames: { hi: 'भारत समाचार' },
+    localizedDescriptions: { hi: 'भारत की ताज़ा खबरें' },
+    sources: [
+      { type: 'rss', name: 'NDTV', url: 'https://feeds.feedburner.com/ndtvnews-top-stories', maxItems: 12 },
+      { type: 'rss', name: 'Times of India', url: 'https://timesofindia.indiatimes.com/rssfeedstopstories.cms', maxItems: 10 },
+    ],
+    promptContext: 'Cover Indian news. Include politics, economy, technology, cricket, and Bollywood.',
+    targetDurationMinutes: 4,
+    isActive: true,
+  },
+  {
+    id: 'cricket-updates',
+    name: 'Cricket Updates',
+    description: 'Latest cricket scores and news',
+    icon: 'sportscourt.fill',
+    color: '#138808',
+    category: 'sports',
+    languages: ['hi', 'en'],
+    localizedNames: { hi: 'क्रिकेट अपडेट', en: 'Cricket Updates' },
+    localizedDescriptions: { hi: 'क्रिकेट के ताज़ा स्कोर और खबरें', en: 'Latest cricket scores and news' },
+    sources: [
+      { type: 'rss', name: 'ESPNcricinfo', url: 'https://www.espncricinfo.com/rss/content/story/feeds/0.xml', maxItems: 12 },
+      { type: 'rss', name: 'Cricbuzz', url: 'https://www.cricbuzz.com/cb-rss/cb-top-stories', maxItems: 10 },
+    ],
+    promptContext: 'Cover cricket news with enthusiasm. Include IPL, international matches, and player updates.',
+    targetDurationMinutes: 4,
+    isActive: true,
+  },
+
+  // CHINESE
+  {
+    id: 'zhongguo-xinwen',
+    name: '中国新闻',
+    description: '中国和亚洲的最新新闻',
+    icon: 'newspaper.fill',
+    color: '#DE2910',
+    category: 'news',
+    languages: ['zh'],
+    localizedNames: { zh: '中国新闻' },
+    localizedDescriptions: { zh: '中国和亚洲的最新新闻' },
+    sources: [
+      { type: 'rss', name: 'BBC Chinese', url: 'https://feeds.bbci.co.uk/zhongwen/simp/rss.xml', maxItems: 12 },
+      { type: 'rss', name: 'South China Morning Post', url: 'https://www.scmp.com/rss/91/feed', maxItems: 10 },
+    ],
+    promptContext: 'Cover Chinese and East Asian news. Include technology, economy, and culture.',
+    targetDurationMinutes: 4,
+    isActive: true,
+  },
+
+  // ITALIAN
+  {
+    id: 'notizie-italia',
+    name: 'Notizie Italia',
+    description: "Le ultime notizie dall'Italia",
+    icon: 'newspaper.fill',
+    color: '#009246',
+    category: 'news',
+    languages: ['it'],
+    localizedNames: { it: 'Notizie Italia' },
+    localizedDescriptions: { it: "Le ultime notizie dall'Italia" },
+    sources: [
+      { type: 'rss', name: 'ANSA', url: 'https://www.ansa.it/sito/ansait_rss.xml', maxItems: 12 },
+      { type: 'rss', name: 'La Repubblica', url: 'https://www.repubblica.it/rss/homepage/rss2.0.xml', maxItems: 10 },
+    ],
+    promptContext: 'Cover Italian news. Include politics, culture, Serie A football, and European affairs.',
     targetDurationMinutes: 4,
     isActive: true,
   },

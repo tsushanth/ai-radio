@@ -4,7 +4,7 @@
 
     <limits>
         <clients>500</clients>
-        <sources>2</sources>
+        <sources>24</sources>
         <queue-size>524288</queue-size>
         <client-timeout>30</client-timeout>
         <header-timeout>15</header-timeout>
@@ -14,10 +14,10 @@
     </limits>
 
     <authentication>
-        <source-password>changeme_source</source-password>
-        <relay-password>changeme_relay</relay-password>
+        <source-password>5J688etweykEMVfTkGXBdw</source-password>
+        <relay-password>u65i5he3L7PcIspnoS4ouA</relay-password>
         <admin-user>admin</admin-user>
-        <admin-password>changeme_admin</admin-password>
+        <admin-password>u65i5he3L7PcIspnoS4ouA</admin-password>
     </authentication>
 
     <hostname>radio.audexa.fm</hostname>
@@ -26,6 +26,7 @@
         <port>8000</port>
     </listen-socket>
 
+    <!-- English (original, backward compatible) -->
     <mount type="normal">
         <mount-name>/stream</mount-name>
         <fallback-mount>/fallback</fallback-mount>
@@ -38,11 +39,141 @@
         <genre>News/Talk</genre>
     </mount>
 
+    <!-- English (explicit /stream-en) -->
+    <mount type="normal">
+        <mount-name>/stream-en</mount-name>
+        <fallback-mount>/stream</fallback-mount>
+        <fallback-override>1</fallback-override>
+        <charset>UTF-8</charset>
+        <public>1</public>
+        <stream-name>Audexa Radio (English)</stream-name>
+        <stream-description>AI-powered 24/7 news and talk radio - English</stream-description>
+        <stream-url>https://radio.audexa.fm</stream-url>
+        <genre>News/Talk</genre>
+    </mount>
+
+    <!-- Spanish -->
+    <mount type="normal">
+        <mount-name>/stream-es</mount-name>
+        <fallback-mount>/stream</fallback-mount>
+        <fallback-override>1</fallback-override>
+        <charset>UTF-8</charset>
+        <public>1</public>
+        <stream-name>Audexa Radio (Español)</stream-name>
+        <stream-description>Radio de noticias 24/7 impulsada por IA - Español</stream-description>
+        <stream-url>https://radio.audexa.fm</stream-url>
+        <genre>News/Talk</genre>
+    </mount>
+
+    <!-- Hindi -->
+    <mount type="normal">
+        <mount-name>/stream-hi</mount-name>
+        <fallback-mount>/stream</fallback-mount>
+        <fallback-override>1</fallback-override>
+        <charset>UTF-8</charset>
+        <public>1</public>
+        <stream-name>Audexa Radio (हिन्दी)</stream-name>
+        <stream-description>AI-powered 24/7 news and talk radio - Hindi</stream-description>
+        <stream-url>https://radio.audexa.fm</stream-url>
+        <genre>News/Talk</genre>
+    </mount>
+
+    <!-- Portuguese -->
+    <mount type="normal">
+        <mount-name>/stream-pt</mount-name>
+        <fallback-mount>/stream</fallback-mount>
+        <fallback-override>1</fallback-override>
+        <charset>UTF-8</charset>
+        <public>1</public>
+        <stream-name>Audexa Radio (Português)</stream-name>
+        <stream-description>Rádio de notícias 24/7 com IA - Português</stream-description>
+        <stream-url>https://radio.audexa.fm</stream-url>
+        <genre>News/Talk</genre>
+    </mount>
+
+    <!-- French -->
+    <mount type="normal">
+        <mount-name>/stream-fr</mount-name>
+        <fallback-mount>/stream</fallback-mount>
+        <fallback-override>1</fallback-override>
+        <charset>UTF-8</charset>
+        <public>1</public>
+        <stream-name>Audexa Radio (Français)</stream-name>
+        <stream-description>Radio d'information 24/7 alimentée par l'IA - Français</stream-description>
+        <stream-url>https://radio.audexa.fm</stream-url>
+        <genre>News/Talk</genre>
+    </mount>
+
+    <!-- German -->
+    <mount type="normal">
+        <mount-name>/stream-de</mount-name>
+        <fallback-mount>/stream</fallback-mount>
+        <fallback-override>1</fallback-override>
+        <charset>UTF-8</charset>
+        <public>1</public>
+        <stream-name>Audexa Radio (Deutsch)</stream-name>
+        <stream-description>KI-gestütztes 24/7-Nachrichtenradio - Deutsch</stream-description>
+        <stream-url>https://radio.audexa.fm</stream-url>
+        <genre>News/Talk</genre>
+    </mount>
+
+    <!-- Japanese -->
+    <mount type="normal">
+        <mount-name>/stream-ja</mount-name>
+        <fallback-mount>/stream</fallback-mount>
+        <fallback-override>1</fallback-override>
+        <charset>UTF-8</charset>
+        <public>1</public>
+        <stream-name>Audexa Radio (日本語)</stream-name>
+        <stream-description>AI搭載24時間ニュースラジオ - Japanese</stream-description>
+        <stream-url>https://radio.audexa.fm</stream-url>
+        <genre>News/Talk</genre>
+    </mount>
+
+    <!-- Korean -->
+    <mount type="normal">
+        <mount-name>/stream-ko</mount-name>
+        <fallback-mount>/stream</fallback-mount>
+        <fallback-override>1</fallback-override>
+        <charset>UTF-8</charset>
+        <public>1</public>
+        <stream-name>Audexa Radio (한국어)</stream-name>
+        <stream-description>AI 기반 24시간 뉴스 라디오 - Korean</stream-description>
+        <stream-url>https://radio.audexa.fm</stream-url>
+        <genre>News/Talk</genre>
+    </mount>
+
+    <!-- Chinese -->
+    <mount type="normal">
+        <mount-name>/stream-zh</mount-name>
+        <fallback-mount>/stream</fallback-mount>
+        <fallback-override>1</fallback-override>
+        <charset>UTF-8</charset>
+        <public>1</public>
+        <stream-name>Audexa Radio (中文)</stream-name>
+        <stream-description>AI驱动全天候新闻电台 - Chinese</stream-description>
+        <stream-url>https://radio.audexa.fm</stream-url>
+        <genre>News/Talk</genre>
+    </mount>
+
+    <!-- Italian -->
+    <mount type="normal">
+        <mount-name>/stream-it</mount-name>
+        <fallback-mount>/stream</fallback-mount>
+        <fallback-override>1</fallback-override>
+        <charset>UTF-8</charset>
+        <public>1</public>
+        <stream-name>Audexa Radio (Italiano)</stream-name>
+        <stream-description>Radio notizie 24/7 con IA - Italian</stream-description>
+        <stream-url>https://radio.audexa.fm</stream-url>
+        <genre>News/Talk</genre>
+    </mount>
+
     <fileserve>1</fileserve>
 
     <paths>
         <basedir>/usr/share/icecast2</basedir>
-        <logdir>/var/log/icecast2</logdir>
+        <logdir>/var/log/icecast</logdir>
         <webroot>/usr/share/icecast2/web</webroot>
         <adminroot>/usr/share/icecast2/admin</adminroot>
     </paths>
@@ -56,5 +187,9 @@
 
     <security>
         <chroot>0</chroot>
+        <changeowner>
+            <user>icecast</user>
+            <group>icecast</group>
+        </changeowner>
     </security>
 </icecast>

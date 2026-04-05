@@ -4,7 +4,7 @@
  * for inclusion in personalized daily briefings
  */
 
-import { getTopicById, getActiveTopics } from '../../config/topics';
+import { topicsService } from '../supabase/topics.service';
 import { contentAggregator } from './aggregator.service';
 import type { TopicDefinition, AggregatedStory, TopicCategory } from '../../types/topics';
 import type { UserPreferences } from '../../types/database';
@@ -81,7 +81,7 @@ export class TopicPreviewService {
    * Fetch preview for a single topic
    */
   private async fetchTopicPreview(topicId: string): Promise<TopicPreview | null> {
-    const topic = getTopicById(topicId);
+    const topic = await topicsService.getTopicById(topicId);
     if (!topic) {
       console.warn(`Topic not found: ${topicId}`);
       return null;

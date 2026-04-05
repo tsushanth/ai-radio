@@ -18,6 +18,7 @@ struct PlayerView: View {
     @State private var currentExpansion: TellMeMoreExpansion?
     @State private var isLoadingExpansion = false
     @State private var showQAInput = false
+    @State private var showSpeedPaywall = false
 
     let episode: Episode
     var voiceService = VoiceService.shared
@@ -95,12 +96,12 @@ struct PlayerView: View {
 
                         // Playback speed button
                         Menu {
-                            Button("0.5x") { viewModel.setPlaybackSpeed(0.5) }
-                            Button("0.75x") { viewModel.setPlaybackSpeed(0.75) }
+                            Button("0.5x") { setSpeedIfAllowed(0.5) }
+                            Button("0.75x") { setSpeedIfAllowed(0.75) }
                             Button("1.0x") { viewModel.setPlaybackSpeed(1.0) }
-                            Button("1.25x") { viewModel.setPlaybackSpeed(1.25) }
-                            Button("1.5x") { viewModel.setPlaybackSpeed(1.5) }
-                            Button("2.0x") { viewModel.setPlaybackSpeed(2.0) }
+                            Button("1.25x") { setSpeedIfAllowed(1.25) }
+                            Button("1.5x") { setSpeedIfAllowed(1.5) }
+                            Button("2.0x") { setSpeedIfAllowed(2.0) }
                         } label: {
                             Text("\(String(format: "%.2g", viewModel.playbackSpeed))x")
                                 .font(.system(size: 16, weight: .semibold))
@@ -316,9 +317,21 @@ struct PlayerView: View {
             }
             .environment(AudioService.shared)
         }
+        .sheet(isPresented: $showSpeedPaywall) {
+            RemotePaywallView(triggerSource: "playback_speed")
+        }
     }
 
     // MARK: - Actions
+
+    /// Only allow non-1.0x speeds for premium users
+    private func setSpeedIfAllowed(_ speed: Float) {
+        if SubscriptionManager.shared.isSubscribed {
+            viewModel.setPlaybackSpeed(speed)
+        } else {
+            showSpeedPaywall = true
+        }
+    }
 
     private func handleSkip() {
         Task {

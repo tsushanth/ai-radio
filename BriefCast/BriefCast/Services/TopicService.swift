@@ -89,9 +89,10 @@ class TopicService {
 
     /// Fetch all available topics - returns cached data immediately, then updates from server
     /// Use this for initial load to show content instantly
-    func fetchTopics() async throws -> TopicsData {
+    func fetchTopics(language: String? = nil) async throws -> TopicsData {
         // Try to fetch from server
-        let endpoint = "\(baseURL)/topics"
+        let lang = language ?? PreferencesService.shared.preferredLanguage
+        let endpoint = "\(baseURL)/topics?lang=\(lang)"
 
         do {
             let data = try await performRequest(endpoint: endpoint)
@@ -115,14 +116,14 @@ class TopicService {
     /// Fetch topics with callback for immediate cached data
     /// - Parameter onCachedData: Called immediately with cached data if available
     /// - Returns: Fresh data from server (also updates cache)
-    func fetchTopicsWithCache(onCachedData: ((TopicsData) -> Void)? = nil) async throws -> TopicsData {
+    func fetchTopicsWithCache(language: String? = nil, onCachedData: ((TopicsData) -> Void)? = nil) async throws -> TopicsData {
         // Immediately return cached data if available
         if let cached = cachedTopicsData {
             onCachedData?(cached)
         }
 
         // Then fetch fresh data from server
-        return try await fetchTopics()
+        return try await fetchTopics(language: language)
     }
 
     /// Fetch a single topic with recent episodes
@@ -270,6 +271,24 @@ class TopicService {
         } catch {
             print("Failed to track ad click: \(error.localizedDescription)")
         }
+    }
+
+    // MARK: - Topic Suggestion
+
+    /// Suggest a new topic to the backend
+    func suggestTopic(topicName: String, language: String, description: String?) async throws {
+        let endpoint = "\(baseURL)/topics/suggest"
+
+        var body: [String: Any] = [
+            "topicName": topicName,
+            "language": language
+        ]
+        if let description = description, !description.isEmpty {
+            body["description"] = description
+        }
+
+        let bodyData = try JSONSerialization.data(withJSONObject: body)
+        _ = try await performRequest(endpoint: endpoint, method: "POST", bodyData: bodyData)
     }
 
     // MARK: - Helpers

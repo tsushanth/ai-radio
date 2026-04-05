@@ -1,0 +1,353 @@
+/* Localizable.strings (Japanese)
+   BriefCast / Audexa
+   Comprehensive localization for the Audexa iOS app */
+
+// MARK: - Auth View
+"Your personal AI radio" = "あなた専用のAIラジオ";
+"Sign in with Google" = "Googleでサインイン";
+"Continue without sign in" = "サインインせずに続ける";
+"You can link your email later to enable personalized Daily Brief" = "後でメールを連携してパーソナライズされたDaily Briefを有効にできます";
+"By continuing, you agree to our" = "続行すると、以下に同意したことになります";
+"Terms of Service" = "利用規約";
+"and" = "および";
+"Privacy Policy" = "プライバシーポリシー";
+
+// MARK: - Home View
+"For You" = "あなたへ";
+"Discover" = "見つける";
+"Good Morning" = "おはようございます";
+"Good Afternoon" = "こんにちは";
+"Good Evening" = "こんばんは";
+"Live Stations" = "ライブステーション";
+"LIVE" = "LIVE";
+"Your Deep Dives" = "あなたの深掘り";
+"Keep listening" = "聴き続ける";
+"Your Topics" = "あなたのトピック";
+"Topic Podcasts" = "トピックポッドキャスト";
+"Tap to explore and play" = "タップして探索・再生";
+"Recommended for you" = "あなたへのおすすめ";
+"More for you" = "あなたへのその他";
+"Playing" = "再生中";
+"Hide" = "非表示";
+"All Topics" = "すべてのトピック";
+"Matching Topics" = "一致するトピック";
+"Popular Shows" = "人気の番組";
+
+// MARK: - Search
+"Find new shows" = "新しい番組を見つける";
+"No results for \"%@\"" = "「%@」の検索結果はありません";
+
+// MARK: - Profile View
+"Profile" = "プロフィール";
+"User" = "ユーザー";
+"Premium" = "プレミアム";
+"Ad-Free" = "広告なし";
+"Go Ad-Free" = "広告なしにする";
+"Active subscription" = "有効なサブスクリプション";
+"Remove all ads" = "すべての広告を削除";
+"Linked Accounts" = "連携済みアカウント";
+"Add Account" = "アカウントを追加";
+"Daily Brief Sources" = "Daily Briefのソース";
+"Email" = "メール";
+"Include email summaries in Daily Brief" = "メールの要約をDaily Briefに含める";
+"Calendar" = "カレンダー";
+"Include upcoming events in Daily Brief" = "今後の予定をDaily Briefに含める";
+"Preferences" = "設定";
+"App Theme" = "アプリテーマ";
+"Podcast Language" = "ポッドキャストの言語";
+"Hidden Topics" = "非表示のトピック";
+"About" = "アプリについて";
+"Version" = "バージョン";
+"Share Audexa" = "Audexaを共有";
+"Tell your friends" = "友達に教える";
+"Sign Out" = "サインアウト";
+"Delete Account" = "アカウントを削除";
+"Are you sure you want to sign out?" = "サインアウトしてもよろしいですか？";
+"Are you sure you want to delete your account? This will permanently delete all your data including podcasts, preferences, and linked accounts. This action cannot be undone." = "アカウントを削除してもよろしいですか？ポッドキャスト、設定、連携済みアカウントを含むすべてのデータが完全に削除されます。この操作は元に戻せません。";
+"Error" = "エラー";
+"OK" = "OK";
+"Failed to delete account. Please try again." = "アカウントの削除に失敗しました。もう一度お試しください。";
+"Deleting account..." = "アカウントを削除中...";
+"Cancel" = "キャンセル";
+"Delete" = "削除";
+"Connected" = "接続済み";
+"Disconnected" = "未接続";
+"Match device settings" = "デバイス設定に合わせる";
+"Always dark mode" = "常にダークモード";
+"Always light mode" = "常にライトモード";
+"Check out Audexa - Your personalized AI-powered daily briefing podcast!" = "Audexaをチェック - あなた専用のAIデイリーブリーフィングポッドキャスト！";
+
+// MARK: - Hidden Topics View
+"No Hidden Topics" = "非表示のトピックなし";
+"Topics you hide will appear here" = "非表示にしたトピックがここに表示されます";
+"Unhide" = "再表示";
+"Done" = "完了";
+
+// MARK: - Player View
+"Voice" = "音声";
+"Cancel Timer" = "タイマーを取消";
+"5 min" = "5分";
+"10 min" = "10分";
+"15 min" = "15分";
+"30 min" = "30分";
+"60 min" = "60分";
+"Skip" = "スキップ";
+"Tell Me More" = "もっと詳しく";
+"Tap to ask a question" = "タップして質問する";
+"Live Transcript" = "ライブ文字起こし";
+"More Details" = "詳細";
+"Listen to Expansion" = "拡張版を聴く";
+"Sources" = "ソース";
+"Expanded Content" = "拡張コンテンツ";
+
+// MARK: - Voice Picker View
+"Voice Settings" = "音声設定";
+"Pairs" = "ペア";
+"Individual" = "個別";
+"Voice Selection" = "音声選択";
+"Host 1 Voice" = "ホスト1の音声";
+"Host 2 Voice" = "ホスト2の音声";
+"No voices available" = "利用可能な音声がありません";
+"Loading voices..." = "音声を読み込み中...";
+"No voice pairs available for %@" = "%@で利用可能な音声ペアがありません";
+"Host 1" = "ホスト1";
+"Host 2" = "ホスト2";
+
+// MARK: - Onboarding
+"Welcome to Audexa" = "Audexaへようこそ";
+"Your personalized AI radio. Get caught up on your emails, calendar, and favorite topics in just a few minutes." = "あなた専用のAIラジオ。メール、カレンダー、お気に入りのトピックをわずか数分でキャッチアップ。";
+"Get Started" = "始める";
+"Connect Your Account" = "アカウントを連携";
+"Link your Google account to get personalized briefings from your email and calendar." = "Googleアカウントを連携して、メールとカレンダーからパーソナライズされたブリーフィングを取得しましょう。";
+"Connect Google" = "Googleを連携";
+"Include email summaries in briefings" = "メールの要約をブリーフィングに含める";
+"(Optional)" = "（オプション）";
+"Include upcoming events in briefings" = "今後の予定をブリーフィングに含める";
+"Connect" = "連携";
+"Continue" = "続ける";
+"Skip for now" = "今はスキップ";
+"Connection Error" = "接続エラー";
+"Failed to connect account" = "アカウントの連携に失敗しました";
+"Choose Your Interests" = "興味を選択";
+"Select topics to personalize your Daily Brief." = "トピックを選択してDaily Briefをパーソナライズしましょう。";
+"Daily Brief Options" = "Daily Briefオプション";
+"Include Topic Updates" = "トピック更新を含める";
+"Add headlines from your topics to Daily Brief" = "トピックのヘッドラインをDaily Briefに追加";
+"Daily Reminder" = "毎日のリマインダー";
+"Notifications blocked. Tap Settings to enable." = "通知がブロックされています。設定をタップして有効にしてください。";
+"Get notified when your brief is ready" = "ブリーフが準備できたら通知を受け取る";
+"Settings" = "設定";
+"Reminder Time" = "リマインダー時刻";
+"Select at least one topic" = "少なくとも1つのトピックを選択してください";
+"Complete Setup" = "セットアップ完了";
+"Access not granted" = "アクセスが許可されていません";
+"Without access, we can only create general topic briefings. To get personalized briefings, please try again and grant the requested permissions." = "アクセスなしでは一般的なトピックブリーフィングのみ作成できます。パーソナライズされたブリーフィングを取得するには、再試行して要求された権限を許可してください。";
+"Try Again" = "再試行";
+"\"Unverified App\" Warning" = "「未確認のアプリ」の警告";
+"Google may show an \"unverified app\" screen because our calendar access is pending verification. This is safe to proceed." = "カレンダーアクセスの確認が保留中のため、Googleが「未確認のアプリ」画面を表示する場合があります。安全に続行できます。";
+"To connect:" = "連携するには：";
+"Tap \"Advanced\" on the warning screen" = "警告画面で「詳細」をタップ";
+"Tap \"Go to Audexa (unsafe)\"" = "「Audexa（安全でない）に移動」をタップ";
+"Grant calendar access" = "カレンダーへのアクセスを許可";
+
+// MARK: - Create View
+"Create" = "作成";
+"Create Daily Brief" = "Daily Briefを作成";
+"Generate your personalized podcast from today's emails and calendar events" = "今日のメールとカレンダーの予定からパーソナライズされたポッドキャストを生成";
+"Generate Now" = "今すぐ生成";
+
+// MARK: - Paywall View
+"Enjoy uninterrupted listening" = "中断なしのリスニングを楽しむ";
+"No audio ad interruptions" = "音声広告の中断なし";
+"Seamless episode playback" = "シームレスなエピソード再生";
+"Support indie development" = "インディー開発を応援";
+"You're an Ad-Free subscriber!" = "広告なしサブスクリプション登録済みです！";
+"Yearly" = "年額";
+"Save 58%" = "58%お得";
+"Monthly" = "月額";
+"Subscribe" = "サブスクリプション登録";
+"Restore Purchases" = "購入を復元";
+"Payment will be charged to your Apple ID account. Subscription automatically renews unless cancelled at least 24 hours before the end of the current period." = "お支払いはApple IDアカウントに請求されます。現在の期間終了の24時間前までにキャンセルしない限り、サブスクリプションは自動的に更新されます。";
+
+// MARK: - Linked Accounts View
+"Connect your accounts to personalize your daily briefings with relevant information from your emails." = "アカウントを連携して、メールの関連情報でデイリーブリーフィングをパーソナライズしましょう。";
+"Connected Accounts" = "接続済みアカウント";
+"Available Accounts" = "利用可能なアカウント";
+"Add Another Account" = "別のアカウントを追加";
+"Not connected" = "未接続";
+"We'll access:" = "以下にアクセスします：";
+"Read your Gmail messages" = "Gmailメッセージの読み取り";
+"Basic profile information" = "基本的なプロフィール情報";
+"Read your calendar events" = "カレンダーの予定の読み取り";
+"Your data is secure" = "あなたのデータは安全です";
+"We only access the information you explicitly allow and use it solely to create your personalized briefings. You can revoke access at any time." = "明示的に許可された情報のみにアクセスし、パーソナライズされたブリーフィングの作成のみに使用します。アクセスはいつでも取り消せます。";
+"Access Permissions" = "アクセス権限";
+"Email Access" = "メールアクセス";
+"Read emails to include in briefings" = "ブリーフィングに含めるメールを読み取る";
+"Disconnect Account" = "アカウントを切断";
+"Disconnect" = "切断";
+"Connected Calendar" = "接続済みカレンダー";
+"Google Calendar" = "Googleカレンダー";
+"Disconnect Calendar" = "カレンダーを切断";
+"Are you sure you want to disconnect your Google Calendar? Your Daily Brief will no longer include upcoming events." = "Googleカレンダーを切断してもよろしいですか？Daily Briefに今後の予定が含まれなくなります。";
+
+// MARK: - Topic Detail View
+"Generate Episode" = "エピソードを生成";
+"Generate New Episode" = "新しいエピソードを生成";
+"Creates a fresh episode with the latest content" = "最新のコンテンツで新しいエピソードを作成";
+"Loading episode..." = "エピソードを読み込み中...";
+"Generating your podcast..." = "ポッドキャストを生成中...";
+"This may take a minute" = "1分ほどかかる場合があります";
+"Previous Episodes" = "過去のエピソード";
+"No previous episodes available" = "過去のエピソードはありません";
+"Hide Topic" = "トピックを非表示";
+"Select Language" = "言語を選択";
+
+// MARK: - Deep Dive
+"Deep Dive" = "深掘り";
+"What do you want to learn about?" = "何について学びたいですか？";
+"Enter any topic and we'll create a research podcast for you" = "トピックを入力すると、リサーチポッドキャストを作成します";
+"Try asking about..." = "こんなことを聞いてみましょう...";
+"Generate Deep Dive" = "深掘りを生成";
+"This may take a few minutes" = "数分かかる場合があります";
+"Generation Failed" = "生成に失敗しました";
+"Regenerate" = "再生成";
+"Generate a fresh take on this topic" = "このトピックの新しい視点を生成";
+"Regenerating..." = "再生成中...";
+
+// MARK: - Q&A View
+"Ask a Question" = "質問する";
+"Close" = "閉じる";
+"Ask a question" = "質問する";
+"Get more context about what you just heard" = "今聞いた内容について詳しく知る";
+"Ask a question..." = "質問を入力...";
+"Follow-up questions" = "フォローアップの質問";
+"Play answer" = "回答を再生";
+"Q&A Answer" = "Q&A回答";
+
+// MARK: - Queue View
+"Your Queue" = "キュー";
+"Clear Queue" = "キューをクリア";
+"Clear All" = "すべてクリア";
+"This will remove all topics from your queue." = "キューからすべてのトピックが削除されます。";
+"Your queue is empty" = "キューは空です";
+"Add topics from the home screen" = "ホーム画面からトピックを追加";
+"Play All" = "すべて再生";
+
+// MARK: - Gradient Header / Daily Brief States
+"Connect your email" = "メールを連携";
+"to generate your personalized brief" = "パーソナライズされたブリーフを生成";
+"Generate Today's Brief" = "今日のブリーフを生成";
+"Generating your brief..." = "ブリーフを生成中...";
+"Fetching your emails and calendar..." = "メールとカレンダーを取得中...";
+"Analyzing content..." = "コンテンツを分析中...";
+"Creating your personalized script..." = "パーソナライズされたスクリプトを作成中...";
+"Generating audio..." = "音声を生成中...";
+"Almost done..." = "もう少しで完了...";
+"Now Playing" = "再生中";
+"Generation failed" = "生成に失敗しました";
+"Retry" = "再試行";
+"Reconnect your email" = "メールを再連携";
+"Reconnect" = "再接続";
+"No new emails" = "新着メールなし";
+"Try Again Later" = "後でもう一度お試しください";
+
+// MARK: - Splash Screen
+"Your AI-powered audio briefing" = "AI搭載のオーディオブリーフィング";
+
+// MARK: - Tab Router
+"Home" = "ホーム";
+
+// MARK: - Notification Settings
+"Notifications" = "通知";
+"Enabled" = "有効";
+"Open Settings" = "設定を開く";
+"Enable" = "有効にする";
+"Not Available" = "利用不可";
+"Permission" = "権限";
+"Allow notifications to receive your daily brief when it's ready." = "Daily Briefの準備ができたら通知を受け取るために、通知を許可してください。";
+"Daily Brief Notifications" = "Daily Brief通知";
+"Briefing Time" = "ブリーフィング時刻";
+"Timezone" = "タイムゾーン";
+"Daily Brief Schedule" = "Daily Briefスケジュール";
+"Daily Brief Content" = "Daily Briefコンテンツ";
+"When enabled, your Daily Brief will include headlines and updates from your selected topics of interest." = "有効にすると、Daily Briefに選択したトピックのヘッドラインと更新が含まれます。";
+"Notification Preview" = "通知プレビュー";
+"Your Daily Brief is Ready" = "Daily Briefの準備ができました";
+"Your personalized briefing is ready to play." = "パーソナライズされたブリーフィングの再生準備ができました。";
+"Manual" = "手動";
+"Generate your daily brief immediately instead of waiting for the scheduled time." = "予定時刻を待たずにDaily Briefをすぐに生成します。";
+"Enable to have your daily brief automatically generated each morning." = "毎朝Daily Briefを自動生成するには有効にしてください。";
+
+// MARK: - Location & Weather Settings
+"Location & Weather" = "位置情報と天気";
+"Use Current Location" = "現在地を使用";
+"Weather Location" = "天気の場所";
+"Home Address" = "自宅住所";
+"Enter your home address" = "自宅住所を入力";
+"Work Address" = "勤務先住所";
+"Enter your work address" = "勤務先住所を入力";
+"Traffic Route" = "交通ルート";
+"Set both addresses to get commute time in your daily briefing" = "両方の住所を設定して、デイリーブリーフィングで通勤時間を取得";
+"Temperature Unit" = "温度単位";
+"Fahrenheit (°F)" = "華氏 (°F)";
+"Celsius (°C)" = "摂氏 (°C)";
+"Units" = "単位";
+"Weather and traffic information will be included in your morning daily briefing when available." = "天気と交通情報は、利用可能な場合、朝のデイリーブリーフィングに含まれます。";
+"Save" = "保存";
+
+// MARK: - Custom Sources
+"Add Source" = "ソースを追加";
+"Source Type" = "ソースの種類";
+"URL" = "URL";
+"Validating..." = "検証中...";
+"Invalid source" = "無効なソース";
+"Name (Optional)" = "名前（オプション）";
+"Auto-detect name" = "名前を自動検出";
+"Leave blank to use the detected name" = "空欄にすると検出された名前が使用されます";
+"Validate" = "検証";
+"My Sources" = "マイソース";
+"No Custom Sources" = "カスタムソースなし";
+"Add RSS feeds, newsletters, or websites to include their content in your daily brief." = "RSSフィード、ニュースレター、またはWebサイトを追加して、Daily Briefにコンテンツを含めましょう。";
+"Add Your First Source" = "最初のソースを追加";
+"Paused" = "一時停止中";
+"Source Info" = "ソース情報";
+"Type" = "種類";
+"Status" = "ステータス";
+"Last Updated" = "最終更新";
+"Items" = "アイテム";
+"Recent Items" = "最近のアイテム";
+"No items yet" = "アイテムはまだありません";
+"Refresh" = "更新";
+"Pause" = "一時停止";
+"Resume" = "再開";
+
+// MARK: - Live Station Player
+"Now Covering" = "現在のカバー";
+"listening" = "リスニング中";
+
+// MARK: - Ad Companion
+"Sponsored" = "スポンサー";
+"Ad" = "広告";
+
+// MARK: - Episode History
+"Generating..." = "生成中...";
+"Failed" = "失敗";
+"Not generated" = "未生成";
+
+// MARK: - Misc / Duration formats
+"min daily" = "分/日";
+"min" = "分";
+"episodes" = "エピソード";
+"items found" = "件のアイテム";
+"sources" = "ソース";
+"topic" = "トピック";
+"topics" = "トピック";
+"selected" = "選択済み";
+"hidden" = "非表示";
+"added to For You" = "あなたへに追加";
+"removed from For You" = "あなたへから削除";
+"/year" = "/年";
+"/month" = "/月";
+"/week" = "/週";
+"/day" = "/日";

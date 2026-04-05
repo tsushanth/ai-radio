@@ -143,6 +143,39 @@ class AudioService {
         }
     }
 
+    /// Play a live stream URL directly (no download, no caching)
+    func playStream(url: URL, title: String, showName: String) {
+        print("📻 AudioService.playStream() called for: \(url)")
+        saveCurrentPosition()
+
+        let episode = Episode(
+            id: "live-stream-\(showName.lowercased().replacingOccurrences(of: " ", with: "-"))",
+            userId: "",
+            title: title,
+            description: showName,
+            audioUrl: url.absoluteString,
+            durationSeconds: nil,
+            status: .completed,
+            errorMessage: nil,
+            generatedAt: Date(),
+            createdAt: Date(),
+            showId: "live-radio",
+            showName: showName,
+            imageColor: "#EF4444",
+            progress: 0,
+            isCompleted: false,
+            lastPlayedAt: nil
+        )
+
+        currentEpisode = episode
+        isDownloading = false
+        isBuffering = true
+        isPlaying = true
+
+        loadAudio(from: url)
+        updateNowPlayingInfo()
+    }
+
     /// Resume playback
     func resume() {
         print("🎵 AudioService.resume() called")

@@ -18,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.kreativekoala.audexa.ui.onboarding.pages.LanguageSelectionPage
 import com.kreativekoala.audexa.ui.onboarding.pages.LinkAccountPage
 import com.kreativekoala.audexa.ui.onboarding.pages.TopicSelectionPage
 import com.kreativekoala.audexa.ui.onboarding.pages.WelcomePage
@@ -48,15 +49,23 @@ fun OnboardingScreen(
                 0 -> WelcomePage(
                     onGetStarted = { viewModel.nextPage() }
                 )
-                1 -> LinkAccountPage(
+                1 -> LanguageSelectionPage(
+                    selectedLanguage = uiState.selectedLanguage,
+                    onLanguageSelected = { viewModel.selectLanguage(it) },
+                    onContinue = { viewModel.nextPage() }
+                )
+                2 -> LinkAccountPage(
                     uiState = uiState,
                     viewModel = viewModel,
                     onContinue = { viewModel.nextPage() }
                 )
-                2 -> TopicSelectionPage(
+                3 -> TopicSelectionPage(
                     uiState = uiState,
                     onToggleTopic = { viewModel.toggleTopic(it) },
-                    onComplete = { viewModel.completeOnboarding(onOnboardingComplete) }
+                    onComplete = { viewModel.completeOnboarding(onOnboardingComplete) },
+                    onSuggestTopic = { topicName, language ->
+                        viewModel.suggestTopic(topicName, language)
+                    }
                 )
             }
         }
@@ -68,7 +77,7 @@ fun OnboardingScreen(
                 .padding(bottom = 16.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            repeat(3) { index ->
+            repeat(4) { index ->
                 Box(
                     modifier = Modifier
                         .size(if (index == uiState.currentPage) 10.dp else 8.dp)

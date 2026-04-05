@@ -30,16 +30,21 @@ Valid segment types: "intro", "headlines", "deep_dive", "listener_request", "tra
 Each segment should be a natural speaking turn, typically 1-3 sentences."""
 
 
-def build_headlines_prompt(topic_name: str, stories_text: str, prompt_context: str) -> str:
+def build_headlines_prompt(
+    topic_name: str, stories_text: str, prompt_context: str,
+    language: str = "en", region: str = "us",
+) -> str:
     """Build prompt for a 2-3 minute headlines segment."""
     now = datetime.now(timezone.utc)
     time_of_day = _get_time_of_day(now.hour)
+    lang_note = f"\nIMPORTANT: Write the entire script in {_language_name(language)}. Tailor references and context for {_region_name(region)} listeners." if language != "en" or region != "us" else ""
 
     return f"""Generate a HEADLINES segment for Audexa Radio.
 
 Topic: {topic_name}
 Time: {time_of_day} ({now.strftime('%I:%M %p UTC')})
-Duration target: 2-3 minutes (~350-500 words total across all segments)
+Region: {_region_name(region)}
+Duration target: 2-3 minutes (~350-500 words total across all segments){lang_note}
 
 Context: {prompt_context}
 
@@ -50,14 +55,19 @@ Cover 4-5 of these stories as quick headlines with brief commentary:
 Start with a brief intro referencing the time and topic. Cover each story in 2-3 speaking turns. End with a tease for what's coming next. Return ONLY valid JSON."""
 
 
-def build_deep_dive_prompt(topic_name: str, stories_text: str, prompt_context: str) -> str:
+def build_deep_dive_prompt(
+    topic_name: str, stories_text: str, prompt_context: str,
+    language: str = "en", region: str = "us",
+) -> str:
     """Build prompt for a 3-5 minute deep dive segment."""
     now = datetime.now(timezone.utc)
+    lang_note = f"\nIMPORTANT: Write the entire script in {_language_name(language)}. Tailor references and context for {_region_name(region)} listeners." if language != "en" or region != "us" else ""
 
     return f"""Generate a DEEP DIVE segment for Audexa Radio.
 
 Topic: {topic_name}
-Duration target: 3-5 minutes (~500-750 words total across all segments)
+Region: {_region_name(region)}
+Duration target: 3-5 minutes (~500-750 words total across all segments){lang_note}
 
 Context: {prompt_context}
 
@@ -68,13 +78,16 @@ Pick the 2-3 most interesting stories below and go deeper. Discuss implications,
 The hosts should have a real discussion — Alex asks probing questions, Jordan provides analysis. End with "we'll be right back after this track." Return ONLY valid JSON."""
 
 
-def build_listener_request_prompt(topic_text: str) -> str:
+def build_listener_request_prompt(
+    topic_text: str,
+    language: str = "en", region: str = "us",
+) -> str:
     """Build prompt for a listener-requested topic segment."""
-    now = datetime.now(timezone.utc)
+    lang_note = f"\nIMPORTANT: Write the entire script in {_language_name(language)}." if language != "en" else ""
 
     return f"""Generate a LISTENER REQUEST segment for Audexa Radio.
 
-A listener just called in and requested we cover: "{topic_text}"
+A listener just called in and requested we cover: "{topic_text}"{lang_note}
 
 Duration target: 2-4 minutes (~350-600 words total)
 
@@ -113,6 +126,25 @@ def format_stories_for_prompt(stories: list) -> str:
             line += f" (score: {story.score})"
         lines.append(line)
     return "\n\n".join(lines)
+
+
+def _language_name(code: str) -> str:
+    names = {
+        "en": "English", "de": "German", "fr": "French", "es": "Spanish",
+        "pt": "Portuguese", "ja": "Japanese", "ko": "Korean", "hi": "Hindi",
+        "ar": "Arabic", "zh": "Mandarin Chinese",
+    }
+    return names.get(code, code)
+
+
+def _region_name(code: str) -> str:
+    names = {
+        "us": "United States", "uk": "United Kingdom", "in": "India",
+        "au": "Australia", "ca": "Canada", "de": "Germany", "fr": "France",
+        "es": "Spain", "br": "Brazil", "jp": "Japan", "kr": "South Korea",
+        "sg": "Singapore", "ae": "UAE", "za": "South Africa",
+    }
+    return names.get(code, code.upper())
 
 
 def _get_time_of_day(hour_utc: int) -> str:

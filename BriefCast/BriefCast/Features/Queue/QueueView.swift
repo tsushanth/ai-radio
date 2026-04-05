@@ -34,6 +34,7 @@ class QueueViewModel {
 
     init() {
         loadQueue()
+        removeStaleEntries()
     }
 
     func loadQueue() {
@@ -48,6 +49,16 @@ class QueueViewModel {
         } catch {
             print("Failed to decode queue: \(error)")
             queuedTopics = []
+        }
+    }
+
+    /// Remove entries older than 24 hours (stale/stuck items)
+    private func removeStaleEntries() {
+        let cutoff = Date().addingTimeInterval(-86400) // 24 hours ago
+        let before = queuedTopics.count
+        queuedTopics.removeAll { $0.addedAt < cutoff }
+        if queuedTopics.count != before {
+            saveQueue()
         }
     }
 

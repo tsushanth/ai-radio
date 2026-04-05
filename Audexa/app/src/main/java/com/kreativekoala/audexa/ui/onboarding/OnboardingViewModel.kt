@@ -6,7 +6,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.kreativekoala.audexa.data.local.PreferencesManager
+import com.kreativekoala.audexa.data.model.SupportedLanguage
 import com.kreativekoala.audexa.data.model.Topic
+import com.kreativekoala.audexa.data.remote.SuggestTopicRequest
 import com.kreativekoala.audexa.data.repository.AuthRepository
 import com.kreativekoala.audexa.data.repository.TopicRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -27,6 +29,7 @@ data class OnboardingUiState(
     val linkedEmail: String? = null,
     val topics: List<Topic> = emptyList(),
     val selectedTopicIds: Set<String> = emptySet(),
+    val selectedLanguage: SupportedLanguage = SupportedLanguage.ENGLISH,
     val isLoadingTopics: Boolean = false,
     val isCompleting: Boolean = false,
     val error: String? = null
@@ -56,9 +59,14 @@ class OnboardingViewModel @Inject constructor(
             val hasLinked = preferencesManager.hasLinkedGoogle.first()
             val email = preferencesManager.linkedEmail.first()
 
+            // Auto-detect device locale
+            val deviceLocale = java.util.Locale.getDefault().language
+            val detectedLanguage = SupportedLanguage.entries.find { it.code == deviceLocale } ?: SupportedLanguage.ENGLISH
+
             _uiState.value = _uiState.value.copy(
                 googleLinked = hasLinked,
-                linkedEmail = email
+                linkedEmail = email,
+                selectedLanguage = detectedLanguage
             )
 
             // Load topics
@@ -70,19 +78,14 @@ class OnboardingViewModel @Inject constructor(
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isLoadingTopics = true)
 
-            // Try cached first for instant display
-            val cached = topicRepository.getCachedTopics()
-            if (cached != null && cached.isNotEmpty()) {
-                _uiState.value = _uiState.value.copy(
-                    topics = cached.filter { it.isActive },
-                    isLoadingTopics = false
-                )
-            }
-
-            // Then fetch fresh
-            topicRepository.getTopics()
+            // Fetch fresh with selected language (skip cache during onboarding
+            // since cached topics may be from a different language)
+            topicRepository.getTopics(_uiState.value.selectedLanguage.code)
                 .onSuccess { response ->
-                    val activeTopics = response.data?.topics?.filter { it.isActive } ?: emptyList()
+                    val activeTopics = response.data?.topics
+                        ?.filter { it.isActive }
+                        ?.distinctBy { it.name } // Deduplicate by name
+                        ?: emptyList()
                     if (activeTopics.isNotEmpty()) {
                         _uiState.value = _uiState.value.copy(
                             topics = activeTopics,
@@ -100,13 +103,19 @@ class OnboardingViewModel @Inject constructor(
     // Page navigation
     fun nextPage() {
         val current = _uiState.value.currentPage
-        if (current < 2) {
+        if (current < 3) {
             _uiState.value = _uiState.value.copy(currentPage = current + 1)
         }
     }
 
     fun goToPage(page: Int) {
-        _uiState.value = _uiState.value.copy(currentPage = page.coerceIn(0, 2))
+        _uiState.value = _uiState.value.copy(currentPage = page.coerceIn(0, 3))
+    }
+
+    // Language selection
+    fun selectLanguage(language: SupportedLanguage) {
+        _uiState.value = _uiState.value.copy(selectedLanguage = language)
+        loadTopics() // Reload with new language
     }
 
     // Page 2: Account linking
@@ -187,6 +196,23 @@ class OnboardingViewModel @Inject constructor(
         _uiState.value = _uiState.value.copy(selectedTopicIds = updated)
     }
 
+    // Topic suggestion
+    fun suggestTopic(topicName: String, language: String) {
+        viewModelScope.launch {
+            topicRepository.suggestTopic(
+                SuggestTopicRequest(
+                    topicName = topicName,
+                    language = language,
+                    description = null
+                )
+            ).onSuccess {
+                Log.d(TAG, "Topic suggested successfully: $topicName")
+            }.onFailure { e ->
+                Log.e(TAG, "Failed to suggest topic: ${e.message}")
+            }
+        }
+    }
+
     // Completion
     fun completeOnboarding(onComplete: () -> Unit) {
         viewModelScope.launch {
@@ -194,10 +220,15 @@ class OnboardingViewModel @Inject constructor(
 
             // Save selected topics
             val selectedIds = _uiState.value.selectedTopicIds
+            Log.d(TAG, "Completing onboarding. Selected topic IDs: $selectedIds")
+            Log.d(TAG, "Available topics: ${_uiState.value.topics.map { it.id }}")
             if (selectedIds.isNotEmpty()) {
                 preferencesManager.setSelectedTopics(selectedIds)
                 preferencesManager.setBookmarkedTopics(selectedIds)
             }
+
+            // Save selected language
+            preferencesManager.setPreferredLanguage(uiState.value.selectedLanguage.code)
 
             // Mark onboarding complete
             preferencesManager.setOnboardingCompleted(true)

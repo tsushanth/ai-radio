@@ -9,6 +9,7 @@ import com.revenuecat.purchases.Package
 import com.revenuecat.purchases.PurchaseParams
 import com.revenuecat.purchases.Purchases
 import com.revenuecat.purchases.PurchasesError
+import com.revenuecat.purchases.Offerings
 import com.revenuecat.purchases.getOfferingsWith
 import com.revenuecat.purchases.interfaces.LogInCallback
 import com.revenuecat.purchases.interfaces.ReceiveCustomerInfoCallback
@@ -31,6 +32,7 @@ class BillingManager @Inject constructor(
         const val MONTHLY_PRODUCT_ID = "audexa_premium_monthly"
         const val YEARLY_PRODUCT_ID = "audexa_premium_yearly"
         const val ENTITLEMENT_ID = "premium"
+        const val FREE_OPEN_LIMIT = 3
     }
 
     private val scope = CoroutineScope(Dispatchers.Main + SupervisorJob())
@@ -51,26 +53,69 @@ class BillingManager @Inject constructor(
                 _isSubscribed.value = cached
             }
         }
-        // Fetch offerings and check subscription status from RevenueCat
-        fetchOfferings()
-        checkSubscriptionStatus()
+        // Delay initial fetch slightly to ensure RevenueCat SDK is fully configured
+        scope.launch {
+            delay(500)
+            fetchOfferings()
+            checkSubscriptionStatus()
+        }
     }
 
-    private fun fetchOfferings() {
+    fun fetchOfferings() {
         Purchases.sharedInstance.getOfferingsWith(
             onError = { error ->
                 Log.w(TAG, "Failed to fetch offerings: ${error.message}")
+                // Retry after a delay
+                if (_packages.value.isEmpty()) {
+                    scope.launch {
+                        delay(3000)
+                        fetchOfferings()
+                    }
+                }
             },
             onSuccess = { offerings ->
-                val currentOffering = offerings.current
-                if (currentOffering != null) {
-                    _packages.value = currentOffering.availablePackages
-                    Log.d(TAG, "Found ${currentOffering.availablePackages.size} packages")
-                } else {
-                    Log.w(TAG, "No current offering configured")
+                extractPackages(offerings)
+                // If still empty, retry once more after delay
+                if (_packages.value.isEmpty()) {
+                    scope.launch {
+                        delay(2000)
+                        Purchases.sharedInstance.getOfferingsWith(
+                            onError = { },
+                            onSuccess = { retryOfferings -> extractPackages(retryOfferings) }
+                        )
+                    }
                 }
             }
         )
+    }
+
+    private fun extractPackages(offerings: Offerings) {
+        // Try current offering first
+        val currentOffering = offerings.current
+        if (currentOffering != null && currentOffering.availablePackages.isNotEmpty()) {
+            _packages.value = currentOffering.availablePackages
+            Log.d(TAG, "Found ${currentOffering.availablePackages.size} packages in current offering")
+            return
+        }
+
+        // Fallback: try "default" offering by lookup key
+        val defaultOffering = offerings["default"]
+        if (defaultOffering != null && defaultOffering.availablePackages.isNotEmpty()) {
+            _packages.value = defaultOffering.availablePackages
+            Log.d(TAG, "Found ${defaultOffering.availablePackages.size} packages in 'default' offering")
+            return
+        }
+
+        // Fallback: use first offering that has packages
+        for ((key, offering) in offerings.all) {
+            if (offering.availablePackages.isNotEmpty()) {
+                _packages.value = offering.availablePackages
+                Log.d(TAG, "Found ${offering.availablePackages.size} packages in '$key' offering")
+                return
+            }
+        }
+
+        Log.w(TAG, "No offerings with packages found. Available offerings: ${offerings.all.keys}")
     }
 
     private fun checkSubscriptionStatus() {

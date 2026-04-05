@@ -1,6 +1,8 @@
 package com.kreativekoala.audexa.ui.subscription
 
 import android.app.Activity
+import android.content.Context
+import android.content.ContextWrapper
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -48,7 +50,8 @@ fun PaywallScreen(
 @Composable
 fun CustomPaywallScreen(
     billingManager: BillingManager,
-    onNavigateBack: () -> Unit
+    onNavigateBack: () -> Unit,
+    isDismissable: Boolean = true
 ) {
     val packages by billingManager.packages.collectAsState()
     val isSubscribed by billingManager.isSubscribed.collectAsState()
@@ -64,21 +67,23 @@ fun CustomPaywallScreen(
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = { },
-                navigationIcon = {
-                    IconButton(onClick = onNavigateBack) {
-                        Icon(
-                            Icons.Default.Close,
-                            contentDescription = stringResource(R.string.close),
-                            tint = MaterialTheme.colorScheme.onBackground
-                        )
-                    }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.background
+            if (isDismissable) {
+                TopAppBar(
+                    title = { },
+                    navigationIcon = {
+                        IconButton(onClick = onNavigateBack) {
+                            Icon(
+                                Icons.Default.Close,
+                                contentDescription = stringResource(R.string.close),
+                                tint = MaterialTheme.colorScheme.onBackground
+                            )
+                        }
+                    },
+                    colors = TopAppBarDefaults.topAppBarColors(
+                        containerColor = MaterialTheme.colorScheme.background
+                    )
                 )
-            )
+            }
         },
         containerColor = MaterialTheme.colorScheme.background
     ) { padding ->
@@ -147,6 +152,23 @@ fun CustomPaywallScreen(
                 }
             } else {
                 // Pricing cards
+                if (packages.isEmpty()) {
+                    // Loading or no offerings configured
+                    Spacer(modifier = Modifier.height(16.dp))
+                    CircularProgressIndicator(
+                        color = AccentOrange,
+                        modifier = Modifier.size(32.dp),
+                        strokeWidth = 2.dp
+                    )
+                    Spacer(modifier = Modifier.height(12.dp))
+                    Text(
+                        text = "Loading plans...",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                    Spacer(modifier = Modifier.height(24.dp))
+                }
+
                 if (yearlyPackage != null) {
                     PricingCard(
                         pkg = yearlyPackage,
@@ -175,7 +197,7 @@ fun CustomPaywallScreen(
                 Button(
                     onClick = {
                         selectedPackage?.let { pkg ->
-                            (context as? Activity)?.let { activity ->
+                            context.findActivity()?.let { activity ->
                                 billingManager.launchPurchaseFlow(activity, pkg)
                             }
                         }
@@ -330,4 +352,13 @@ private fun PricingCard(
             )
         }
     }
+}
+
+private fun Context.findActivity(): Activity? {
+    var context = this
+    while (context is ContextWrapper) {
+        if (context is Activity) return context
+        context = context.baseContext
+    }
+    return null
 }

@@ -262,7 +262,7 @@ class AudioManager @Inject constructor(
             Log.d(TAG, "Queue empty, nothing to play next")
             return
         }
-        val next = current.removeFirst()
+        val next = current.removeAt(0)
         _queue.value = current
         Log.d(TAG, "Playing next from queue: ${next.title}")
         play(id = next.id, title = next.title, description = "", audioUrl = next.audioUrl)

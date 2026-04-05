@@ -72,9 +72,9 @@ class TopicRepository @Inject constructor(
      */
     fun hasCachedTopics(): Boolean = cachedTopics != null && cachedTopics!!.isNotEmpty()
 
-    suspend fun getTopics(): Result<TopicsResponse> = runCatching {
+    suspend fun getTopics(language: String = "en"): Result<TopicsResponse> = runCatching {
         try {
-            val response = apiService.getTopics()
+            val response = apiService.getTopics(language)
             // Cache the fresh data (server takes precedence)
             response.data?.topics?.let { cacheTopics(it) }
             response
@@ -141,5 +141,9 @@ class TopicRepository @Inject constructor(
         } catch (e: Exception) {
             Log.e(TAG, "Failed to track ad click: ${e.message}")
         }
+    }
+
+    suspend fun suggestTopic(request: SuggestTopicRequest): Result<SuggestTopicResponse> = runCatching {
+        apiService.suggestTopic(request)
     }
 }

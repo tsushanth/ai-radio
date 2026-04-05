@@ -62,24 +62,29 @@ class RadioScriptGenerator:
         )
 
     async def generate_headlines(
-        self, topic_name: str, stories: list, prompt_context: str
+        self, topic_name: str, stories: list, prompt_context: str,
+        language: str = "en", region: str = "us",
     ) -> list[ScriptSegment]:
         """Generate a 2-3 minute headlines segment."""
         stories_text = format_stories_for_prompt(stories)
-        user_prompt = build_headlines_prompt(topic_name, stories_text, prompt_context)
+        user_prompt = build_headlines_prompt(topic_name, stories_text, prompt_context, language, region)
         return await self._generate(user_prompt)
 
     async def generate_deep_dive(
-        self, topic_name: str, stories: list, prompt_context: str
+        self, topic_name: str, stories: list, prompt_context: str,
+        language: str = "en", region: str = "us",
     ) -> list[ScriptSegment]:
         """Generate a 3-5 minute deep dive segment."""
         stories_text = format_stories_for_prompt(stories)
-        user_prompt = build_deep_dive_prompt(topic_name, stories_text, prompt_context)
+        user_prompt = build_deep_dive_prompt(topic_name, stories_text, prompt_context, language, region)
         return await self._generate(user_prompt)
 
-    async def generate_listener_request(self, topic_text: str) -> list[ScriptSegment]:
+    async def generate_listener_request(
+        self, topic_text: str,
+        language: str = "en", region: str = "us",
+    ) -> list[ScriptSegment]:
         """Generate a 2-4 minute segment for a caller's topic request."""
-        user_prompt = build_listener_request_prompt(topic_text)
+        user_prompt = build_listener_request_prompt(topic_text, language, region)
         return await self._generate(user_prompt)
 
     async def generate_transition(self) -> list[ScriptSegment]:

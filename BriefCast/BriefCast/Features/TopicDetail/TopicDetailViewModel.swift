@@ -111,6 +111,21 @@ class TopicDetailViewModel {
 
         isLoading = false
 
+        // If backend returned notGenerated but history has today's completed episode, use it
+        if currentEpisode?.status == .notGenerated || currentEpisode == nil {
+            let todayString = {
+                let formatter = DateFormatter()
+                formatter.dateFormat = "yyyy-MM-dd"
+                return formatter.string(from: Date())
+            }()
+            if let todayEpisode = episodeHistory.first(where: { $0.date == todayString && $0.status == .completed }) {
+                currentEpisode = todayEpisode
+                if let seconds = todayEpisode.durationSeconds {
+                    duration = TimeInterval(seconds)
+                }
+            }
+        }
+
         // Auto-play the episode once loaded
         if canPlay {
             play()
@@ -125,6 +140,18 @@ class TopicDetailViewModel {
         )
         currentEpisode = episodeData.episode
 
+        // If episode is still generating, poll until ready
+        if episodeData.episode.status == .generating {
+            isGenerating = true
+            await pollForEpisode()
+            return
+        }
+
+        // If not generated yet, just show the state (no auto-generation)
+        if episodeData.episode.status == .notGenerated {
+            return
+        }
+
         let isSubscriber = preferencesService.isSubscribed
 
         // Subscribers get no ads
@@ -134,8 +161,6 @@ class TopicDetailViewModel {
             // Store custom ads from backend
             ads = episodeData.ads ?? []
 
-            // IMA fallback disabled — test VAST tag was causing issues in production.
-            // Re-enable once a production Google Ad Manager tag is configured.
             if !ads.isEmpty {
                 print("📢 Loaded \(ads.count) custom ad(s) for episode")
             }
@@ -148,6 +173,44 @@ class TopicDetailViewModel {
         if let seconds = episodeData.episode.durationSeconds {
             duration = TimeInterval(seconds)
         }
+    }
+
+    /// Poll the backend until episode generation completes
+    private func pollForEpisode() async {
+        for _ in 0..<20 { // Poll up to 20 times (10 seconds apart = ~3.3 min max)
+            try? await Task.sleep(nanoseconds: 10_000_000_000) // 10 seconds
+
+            do {
+                let episodeData = try await topicService.getOrGenerateEpisode(
+                    topicId: topic.id,
+                    language: selectedLanguage.rawValue,
+                    forceRegenerate: false
+                )
+                currentEpisode = episodeData.episode
+
+                if episodeData.episode.status == .completed {
+                    ads = episodeData.ads ?? []
+                    calculateAdInsertionPoints()
+                    if let seconds = episodeData.episode.durationSeconds {
+                        duration = TimeInterval(seconds)
+                    }
+                    isGenerating = false
+                    return
+                }
+
+                if episodeData.episode.status == .failed {
+                    loadError = episodeData.episode.error ?? "Episode generation failed"
+                    isGenerating = false
+                    return
+                }
+            } catch {
+                // Keep polling on transient errors
+            }
+        }
+
+        // Timed out
+        loadError = "Episode generation is taking longer than expected. Please try again later."
+        isGenerating = false
     }
 
     func loadEpisodeHistory() async throws {
@@ -249,16 +312,12 @@ class TopicDetailViewModel {
             print("Failed to load episode history for \(language.displayName)")
         }
 
-        // Now load/generate the current episode
-        isGenerating = true
-
+        // Now load the current episode (fetch only, no generation)
         do {
             try await loadEpisode()
         } catch {
             loadError = "Failed to load episode for \(language.displayName)"
         }
-
-        isGenerating = false
     }
 
     // MARK: - Episode Generation
@@ -668,8 +727,10 @@ class TopicDetailViewModel {
 
     // MARK: - Bookmarking
 
-    func toggleBookmark() {
-        preferencesService.toggleBookmark(for: topic.id)
+    /// Returns `false` if blocked by the free-user bookmark limit.
+    @discardableResult
+    func toggleBookmark() -> Bool {
+        return preferencesService.toggleBookmark(for: topic.id)
     }
 
     // MARK: - Hide Topic

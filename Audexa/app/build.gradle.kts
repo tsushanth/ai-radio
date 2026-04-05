@@ -24,8 +24,8 @@ android {
         applicationId = "com.kreativekoala.audexa"
         minSdk = 26
         targetSdk = 35
-        versionCode = 13
-        versionName = "12.0.0"
+        versionCode = 20
+        versionName = "12.2.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -134,6 +134,7 @@ dependencies {
     implementation(platform("io.github.jan-tennert.supabase:bom:3.0.0"))
     implementation("io.github.jan-tennert.supabase:postgrest-kt")
     implementation("io.github.jan-tennert.supabase:auth-kt")
+    implementation("io.github.jan-tennert.supabase:realtime-kt")
 
     // Ktor client for Supabase (supabase-kt 3.0 uses Ktor 3.x)
     implementation(platform("io.ktor:ktor-bom:3.0.2"))
@@ -148,6 +149,9 @@ dependencies {
     // RevenueCat
     implementation(libs.revenuecat.purchases)
     implementation(libs.revenuecat.purchases.ui)
+
+    // PaywallKit
+    implementation(project(":paywallkit"))
 
     // Testing
     testImplementation("junit:junit:4.13.2")

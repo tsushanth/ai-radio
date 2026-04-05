@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import PaywallKit
 
 struct ProfileView: View {
     @EnvironmentObject var authService: AuthService
@@ -14,6 +15,7 @@ struct ProfileView: View {
     @State private var showThemePicker = false
     @State private var showHiddenTopics = false
     @State private var showDeleteConfirmation = false
+    @State private var showRadioLanguages = false
     @State private var showSignOutConfirmation = false
     @State private var showPaywall = false
     @State private var isDeleting = false
@@ -71,7 +73,9 @@ struct ProfileView: View {
                                 title: subscriptionManager.isSubscribed ? "Ad-Free" : "Go Ad-Free",
                                 subtitle: subscriptionManager.isSubscribed ? "Active subscription" : "Remove all ads",
                                 action: {
-                                    showPaywall = true
+                                    if !subscriptionManager.isSubscribed {
+                                        showPaywall = true
+                                    }
                                 }
                             )
                         }
@@ -170,6 +174,15 @@ struct ProfileView: View {
                                 }
                             )
 
+                            SettingsRow(
+                                icon: "radio.fill",
+                                title: "Radio Languages",
+                                subtitle: radioLanguagesSummary,
+                                action: {
+                                    showRadioLanguages = true
+                                }
+                            )
+
                             if !preferencesService.hiddenTopicIds.isEmpty {
                                 SettingsRow(
                                     icon: "eye.slash.fill",
@@ -229,6 +242,31 @@ struct ProfileView: View {
                         }
                     }
                     .padding(.horizontal, 16)
+
+                    // Debug Paywall Section (DEBUG only)
+                    #if DEBUG
+                    VStack(alignment: .leading, spacing: 16) {
+                        List {
+                            PaywallDebugView(
+                                appId: "audexa",
+                                appName: "Audexa Premium",
+                                features: [
+                                    PaywallFeature(icon: "speaker.slash.fill", title: "Ad-Free Listening", description: "No audio ad interruptions"),
+                                    PaywallFeature(icon: "bolt.fill", title: "Seamless Playback", description: "Uninterrupted episode streaming"),
+                                    PaywallFeature(icon: "waveform.circle.fill", title: "Premium Voices", description: "Ultra-realistic AI narrators"),
+                                    PaywallFeature(icon: "arrow.down.circle.fill", title: "Offline Downloads", description: "Listen without internet"),
+                                    PaywallFeature(icon: "infinity", title: "Unlimited Topics", description: "Explore all categories"),
+                                    PaywallFeature(icon: "magnifyingglass.circle.fill", title: "Deep Dive", description: "In-depth AI research podcasts"),
+                                ],
+                                theme: PaywallTheme(accent: Color(hex: "#FF6B35"), accent2: Color(hex: "#E55A2B"))
+                            )
+                        }
+                        .listStyle(.insetGrouped)
+                        .frame(height: 420)
+                        .scrollDisabled(true)
+                    }
+                    .padding(.horizontal, 16)
+                    #endif
 
                     // Account Actions Section
                     VStack(spacing: 12) {
@@ -304,6 +342,10 @@ struct ProfileView: View {
                 )
                 .presentationDetents([.height(280)])
             }
+            .sheet(isPresented: $showRadioLanguages) {
+                RadioLanguagesView()
+                    .presentationDetents([.medium])
+            }
             .sheet(isPresented: $showPaywall) {
                 RemotePaywallView(triggerSource: "profile")
             }
@@ -373,6 +415,12 @@ struct ProfileView: View {
             return String(components[0].prefix(1) + components[1].prefix(1)).uppercased()
         }
         return String(name.prefix(1)).uppercased()
+    }
+
+    private var radioLanguagesSummary: String {
+        let langs = preferencesService.radioSupportedLanguages
+        if langs.isEmpty { return "None" }
+        return langs.map { $0.radioStationName.replacingOccurrences(of: "Audexa Radio ", with: "").replacingOccurrences(of: "Audexa Radio", with: "English") }.joined(separator: ", ")
     }
 
     private func shareApp() {
@@ -759,6 +807,68 @@ struct ThemePickerView: View {
         case .system: return "Match device settings"
         case .dark: return "Always dark mode"
         case .light: return "Always light mode"
+        }
+    }
+}
+
+// MARK: - Radio Languages View
+
+struct RadioLanguagesView: View {
+    @Environment(\.dismiss) private var dismiss
+    @StateObject private var preferencesService = PreferencesService.shared
+
+    var body: some View {
+        NavigationStack {
+            List {
+                Section {
+                    ForEach(SupportedLanguage.radioAvailable) { language in
+                        let isEnabled = preferencesService.radioLanguages.contains(language.rawValue)
+                        let isLastEnabled = isEnabled && preferencesService.radioLanguages.count == 1
+                        Button(action: {
+                            preferencesService.toggleRadioLanguage(language.rawValue)
+                        }) {
+                            HStack {
+                                Text(language.flagEmoji)
+                                    .font(.system(size: 24))
+
+                                VStack(alignment: .leading, spacing: 2) {
+                                    Text(language.radioStationName)
+                                        .font(.system(size: 16, weight: .medium))
+                                        .foregroundColor(Theme.Colors.primaryText)
+
+                                    Text(language.nativeName)
+                                        .font(.system(size: 13))
+                                        .foregroundColor(Theme.Colors.secondaryText)
+                                }
+
+                                Spacer()
+
+                                Image(systemName: isEnabled ? "checkmark.circle.fill" : "circle")
+                                    .font(.system(size: 22))
+                                    .foregroundColor(isEnabled ? Theme.Colors.accent : Theme.Colors.secondaryText.opacity(0.4))
+                            }
+                            .padding(.vertical, 4)
+                            .opacity(isLastEnabled ? 0.6 : 1.0)
+                        }
+                        .disabled(isLastEnabled)
+                    }
+                } footer: {
+                    Text("Selected stations will appear on your home screen. At least one language must be enabled.")
+                        .font(.system(size: 13))
+                        .foregroundColor(Theme.Colors.secondaryText)
+                }
+            }
+            .listStyle(.insetGrouped)
+            .navigationTitle("Radio Languages")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button("Done") {
+                        dismiss()
+                    }
+                    .foregroundColor(Theme.Colors.accent)
+                }
+            }
         }
     }
 }

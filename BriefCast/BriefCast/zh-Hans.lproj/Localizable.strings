@@ -1,0 +1,353 @@
+/* Localizable.strings (Simplified Chinese)
+   BriefCast / Audexa
+   Comprehensive localization for the Audexa iOS app */
+
+// MARK: - Auth View
+"Your personal AI radio" = "你的个人AI电台";
+"Sign in with Google" = "使用Google登录";
+"Continue without sign in" = "不登录继续使用";
+"You can link your email later to enable personalized Daily Brief" = "你可以稍后关联邮箱以启用个性化每日简报";
+"By continuing, you agree to our" = "继续即表示您同意我们的";
+"Terms of Service" = "服务条款";
+"and" = "和";
+"Privacy Policy" = "隐私政策";
+
+// MARK: - Home View
+"For You" = "为你推荐";
+"Discover" = "发现";
+"Good Morning" = "早上好";
+"Good Afternoon" = "下午好";
+"Good Evening" = "晚上好";
+"Live Stations" = "直播电台";
+"LIVE" = "直播";
+"Your Deep Dives" = "你的深度探索";
+"Keep listening" = "继续收听";
+"Your Topics" = "你的主题";
+"Topic Podcasts" = "主题播客";
+"Tap to explore and play" = "点击探索和播放";
+"Recommended for you" = "为你推荐";
+"More for you" = "更多推荐";
+"Playing" = "正在播放";
+"Hide" = "隐藏";
+"All Topics" = "所有主题";
+"Matching Topics" = "匹配的主题";
+"Popular Shows" = "热门节目";
+
+// MARK: - Search
+"Find new shows" = "发现新节目";
+"No results for \"%@\"" = "没有找到\"%@\"的结果";
+
+// MARK: - Profile View
+"Profile" = "个人资料";
+"User" = "用户";
+"Premium" = "高级版";
+"Ad-Free" = "无广告";
+"Go Ad-Free" = "开启无广告";
+"Active subscription" = "有效订阅";
+"Remove all ads" = "移除所有广告";
+"Linked Accounts" = "已关联的账户";
+"Add Account" = "添加账户";
+"Daily Brief Sources" = "每日简报来源";
+"Email" = "邮箱";
+"Include email summaries in Daily Brief" = "在每日简报中包含邮件摘要";
+"Calendar" = "日历";
+"Include upcoming events in Daily Brief" = "在每日简报中包含即将到来的日程";
+"Preferences" = "偏好设置";
+"App Theme" = "应用主题";
+"Podcast Language" = "播客语言";
+"Hidden Topics" = "已隐藏的主题";
+"About" = "关于";
+"Version" = "版本";
+"Share Audexa" = "分享Audexa";
+"Tell your friends" = "告诉你的朋友";
+"Sign Out" = "退出登录";
+"Delete Account" = "删除账户";
+"Are you sure you want to sign out?" = "确定要退出登录吗？";
+"Are you sure you want to delete your account? This will permanently delete all your data including podcasts, preferences, and linked accounts. This action cannot be undone." = "确定要删除您的账户吗？这将永久删除您的所有数据，包括播客、偏好设置和已关联的账户。此操作无法撤消。";
+"Error" = "错误";
+"OK" = "好的";
+"Failed to delete account. Please try again." = "删除账户失败，请重试。";
+"Deleting account..." = "正在删除账户...";
+"Cancel" = "取消";
+"Delete" = "删除";
+"Connected" = "已连接";
+"Disconnected" = "未连接";
+"Match device settings" = "跟随设备设置";
+"Always dark mode" = "始终深色模式";
+"Always light mode" = "始终浅色模式";
+"Check out Audexa - Your personalized AI-powered daily briefing podcast!" = "来看看Audexa——你的个性化AI每日简报播客！";
+
+// MARK: - Hidden Topics View
+"No Hidden Topics" = "没有隐藏的主题";
+"Topics you hide will appear here" = "你隐藏的主题将显示在这里";
+"Unhide" = "取消隐藏";
+"Done" = "完成";
+
+// MARK: - Player View
+"Voice" = "语音";
+"Cancel Timer" = "取消定时器";
+"5 min" = "5分钟";
+"10 min" = "10分钟";
+"15 min" = "15分钟";
+"30 min" = "30分钟";
+"60 min" = "60分钟";
+"Skip" = "跳过";
+"Tell Me More" = "了解更多";
+"Tap to ask a question" = "点击提问";
+"Live Transcript" = "实时字幕";
+"More Details" = "更多详情";
+"Listen to Expansion" = "收听扩展内容";
+"Sources" = "来源";
+"Expanded Content" = "扩展内容";
+
+// MARK: - Voice Picker View
+"Voice Settings" = "语音设置";
+"Pairs" = "组合";
+"Individual" = "单独";
+"Voice Selection" = "语音选择";
+"Host 1 Voice" = "主持人1语音";
+"Host 2 Voice" = "主持人2语音";
+"No voices available" = "没有可用的语音";
+"Loading voices..." = "正在加载语音...";
+"No voice pairs available for %@" = "%@没有可用的语音组合";
+"Host 1" = "主持人1";
+"Host 2" = "主持人2";
+
+// MARK: - Onboarding
+"Welcome to Audexa" = "欢迎使用Audexa";
+"Your personalized AI radio. Get caught up on your emails, calendar, and favorite topics in just a few minutes." = "你的个性化AI电台。只需几分钟即可了解邮件、日历和感兴趣的主题。";
+"Get Started" = "开始使用";
+"Connect Your Account" = "关联你的账户";
+"Link your Google account to get personalized briefings from your email and calendar." = "关联你的Google账户，从邮件和日历获取个性化简报。";
+"Connect Google" = "关联Google";
+"Include email summaries in briefings" = "在简报中包含邮件摘要";
+"(Optional)" = "（可选）";
+"Include upcoming events in briefings" = "在简报中包含即将到来的日程";
+"Connect" = "关联";
+"Continue" = "继续";
+"Skip for now" = "暂时跳过";
+"Connection Error" = "连接错误";
+"Failed to connect account" = "账户关联失败";
+"Choose Your Interests" = "选择你的兴趣";
+"Select topics to personalize your Daily Brief." = "选择主题以个性化你的每日简报。";
+"Daily Brief Options" = "每日简报选项";
+"Include Topic Updates" = "包含主题更新";
+"Add headlines from your topics to Daily Brief" = "将你的主题头条添加到每日简报";
+"Daily Reminder" = "每日提醒";
+"Notifications blocked. Tap Settings to enable." = "通知已被阻止。点击设置以启用。";
+"Get notified when your brief is ready" = "简报准备好后收到通知";
+"Settings" = "设置";
+"Reminder Time" = "提醒时间";
+"Select at least one topic" = "请至少选择一个主题";
+"Complete Setup" = "完成设置";
+"Access not granted" = "未授予访问权限";
+"Without access, we can only create general topic briefings. To get personalized briefings, please try again and grant the requested permissions." = "没有访问权限，我们只能创建通用主题简报。要获取个性化简报，请重试并授予所请求的权限。";
+"Try Again" = "重试";
+"\"Unverified App\" Warning" = "\"未验证应用\"警告";
+"Google may show an \"unverified app\" screen because our calendar access is pending verification. This is safe to proceed." = "Google可能会显示\"未验证应用\"屏幕，因为我们的日历访问权限正在验证中。可以安全继续。";
+"To connect:" = "连接方法：";
+"Tap \"Advanced\" on the warning screen" = "在警告屏幕上点击\"高级\"";
+"Tap \"Go to Audexa (unsafe)\"" = "点击\"转到Audexa（不安全）\"";
+"Grant calendar access" = "授予日历访问权限";
+
+// MARK: - Create View
+"Create" = "创建";
+"Create Daily Brief" = "创建每日简报";
+"Generate your personalized podcast from today's emails and calendar events" = "从今天的邮件和日历事件生成个性化播客";
+"Generate Now" = "立即生成";
+
+// MARK: - Paywall View
+"Enjoy uninterrupted listening" = "享受不间断的收听体验";
+"No audio ad interruptions" = "无音频广告打断";
+"Seamless episode playback" = "无缝播放";
+"Support indie development" = "支持独立开发";
+"You're an Ad-Free subscriber!" = "你已是无广告订阅用户！";
+"Yearly" = "年付";
+"Save 58%" = "节省58%";
+"Monthly" = "月付";
+"Subscribe" = "订阅";
+"Restore Purchases" = "恢复购买";
+"Payment will be charged to your Apple ID account. Subscription automatically renews unless cancelled at least 24 hours before the end of the current period." = "费用将从你的Apple ID账户扣取。订阅将自动续订，除非在当前周期结束前至少24小时取消。";
+
+// MARK: - Linked Accounts View
+"Connect your accounts to personalize your daily briefings with relevant information from your emails." = "关联你的账户，用邮件中的相关信息个性化你的每日简报。";
+"Connected Accounts" = "已连接的账户";
+"Available Accounts" = "可用账户";
+"Add Another Account" = "添加其他账户";
+"Not connected" = "未连接";
+"We'll access:" = "我们将访问：";
+"Read your Gmail messages" = "读取你的Gmail消息";
+"Basic profile information" = "基本个人信息";
+"Read your calendar events" = "读取你的日历事件";
+"Your data is secure" = "你的数据是安全的";
+"We only access the information you explicitly allow and use it solely to create your personalized briefings. You can revoke access at any time." = "我们仅访问你明确允许的信息，且仅用于创建个性化简报。你可以随时撤销访问权限。";
+"Access Permissions" = "访问权限";
+"Email Access" = "邮件访问";
+"Read emails to include in briefings" = "读取邮件以包含在简报中";
+"Disconnect Account" = "断开账户连接";
+"Disconnect" = "断开连接";
+"Connected Calendar" = "已连接的日历";
+"Google Calendar" = "Google日历";
+"Disconnect Calendar" = "断开日历连接";
+"Are you sure you want to disconnect your Google Calendar? Your Daily Brief will no longer include upcoming events." = "确定要断开Google日历的连接吗？你的每日简报将不再包含即将到来的日程。";
+
+// MARK: - Topic Detail View
+"Generate Episode" = "生成节目";
+"Generate New Episode" = "生成新节目";
+"Creates a fresh episode with the latest content" = "用最新内容创建新节目";
+"Loading episode..." = "正在加载节目...";
+"Generating your podcast..." = "正在生成播客...";
+"This may take a minute" = "这可能需要一分钟";
+"Previous Episodes" = "往期节目";
+"No previous episodes available" = "没有往期节目";
+"Hide Topic" = "隐藏主题";
+"Select Language" = "选择语言";
+
+// MARK: - Deep Dive
+"Deep Dive" = "深度探索";
+"What do you want to learn about?" = "你想了解什么？";
+"Enter any topic and we'll create a research podcast for you" = "输入任何主题，我们将为你创建研究播客";
+"Try asking about..." = "试着问问...";
+"Generate Deep Dive" = "生成深度探索";
+"This may take a few minutes" = "这可能需要几分钟";
+"Generation Failed" = "生成失败";
+"Regenerate" = "重新生成";
+"Generate a fresh take on this topic" = "生成该主题的新视角";
+"Regenerating..." = "正在重新生成...";
+
+// MARK: - Q&A View
+"Ask a Question" = "提问";
+"Close" = "关闭";
+"Ask a question" = "提问";
+"Get more context about what you just heard" = "了解你刚听到内容的更多背景";
+"Ask a question..." = "输入问题...";
+"Follow-up questions" = "后续问题";
+"Play answer" = "播放回答";
+"Q&A Answer" = "问答回答";
+
+// MARK: - Queue View
+"Your Queue" = "你的队列";
+"Clear Queue" = "清空队列";
+"Clear All" = "全部清除";
+"This will remove all topics from your queue." = "这将从你的队列中移除所有主题。";
+"Your queue is empty" = "你的队列为空";
+"Add topics from the home screen" = "从主页添加主题";
+"Play All" = "全部播放";
+
+// MARK: - Gradient Header / Daily Brief States
+"Connect your email" = "关联你的邮箱";
+"to generate your personalized brief" = "以生成你的个性化简报";
+"Generate Today's Brief" = "生成今日简报";
+"Generating your brief..." = "正在生成简报...";
+"Fetching your emails and calendar..." = "正在获取邮件和日历...";
+"Analyzing content..." = "正在分析内容...";
+"Creating your personalized script..." = "正在创建个性化脚本...";
+"Generating audio..." = "正在生成音频...";
+"Almost done..." = "即将完成...";
+"Now Playing" = "正在播放";
+"Generation failed" = "生成失败";
+"Retry" = "重试";
+"Reconnect your email" = "重新关联邮箱";
+"Reconnect" = "重新连接";
+"No new emails" = "没有新邮件";
+"Try Again Later" = "请稍后再试";
+
+// MARK: - Splash Screen
+"Your AI-powered audio briefing" = "你的AI音频简报";
+
+// MARK: - Tab Router
+"Home" = "首页";
+
+// MARK: - Notification Settings
+"Notifications" = "通知";
+"Enabled" = "已启用";
+"Open Settings" = "打开设置";
+"Enable" = "启用";
+"Not Available" = "不可用";
+"Permission" = "权限";
+"Allow notifications to receive your daily brief when it's ready." = "允许通知以在每日简报准备好后接收提醒。";
+"Daily Brief Notifications" = "每日简报通知";
+"Briefing Time" = "简报时间";
+"Timezone" = "时区";
+"Daily Brief Schedule" = "每日简报计划";
+"Daily Brief Content" = "每日简报内容";
+"When enabled, your Daily Brief will include headlines and updates from your selected topics of interest." = "启用后，每日简报将包含你选择的感兴趣主题的头条和更新。";
+"Notification Preview" = "通知预览";
+"Your Daily Brief is Ready" = "你的每日简报已准备好";
+"Your personalized briefing is ready to play." = "你的个性化简报已准备好播放。";
+"Manual" = "手动";
+"Generate your daily brief immediately instead of waiting for the scheduled time." = "立即生成每日简报，无需等待计划时间。";
+"Enable to have your daily brief automatically generated each morning." = "启用以每天早上自动生成每日简报。";
+
+// MARK: - Location & Weather Settings
+"Location & Weather" = "位置和天气";
+"Use Current Location" = "使用当前位置";
+"Weather Location" = "天气位置";
+"Home Address" = "家庭住址";
+"Enter your home address" = "输入你的家庭住址";
+"Work Address" = "工作地址";
+"Enter your work address" = "输入你的工作地址";
+"Traffic Route" = "交通路线";
+"Set both addresses to get commute time in your daily briefing" = "设置两个地址以在每日简报中获取通勤时间";
+"Temperature Unit" = "温度单位";
+"Fahrenheit (°F)" = "华氏 (°F)";
+"Celsius (°C)" = "摄氏 (°C)";
+"Units" = "单位";
+"Weather and traffic information will be included in your morning daily briefing when available." = "天气和交通信息将在可用时包含在你的早间每日简报中。";
+"Save" = "保存";
+
+// MARK: - Custom Sources
+"Add Source" = "添加来源";
+"Source Type" = "来源类型";
+"URL" = "URL";
+"Validating..." = "正在验证...";
+"Invalid source" = "无效来源";
+"Name (Optional)" = "名称（可选）";
+"Auto-detect name" = "自动检测名称";
+"Leave blank to use the detected name" = "留空以使用检测到的名称";
+"Validate" = "验证";
+"My Sources" = "我的来源";
+"No Custom Sources" = "没有自定义来源";
+"Add RSS feeds, newsletters, or websites to include their content in your daily brief." = "添加RSS订阅、新闻通讯或网站，将其内容包含在你的每日简报中。";
+"Add Your First Source" = "添加你的第一个来源";
+"Paused" = "已暂停";
+"Source Info" = "来源信息";
+"Type" = "类型";
+"Status" = "状态";
+"Last Updated" = "最后更新";
+"Items" = "条目";
+"Recent Items" = "最近的条目";
+"No items yet" = "暂无条目";
+"Refresh" = "刷新";
+"Pause" = "暂停";
+"Resume" = "恢复";
+
+// MARK: - Live Station Player
+"Now Covering" = "当前话题";
+"listening" = "正在收听";
+
+// MARK: - Ad Companion
+"Sponsored" = "赞助";
+"Ad" = "广告";
+
+// MARK: - Episode History
+"Generating..." = "正在生成...";
+"Failed" = "失败";
+"Not generated" = "未生成";
+
+// MARK: - Misc / Duration formats
+"min daily" = "分钟/天";
+"min" = "分钟";
+"episodes" = "集";
+"items found" = "个结果";
+"sources" = "个来源";
+"topic" = "个主题";
+"topics" = "个主题";
+"selected" = "已选择";
+"hidden" = "已隐藏";
+"added to For You" = "已添加到为你推荐";
+"removed from For You" = "已从为你推荐中移除";
+"/year" = "/年";
+"/month" = "/月";
+"/week" = "/周";
+"/day" = "/天";

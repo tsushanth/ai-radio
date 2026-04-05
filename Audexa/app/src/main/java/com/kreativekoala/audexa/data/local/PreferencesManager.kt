@@ -54,8 +54,14 @@ class PreferencesManager @Inject constructor(
         val FCM_TOKEN = stringPreferencesKey("fcm_token")
         val INCLUDE_TOPIC_UPDATES = booleanPreferencesKey("include_topic_updates")
 
+        // Radio languages (comma-separated codes, e.g. "en,es,hi")
+        val RADIO_LANGUAGES = stringPreferencesKey("radio_languages")
+
         // Subscription
         val IS_SUBSCRIBED = booleanPreferencesKey("is_subscribed")
+
+        // App open tracking (for paywall gate)
+        val APP_OPEN_COUNT = intPreferencesKey("app_open_count")
 
         // Playback
         val PLAYBACK_SPEED = floatPreferencesKey("playback_speed")
@@ -150,6 +156,53 @@ class PreferencesManager @Inject constructor(
     // Subscription (cached for offline/instant access)
     val isSubscribed: Flow<Boolean> = dataStore.data.map {
         it[Keys.IS_SUBSCRIBED] ?: false
+    }
+
+    // App open count (for paywall gate)
+    val appOpenCount: Flow<Int> = dataStore.data.map {
+        it[Keys.APP_OPEN_COUNT] ?: 0
+    }
+
+    suspend fun incrementAppOpenCount(): Int {
+        var newCount = 0
+        dataStore.edit { prefs ->
+            val current = prefs[Keys.APP_OPEN_COUNT] ?: 0
+            newCount = current + 1
+            prefs[Keys.APP_OPEN_COUNT] = newCount
+        }
+        return newCount
+    }
+
+    // Radio languages (defaults to user's preferred language if radio-available, else English)
+    val radioLanguages: Flow<Set<String>> = dataStore.data.map { prefs ->
+        val stored = prefs[Keys.RADIO_LANGUAGES]
+        if (stored != null) {
+            stored.split(",").filter { it.isNotBlank() }.toSet()
+        } else {
+            // Default: user's preferred language if it's radio-available, else English
+            val preferred = prefs[Keys.PREFERRED_LANGUAGE] ?: "en"
+            val radioAvailableCodes = com.kreativekoala.audexa.data.model.SupportedLanguage.radioAvailable.map { it.code }.toSet()
+            if (preferred in radioAvailableCodes) setOf(preferred) else setOf("en")
+        }
+    }
+
+    suspend fun setRadioLanguages(languages: Set<String>) {
+        dataStore.edit { prefs ->
+            prefs[Keys.RADIO_LANGUAGES] = languages.joinToString(",")
+        }
+    }
+
+    suspend fun toggleRadioLanguage(code: String) {
+        dataStore.edit { prefs ->
+            val current = prefs[Keys.RADIO_LANGUAGES]?.split(",")?.filter { it.isNotBlank() }?.toMutableSet()
+                ?: mutableSetOf("en")
+            if (current.contains(code)) {
+                if (current.size > 1) current.remove(code)  // Must keep at least one
+            } else {
+                current.add(code)
+            }
+            prefs[Keys.RADIO_LANGUAGES] = current.joinToString(",")
+        }
     }
 
     // Setters

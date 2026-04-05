@@ -24,7 +24,7 @@ BriefCast allows users to link their Google and Microsoft accounts to access:
    - **App name**: BriefCast
    - **User support email**: Your email
    - **App logo**: (Optional) Upload your app logo
-   - **Authorized domains**: `kreativekoala.com` (if you have a website)
+   - **Authorized domains**: `kreativekoala.llc` (if you have a website)
    - **Developer contact**: Your email
 
 3. Add **Scopes**:

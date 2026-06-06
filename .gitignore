@@ -1,0 +1,25 @@
+# macOS
+.DS_Store
+
+# Xcode — user-specific IDE state (per-user, don't track)
+**/xcuserdata/
+*.xcuserstate
+
+# iOS build output (xcarchive, derived data, generated bundles)
+BriefCast/build/
+**/DerivedData/
+*.xcarchive
+
+# Fastlane — auto-generated per-run
+**/fastlane/report.xml
+**/fastlane/test_output/
+**/fastlane/screenshots/.DS_Store
+
+# Android — build output
+Audexa/app/build/
+Audexa/build/
+Audexa/.gradle/
+
+# Common
+*.log
+*.tmp

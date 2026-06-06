@@ -688,7 +688,7 @@ class LinkedAccountsViewModel: ObservableObject {
         // This is the email being linked (e.g., t.sushanth@gmail.com)
         let userId = email
 
-        let url = URL(string: "https://ai-radio-backend-917362189743.us-central1.run.app/api/linked-accounts/\(userId)")!
+        let url = URL(string: "https://ai-radio-backend.fly.dev/api/linked-accounts/\(userId)")!
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")

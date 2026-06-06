@@ -157,7 +157,10 @@ struct ContentView: View {
                 }
             )
         }
-        .fullScreenCover(isPresented: $showDeepDivePaywall) {
+        .fullScreenCover(isPresented: $showDeepDivePaywall, onDismiss: {
+            PaywallCoordinator.shared.trackDismiss()
+            PaywallCoordinator.shared.checkWinbackEligibility()
+        }) {
             RemotePaywallView(triggerSource: "deep_dive")
         }
         .sheet(isPresented: $showDeepDiveAdChoice) {

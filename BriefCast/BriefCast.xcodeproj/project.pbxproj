@@ -19,8 +19,12 @@
 		881B33BC2EEA019B003270AA /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 881B33BB2EEA019B003270AA /* GoogleSignInSwift */; };
 		88CE60892F6F781000D8F36E /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 40AD34D43873B64461C0D6B7 /* FirebaseAnalytics */; };
 		A1B2C3D4E5F60001 /* PaywallKit in Frameworks */ = {isa = PBXBuildFile; productRef = A1B2C3D4E5F60002 /* PaywallKit */; };
+		F4CC70FD81E0BAF1AF007716 /* RatingKit in Frameworks */ = {isa = PBXBuildFile; productRef = B14BDB45A66CEFD64131416B /* RatingKit */; };
 		D42F8F426882710680F9E448 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 97BB906C960EE20ABBFC217A /* Foundation.framework */; };
+		FB_AX_BUILD /* FacebookCore in Frameworks */ = {isa = PBXBuildFile; productRef = FB_AX_REF /* FacebookCore */; };
 		GAD_BUILD_001 /* GoogleMobileAds in Frameworks */ = {isa = PBXBuildFile; productRef = GAD_REF_001 /* GoogleMobileAds */; };
+		TT_AX_BUILD /* TikTokBusinessSDK in Frameworks */ = {isa = PBXBuildFile; productRef = TT_AX_REF /* TikTokBusinessSDK */; };
+		FAD0000000000000000003 /* FluidAudio in Frameworks */ = {isa = PBXBuildFile; productRef = FAD0000000000000000002 /* FluidAudio */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -36,7 +40,7 @@
 /* Begin PBXFileReference section */
 		21325DC96DB64CC6490C9AA8 /* ScreenshotTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ScreenshotTests.swift; sourceTree = "<group>"; };
 		881B32E22EE8AE52003270AA /* BriefCast.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BriefCast.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		9453BAE1ECCC432690688EBD /* BriefCastUITests */ = {isa = PBXFileReference; includeInIndex = 0; path = BriefCastUITests; sourceTree = BUILT_PRODUCTS_DIR; };
+		9453BAE1ECCC432690688EBD /* BriefCastUITests */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = file; name = BriefCastUITests; path = BriefCastUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		97BB906C960EE20ABBFC217A /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS18.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 		B07BA525E95057DFE5BA7437 /* SnapshotHelper.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SnapshotHelper.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -85,7 +89,11 @@
 				881B33B32EEA0167003270AA /* Realtime in Frameworks */,
 				881B33BA2EEA019B003270AA /* GoogleSignIn in Frameworks */,
 				A1B2C3D4E5F60001 /* PaywallKit in Frameworks */,
+				F4CC70FD81E0BAF1AF007716 /* RatingKit in Frameworks */,
 				GAD_BUILD_001 /* GoogleMobileAds in Frameworks */,
+				TT_AX_BUILD /* TikTokBusinessSDK in Frameworks */,
+				FB_AX_BUILD /* FacebookCore in Frameworks */,
+				FAD0000000000000000003 /* FluidAudio in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -133,7 +141,6 @@
 				B07BA525E95057DFE5BA7437 /* SnapshotHelper.swift */,
 				21325DC96DB64CC6490C9AA8 /* ScreenshotTests.swift */,
 			);
-			name = BriefCastUITests;
 			path = BriefCastUITests;
 			sourceTree = "<group>";
 		};
@@ -167,6 +174,10 @@
 				881B33BB2EEA019B003270AA /* GoogleSignInSwift */,
 				40AD34D43873B64461C0D6B7 /* FirebaseAnalytics */,
 				A1B2C3D4E5F60002 /* PaywallKit */,
+				B14BDB45A66CEFD64131416B /* RatingKit */,
+				TT_AX_REF /* TikTokBusinessSDK */,
+				FB_AX_REF /* FacebookCore */,
+				FAD0000000000000000002 /* FluidAudio */,
 			);
 			productName = BriefCast;
 			productReference = 881B32E22EE8AE52003270AA /* BriefCast.app */;
@@ -227,8 +238,12 @@
 				881B33AB2EEA0167003270AA /* XCRemoteSwiftPackageReference "supabase-swift" */,
 				881B33B82EEA019B003270AA /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
 				4248B23A2A8836B7D53FE1D1 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
-				A1B2C3D4E5F60003 /* XCLocalSwiftPackageReference "PaywallKit" */,
+				A1B2C3D4E5F60003 /* XCLocalSwiftPackageReference "../../PaywallKit" */,
+				459C8322E195D4818A12B399 /* XCRemoteSwiftPackageReference "RatingKit" */,
 				GAD_PACKAGE /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */,
+				TT_AX_PACKAGE /* XCRemoteSwiftPackageReference "tiktok-business-ios-sdk" */,
+				FB_AX_PACKAGE /* XCRemoteSwiftPackageReference "facebook-ios-sdk" */,
+				FAD0000000000000000001 /* XCRemoteSwiftPackageReference "FluidAudio" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 881B32E32EE8AE52003270AA /* Products */;
@@ -429,7 +444,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = BriefCast/BriefCast.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 29;
+				CURRENT_PROJECT_VERSION = 47;
 				DEVELOPMENT_ASSET_PATHS = "\"BriefCast/Preview Content\"";
 				DEVELOPMENT_TEAM = 7RS696YC75;
 				ENABLE_PREVIEWS = YES;
@@ -447,7 +462,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 16.3;
+				MARKETING_VERSION = 17.0.7;
 				PRODUCT_BUNDLE_IDENTIFIER = com.kreativekoala.briefcast;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -465,7 +480,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = BriefCast/BriefCast.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 29;
+				CURRENT_PROJECT_VERSION = 47;
 				DEVELOPMENT_ASSET_PATHS = "\"BriefCast/Preview Content\"";
 				DEVELOPMENT_TEAM = 7RS696YC75;
 				ENABLE_PREVIEWS = YES;
@@ -483,7 +498,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 16.3;
+				MARKETING_VERSION = 17.0.7;
 				PRODUCT_BUNDLE_IDENTIFIER = com.kreativekoala.briefcast;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -542,7 +557,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
-		A1B2C3D4E5F60003 /* XCLocalSwiftPackageReference "PaywallKit" */ = {
+		A1B2C3D4E5F60003 /* XCLocalSwiftPackageReference "../../PaywallKit" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = ../../PaywallKit;
 		};
@@ -573,6 +588,14 @@
 				minimumVersion = 9.0.0;
 			};
 		};
+		FB_AX_PACKAGE /* XCRemoteSwiftPackageReference "facebook-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/facebook/facebook-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 17.0.0;
+			};
+		};
 		GAD_PACKAGE /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/googleads/swift-package-manager-google-mobile-ads";
@@ -581,9 +604,38 @@
 				minimumVersion = 11.0.0;
 			};
 		};
+		TT_AX_PACKAGE /* XCRemoteSwiftPackageReference "tiktok-business-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/tiktok/tiktok-business-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
+		459C8322E195D4818A12B399 /* XCRemoteSwiftPackageReference "RatingKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/tsushanth/RatingKit.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = "2.0.1";
+			};
+		};
+		FAD0000000000000000001 /* XCRemoteSwiftPackageReference "FluidAudio" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/FluidInference/FluidAudio";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.14.4;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		FAD0000000000000000002 /* FluidAudio */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = FAD0000000000000000001 /* XCRemoteSwiftPackageReference "FluidAudio" */;
+			productName = FluidAudio;
+		};
 		40AD34D43873B64461C0D6B7 /* FirebaseAnalytics */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 4248B23A2A8836B7D53FE1D1 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
@@ -633,10 +685,25 @@
 			isa = XCSwiftPackageProductDependency;
 			productName = PaywallKit;
 		};
+		FB_AX_REF /* FacebookCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = FB_AX_PACKAGE /* XCRemoteSwiftPackageReference "facebook-ios-sdk" */;
+			productName = FacebookCore;
+		};
 		GAD_REF_001 /* GoogleMobileAds */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = GAD_PACKAGE /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */;
 			productName = GoogleMobileAds;
+		};
+		TT_AX_REF /* TikTokBusinessSDK */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = TT_AX_PACKAGE /* XCRemoteSwiftPackageReference "tiktok-business-ios-sdk" */;
+			productName = TikTokBusinessSDK;
+		};
+		B14BDB45A66CEFD64131416B /* RatingKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 459C8322E195D4818A12B399 /* XCRemoteSwiftPackageReference "RatingKit" */;
+			productName = RatingKit;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

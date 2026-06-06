@@ -5,7 +5,7 @@ final class RadioConfig: @unchecked Sendable {
     static let shared = RadioConfig()
 
     private(set) var baseURL: String = "https://radio.audexa.app" // fallback
-    private let apiBase = "https://ai-radio-backend-917362189743.us-central1.run.app/api"
+    private let apiBase = "https://ai-radio-backend.fly.dev/api"
 
     private init() {}
 

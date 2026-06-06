@@ -8,6 +8,7 @@
 import SwiftUI
 import GoogleSignIn
 import PaywallKit
+import RatingKit
 
 @main
 struct BriefCastApp: App {
@@ -17,6 +18,7 @@ struct BriefCastApp: App {
     @State private var subscriptionManager = SubscriptionManager.shared
     @State private var showSplash = true
     @State private var showAppOpenPaywall = false
+    @ObservedObject private var paywallCoordinator = PaywallCoordinator.shared
 
     init() {
         // FASTLANE_SNAPSHOT: skip onboarding and paywall for screenshots
@@ -24,7 +26,17 @@ struct BriefCastApp: App {
             UserDefaults.standard.set(true, forKey: "hasCompletedOnboarding")
             UserDefaults.standard.set(999, forKey: "com.audexa.appOpenCount") // prevent paywall trigger
         }
-        ReviewManager.shared.recordAppLaunch()
+
+        // Initialize ad attribution SDKs
+        FacebookSDKHelper.shared.initialize()
+        TikTokHelper.shared.initialize()
+        TikTokHelper.shared.requestTrackingPermission()
+        FacebookSDKHelper.shared.requestTrackingPermission()
+    
+        // Server-driven rating prompts (variant testing + analytics).
+        // Currently in simple mode — uses native SKStoreReviewController, no UI overlay.
+        RatingKit.configure(appId: "audexa", apiUrl: "https://paywallkit-api.fly.dev")
+        RatingKit.shared.trackAppOpen()
     }
     @State private var showDailyBriefPlayer = false
     @State private var pendingEpisodeId: String?
@@ -33,8 +45,11 @@ struct BriefCastApp: App {
         WindowGroup {
             ZStack {
                 ContentView()
+                    .ratingPrompt()
                     .environmentObject(authService)
                     .onOpenURL { url in
+                        // Handle promo code deep links (e.g. audexa://open?code=FOCUS30)
+                        PromoCodeManager.shared.handleURL(url)
                         // Handle Google OAuth callback when linking account from Settings
                         GIDSignIn.sharedInstance.handle(url)
                     }
@@ -54,6 +69,10 @@ struct BriefCastApp: App {
                         // Navigate to home for retry - HomeView will handle this
                         NotificationCenter.default.post(name: .navigateToHome, object: nil)
                     }
+                    .onReceive(NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification)) { _ in
+                        // Winback eligibility is checked after paywall dismiss only, not on foreground
+                        _ = subscriptionManager.isSubscribed
+                    }
 
                 // Splash screen overlay
                 if showSplash {
@@ -62,9 +81,10 @@ struct BriefCastApp: App {
                         .zIndex(1)
                 }
             }
-            .reviewPrompt()
             .preferredColorScheme(preferencesService.appTheme.colorScheme)
             .onAppear {
+                // Check clipboard for promo code once per install
+                Task { await PromoCodeManager.shared.checkClipboard() }
                 // Dismiss splash screen after a delay
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1.8) {
                     withAnimation(.easeOut(duration: 0.4)) {
@@ -74,15 +94,22 @@ struct BriefCastApp: App {
                     triggerAppOpenPaywall()
                 }
             }
-            .fullScreenCover(isPresented: $showAppOpenPaywall) {
+            .fullScreenCover(isPresented: $showAppOpenPaywall, onDismiss: {
+                PaywallCoordinator.shared.trackDismiss()
+                // Winback check deferred — will trigger on next paywall dismiss after cooldown
+            }) {
                 RemotePaywallView(triggerSource: "app_open")
+            }
+            .fullScreenCover(isPresented: $paywallCoordinator.showWinbackOffer) {
+                WinbackOfferView()
             }
         }
     }
 
     // MARK: - App-Open Paywall Trigger
 
-    /// Shows paywall on 1st, 3rd, 5th open, then every 3rd open after that
+    /// Shows paywall on the 5th open, then every 25th open (5, 30, 55, ...).
+    /// Intentionally infrequent — compliant with App Store guideline 5.6.
     private func triggerAppOpenPaywall() {
         // Don't show if already subscribed
         guard !subscriptionManager.isSubscribed else { return }
@@ -91,14 +118,7 @@ struct BriefCastApp: App {
         let count = UserDefaults.standard.integer(forKey: key) + 1
         UserDefaults.standard.set(count, forKey: key)
 
-        let shouldShow: Bool
-        switch count {
-        case 1, 3, 5:
-            shouldShow = true
-        default:
-            // Every 3rd open after 5th (8, 11, 14, ...)
-            shouldShow = count > 5 && (count - 5) % 3 == 0
-        }
+        let shouldShow = count == 5 || (count > 5 && (count - 5) % 25 == 0)
 
         if shouldShow {
             // Small delay so UI is ready

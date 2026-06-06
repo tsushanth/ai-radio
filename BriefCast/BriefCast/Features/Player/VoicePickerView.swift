@@ -18,6 +18,8 @@ struct VoicePickerView: View {
     @State private var isLoading = false
     @State private var selectedTab: VoiceTab = .pairs
     @State private var showPremiumVoicesPaywall = false
+    @State private var onDeviceEnabled: Bool = KokoroModelManager.isOnDeviceEnabledByUser
+    @ObservedObject private var kokoroManager = KokoroModelManager.shared
 
     enum VoiceTab: String, CaseIterable {
         case pairs = "Pairs"
@@ -27,6 +29,11 @@ struct VoicePickerView: View {
     var body: some View {
         NavigationStack {
             VStack(spacing: 0) {
+                // On-device synthesis toggle (only on eligible devices)
+                if KokoroModelManager.isDeviceEligible {
+                    onDeviceToggle
+                }
+
                 // Provider selector
                 providerSelector
 
@@ -62,6 +69,60 @@ struct VoicePickerView: View {
         }
         .sheet(isPresented: $showPremiumVoicesPaywall) {
             RemotePaywallView(triggerSource: "premium_voices")
+        }
+    }
+
+    // MARK: - On-Device Synthesis Toggle
+
+    private var onDeviceToggle: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            Toggle(isOn: $onDeviceEnabled) {
+                HStack(spacing: 8) {
+                    Image(systemName: "iphone.gen3")
+                        .foregroundColor(.accentColor)
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text("On-device synthesis")
+                            .font(.subheadline)
+                            .fontWeight(.semibold)
+                        Text(onDeviceStatusText)
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                    }
+                }
+            }
+            .onChange(of: onDeviceEnabled) { _, newValue in
+                KokoroModelManager.isOnDeviceEnabledByUser = newValue
+            }
+
+            if case .preparing = kokoroManager.state {
+                ProgressView(value: kokoroManager.downloadProgress)
+                    .progressViewStyle(.linear)
+            }
+        }
+        .padding(.horizontal, 16)
+        .padding(.vertical, 12)
+        .background(Color(UIColor.secondarySystemGroupedBackground))
+    }
+
+    private var onDeviceStatusText: String {
+        if !onDeviceEnabled {
+            return "English only · uses cloud voices when off"
+        }
+        switch kokoroManager.state {
+        case .ready:
+            return "Ready · runs free + offline"
+        case .preparing:
+            // Prefer the FluidAudio phase string (e.g. "Downloading 12/33 files")
+            // when present; fall back to a percentage when only the fraction is known.
+            if !kokoroManager.phaseDescription.isEmpty {
+                return kokoroManager.phaseDescription
+            }
+            let pct = Int((kokoroManager.downloadProgress * 100).rounded())
+            return "Downloading model… \(pct)%"
+        case .failed(let message):
+            return "Failed: \(message)"
+        case .notReady:
+            return "Downloads ~250 MB on first podcast"
         }
     }
 

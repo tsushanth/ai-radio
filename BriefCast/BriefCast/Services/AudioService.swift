@@ -11,6 +11,7 @@ import Combine
 import MediaPlayer
 import StoreKit
 import UIKit
+import RatingKit
 
 // Notification sent when playback finishes
 extension Notification.Name {
@@ -703,13 +704,14 @@ class AudioService {
         isPlaying = false
         currentTime = 0
 
-        // Track episode completion and prompt for review
-        let prefs = PreferencesService.shared
-        prefs.incrementEpisodesListened()
-        if prefs.shouldPromptForReview {
-            prefs.recordReviewPrompt()
-            if let scene = UIApplication.shared.connectedScenes.first(where: { $0.activationState == .foregroundActive }) as? UIWindowScene {
-                SKStoreReviewController.requestReview(in: scene)
+        // Track episode completion (RatingKit handles thresholds + variant testing).
+        // Only count when app is foreground — if user is in CarPlay/locked screen/
+        // background, they won't see the gateway prompt and we'd waste the trigger
+        // slot (Apple throttles SKStoreReviewController to ~3 prompts/year/user).
+        PreferencesService.shared.incrementEpisodesListened()
+        Task { @MainActor in
+            if UIApplication.shared.applicationState == .active {
+                RatingKit.shared.trackAction()
             }
         }
 

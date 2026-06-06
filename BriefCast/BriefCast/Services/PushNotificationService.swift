@@ -99,7 +99,7 @@ class PushNotificationService: NSObject, ObservableObject {
             return
         }
 
-        guard let url = URL(string: "https://ai-radio-backend-917362189743.us-central1.run.app/api/notifications/register") else {
+        guard let url = URL(string: "https://ai-radio-backend.fly.dev/api/notifications/register") else {
             print("❌ Invalid backend URL for token registration")
             return
         }
@@ -138,7 +138,7 @@ class PushNotificationService: NSObject, ObservableObject {
         }
 
         // Unregister from backend
-        if let url = URL(string: "https://ai-radio-backend-917362189743.us-central1.run.app/api/notifications/unregister") {
+        if let url = URL(string: "https://ai-radio-backend.fly.dev/api/notifications/unregister") {
             var request = URLRequest(url: url)
             request.httpMethod = "DELETE"
             request.setValue("application/json", forHTTPHeaderField: "Content-Type")
@@ -396,7 +396,7 @@ class PushNotificationService: NSObject, ObservableObject {
         timezone: String,
         enabled: Bool
     ) async {
-        guard let url = URL(string: "https://ai-radio-backend-917362189743.us-central1.run.app/api/notifications/settings") else {
+        guard let url = URL(string: "https://ai-radio-backend.fly.dev/api/notifications/settings") else {
             print("❌ Invalid backend URL for notification settings")
             return
         }

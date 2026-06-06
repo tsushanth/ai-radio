@@ -12,7 +12,7 @@ import UIKit
 class CustomSourceService {
     static let shared = CustomSourceService()
 
-    private let baseURL = "https://ai-radio-backend-917362189743.us-central1.run.app/api"
+    private let baseURL = "https://ai-radio-backend.fly.dev/api"
     private let jsonDecoder: JSONDecoder
     private let jsonEncoder: JSONEncoder
     private let standardSession: URLSession

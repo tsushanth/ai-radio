@@ -899,12 +899,16 @@ struct TopicSelectionPage: View {
                 .padding(.bottom, 16)
             }
 
-            // Complete button
+            // Complete button — always enabled so users can finish onboarding
+            // even without selecting topics. They can pick later from Home.
+            // The Android equivalent had this gated on selectedTopics.isEmpty
+            // and produced a Play 1★ review when topics failed to load.
             VStack(spacing: 8) {
                 if viewModel.selectedTopics.isEmpty {
-                    Text("Select at least one topic")
-                        .font(.system(size: 14, weight: .medium))
-                        .foregroundColor(.orange)
+                    Text("Tap Continue — you can pick topics later from the Home screen")
+                        .font(.system(size: 13, weight: .medium))
+                        .foregroundColor(Theme.Colors.secondaryText)
+                        .multilineTextAlignment(.center)
                 } else {
                     Text("\(viewModel.selectedTopics.count) topic\(viewModel.selectedTopics.count == 1 ? "" : "s") selected")
                         .font(.system(size: 14, weight: .medium))
@@ -912,15 +916,14 @@ struct TopicSelectionPage: View {
                 }
 
                 Button(action: onComplete) {
-                    Text("Complete Setup")
+                    Text(viewModel.selectedTopics.isEmpty ? "Continue" : "Complete Setup")
                         .font(.system(size: 18, weight: .semibold))
                         .foregroundColor(.white)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 16)
-                        .background(viewModel.selectedTopics.isEmpty ? Color.gray : Theme.Colors.accent)
+                        .background(Theme.Colors.accent)
                         .cornerRadius(12)
                 }
-                .disabled(viewModel.selectedTopics.isEmpty)
             }
             .padding(.horizontal, 24)
             .padding(.bottom, 60)
@@ -1168,7 +1171,7 @@ class OnboardingViewModel: ObservableObject {
     ) async throws {
         let userId = email
 
-        let url = URL(string: "https://ai-radio-backend-917362189743.us-central1.run.app/api/linked-accounts/\(userId)")!
+        let url = URL(string: "https://ai-radio-backend.fly.dev/api/linked-accounts/\(userId)")!
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")

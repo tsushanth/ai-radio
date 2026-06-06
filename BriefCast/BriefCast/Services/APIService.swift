@@ -39,7 +39,7 @@ enum APIError: Error {
 actor APIService {
     static let shared = APIService()
 
-    private let baseURL = "https://ai-radio-backend-917362189743.us-central1.run.app/api"
+    private let baseURL = "https://ai-radio-backend.fly.dev/api"
     private var authToken: String?
     private let jsonDecoder: JSONDecoder
     private let jsonEncoder: JSONEncoder

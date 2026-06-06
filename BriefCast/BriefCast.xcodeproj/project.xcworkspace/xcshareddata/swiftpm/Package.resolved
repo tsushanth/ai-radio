@@ -1,5 +1,5 @@
 {
-  "originHash" : "7e1be71db28cd98293211d9e3a09ed3a786834c37c36677f55fb01a0d4d1cba7",
+  "originHash" : "1ff7572176e71ea3874ce90f2b290ba7121eb6bbabf7ec68bcedbb7769fed40b",
   "pins" : [
     {
       "identity" : "abseil-cpp-binary",
@@ -29,12 +29,30 @@
       }
     },
     {
+      "identity" : "facebook-ios-sdk",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/facebook/facebook-ios-sdk",
+      "state" : {
+        "revision" : "619d1772808425faa010d92293b26eeb9bc1d630",
+        "version" : "17.4.0"
+      }
+    },
+    {
       "identity" : "firebase-ios-sdk",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/firebase/firebase-ios-sdk",
       "state" : {
         "revision" : "fdc352fabaf5916e7faa1f96ad02b1957e93e5a5",
         "version" : "11.15.0"
+      }
+    },
+    {
+      "identity" : "fluidaudio",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/FluidInference/FluidAudio",
+      "state" : {
+        "revision" : "bdbff4d88afe12d1e70c7f3dc4301efb9281f853",
+        "version" : "0.14.4"
       }
     },
     {
@@ -146,6 +164,15 @@
       }
     },
     {
+      "identity" : "ratingkit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/tsushanth/RatingKit.git",
+      "state" : {
+        "revision" : "62dd8c3881b316ab56ac72d6d8452d4fe80ee81f",
+        "version" : "2.0.1"
+      }
+    },
+    {
       "identity" : "supabase-swift",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/supabase/supabase-swift",
@@ -224,6 +251,15 @@
       "state" : {
         "revision" : "9bbb079b69af9d66470ced85461bf13bb40becac",
         "version" : "1.35.0"
+      }
+    },
+    {
+      "identity" : "tiktok-business-ios-sdk",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/tiktok/tiktok-business-ios-sdk",
+      "state" : {
+        "revision" : "79faf4f1a8a15b039cb0d41a5186ea32fff86cb2",
+        "version" : "1.6.0"
       }
     },
     {

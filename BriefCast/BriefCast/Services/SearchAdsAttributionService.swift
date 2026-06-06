@@ -75,7 +75,7 @@ class SearchAdsAttributionService: ObservableObject {
 
     /// Report attribution data to backend for bid optimization
     private func reportAttributionToBackend(token: String) async {
-        guard let url = URL(string: "https://ai-radio-backend-917362189743.us-central1.run.app/api/attribution/apple-search-ads") else {
+        guard let url = URL(string: "https://ai-radio-backend.fly.dev/api/attribution/apple-search-ads") else {
             print("❌ Invalid backend URL for ASA attribution")
             return
         }
@@ -128,7 +128,7 @@ class SearchAdsAttributionService: ObservableObject {
             return
         }
 
-        guard let url = URL(string: "https://ai-radio-backend-917362189743.us-central1.run.app/api/attribution/link-user") else {
+        guard let url = URL(string: "https://ai-radio-backend.fly.dev/api/attribution/link-user") else {
             print("❌ Invalid backend URL for attribution user link")
             return
         }

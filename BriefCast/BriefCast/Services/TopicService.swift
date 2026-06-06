@@ -11,7 +11,7 @@ import Foundation
 class TopicService {
     static let shared = TopicService()
 
-    private let baseURL = "https://ai-radio-backend-917362189743.us-central1.run.app/api"
+    private let baseURL = "https://ai-radio-backend.fly.dev/api"
     private let jsonDecoder: JSONDecoder
     private let jsonEncoder: JSONEncoder
 
@@ -91,7 +91,8 @@ class TopicService {
     /// Use this for initial load to show content instantly
     func fetchTopics(language: String? = nil) async throws -> TopicsData {
         // Try to fetch from server
-        let lang = language ?? PreferencesService.shared.preferredLanguage
+        // Always fetch all topics in English — language preference affects episode content, not topic listing
+        let lang = "en"
         let endpoint = "\(baseURL)/topics?lang=\(lang)"
 
         do {
@@ -162,14 +163,18 @@ class TopicService {
         return response.data
     }
 
-    /// Poll for episode completion with exponential backoff (matches Android behavior)
+    /// Poll for episode completion with exponential backoff (matches Android behavior).
+    /// Default ceiling is 30 minutes — Kokoro TTS on Fly currently takes
+    /// ~3 min per segment and an episode has 10-20 segments, so 6 minutes
+    /// (the prior ceiling) silently failed mid-generation. 30 min is the
+    /// soft cap until we switch TTS providers.
     private func pollForEpisodeCompletion(
         topicId: String,
-        language: String
+        language: String,
+        maxWaitTime: TimeInterval = 1800
     ) async throws -> TopicEpisodeData {
         var pollInterval: TimeInterval = 2.0
         let maxPollInterval: TimeInterval = 10.0
-        let maxWaitTime: TimeInterval = 360 // 6 minutes
         let startTime = Date()
         let endpoint = "\(baseURL)/topics/\(topicId)/episode?lang=\(language)"
 
@@ -195,7 +200,13 @@ class TopicService {
         }
     }
 
-    /// Generate a new episode (force generation)
+    /// Generate a new episode (force generation).
+    ///
+    /// The backend's POST /topics/:topicId/generate now returns
+    /// immediately when `forceRegenerate: true` is set (kicks off TTS in
+    /// the background and replies with `status: generating`). We
+    /// therefore poll the GET endpoint until completion, mirroring the
+    /// first-load behavior in `getOrGenerateEpisode`.
     func generateEpisode(topicId: String, language: String = "en") async throws -> TopicEpisodeData {
         let endpoint = "\(baseURL)/topics/\(topicId)/generate"
 
@@ -205,11 +216,16 @@ class TopicService {
         ]
         let bodyData = try JSONSerialization.data(withJSONObject: bodyDict)
 
-        // Use generation session with extended timeout
+        // Fire the POST. We expect a fast response with status=generating;
+        // if any older deploy is still serving, the same code path falls
+        // through to polling and the duplicate work is harmless.
         let data = try await performRequest(endpoint: endpoint, method: "POST", bodyData: bodyData, session: generationSession)
-
         let response = try jsonDecoder.decode(TopicEpisodeResponse.self, from: data)
-        return response.data
+
+        if response.data.episode.status == .completed {
+            return response.data
+        }
+        return try await pollForEpisodeCompletion(topicId: topicId, language: language)
     }
 
     /// Fetch episode history for a topic

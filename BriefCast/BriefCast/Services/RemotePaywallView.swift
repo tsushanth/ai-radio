@@ -1,5 +1,6 @@
 import SwiftUI
 import PaywallKit
+import RatingKit
 
 /// Paywall powered by PaywallKit — A/B tested templates with Terms & Privacy links
 struct RemotePaywallView: View {
@@ -7,6 +8,10 @@ struct RemotePaywallView: View {
     var triggerSource: String = "unknown"
 
     @ObservedObject private var store = StoreManager.shared
+
+    /// Server-controlled: false by default (no immediate winback after first dismiss).
+    /// PaywallKit-API /resolve can return showWinback: true for repeat dismissers.
+    private var showWinback: Bool { ExperimentManager.shared.showWinback() }
 
     private let features: [PaywallFeature] = [
         PaywallFeature(icon: "speaker.slash.fill", title: "Ad-Free Listening", description: "No audio ad interruptions"),
@@ -22,21 +27,29 @@ struct RemotePaywallView: View {
         accent2: Color(hex: "#E55A2B")
     )
 
+    private var placement: String {
+        PromoCodeManager.shared.activeCode != nil ? "promo_code_onboarding" : "app_open"
+    }
+
     var body: some View {
         PaywallView(
             appId: "audexa",
+            placement: placement,
             appName: "Audexa Premium",
             features: features,
             products: store.paywallProducts,
             theme: theme,
-            showWinback: true,
+            showWinback: showWinback,
             isDismissible: true,
             onPurchase: { productId in
                 let result = await store.purchase(productId: productId)
                 if case .purchased = result {
+                    TikTokHelper.shared.trackEvent("purchase_success", properties: ["product_id": productId])
+                    FacebookSDKHelper.shared.logSubscription(price: 0, currency: "USD", productId: productId)
                     await MainActor.run {
                         SubscriptionManager.shared.isSubscribed = true
                         PreferencesService.shared.isSubscribed = true
+                        RatingKit.shared.trackPurchase()
                         dismiss()
                     }
                     return true

@@ -12,7 +12,7 @@ import UIKit
 class LiveStationService {
     static let shared = LiveStationService()
 
-    private let baseURL = "https://ai-radio-backend-917362189743.us-central1.run.app/api"
+    private let baseURL = "https://ai-radio-backend.fly.dev/api"
 
     /// Live Icecast stream for Audexa Radio — injected into any station whose name contains "Audexa"
     static let audexaStreamURL = "http://radio.audexa.fm/stream"

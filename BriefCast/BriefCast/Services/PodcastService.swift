@@ -74,7 +74,7 @@ struct PodcastErrorResponse: Codable {
 actor PodcastService {
     static let shared = PodcastService()
 
-    private let baseURL = "https://ai-radio-backend-917362189743.us-central1.run.app/api"
+    private let baseURL = "https://ai-radio-backend.fly.dev/api"
 
     /// Custom URLSession with extended timeout for long-running generation requests
     /// Podcast generation can take 3-5 minutes due to GPT-4 script generation and TTS
@@ -486,12 +486,39 @@ actor PodcastService {
     }
 
     /// Generate podcast with async polling - returns progress updates via callback
-    /// This is the recommended method for production use
+    /// This is the recommended method for production use.
+    ///
+    /// Routes to on-device Kokoro synthesis when:
+    ///   1. The device is eligible (iOS 17+, ≥4 GB RAM)
+    ///   2. The podcast language is English
+    /// Otherwise falls through to the existing cloud TTS pipeline.
     func generatePodcastAsync(
         for userEmail: String,
         preferences: UserPreferences,
         onProgress: @escaping (Int, String) -> Void
     ) async throws -> GeneratePodcastResponse {
+        if shouldUseOnDeviceSynthesis(for: preferences) {
+            do {
+                return try await generatePodcastOnDevice(
+                    for: userEmail,
+                    preferences: preferences,
+                    onProgress: onProgress
+                )
+            } catch is CancellationError {
+                throw CancellationError()
+            } catch {
+                // Auth/content errors: surface immediately — re-running on cloud
+                // would hit the same backend prerequisites with the same outcome.
+                if let apiError = error as? PodcastAPIError,
+                   apiError.isAuthError || apiError.isContentError {
+                    throw apiError
+                }
+                // On-device synthesis itself failed (model download, OOM, etc.).
+                // Fall back to the cloud pipeline so the user still gets audio.
+                print("[PodcastService] On-device synthesis failed (\(error)); falling back to cloud TTS")
+            }
+        }
+
         // Start async job
         let jobId = try await startAsyncGeneration(for: userEmail, preferences: preferences)
         onProgress(5, "Starting generation...")
@@ -572,5 +599,145 @@ actor PodcastService {
                 continue
             }
         }
+    }
+
+    // MARK: - On-Device Synthesis (Kokoro)
+
+    private struct ScriptOnlyResponse: Codable {
+        let success: Bool
+        let script: ScriptPayload?
+        let title: String?
+        let error: PodcastAPIError?
+        let noContent: Bool?
+
+        struct ScriptPayload: Codable {
+            let segments: [Segment]
+            let totalSegments: Int
+            let language: String
+
+            struct Segment: Codable {
+                let speaker: String
+                let text: String
+                let type: String
+            }
+        }
+    }
+
+    private nonisolated func shouldUseOnDeviceSynthesis(for preferences: UserPreferences) -> Bool {
+        let language = (preferences.language ?? "en").lowercased()
+        guard language.hasPrefix("en") else { return false }
+        guard KokoroModelManager.isDeviceEligible else { return false }
+        return KokoroModelManager.isOnDeviceEnabledByUser
+    }
+
+    private func generatePodcastOnDevice(
+        for userEmail: String,
+        preferences: UserPreferences,
+        onProgress: @escaping (Int, String) -> Void
+    ) async throws -> GeneratePodcastResponse {
+        onProgress(5, "Generating script…")
+
+        let script = try await fetchScriptOnly(for: userEmail, preferences: preferences)
+        guard !script.segments.isEmpty else {
+            throw PodcastAPIError(
+                code: .insufficientContent,
+                message: "Not enough content to generate a podcast.",
+                action: .none,
+                retryable: false,
+                details: nil
+            )
+        }
+
+        onProgress(30, "Script ready. Synthesizing on device…")
+
+        let host1 = preferences.voiceHost1 ?? "nova"
+        let host2 = preferences.voiceHost2 ?? "onyx"
+
+        let synthesizerSegments = script.segments.map { seg in
+            KokoroPodcastSynthesizer.Segment(speaker: seg.speaker, text: seg.text)
+        }
+
+        let result = try await KokoroPodcastSynthesizer.shared.synthesize(
+            segments: synthesizerSegments,
+            host1Voice: host1,
+            host2Voice: host2,
+            progress: { progress in
+                // Map synthesizer fraction (0..1) to the 30..95 range used by the
+                // existing UI progress bar so cloud/on-device feel consistent.
+                let scaled = 30 + Int(progress.fraction * 65)
+                Task { @MainActor in onProgress(scaled, progress.message) }
+            }
+        )
+
+        onProgress(100, "Complete")
+
+        return GeneratePodcastResponse(
+            success: true,
+            episode: GeneratePodcastResponse.EpisodeInfo(
+                id: "ondevice_\(UUID().uuidString)",
+                audioUrl: result.fileURL.absoluteString,
+                durationSeconds: Int(result.durationSeconds.rounded()),
+                scriptSegments: script.segments.count
+            ),
+            costEstimate: GeneratePodcastResponse.CostEstimate(
+                scriptCostUsd: 0,
+                ttsCostUsd: 0,
+                totalCostUsd: 0
+            )
+        )
+    }
+
+    private func fetchScriptOnly(
+        for userEmail: String,
+        preferences: UserPreferences
+    ) async throws -> ScriptOnlyResponse.ScriptPayload {
+        let url = URL(string: "\(baseURL)/podcast/script")!
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.timeoutInterval = 90
+
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        let localDate = dateFormatter.string(from: Date())
+
+        let body = GeneratePodcastRequest(
+            userId: userEmail,
+            date: localDate,
+            preferences: GeneratePodcastRequest.Preferences(
+                briefingTime: preferences.briefingTime ?? "07:00",
+                topics: preferences.topics ?? [],
+                voiceHost1: preferences.voiceHost1 ?? "nova",
+                voiceHost2: preferences.voiceHost2 ?? "onyx",
+                includeWeather: preferences.includeWeather ?? false,
+                includeCalendar: preferences.includeCalendar ?? true,
+                includeEmail: preferences.includeEmail ?? true,
+                language: preferences.language ?? "en",
+                includeTopicTeasers: preferences.includeTopicTeasers ?? true
+            )
+        )
+        request.httpBody = try JSONEncoder().encode(body)
+
+        let (data, response) = try await longRunningSession.data(for: request)
+        guard let httpResponse = response as? HTTPURLResponse else {
+            throw NSError(domain: "PodcastService", code: -1, userInfo: [NSLocalizedDescriptionKey: "Invalid response"])
+        }
+
+        if httpResponse.statusCode == 200 {
+            let decoded = try JSONDecoder().decode(ScriptOnlyResponse.self, from: data)
+            if let script = decoded.script {
+                return script
+            }
+            if let error = decoded.error {
+                throw error
+            }
+            throw NSError(domain: "PodcastService", code: -7, userInfo: [NSLocalizedDescriptionKey: "Empty script response"])
+        }
+
+        if let errorResponse = try? JSONDecoder().decode(PodcastErrorResponse.self, from: data),
+           let apiError = errorResponse.error {
+            throw apiError
+        }
+        throw NSError(domain: "PodcastService", code: httpResponse.statusCode, userInfo: [NSLocalizedDescriptionKey: "Failed to generate script"])
     }
 }

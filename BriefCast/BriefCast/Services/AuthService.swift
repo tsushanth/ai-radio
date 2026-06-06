@@ -95,7 +95,7 @@ class AuthService: ObservableObject {
         if !isGuestUser {
             guard let encodedUserId = userId.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed),
                   !encodedUserId.isEmpty,
-                  let url = URL(string: "https://ai-radio-backend-917362189743.us-central1.run.app/api/user/\(encodedUserId)") else {
+                  let url = URL(string: "https://ai-radio-backend.fly.dev/api/user/\(encodedUserId)") else {
                 throw NSError(domain: "AuthService", code: -1, userInfo: [NSLocalizedDescriptionKey: "Invalid URL"])
             }
 
@@ -309,7 +309,7 @@ class AuthService: ObservableObject {
         // Use the email as the user identifier for the backend
         let userId = email
 
-        guard let url = URL(string: "https://ai-radio-backend-917362189743.us-central1.run.app/api/linked-accounts/\(userId)") else {
+        guard let url = URL(string: "https://ai-radio-backend.fly.dev/api/linked-accounts/\(userId)") else {
             throw NSError(domain: "AuthService", code: -1, userInfo: [NSLocalizedDescriptionKey: "Invalid URL"])
         }
 

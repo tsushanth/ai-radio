@@ -5,7 +5,54 @@ ISSUER_ID   = "17f51aa8-305f-48b3-acbe-fd8ed3dd5fb6"
 KEY_PATH    = File.expand_path("~/private_keys/AuthKey_3WHS49Y787.p8")
 
 platform :ios do
-  lane :upload_metadata do
+  desc "Build and submit to App Store for review"
+  lane :build_and_submit do
+    api_key = app_store_connect_api_key(
+      key_id: KEY_ID,
+      issuer_id: ISSUER_ID,
+      key_filepath: KEY_PATH,
+      duration: 1200,
+      in_house: false
+    )
+
+    gym(
+      project: "BriefCast.xcodeproj",
+      scheme: "BriefCast",
+      configuration: "Release",
+      export_method: "app-store",
+      export_options: {
+        method: "app-store-connect",
+        teamID: "7RS696YC75",
+        signingStyle: "automatic",
+        destination: "upload"
+      },
+      xcargs: "-allowProvisioningUpdates -authenticationKeyPath #{KEY_PATH} -authenticationKeyID #{KEY_ID} -authenticationKeyIssuerID #{ISSUER_ID}",
+      output_directory: "/tmp/briefcast_build",
+      output_name: "BriefCast.ipa",
+      clean: true
+    )
+
+    deliver(
+      api_key: api_key,
+      app_identifier: "com.kreativekoala.briefcast",
+      app_version: "17.0.4",
+      skip_binary_upload: true,
+      submit_for_review: true,
+      automatic_release: false,
+      force: true,
+      skip_screenshots: true,
+      skip_metadata: true,
+      run_precheck_before_submit: false,
+      submission_information: {
+        add_id_info_uses_idfa: false,
+        export_compliance_uses_encryption: false,
+        export_compliance_is_exempt: false
+      }
+    )
+  end
+
+  desc "Upload screenshots + app previews from screenshots_final/ to App Store Connect"
+  lane :upload_previews do
     api_key = app_store_connect_api_key(
       key_id: KEY_ID,
       issuer_id: ISSUER_ID,
@@ -16,13 +63,15 @@ platform :ios do
 
     deliver(
       api_key: api_key,
-      app_version: "16.0",
+      app_identifier: "com.kreativekoala.briefcast",
+      app_version: "17.0.4",
+      screenshots_path: "./fastlane/screenshots_final",
       skip_binary_upload: true,
-      force: true,
+      skip_metadata: true,
+      skip_screenshots: false,
       submit_for_review: false,
-      automatic_release: false,
-      skip_screenshots: true,
-      metadata_path: "./fastlane/metadata",
+      force: true,
+      overwrite_screenshots: true,
       run_precheck_before_submit: false
     )
   end
@@ -38,7 +87,9 @@ platform :ios do
 
     deliver(
       api_key: api_key,
-      app_version: "16.0",
+      app_identifier: "com.kreativekoala.briefcast",
+      app_version: "17.0.4",
+      build_number: "44",
       skip_binary_upload: true,
       submit_for_review: true,
       automatic_release: false,

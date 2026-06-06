@@ -75,6 +75,8 @@ class SubscriptionManager {
         case .purchased:
             isSubscribed = true
             preferencesService.isSubscribed = true
+            TikTokHelper.shared.trackEvent("purchase_success", properties: ["product_id": productId])
+            FacebookSDKHelper.shared.logSubscription(price: 0, currency: "USD", productId: productId)
         case .cancelled:
             break
         case .pending:

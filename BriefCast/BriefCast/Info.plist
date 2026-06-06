@@ -63,5 +63,7 @@
 	<array>
 		<string>audio</string>
 	</array>
+	<key>NSUserTrackingUsageDescription</key>
+	<string>We use this to personalize your experience and show relevant content.</string>
 </dict>
 </plist>

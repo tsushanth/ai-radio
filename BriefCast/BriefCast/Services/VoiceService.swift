@@ -17,7 +17,7 @@ class VoiceService {
     private(set) var isLoading = false
     private(set) var error: String?
 
-    private let baseURL = "https://ai-radio-backend-917362189743.us-central1.run.app/api"
+    private let baseURL = "https://ai-radio-backend.fly.dev/api"
     private var authToken: String?
 
     private init() {}

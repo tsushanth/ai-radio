@@ -14,7 +14,7 @@ enum TTSProvider: String, Codable, CaseIterable {
 
     var displayName: String {
         switch self {
-        case .openai: return "OpenAI"
+        case .openai: return "Neural"
         case .elevenlabs: return "ElevenLabs"
         }
     }

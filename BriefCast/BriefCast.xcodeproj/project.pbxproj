@@ -19,12 +19,13 @@
 		881B33BC2EEA019B003270AA /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 881B33BB2EEA019B003270AA /* GoogleSignInSwift */; };
 		88CE60892F6F781000D8F36E /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 40AD34D43873B64461C0D6B7 /* FirebaseAnalytics */; };
 		A1B2C3D4E5F60001 /* PaywallKit in Frameworks */ = {isa = PBXBuildFile; productRef = A1B2C3D4E5F60002 /* PaywallKit */; };
-		F4CC70FD81E0BAF1AF007716 /* RatingKit in Frameworks */ = {isa = PBXBuildFile; productRef = B14BDB45A66CEFD64131416B /* RatingKit */; };
 		D42F8F426882710680F9E448 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 97BB906C960EE20ABBFC217A /* Foundation.framework */; };
+		F4CC70FD81E0BAF1AF007716 /* RatingKit in Frameworks */ = {isa = PBXBuildFile; productRef = B14BDB45A66CEFD64131416B /* RatingKit */; };
+		F5841277D5DCD503845ADD55 /* AdServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0D46641C83DEE5D00C5D22B /* AdServices.framework */; };
+		FAD0000000000000000003 /* FluidAudio in Frameworks */ = {isa = PBXBuildFile; productRef = FAD0000000000000000002 /* FluidAudio */; };
 		FB_AX_BUILD /* FacebookCore in Frameworks */ = {isa = PBXBuildFile; productRef = FB_AX_REF /* FacebookCore */; };
 		GAD_BUILD_001 /* GoogleMobileAds in Frameworks */ = {isa = PBXBuildFile; productRef = GAD_REF_001 /* GoogleMobileAds */; };
 		TT_AX_BUILD /* TikTokBusinessSDK in Frameworks */ = {isa = PBXBuildFile; productRef = TT_AX_REF /* TikTokBusinessSDK */; };
-		FAD0000000000000000003 /* FluidAudio in Frameworks */ = {isa = PBXBuildFile; productRef = FAD0000000000000000002 /* FluidAudio */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -43,6 +44,7 @@
 		9453BAE1ECCC432690688EBD /* BriefCastUITests */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = file; name = BriefCastUITests; path = BriefCastUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		97BB906C960EE20ABBFC217A /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS18.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 		B07BA525E95057DFE5BA7437 /* SnapshotHelper.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SnapshotHelper.swift; sourceTree = "<group>"; };
+		D0D46641C83DEE5D00C5D22B /* AdServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdServices.framework; path = System/Library/Frameworks/AdServices.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -94,6 +96,7 @@
 				TT_AX_BUILD /* TikTokBusinessSDK in Frameworks */,
 				FB_AX_BUILD /* FacebookCore in Frameworks */,
 				FAD0000000000000000003 /* FluidAudio in Frameworks */,
+				F5841277D5DCD503845ADD55 /* AdServices.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -104,6 +107,7 @@
 			isa = PBXGroup;
 			children = (
 				C96BE52FA8CA2F1419DF2962 /* iOS */,
+				D0D46641C83DEE5D00C5D22B /* AdServices.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -238,7 +242,7 @@
 				881B33AB2EEA0167003270AA /* XCRemoteSwiftPackageReference "supabase-swift" */,
 				881B33B82EEA019B003270AA /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
 				4248B23A2A8836B7D53FE1D1 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
-				A1B2C3D4E5F60003 /* XCLocalSwiftPackageReference "../../PaywallKit" */,
+				A1B2C3D4E5F60003 /* XCLocalSwiftPackageReference "PaywallKit" */,
 				459C8322E195D4818A12B399 /* XCRemoteSwiftPackageReference "RatingKit" */,
 				GAD_PACKAGE /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */,
 				TT_AX_PACKAGE /* XCRemoteSwiftPackageReference "tiktok-business-ios-sdk" */,
@@ -444,7 +448,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = BriefCast/BriefCast.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 47;
+				CURRENT_PROJECT_VERSION = 49;
 				DEVELOPMENT_ASSET_PATHS = "\"BriefCast/Preview Content\"";
 				DEVELOPMENT_TEAM = 7RS696YC75;
 				ENABLE_PREVIEWS = YES;
@@ -462,7 +466,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 17.0.7;
+				MARKETING_VERSION = 17.0.9;
 				PRODUCT_BUNDLE_IDENTIFIER = com.kreativekoala.briefcast;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -480,7 +484,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = BriefCast/BriefCast.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 47;
+				CURRENT_PROJECT_VERSION = 49;
 				DEVELOPMENT_ASSET_PATHS = "\"BriefCast/Preview Content\"";
 				DEVELOPMENT_TEAM = 7RS696YC75;
 				ENABLE_PREVIEWS = YES;
@@ -498,7 +502,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 17.0.7;
+				MARKETING_VERSION = 17.0.9;
 				PRODUCT_BUNDLE_IDENTIFIER = com.kreativekoala.briefcast;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -557,7 +561,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
-		A1B2C3D4E5F60003 /* XCLocalSwiftPackageReference "../../PaywallKit" */ = {
+		A1B2C3D4E5F60003 /* XCLocalSwiftPackageReference "PaywallKit" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = ../../PaywallKit;
 		};
@@ -570,6 +574,14 @@
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 11.0.0;
+			};
+		};
+		459C8322E195D4818A12B399 /* XCRemoteSwiftPackageReference "RatingKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/tsushanth/RatingKit.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.0.1;
 			};
 		};
 		881B33AB2EEA0167003270AA /* XCRemoteSwiftPackageReference "supabase-swift" */ = {
@@ -586,6 +598,14 @@
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 9.0.0;
+			};
+		};
+		FAD0000000000000000001 /* XCRemoteSwiftPackageReference "FluidAudio" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/FluidInference/FluidAudio";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.14.4;
 			};
 		};
 		FB_AX_PACKAGE /* XCRemoteSwiftPackageReference "facebook-ios-sdk" */ = {
@@ -612,30 +632,9 @@
 				minimumVersion = 1.0.0;
 			};
 		};
-		459C8322E195D4818A12B399 /* XCRemoteSwiftPackageReference "RatingKit" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/tsushanth/RatingKit.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = "2.0.1";
-			};
-		};
-		FAD0000000000000000001 /* XCRemoteSwiftPackageReference "FluidAudio" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/FluidInference/FluidAudio";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 0.14.4;
-			};
-		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		FAD0000000000000000002 /* FluidAudio */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = FAD0000000000000000001 /* XCRemoteSwiftPackageReference "FluidAudio" */;
-			productName = FluidAudio;
-		};
 		40AD34D43873B64461C0D6B7 /* FirebaseAnalytics */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 4248B23A2A8836B7D53FE1D1 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
@@ -685,6 +684,16 @@
 			isa = XCSwiftPackageProductDependency;
 			productName = PaywallKit;
 		};
+		B14BDB45A66CEFD64131416B /* RatingKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 459C8322E195D4818A12B399 /* XCRemoteSwiftPackageReference "RatingKit" */;
+			productName = RatingKit;
+		};
+		FAD0000000000000000002 /* FluidAudio */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = FAD0000000000000000001 /* XCRemoteSwiftPackageReference "FluidAudio" */;
+			productName = FluidAudio;
+		};
 		FB_AX_REF /* FacebookCore */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = FB_AX_PACKAGE /* XCRemoteSwiftPackageReference "facebook-ios-sdk" */;
@@ -699,11 +708,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = TT_AX_PACKAGE /* XCRemoteSwiftPackageReference "tiktok-business-ios-sdk" */;
 			productName = TikTokBusinessSDK;
-		};
-		B14BDB45A66CEFD64131416B /* RatingKit */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 459C8322E195D4818A12B399 /* XCRemoteSwiftPackageReference "RatingKit" */;
-			productName = RatingKit;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

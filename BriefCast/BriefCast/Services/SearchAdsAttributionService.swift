@@ -60,7 +60,12 @@ class SearchAdsAttributionService: ObservableObject {
 
                 print("✅ ASA attribution token fetched successfully")
 
-                // Report to backend
+                // Post token to Apple to register the conversion. This is
+                // required for ASA attribution — without it, the campaign
+                // never sees the install/conversion event.
+                await Self.postTokenToApple(token: token)
+
+                // Also report to backend for our own bid-optimization pipeline
                 await reportAttributionToBackend(token: token)
             } else {
                 print("⚠️ AdServices not available (requires iOS 14.3+)")
@@ -68,6 +73,24 @@ class SearchAdsAttributionService: ObservableObject {
         } catch {
             // Attribution errors are expected for organic installs
             print("ℹ️ ASA attribution not available: \(error.localizedDescription)")
+        }
+    }
+
+    /// POST the attribution token to Apple to register the ASA conversion.
+    /// Apple returns the campaign/keyword payload, but the side effect of
+    /// the POST is what registers the install with the ASA campaign.
+    private static func postTokenToApple(token: String) async {
+        guard let url = URL(string: "https://api-adservices.apple.com/api/v1/") else { return }
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("text/plain", forHTTPHeaderField: "Content-Type")
+        request.httpBody = token.data(using: .utf8)
+        do {
+            _ = try await URLSession.shared.data(for: request)
+            print("✅ ASA attribution token posted to Apple")
+        } catch {
+            // Silent — Apple may rate-limit or token may be too new
+            print("ℹ️ Could not post ASA token to Apple: \(error.localizedDescription)")
         }
     }
 

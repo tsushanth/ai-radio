@@ -115,6 +115,12 @@ struct LiveRadioView: View {
     @StateObject private var reactionVM = LiveReactionViewModel()
     @StateObject private var queueService = RadioQueueService()
 
+    // Topic Request sheet
+    @State private var showRequestSheet = false
+    @State private var requestTopicText = ""
+    @State private var isSubmittingRequest = false
+    @FocusState private var requestSheetFocused: Bool
+
     // Ad break state
     @State private var showAdBreak = false
     @State private var adCountdown = 15
@@ -229,9 +235,9 @@ struct LiveRadioView: View {
                     // Request hint
                     HStack(spacing: 4) {
                         Image(systemName: "mic.fill").font(.system(size: 9)).foregroundColor(.orange.opacity(0.7))
-                        Text("Type").foregroundColor(.white.opacity(0.35))
-                        Text("@audexa").foregroundColor(.orange.opacity(0.7)).fontWeight(.semibold)
-                        Text("+ topic to add to the live queue").foregroundColor(.white.opacity(0.35))
+                        Text("Tap the").foregroundColor(.white.opacity(0.35))
+                        Text("mic").foregroundColor(.orange.opacity(0.7)).fontWeight(.semibold)
+                        Text("to request a topic for the live queue").foregroundColor(.white.opacity(0.35))
                     }
                     .font(.system(size: 10))
                     .padding(.horizontal, 24)
@@ -263,7 +269,20 @@ struct LiveRadioView: View {
 
                     // Chat input
                     HStack(spacing: 8) {
-                        TextField("", text: $chatText, prompt: Text("Chat or @audexa climate change...").foregroundColor(.white.opacity(0.4)))
+                        Button {
+                            requestTopicText = ""
+                            showRequestSheet = true
+                        } label: {
+                            Image(systemName: "mic.fill")
+                                .font(.system(size: 14, weight: .semibold))
+                                .foregroundColor(.orange)
+                                .frame(width: 36, height: 36)
+                                .background(Color.orange.opacity(0.15))
+                                .clipShape(Circle())
+                        }
+                        .buttonStyle(.plain)
+
+                        TextField("", text: $chatText, prompt: Text("Chat with listeners...").foregroundColor(.white.opacity(0.4)))
                             .font(.system(size: 13))
                             .foregroundColor(.white)
                             .padding(.horizontal, 12)
@@ -318,6 +337,99 @@ struct LiveRadioView: View {
         }
         .fullScreenCover(isPresented: $showAdPaywall) {
             RemotePaywallView(triggerSource: "radio_ad_break")
+        }
+        .sheet(isPresented: $showRequestSheet) {
+            requestTopicSheet
+        }
+    }
+
+    // MARK: - Request Topic Sheet
+
+    private var requestTopicSheet: some View {
+        VStack(spacing: 16) {
+            HStack {
+                Text("Request a Topic")
+                    .font(.title3.bold())
+                    .foregroundColor(.white)
+                Spacer()
+                Button {
+                    showRequestSheet = false
+                } label: {
+                    Image(systemName: "xmark.circle.fill")
+                        .font(.title2)
+                        .foregroundColor(.white.opacity(0.6))
+                }
+                .buttonStyle(.plain)
+            }
+
+            Text("Tell Audexa Radio what you'd like to hear. It will be added to the live queue.")
+                .font(.system(size: 13))
+                .foregroundColor(.white.opacity(0.6))
+                .multilineTextAlignment(.leading)
+                .frame(maxWidth: .infinity, alignment: .leading)
+
+            TextField("", text: $requestTopicText, prompt: Text("e.g. climate change, Lakers news, Hollywood gossip…").foregroundColor(.white.opacity(0.4)))
+                .font(.system(size: 15))
+                .foregroundColor(.white)
+                .padding(.horizontal, 14)
+                .padding(.vertical, 12)
+                .background(Color.white.opacity(0.12))
+                .cornerRadius(12)
+                .focused($requestSheetFocused)
+                .onSubmit { submitTopicRequest() }
+
+            Button {
+                submitTopicRequest()
+            } label: {
+                HStack(spacing: 6) {
+                    if isSubmittingRequest {
+                        ProgressView()
+                            .progressViewStyle(.circular)
+                            .tint(.white)
+                    } else {
+                        Image(systemName: "mic.fill")
+                    }
+                    Text(isSubmittingRequest ? "Submitting…" : "Add to Live Queue")
+                        .font(.system(size: 15, weight: .semibold))
+                }
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 14)
+                .background(canSubmitRequest ? Color.orange : Color.orange.opacity(0.3))
+                .foregroundColor(.white)
+                .cornerRadius(12)
+            }
+            .buttonStyle(.plain)
+            .disabled(!canSubmitRequest)
+
+            Spacer()
+        }
+        .padding(24)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(Color(red: 0.07, green: 0.04, blue: 0.04).ignoresSafeArea())
+        .presentationDetents([.medium])
+        .presentationDragIndicator(.visible)
+        .onAppear {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                requestSheetFocused = true
+            }
+        }
+    }
+
+    private var canSubmitRequest: Bool {
+        !isSubmittingRequest && requestTopicText.trimmingCharacters(in: .whitespacesAndNewlines).count >= 3
+    }
+
+    private func submitTopicRequest() {
+        let topic = requestTopicText.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard topic.count >= 3, !isSubmittingRequest else { return }
+        isSubmittingRequest = true
+        Task {
+            await reactionVM.submitTopicRequest(topic, username: displayUsername)
+            await MainActor.run {
+                isSubmittingRequest = false
+                showRequestSheet = false
+                requestTopicText = ""
+            }
         }
     }
 

@@ -232,6 +232,13 @@ class LiveReactionViewModel: ObservableObject {
         }
     }
 
+    /// Submit a topic to the live queue without going through chat.
+    /// Used by the dedicated "Request Topic" button. Same effect as `@audexa`
+    /// in chat, but bypasses the chat broadcast.
+    func submitTopicRequest(_ topic: String, username: String) async {
+        await postRequestTopic(topic, username: username)
+    }
+
     // MARK: Private
 
     private func postRequestTopic(_ topic: String, username: String) async {

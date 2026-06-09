@@ -107,8 +107,8 @@ class LiveRadioViewModel @Inject constructor(
     private val _pendingRequests = MutableStateFlow<List<String>>(emptyList())
     val pendingRequests: StateFlow<List<String>> = _pendingRequests.asStateFlow()
 
-    // Supabase channel
-    private val channel = supabase.channel("radio:live")
+    // Supabase channel — shared with LiveReactionOverlay so only one subscription exists
+    val channel = supabase.channel("radio:live")
     private var chatListenerJob: Job? = null
     private var queuePollingJob: Job? = null
 
@@ -193,6 +193,14 @@ class LiveRadioViewModel @Inject constructor(
         }
         _moderationError.value = null
 
+        // Add own message locally immediately (Supabase broadcast doesn't echo to sender)
+        val ownMsg = ChatMessage(
+            username = "You",
+            text = trimmed,
+            isRequest = trimmed.contains("@audexa", ignoreCase = true)
+        )
+        _chatMessages.value = (_chatMessages.value + ownMsg).takeLast(MAX_CHAT_MESSAGES)
+
         viewModelScope.launch {
             try {
                 channel.broadcast(
@@ -252,6 +260,22 @@ class LiveRadioViewModel @Inject constructor(
         }
 
         return null
+    }
+
+    /**
+     * Submit a topic to the live queue from the dedicated "Request Topic" sheet.
+     * Same effect as `@audexa` in chat, but bypasses the chat broadcast.
+     */
+    fun submitTopicRequest(topic: String, onComplete: (Boolean) -> Unit = {}) {
+        val cleaned = topic.trim()
+        if (cleaned.length < 3) {
+            onComplete(false)
+            return
+        }
+        viewModelScope.launch {
+            postRequestTopic(cleaned)
+            onComplete(true)
+        }
     }
 
     private suspend fun postRequestTopic(topic: String) = withContext(Dispatchers.IO) {

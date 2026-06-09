@@ -2,8 +2,11 @@ package com.kreativekoala.audexa.ui.radio
 
 import android.content.Intent
 import android.net.Uri
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
@@ -12,22 +15,31 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowUpward
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Mic
 import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.kreativekoala.audexa.ui.components.LiveReactionOverlay
 import com.kreativekoala.audexa.ui.theme.AccentOrange
+import io.github.jan.supabase.realtime.broadcastFlow
+import kotlinx.coroutines.launch
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.jsonPrimitive
+
+private val REACTION_EMOJIS = listOf("🔥", "❤️", "😂", "🎵", "👏", "🤯")
 
 // Badge colors for segment types
 private val HeadlinesBadgeColor = Color(0xFF3B82F6)  // blue
@@ -58,11 +70,54 @@ fun LiveRadioScreen(
     val pendingRequests by viewModel.pendingRequests.collectAsState()
 
     var chatText by remember { mutableStateOf("") }
+    var lastReactionMs by remember { mutableLongStateOf(0L) }
+    val floatingReactions = remember { mutableStateListOf<Pair<String, String>>() } // id, emoji
+    val scope = rememberCoroutineScope()
+
+    // Request Topic sheet
+    var showRequestSheet by remember { mutableStateOf(false) }
+    var requestTopicText by remember { mutableStateOf("") }
+    var isSubmittingRequest by remember { mutableStateOf(false) }
+
+    fun sendReaction(emoji: String) {
+        val now = System.currentTimeMillis()
+        if (now - lastReactionMs < 333L) return
+        lastReactionMs = now
+        // Add locally immediately (broadcast doesn't echo to sender)
+        val id = java.util.UUID.randomUUID().toString()
+        floatingReactions.add(id to emoji)
+        scope.launch {
+            kotlinx.coroutines.delay(3000)
+            floatingReactions.removeIf { it.first == id }
+        }
+        scope.launch {
+            try {
+                viewModel.channel.broadcast(
+                    event = "reaction",
+                    message = kotlinx.serialization.json.buildJsonObject {
+                        put("emoji", kotlinx.serialization.json.JsonPrimitive(emoji))
+                    }
+                )
+            } catch (_: Exception) {}
+        }
+    }
 
     LaunchedEffect(Unit) {
         viewModel.startStream()
         viewModel.connectChat()
         viewModel.startQueuePolling()
+    }
+
+    // Collect incoming emoji reactions from other listeners
+    LaunchedEffect(viewModel.channel) {
+        viewModel.channel.broadcastFlow<JsonObject>(event = "reaction")
+            .collect { payload ->
+                val emoji = payload["emoji"]?.jsonPrimitive?.content ?: return@collect
+                val id = java.util.UUID.randomUUID().toString()
+                floatingReactions.add(id to emoji)
+                kotlinx.coroutines.delay(3000)
+                floatingReactions.removeIf { it.first == id }
+            }
     }
 
     DisposableEffect(Unit) {
@@ -82,21 +137,19 @@ fun LiveRadioScreen(
                 )
             )
     ) {
-        // Live reaction floating emojis
-        LiveReactionOverlay(
-            supabase = viewModel.supabase,
-            modifier = Modifier.fillMaxSize()
-        )
-
         Column(
             modifier = Modifier
                 .fillMaxSize()
         ) {
             // Scrollable content
+            val scrollState = rememberScrollState()
+            LaunchedEffect(chatMessages.size) {
+                if (chatMessages.isNotEmpty()) scrollState.animateScrollTo(scrollState.maxValue)
+            }
             Column(
                 modifier = Modifier
                     .weight(1f)
-                    .verticalScroll(rememberScrollState()),
+                    .verticalScroll(scrollState),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 // Top bar
@@ -264,14 +317,25 @@ fun LiveRadioScreen(
                     Spacer(modifier = Modifier.height(8.dp))
                 }
 
-                // Emoji hint
-                Text(
-                    text = "Tap an emoji to react live",
-                    color = Color.White.copy(alpha = 0.4f),
-                    fontSize = 13.sp
-                )
+                // Emoji reaction row
+                Row(
+                    modifier = Modifier.padding(horizontal = 24.dp, vertical = 8.dp),
+                    horizontalArrangement = Arrangement.spacedBy(16.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    REACTION_EMOJIS.forEach { emoji ->
+                        Text(
+                            text = emoji,
+                            fontSize = 28.sp,
+                            modifier = Modifier.clickable(
+                                interactionSource = remember { MutableInteractionSource() },
+                                indication = null
+                            ) { sendReaction(emoji) }
+                        )
+                    }
+                }
 
-                Spacer(modifier = Modifier.height(12.dp))
+                Spacer(modifier = Modifier.height(8.dp))
             }
 
             // ── Pinned chat input at bottom ──────────────────────────
@@ -327,18 +391,18 @@ fun LiveRadioScreen(
                 ) {
                     Text("🎙️", fontSize = 9.sp)
                     Text(
-                        text = "Type",
+                        text = "Tap the",
                         color = Color.White.copy(alpha = 0.35f),
                         fontSize = 10.sp
                     )
                     Text(
-                        text = "@audexa",
+                        text = "mic",
                         color = AccentOrange.copy(alpha = 0.7f),
                         fontSize = 10.sp,
                         fontWeight = FontWeight.SemiBold
                     )
                     Text(
-                        text = "+ topic to add to the live queue",
+                        text = "to request a topic for the live queue",
                         color = Color.White.copy(alpha = 0.35f),
                         fontSize = 10.sp
                     )
@@ -352,6 +416,26 @@ fun LiveRadioScreen(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
+                    // Request Topic button (opens dedicated sheet)
+                    Box(
+                        modifier = Modifier
+                            .size(36.dp)
+                            .clip(CircleShape)
+                            .background(AccentOrange.copy(alpha = 0.15f))
+                            .clickable {
+                                requestTopicText = ""
+                                showRequestSheet = true
+                            },
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Mic,
+                            contentDescription = "Request Topic",
+                            tint = AccentOrange,
+                            modifier = Modifier.size(18.dp)
+                        )
+                    }
+
                     OutlinedTextField(
                         value = chatText,
                         onValueChange = {
@@ -361,7 +445,7 @@ fun LiveRadioScreen(
                         modifier = Modifier.weight(1f),
                         placeholder = {
                             Text(
-                                "Chat or @audexa climate change...",
+                                "Chat with listeners...",
                                 color = Color.White.copy(alpha = 0.4f),
                                 fontSize = 13.sp
                             )
@@ -406,6 +490,151 @@ fun LiveRadioScreen(
                         color = Color(0xFFEF4444),
                         fontSize = 11.sp,
                         modifier = Modifier.padding(top = 4.dp)
+                    )
+                }
+            }
+        }
+
+        // Floating emoji animations — local + incoming from others
+        BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
+            val containerWidthDp = maxWidth
+            val containerHeightDp = maxHeight
+            floatingReactions.forEach { (id, emoji) ->
+                key(id) {
+                    FloatingEmojiItem(
+                        emoji = emoji,
+                        startXDp = containerWidthDp * (0.1f + (id.hashCode().and(0xFF).toFloat() / 255f) * 0.8f),
+                        startYDp = containerHeightDp * 0.75f,
+                    )
+                }
+            }
+        }
+
+        // Request Topic bottom sheet
+        if (showRequestSheet) {
+            RequestTopicSheet(
+                topicText = requestTopicText,
+                onTopicChange = { requestTopicText = it },
+                isSubmitting = isSubmittingRequest,
+                onDismiss = { showRequestSheet = false },
+                onSubmit = {
+                    val topic = requestTopicText.trim()
+                    if (topic.length >= 3 && !isSubmittingRequest) {
+                        isSubmittingRequest = true
+                        viewModel.submitTopicRequest(topic) {
+                            isSubmittingRequest = false
+                            requestTopicText = ""
+                            showRequestSheet = false
+                        }
+                    }
+                }
+            )
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun RequestTopicSheet(
+    topicText: String,
+    onTopicChange: (String) -> Unit,
+    isSubmitting: Boolean,
+    onDismiss: () -> Unit,
+    onSubmit: () -> Unit
+) {
+    val sheetState = rememberModalBottomSheetState()
+    val canSubmit = topicText.trim().length >= 3 && !isSubmitting
+
+    ModalBottomSheet(
+        onDismissRequest = onDismiss,
+        sheetState = sheetState,
+        containerColor = Color(0xFF120606),
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 24.dp, vertical = 8.dp)
+                .padding(bottom = 24.dp)
+        ) {
+            Text(
+                text = "Request a Topic",
+                color = Color.White,
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Text(
+                text = "Tell Audexa Radio what you'd like to hear. It will be added to the live queue.",
+                color = Color.White.copy(alpha = 0.6f),
+                fontSize = 13.sp
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            OutlinedTextField(
+                value = topicText,
+                onValueChange = onTopicChange,
+                modifier = Modifier.fillMaxWidth(),
+                placeholder = {
+                    Text(
+                        "e.g. climate change, Lakers news, Hollywood gossip…",
+                        color = Color.White.copy(alpha = 0.4f),
+                        fontSize = 14.sp
+                    )
+                },
+                singleLine = true,
+                textStyle = LocalTextStyle.current.copy(
+                    color = Color.White,
+                    fontSize = 15.sp
+                ),
+                shape = RoundedCornerShape(12.dp),
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedContainerColor = Color.White.copy(alpha = 0.12f),
+                    unfocusedContainerColor = Color.White.copy(alpha = 0.12f),
+                    focusedBorderColor = Color.Transparent,
+                    unfocusedBorderColor = Color.Transparent,
+                    cursorColor = AccentOrange
+                )
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Button(
+                onClick = onSubmit,
+                enabled = canSubmit,
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(12.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = AccentOrange,
+                    disabledContainerColor = AccentOrange.copy(alpha = 0.3f),
+                    contentColor = Color.White,
+                    disabledContentColor = Color.White
+                )
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(6.dp),
+                    modifier = Modifier.padding(vertical = 6.dp)
+                ) {
+                    if (isSubmitting) {
+                        CircularProgressIndicator(
+                            modifier = Modifier.size(16.dp),
+                            color = Color.White,
+                            strokeWidth = 2.dp
+                        )
+                    } else {
+                        Icon(
+                            imageVector = Icons.Default.Mic,
+                            contentDescription = null,
+                            modifier = Modifier.size(18.dp)
+                        )
+                    }
+                    Text(
+                        text = if (isSubmitting) "Submitting…" else "Add to Live Queue",
+                        fontSize = 15.sp,
+                        fontWeight = FontWeight.SemiBold
                     )
                 }
             }
@@ -599,4 +828,43 @@ private fun ChatSection(messages: List<ChatMessage>) {
             }
         }
     }
+}
+
+@Composable
+private fun FloatingEmojiItem(
+    emoji: String,
+    startXDp: Dp,
+    startYDp: Dp,
+) {
+    val density = LocalDensity.current
+    val startYPx = with(density) { startYDp.toPx() }
+
+    val offsetY = remember { Animatable(startYPx) }
+    val alpha = remember { Animatable(1f) }
+
+    LaunchedEffect(Unit) {
+        launch {
+            offsetY.animateTo(
+                targetValue = startYPx - with(density) { 200.dp.toPx() },
+                animationSpec = tween(durationMillis = 2500),
+            )
+        }
+        launch {
+            kotlinx.coroutines.delay(1500)
+            alpha.animateTo(
+                targetValue = 0f,
+                animationSpec = tween(durationMillis = 1000),
+            )
+        }
+    }
+
+    val currentYDp = with(density) { offsetY.value.toDp() }
+
+    Text(
+        text = emoji,
+        fontSize = 32.sp,
+        modifier = Modifier
+            .absoluteOffset(x = startXDp, y = currentYDp)
+            .alpha(alpha.value),
+    )
 }

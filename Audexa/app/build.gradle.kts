@@ -24,8 +24,8 @@ android {
         applicationId = "com.kreativekoala.audexa"
         minSdk = 26
         targetSdk = 35
-        versionCode = 20
-        versionName = "12.2.0"
+        versionCode = 36
+        versionName = "12.5.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -35,7 +35,7 @@ android {
         // Build config fields
         buildConfigField("String", "SUPABASE_URL", "\"https://lxtuvvsrtpoqgikbpasm.supabase.co\"")
         buildConfigField("String", "SUPABASE_ANON_KEY", "\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx4dHV2dnNydHBvcWdpa2JwYXNtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUzMDA5NDEsImV4cCI6MjA4MDg3Njk0MX0.-0L2P6Wutv8hlsmMBaurznr1HgWSOWukj7rZTmmkuI4\"")
-        buildConfigField("String", "API_BASE_URL", "\"https://ai-radio-backend-3t2vweivqa-uc.a.run.app/api\"")
+        buildConfigField("String", "API_BASE_URL", "\"https://ai-radio-backend.fly.dev/api\"")
         buildConfigField("String", "GOOGLE_WEB_CLIENT_ID", "\"517355381306-o9vf858ti99540b6s21l15gj5dk3d8e2.apps.googleusercontent.com\"")
         // OAuth client for Gmail/Calendar linking - use same project as sign-in (517355381306)
         // This project has Android OAuth clients with SHA-1 fingerprints configured
@@ -44,8 +44,13 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = true
-            isShrinkResources = true
+            // R8 minify silently strips reflection-loaded classes — Retrofit
+            // DTOs (TopicsResponse etc.) come back empty in release builds,
+            // soft-locking onboarding on the topic-selection step (Play
+            // review report 2026-05-28). Same R8-stripping failure pattern
+            // broke MeetingMind 1.5.7 on 2026-05-24. Keep disabled.
+            isMinifyEnabled = false
+            isShrinkResources = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -79,6 +84,14 @@ android {
 dependencies {
     // Desugaring (Java 8+ API support)
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.5")
+
+    // On-device Kokoro 82M TTS: ONNX Runtime + WorkManager (resumable model download)
+    // Use `onnxruntime-android` ≥ 1.22.0 — earlier 1.20.x and 1.21.x ship
+    // `libonnxruntime.so` 16 KB-aligned but the JNI bridge
+    // `libonnxruntime4j_jni.so` is still 4 KB-aligned, which trips the
+    // Play Store 16 KB page-size check on Android 15+ devices.
+    implementation("com.microsoft.onnxruntime:onnxruntime-android:1.22.0")
+    implementation("androidx.work:work-runtime-ktx:2.9.1")
 
     // Core Android
     implementation(libs.androidx.core.ktx)
@@ -152,6 +165,7 @@ dependencies {
 
     // PaywallKit
     implementation(project(":paywallkit"))
+    implementation(project(":crosspromokit"))
 
     // Testing
     testImplementation("junit:junit:4.13.2")

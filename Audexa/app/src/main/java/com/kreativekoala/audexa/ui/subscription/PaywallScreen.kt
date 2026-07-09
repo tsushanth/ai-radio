@@ -2,6 +2,8 @@ package com.kreativekoala.audexa.ui.subscription
 
 import android.app.Activity
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.content.ContextWrapper
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -232,6 +234,17 @@ fun CustomPaywallScreen(
                     Text(
                         text = stringResource(R.string.restore_purchases),
                         color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+
+                TextButton(onClick = {
+                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/redeem?code=promo-1month-free"))
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    try { context.startActivity(intent) } catch (_: Exception) {}
+                }) {
+                    Text(
+                        text = "Have an offer code?",
+                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
                     )
                 }
 

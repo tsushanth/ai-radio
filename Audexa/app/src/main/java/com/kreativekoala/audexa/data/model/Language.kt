@@ -15,7 +15,8 @@ enum class SupportedLanguage(
     CHINESE("zh", "Chinese", "中文", "🇨🇳"),
     HINDI("hi", "Hindi", "हिन्दी", "🇮🇳"),
     KOREAN("ko", "Korean", "한국어", "🇰🇷"),
-    ITALIAN("it", "Italian", "Italiano", "🇮🇹");
+    ITALIAN("it", "Italian", "Italiano", "🇮🇹"),
+    TAGALOG("tl", "Tagalog", "Tagalog", "🇵🇭");
 
     val displayWithFlag: String
         get() = "$flagEmoji $displayName"
@@ -33,6 +34,7 @@ enum class SupportedLanguage(
             KOREAN -> "Audexa Radio 한국어"
             CHINESE -> "Audexa Radio 中文"
             ITALIAN -> "Audexa Radio Italiano"
+            TAGALOG -> "Audexa Radio Tagalog"
         }
 
     /** Stream URL for this language's radio station */
@@ -49,6 +51,6 @@ enum class SupportedLanguage(
 
         /** Languages that have radio streams available */
         val radioAvailable: List<SupportedLanguage>
-            get() = listOf(ENGLISH, SPANISH, HINDI, PORTUGUESE, FRENCH, GERMAN, JAPANESE, KOREAN, CHINESE, ITALIAN)
+            get() = listOf(ENGLISH, SPANISH, HINDI, PORTUGUESE, FRENCH, GERMAN, JAPANESE, KOREAN, CHINESE, ITALIAN, TAGALOG)
     }
 }

@@ -13,3 +13,9 @@
 .externalNativeBuild
 .cxx
 local.properties
+
+# Kotlin compiler session cache (regenerated on each build)
+.kotlin/
+
+# Fastlane run report (regenerated each run)
+fastlane/report.xml

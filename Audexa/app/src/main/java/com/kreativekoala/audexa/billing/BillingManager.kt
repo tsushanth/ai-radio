@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.util.Log
 import com.kreativekoala.audexa.data.local.PreferencesManager
+import com.kreativekoala.paywallkit.manager.PromoCodeManager
 import com.revenuecat.purchases.CustomerInfo
 import com.revenuecat.purchases.Package
 import com.revenuecat.purchases.PurchaseParams
@@ -150,6 +151,7 @@ class BillingManager @Inject constructor(
                 _purchaseInProgress.value = false
                 val hasEntitlement = customerInfo.entitlements[ENTITLEMENT_ID]?.isActive == true
                 updateSubscriptionStatus(hasEntitlement)
+                PromoCodeManager.clearAfterConversion()
                 Log.d(TAG, "Purchase successful, premium=$hasEntitlement")
             }
         )

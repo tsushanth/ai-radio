@@ -109,13 +109,52 @@ class TopicRepository @Inject constructor(
         language: String = "en",
         forceRegenerate: Boolean = false
     ): Result<TopicEpisodeResponse> = runCatching {
-        apiService.generateTopicEpisode(
+        val initial = apiService.generateTopicEpisode(
             topicId,
             GenerateTopicRequest(
                 language = language,
                 forceRegenerate = forceRegenerate
             )
         )
+        // Backend returns immediately when forceRegenerate=true (Jun 2026):
+        // status=generating, real TTS happens server-side over the next
+        // 30+ minutes. Poll the GET endpoint with exponential backoff so
+        // callers can simply await this method and receive the completed
+        // episode. Matches the iOS TopicService.pollForEpisodeCompletion
+        // ceiling of 30 minutes.
+        if (initial.data?.episode?.status == "generating") {
+            pollUntilCompleted(topicId, language, initial)
+        } else {
+            initial
+        }
+    }
+
+    private suspend fun pollUntilCompleted(
+        topicId: String,
+        language: String,
+        fallback: TopicEpisodeResponse,
+        maxWaitMs: Long = 30 * 60 * 1000L,
+    ): TopicEpisodeResponse {
+        val start = System.currentTimeMillis()
+        var delayMs = 2_000L
+        val maxDelayMs = 10_000L
+        while (System.currentTimeMillis() - start < maxWaitMs) {
+            kotlinx.coroutines.delay(delayMs)
+            val resp = try {
+                apiService.getTopicEpisode(topicId, language)
+            } catch (e: Exception) {
+                Log.w(TAG, "poll fetch failed, retrying: ${e.message}")
+                delayMs = (delayMs * 3 / 2).coerceAtMost(maxDelayMs)
+                continue
+            }
+            when (resp.data?.episode?.status) {
+                "completed" -> return resp
+                "failed" -> return resp
+                else -> delayMs = (delayMs * 3 / 2).coerceAtMost(maxDelayMs)
+            }
+        }
+        Log.w(TAG, "polling timed out after ${maxWaitMs}ms; returning last known state")
+        return fallback
     }
 
     suspend fun getTopicEpisodes(

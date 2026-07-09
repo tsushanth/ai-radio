@@ -67,6 +67,12 @@ class PreferencesManager @Inject constructor(
         val PLAYBACK_SPEED = floatPreferencesKey("playback_speed")
         val PLAYBACK_POSITIONS = stringPreferencesKey("playback_positions")
         val LISTENING_HISTORY = stringPreferencesKey("listening_history")
+
+        // Radio topic reminders — dedupe set so a bookmarked topic that
+        // rotates twice in one UTC day only notifies the user once. Entries
+        // are "<YYYY-MM-DD>:<topicId>"; trimmed daily by RadioReminderManager
+        // by virtue of yesterday's keys never matching today's lookups.
+        val RADIO_REMINDERS_FIRED = stringSetPreferencesKey("radio_reminders_fired")
     }
 
     /**
@@ -243,6 +249,38 @@ class PreferencesManager @Inject constructor(
     suspend fun setBookmarkedTopics(topics: Set<String>) {
         dataStore.edit { prefs ->
             prefs[Keys.BOOKMARKED_TOPICS] = topics
+        }
+    }
+
+    /**
+     * Set of "<YYYY-MM-DD>:<topicId>" tokens for which we've already armed
+     * a radio-topic notification today. Read by RadioReminderManager to skip
+     * duplicates within the same UTC day. Older entries are harmless — they
+     * never match today's lookup keys.
+     */
+    val radioRemindersFiredToday: Flow<Set<String>> = dataStore.data.map {
+        it[Keys.RADIO_REMINDERS_FIRED] ?: emptySet()
+    }
+
+    suspend fun markRadioReminderScheduled(key: String) {
+        dataStore.edit { prefs ->
+            val current = prefs[Keys.RADIO_REMINDERS_FIRED] ?: emptySet()
+            // Keep the set bounded — drop entries older than 2 days (key format
+            // is YYYY-MM-DD:...). At ~10 bookmarks × 2 days = 20 keys, plenty.
+            val today = java.util.Calendar.getInstance(java.util.TimeZone.getTimeZone("UTC"))
+            val yesterday = (today.clone() as java.util.Calendar).apply {
+                add(java.util.Calendar.DAY_OF_MONTH, -1)
+            }
+            fun dateKey(c: java.util.Calendar): String = "%04d-%02d-%02d".format(
+                c.get(java.util.Calendar.YEAR),
+                c.get(java.util.Calendar.MONTH) + 1,
+                c.get(java.util.Calendar.DAY_OF_MONTH),
+            )
+            val keepPrefixes = setOf(dateKey(today), dateKey(yesterday))
+            val pruned = current.filter { entry ->
+                keepPrefixes.any { entry.startsWith("$it:") }
+            }.toSet()
+            prefs[Keys.RADIO_REMINDERS_FIRED] = pruned + key
         }
     }
 

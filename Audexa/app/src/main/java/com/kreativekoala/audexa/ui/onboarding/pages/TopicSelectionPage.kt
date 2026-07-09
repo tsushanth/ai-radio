@@ -150,6 +150,34 @@ fun TopicSelectionPage(
             ) {
                 CircularProgressIndicator(color = AccentOrange)
             }
+        } else if (uiState.topics.isEmpty()) {
+            // Empty state — show a friendly hint instead of an empty grid
+            // so the user understands they can still continue or suggest a topic.
+            Box(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Text(
+                        text = "No topics available right now.",
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f),
+                        textAlign = TextAlign.Center
+                    )
+                    Text(
+                        text = "Tap Continue to finish setup — you can pick topics later from the Home screen.",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.5f),
+                        textAlign = TextAlign.Center
+                    )
+                }
+            }
         } else {
             LazyVerticalGrid(
                 columns = GridCells.Fixed(2),
@@ -209,6 +237,10 @@ fun TopicSelectionPage(
             Spacer(modifier = Modifier.height(8.dp))
         }
 
+        // Always allow proceeding so users with an empty topics list or who don't
+        // want to pick anything aren't soft-locked on the final step. The
+        // ViewModel.completeOnboarding() path already no-ops on empty selection,
+        // and users can pick topics later from the Home screen.
         Button(
             onClick = onComplete,
             modifier = Modifier
@@ -220,7 +252,7 @@ fun TopicSelectionPage(
                 containerColor = AccentOrange,
                 contentColor = PrimaryTextDark
             ),
-            enabled = selectedCount > 0 && !uiState.isCompleting
+            enabled = !uiState.isCompleting
         ) {
             if (uiState.isCompleting) {
                 CircularProgressIndicator(
@@ -230,7 +262,10 @@ fun TopicSelectionPage(
                 )
             } else {
                 Text(
-                    text = stringResource(R.string.complete_setup),
+                    text = if (selectedCount > 0)
+                        stringResource(R.string.complete_setup)
+                    else
+                        "Continue",
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.SemiBold
                 )

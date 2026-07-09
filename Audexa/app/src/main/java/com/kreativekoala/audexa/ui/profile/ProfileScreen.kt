@@ -25,6 +25,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.compose.ui.graphics.Color
 import com.kreativekoala.audexa.R
 import com.kreativekoala.audexa.ui.theme.*
+import com.kreativekoala.crosspromokit.models.AppId
+import com.kreativekoala.crosspromokit.view.CrossPromoSection
 import com.kreativekoala.paywallkit.models.PaywallFeature
 import com.kreativekoala.paywallkit.models.PaywallTheme
 import com.kreativekoala.paywallkit.view.PaywallPreview
@@ -265,6 +267,8 @@ fun ProfileScreen(
                     fontWeight = FontWeight.SemiBold
                 )
             }
+
+            CrossPromoSection(currentApp = AppId.AUDEXA)
 
             Spacer(modifier = Modifier.height(Sizing.miniPlayerHeight.dp + Sizing.tabBarHeight.dp))
         }

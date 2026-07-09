@@ -9,6 +9,7 @@ import com.revenuecat.purchases.LogLevel
 import com.revenuecat.purchases.Purchases
 import com.revenuecat.purchases.PurchasesConfiguration
 import com.kreativekoala.paywallkit.manager.ExperimentManager
+import com.kreativekoala.paywallkit.manager.PromoCodeManager
 import dagger.hilt.android.HiltAndroidApp
 
 @HiltAndroidApp
@@ -17,6 +18,7 @@ class AudexaApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         ExperimentManager.init(this)
+        PromoCodeManager.init(this)
         configureRevenueCat()
         createNotificationChannels()
     }

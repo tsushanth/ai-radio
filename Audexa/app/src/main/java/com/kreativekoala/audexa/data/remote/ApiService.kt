@@ -31,6 +31,10 @@ interface ApiService {
     @POST("podcast/generate")
     suspend fun generatePodcast(@Body request: GeneratePodcastRequest): GeneratePodcastResponse
 
+    /** Script-only generation for on-device synthesis (Kokoro on iOS / system TTS on Android). */
+    @POST("podcast/script")
+    suspend fun generatePodcastScript(@Body request: GeneratePodcastRequest): GeneratePodcastScriptResponse
+
     // Async generation endpoints (recommended for production)
     @POST("podcast/generate-async")
     suspend fun startAsyncGeneration(@Body request: GeneratePodcastRequest): AsyncGenerateResponse
@@ -373,4 +377,35 @@ data class SuggestTopicRequest(
 data class SuggestTopicResponse(
     val success: Boolean,
     val message: String? = null
+)
+
+// On-device script-only generation models
+@Serializable
+data class GeneratePodcastScriptResponse(
+    val success: Boolean,
+    val script: ScriptPayload? = null,
+    val error: ScriptError? = null,
+    val noContent: Boolean? = null
+)
+
+@Serializable
+data class ScriptPayload(
+    val segments: List<ScriptSegment>,
+    val totalSegments: Int = 0,
+    val language: String = "en"
+)
+
+@Serializable
+data class ScriptSegment(
+    val speaker: String,
+    val text: String,
+    val type: String = "news"
+)
+
+@Serializable
+data class ScriptError(
+    val code: String,
+    val message: String,
+    val action: String? = null,
+    val retryable: Boolean = false
 )

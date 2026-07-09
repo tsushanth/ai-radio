@@ -32,9 +32,43 @@ class KokoroPreferences private constructor(private val prefs: SharedPreferences
         _allowCellularModelDownload.value = allow
     }
 
+    // ── on-device voice selection ────────────────────────────────────────────
+    // When enabled=true, ReadAloudManager routes podcasts/deep-dives through
+    // KokoroTtsEngine using selectedVoiceId. When enabled=false (default), the
+    // system TTS engine is used (Phase A behavior).
+
+    private val _useKokoroEngine =
+        MutableStateFlow(prefs.getBoolean(KEY_USE_KOKORO, false))
+
+    /** When true, on-device Audexa content routes through Kokoro instead of system TTS. */
+    val useKokoroEngine: StateFlow<Boolean> =
+        _useKokoroEngine.asStateFlow()
+
+    fun setUseKokoroEngine(enabled: Boolean) {
+        prefs.edit().putBoolean(KEY_USE_KOKORO, enabled).apply()
+        _useKokoroEngine.value = enabled
+    }
+
+    private val _selectedVoiceId =
+        MutableStateFlow(prefs.getString(KEY_SELECTED_VOICE_ID, null))
+
+    /** User's picked Kokoro voice id. Null = engine default. */
+    val selectedVoiceId: StateFlow<String?> =
+        _selectedVoiceId.asStateFlow()
+
+    fun setSelectedVoiceId(voiceId: String?) {
+        prefs.edit().apply {
+            if (voiceId == null) remove(KEY_SELECTED_VOICE_ID)
+            else putString(KEY_SELECTED_VOICE_ID, voiceId)
+        }.apply()
+        _selectedVoiceId.value = voiceId
+    }
+
     companion object {
         private const val PREFS_FILE = "kokoro_prefs"
         private const val KEY_ALLOW_CELLULAR = "allow_cellular_model_download"
+        private const val KEY_USE_KOKORO = "use_kokoro_engine"
+        private const val KEY_SELECTED_VOICE_ID = "selected_voice_id"
 
         @Volatile private var instance: KokoroPreferences? = null
 

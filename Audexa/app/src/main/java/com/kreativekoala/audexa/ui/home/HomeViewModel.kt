@@ -658,7 +658,24 @@ class HomeViewModel @Inject constructor(
             val engine = manager.engine
             engine.prepare()
             val voices = engine.voices.value
-            val (host1Voice, host2Voice) = pickHostVoices(voices)
+            // If the user has picked a specific Kokoro voice, honor it for host1
+            // and auto-pick a contrasting voice for host2 from the same pool.
+            // Otherwise fall back to the auto-picker's female + male heuristic.
+            val kokoroPrefs = com.kreativekoala.audexa.tts.kokoro.KokoroPreferences
+                .getInstance(context)
+            val userPickedId = kokoroPrefs.selectedVoiceId.value
+                ?.takeIf { picked -> voices.any { it.id == picked } }
+            val (host1Voice, host2Voice) = if (userPickedId != null) {
+                val userVoice = voices.first { it.id == userPickedId }
+                val partner = voices.firstOrNull {
+                    it.id != userPickedId && it.isFemale != userVoice.isFemale
+                }?.id
+                    ?: voices.firstOrNull { it.id != userPickedId }?.id
+                    ?: userPickedId
+                userPickedId to partner
+            } else {
+                pickHostVoices(voices)
+            }
             val ttsSegments = segments.map { seg ->
                 TtsSegment(
                     text = seg.text,

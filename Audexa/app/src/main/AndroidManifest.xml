@@ -52,6 +52,11 @@
             android:name=".service.DailyNotificationReceiver"
             android:exported="false" />
 
+        <!-- Radio topic reminder (one alarm per bookmarked topic, fires at predicted play time) -->
+        <receiver
+            android:name=".service.RadioTopicReminderReceiver"
+            android:exported="false" />
+
         <!-- Boot Receiver to restore notifications -->
         <receiver
             android:name=".service.BootReceiver"

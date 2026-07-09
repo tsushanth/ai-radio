@@ -19,3 +19,6 @@ rootProject.name = "Audexa"
 include(":app")
 include(":paywallkit")
 project(":paywallkit").projectDir = file("/Users/sushanthtiruvaipati/Documents/GitHub/PaywallKit-Android/paywallkit")
+
+include(":crosspromokit")
+project(":crosspromokit").projectDir = file("/Users/sushanthtiruvaipati/Documents/GitHub/CrossPromoKit-Android/crosspromokit")

@@ -22,6 +22,8 @@ import com.kreativekoala.audexa.service.AudioManager
 import com.kreativekoala.audexa.service.QueueItem
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -203,80 +205,100 @@ class TopicDetailViewModel @Inject constructor(
         viewModelScope.launch {
             val langCode = preferencesManager.preferredLanguage.first()
             val language = SupportedLanguage.fromCode(langCode)
-            _uiState.value = _uiState.value.copy(selectedLanguage = language)
-            loadEpisode()
-            loadEpisodeHistory()
+            _uiState.value = _uiState.value.copy(
+                selectedLanguage = language,
+                isLoading = true,
+                error = null
+            )
+
+            // Load today's episode and history in parallel so we can fall back
+            // to the most recent completed episode in history when today's
+            // hasn't been generated yet (avoids triggering a fresh generation
+            // on tap when an existing episode is right there).
+            coroutineScope {
+                val episodeJob = async { loadEpisodeInternal() }
+                val historyJob = async { loadEpisodeHistoryInternal() }
+                episodeJob.await()
+                historyJob.await()
+            }
+
+            val state = _uiState.value
+            val current = state.currentEpisode
+            if (current == null || current.status != "completed" || current.audioUrl == null) {
+                val fallback = state.episodeHistory.firstOrNull {
+                    it.status == "completed" && it.audioUrl != null
+                }
+                if (fallback != null) {
+                    val ads = if (isSubscriber) emptyList() else state.ads
+                    _uiState.value = _uiState.value.copy(
+                        currentEpisode = fallback,
+                        duration = (fallback.durationSeconds ?: 0) * 1000L,
+                        ads = ads
+                    )
+                    calculateAdInsertionPoints(fallback, ads)
+                    audioManager.play(fallback)
+                    queueEpisodeHistory()
+                    recordListeningHistory(fallback)
+                }
+            }
+
+            _uiState.value = _uiState.value.copy(isLoading = false)
         }
     }
 
-    private fun loadEpisode() {
+    private suspend fun loadEpisodeInternal() {
         val topic = _uiState.value.topic ?: return
         val language = _uiState.value.selectedLanguage.code
 
-        viewModelScope.launch {
-            _uiState.value = _uiState.value.copy(isLoading = true, error = null)
+        topicRepository.getTopicEpisode(topic.id, language)
+            .onSuccess { response ->
+                val episode = response.data?.episode
+                var ads = response.data?.ads ?: emptyList()
 
-            topicRepository.getTopicEpisode(topic.id, language)
-                .onSuccess { response ->
-                    val episode = response.data?.episode
-                    var ads = response.data?.ads ?: emptyList()
-
-                    if (episode != null && episode.status == "completed") {
-                        // Subscribers get no ads at all
-                        if (isSubscriber) {
-                            ads = emptyList()
-                        }
-
-                        // IMA fallback disabled — test VAST tag was causing issues in production.
-                        // Re-enable once a production Google Ad Manager tag is configured.
-
-                        _uiState.value = _uiState.value.copy(
-                            currentEpisode = episode,
-                            isLoading = false,
-                            duration = (episode.durationSeconds ?: 0) * 1000L,
-                            ads = ads
-                        )
-                        calculateAdInsertionPoints(episode, ads)
-
-                        // Auto-play the episode once loaded
-                        if (episode.audioUrl != null) {
-                            audioManager.play(episode)
-                            queueEpisodeHistory()
-                            recordListeningHistory(episode)
-                        }
-                    } else {
-                        _uiState.value = _uiState.value.copy(
-                            currentEpisode = null,
-                            isLoading = false,
-                            ads = emptyList()
-                        )
+                if (episode != null && episode.status == "completed") {
+                    // Subscribers get no ads at all
+                    if (isSubscriber) {
+                        ads = emptyList()
                     }
-                }
-                .onFailure { e ->
-                    Log.e(TAG, "Failed to load episode: ${e.message}")
+
                     _uiState.value = _uiState.value.copy(
-                        isLoading = false,
-                        error = e.message
+                        currentEpisode = episode,
+                        duration = (episode.durationSeconds ?: 0) * 1000L,
+                        ads = ads
+                    )
+                    calculateAdInsertionPoints(episode, ads)
+
+                    if (episode.audioUrl != null) {
+                        audioManager.play(episode)
+                        queueEpisodeHistory()
+                        recordListeningHistory(episode)
+                    }
+                } else {
+                    _uiState.value = _uiState.value.copy(
+                        currentEpisode = null,
+                        ads = emptyList()
                     )
                 }
-        }
+            }
+            .onFailure { e ->
+                Log.e(TAG, "Failed to load episode: ${e.message}")
+                _uiState.value = _uiState.value.copy(error = e.message)
+            }
     }
 
-    private fun loadEpisodeHistory() {
+    private suspend fun loadEpisodeHistoryInternal() {
         val topic = _uiState.value.topic ?: return
         val language = _uiState.value.selectedLanguage.code
 
-        viewModelScope.launch {
-            topicRepository.getTopicEpisodes(topic.id, language)
-                .onSuccess { response ->
-                    _uiState.value = _uiState.value.copy(
-                        episodeHistory = response.data?.episodes ?: emptyList()
-                    )
-                }
-                .onFailure { e ->
-                    Log.e(TAG, "Failed to load history: ${e.message}")
-                }
-        }
+        topicRepository.getTopicEpisodes(topic.id, language)
+            .onSuccess { response ->
+                _uiState.value = _uiState.value.copy(
+                    episodeHistory = response.data?.episodes ?: emptyList()
+                )
+            }
+            .onFailure { e ->
+                Log.e(TAG, "Failed to load history: ${e.message}")
+            }
     }
 
     // MARK: - Ad Insertion Points
@@ -504,7 +526,7 @@ class TopicDetailViewModel @Inject constructor(
                         calculateAdInsertionPoints(episode, ads)
                         audioManager.play(episode)
                     }
-                    loadEpisodeHistory()
+                    loadEpisodeHistoryInternal()
                 }
                 .onFailure { e ->
                     Log.e(TAG, "Failed to generate episode: ${e.message}")
@@ -539,7 +561,7 @@ class TopicDetailViewModel @Inject constructor(
                         calculateAdInsertionPoints(episode, ads)
                         audioManager.play(episode)
                     }
-                    loadEpisodeHistory()
+                    loadEpisodeHistoryInternal()
                 }
                 .onFailure { e ->
                     Log.e(TAG, "Failed to regenerate episode: ${e.message}")
@@ -558,12 +580,43 @@ class TopicDetailViewModel @Inject constructor(
         }
         _uiState.value = _uiState.value.copy(
             selectedLanguage = language,
-            ads = emptyList()
+            ads = emptyList(),
+            isLoading = true,
+            error = null
         )
         adInsertionPoints = emptyList()
         nextAdIndex = 0
-        loadEpisode()
-        loadEpisodeHistory()
+
+        viewModelScope.launch {
+            coroutineScope {
+                val episodeJob = async { loadEpisodeInternal() }
+                val historyJob = async { loadEpisodeHistoryInternal() }
+                episodeJob.await()
+                historyJob.await()
+            }
+
+            val state = _uiState.value
+            val current = state.currentEpisode
+            if (current == null || current.status != "completed" || current.audioUrl == null) {
+                val fallback = state.episodeHistory.firstOrNull {
+                    it.status == "completed" && it.audioUrl != null
+                }
+                if (fallback != null) {
+                    val ads = if (isSubscriber) emptyList() else state.ads
+                    _uiState.value = _uiState.value.copy(
+                        currentEpisode = fallback,
+                        duration = (fallback.durationSeconds ?: 0) * 1000L,
+                        ads = ads
+                    )
+                    calculateAdInsertionPoints(fallback, ads)
+                    audioManager.play(fallback)
+                    queueEpisodeHistory()
+                    recordListeningHistory(fallback)
+                }
+            }
+
+            _uiState.value = _uiState.value.copy(isLoading = false)
+        }
     }
 
     fun togglePlayPause() {
@@ -584,12 +637,8 @@ class TopicDetailViewModel @Inject constructor(
         if (_uiState.value.isPlaying) {
             audioManager.pause()
         } else {
-            if (audioManager.currentEpisodeId.value == episode.id) {
-                audioManager.resume()
-            } else {
-                Log.d(TAG, "Playing episode: ${episode.title} with URL: ${episode.audioUrl}")
-                audioManager.play(episode)
-            }
+            Log.d(TAG, "Playing episode: ${episode.title} with URL: ${episode.audioUrl}")
+            audioManager.play(episode)
         }
     }
 

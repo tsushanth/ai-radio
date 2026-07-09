@@ -69,6 +69,17 @@ class PodcastRepository @Inject constructor(
     }
 
     /**
+     * Fetch the script-only response (no TTS / no audio upload). Used by the
+     * on-device synthesis path so the device can speak the dialogue locally.
+     */
+    suspend fun fetchPodcastScript(
+        request: GeneratePodcastRequest
+    ): com.kreativekoala.audexa.data.remote.GeneratePodcastScriptResponse {
+        Log.d(TAG, "Fetching script-only podcast (lang=${request.preferences.language})")
+        return apiService.generatePodcastScript(request)
+    }
+
+    /**
      * Async podcast generation with polling - emits progress updates
      * This is the recommended method for production use
      */

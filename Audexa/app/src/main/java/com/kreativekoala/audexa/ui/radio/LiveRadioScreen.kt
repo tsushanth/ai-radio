@@ -79,6 +79,16 @@ fun LiveRadioScreen(
     var requestTopicText by remember { mutableStateOf("") }
     var isSubmittingRequest by remember { mutableStateOf(false) }
 
+    // Premium-required dialog (shown when non-premium users try to submit a topic)
+    var showPremiumDialog by remember { mutableStateOf(false) }
+
+    LaunchedEffect(viewModel) {
+        viewModel.paywallRequested.collect {
+            showRequestSheet = false
+            showPremiumDialog = true
+        }
+    }
+
     fun sendReaction(emoji: String) {
         val now = System.currentTimeMillis()
         if (now - lastReactionMs < 333L) return
@@ -519,13 +529,41 @@ fun LiveRadioScreen(
                 onDismiss = { showRequestSheet = false },
                 onSubmit = {
                     val topic = requestTopicText.trim()
-                    if (topic.length >= 3 && !isSubmittingRequest) {
+                    if (topic.length >= 5 && !isSubmittingRequest) {
                         isSubmittingRequest = true
-                        viewModel.submitTopicRequest(topic) {
+                        viewModel.submitTopicRequest(topic) { success ->
                             isSubmittingRequest = false
-                            requestTopicText = ""
-                            showRequestSheet = false
+                            if (success) {
+                                requestTopicText = ""
+                                showRequestSheet = false
+                            }
+                            // On failure (incl. paywall trigger), leave text intact
+                            // so the user can retry after upgrading.
                         }
+                    }
+                }
+            )
+        }
+
+        // Premium-required dialog — shown when a non-premium user tries to submit
+        if (showPremiumDialog) {
+            AlertDialog(
+                onDismissRequest = { showPremiumDialog = false },
+                title = { Text("Premium feature") },
+                text = {
+                    Text(
+                        "Topic requests are available to Audexa Premium subscribers. " +
+                                "Upgrade to submit requests and hear them on the live radio."
+                    )
+                },
+                confirmButton = {
+                    TextButton(onClick = { showPremiumDialog = false }) {
+                        Text("Learn more")
+                    }
+                },
+                dismissButton = {
+                    TextButton(onClick = { showPremiumDialog = false }) {
+                        Text("Not now")
                     }
                 }
             )

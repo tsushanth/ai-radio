@@ -42,6 +42,14 @@ class NotificationService @Inject constructor(
         const val CHANNEL_NAME_DAILY_BRIEF = "Daily Brief"
         const val NOTIFICATION_ID_DAILY_REMINDER = 1001
         private const val DAILY_REMINDER_REQUEST_CODE = 2001
+        // Radio-topic reminders ("Cricket Updates is playing on Audexa Radio")
+        // get their own channel so users can silence them independently of
+        // the daily brief reminder.
+        const val CHANNEL_ID_RADIO_TOPIC = "radio_topic_channel"
+        // Base notification ID — derive per-topic IDs from a hash so a fresh
+        // notification for the same topic replaces any stale one.
+        private const val RADIO_TOPIC_NOTIFICATION_BASE = 3000
+        const val INTENT_ACTION_OPEN_LIVE_RADIO = "com.kreativekoala.audexa.OPEN_LIVE_RADIO"
     }
 
     private val okHttpClient = OkHttpClient.Builder().build()
@@ -51,7 +59,9 @@ class NotificationService @Inject constructor(
      */
     fun createNotificationChannels() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel = NotificationChannel(
+            val notificationManager = context.getSystemService(NotificationManager::class.java)
+
+            val brief = NotificationChannel(
                 CHANNEL_ID_DAILY_BRIEF,
                 context.getString(R.string.daily_brief),
                 NotificationManager.IMPORTANCE_HIGH
@@ -60,10 +70,22 @@ class NotificationService @Inject constructor(
                 enableVibration(true)
                 setShowBadge(true)
             }
+            notificationManager.createNotificationChannel(brief)
 
-            val notificationManager = context.getSystemService(NotificationManager::class.java)
-            notificationManager.createNotificationChannel(channel)
-            Log.d(TAG, "Notification channel created: $CHANNEL_ID_DAILY_BRIEF")
+            // Separate channel so users can mute radio-topic reminders without
+            // killing the daily-brief alert.
+            val radio = NotificationChannel(
+                CHANNEL_ID_RADIO_TOPIC,
+                context.getString(R.string.radio_topic_channel_name),
+                NotificationManager.IMPORTANCE_DEFAULT
+            ).apply {
+                description = context.getString(R.string.radio_topic_channel_description)
+                enableVibration(true)
+                setShowBadge(true)
+            }
+            notificationManager.createNotificationChannel(radio)
+
+            Log.d(TAG, "Notification channels created: $CHANNEL_ID_DAILY_BRIEF, $CHANNEL_ID_RADIO_TOPIC")
         }
     }
 
@@ -179,6 +201,54 @@ class NotificationService @Inject constructor(
             Log.d(TAG, "Daily reminder notification shown")
         } catch (e: SecurityException) {
             Log.e(TAG, "Failed to show notification: ${e.message}")
+        }
+    }
+
+    /**
+     * Fires when a bookmarked topic is about to play on the radio. Tapping
+     * the notification opens MainActivity with an action that the navigation
+     * layer reads and routes to LiveRadioView.
+     */
+    fun showRadioTopicNotification(topicId: String, topicName: String) {
+        if (!hasNotificationPermission()) {
+            Log.w(TAG, "Notification permission not granted; skipping radio-topic notification")
+            return
+        }
+
+        val intent = Intent(context, MainActivity::class.java).apply {
+            action = INTENT_ACTION_OPEN_LIVE_RADIO
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+            putExtra("notification_type", "radio_topic")
+            putExtra("topic_id", topicId)
+        }
+        // Use the topic-id hash as the request code so different topics produce
+        // distinct PendingIntents.
+        val pendingIntent = PendingIntent.getActivity(
+            context,
+            topicId.hashCode(),
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+
+        val title = context.getString(R.string.radio_topic_notification_title)
+        val body = context.getString(R.string.radio_topic_notification_body, topicName)
+
+        val notification = NotificationCompat.Builder(context, CHANNEL_ID_RADIO_TOPIC)
+            .setSmallIcon(R.drawable.ic_launcher_foreground)
+            .setContentTitle(title)
+            .setContentText(body)
+            .setStyle(NotificationCompat.BigTextStyle().bigText(body))
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            .setAutoCancel(true)
+            .setContentIntent(pendingIntent)
+            .build()
+
+        val notificationId = RADIO_TOPIC_NOTIFICATION_BASE + (topicId.hashCode() and 0xFFFF)
+        try {
+            NotificationManagerCompat.from(context).notify(notificationId, notification)
+            Log.d(TAG, "Radio topic notification shown for '$topicName' (id=$topicId)")
+        } catch (e: SecurityException) {
+            Log.e(TAG, "Failed to show radio topic notification: ${e.message}")
         }
     }
 

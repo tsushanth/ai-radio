@@ -16,7 +16,14 @@ data class Topic(
     @SerialName("target_duration_minutes")
     val targetDurationMinutes: Int = 5,
     @SerialName("is_active")
-    val isActive: Boolean = true
+    val isActive: Boolean = true,
+    /**
+     * Backend `languages` array. `["all"]` = universal (audio is translated
+     * per user language at episode-gen time). A specific code like `["ja"]`
+     * means the topic is curated for that locale's users only — those are
+     * the "locale-specific" topics that show in the Trending row.
+     */
+    val languages: List<String> = listOf("all")
 ) {
     val composableColor: Color
         get() = try {

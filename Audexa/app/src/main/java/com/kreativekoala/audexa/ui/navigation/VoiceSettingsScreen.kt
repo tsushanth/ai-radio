@@ -30,6 +30,7 @@ import com.kreativekoala.audexa.ui.theme.*
 @Composable
 fun VoiceSettingsScreen(
     onNavigateBack: () -> Unit,
+    onOpenKokoroTest: () -> Unit = {},
     viewModel: VoiceSettingsViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -51,6 +52,15 @@ fun VoiceSettingsScreen(
                             contentDescription = stringResource(R.string.back),
                             tint = PrimaryText
                         )
+                    }
+                },
+                actions = {
+                    // Debug entry point for the on-device Kokoro TTS pipeline.
+                    // Surfaced here while we validate model download + ONNX
+                    // session + synth + playback before wiring it into deep
+                    // dives / topic podcasts.
+                    TextButton(onClick = onOpenKokoroTest) {
+                        Text("On-device", color = PrimaryText)
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(

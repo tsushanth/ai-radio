@@ -14,9 +14,14 @@ import com.kreativekoala.audexa.data.repository.AsyncGenerationResult
 import com.kreativekoala.audexa.data.repository.PodcastRepository
 import com.kreativekoala.audexa.data.repository.TopicRepository
 import com.kreativekoala.audexa.service.AudioManager
+import com.kreativekoala.audexa.tts.ReadAloudManager
+import com.kreativekoala.audexa.tts.TtsSegment
+import com.kreativekoala.audexa.tts.TtsState
+import com.kreativekoala.audexa.tts.TtsVoice
 import com.kreativekoala.audexa.ui.components.DailyBriefState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
@@ -29,7 +34,8 @@ class HomeViewModel @Inject constructor(
     private val podcastRepository: PodcastRepository,
     private val topicRepository: TopicRepository,
     private val preferencesManager: PreferencesManager,
-    private val audioManager: AudioManager
+    private val audioManager: AudioManager,
+    private val radioReminderManager: com.kreativekoala.audexa.service.RadioReminderManager
 ) : ViewModel() {
 
     companion object {
@@ -73,6 +79,8 @@ class HomeViewModel @Inject constructor(
     val hiddenTopicIds = preferencesManager.hiddenTopics
     val hasLinkedGoogle = preferencesManager.hasLinkedGoogle
     val radioLanguages = preferencesManager.radioLanguages
+    /** Exposed so HomeScreen can decide whether to show a "Trending in <locale>" row. */
+    val preferredLanguage = preferencesManager.preferredLanguage
 
     // Visible topics (filter out hidden)
     val visibleTopics: Flow<List<Topic>> = combine(
@@ -309,10 +317,14 @@ class HomeViewModel @Inject constructor(
 
             // Fetch topics from server (will update cache automatically)
             // Topics are already loaded from cache in init, so this updates in background
-            val language = preferencesManager.preferredLanguage.first()
             val bookmarked = preferencesManager.bookmarkedTopics.first()
-            Log.d(TAG, "Loading topics with lang=$language, bookmarked=$bookmarked")
-            topicRepository.getTopics(language)
+            // Use the user's preferred language so JP/ES/etc. users see
+            // localized topic names + locale-specific topics (e.g. 日本ニュース
+            // instead of "Daily News Brief") — backend applies
+            // `localized_names[language]` when given lang=ja.
+            val lang = preferencesManager.preferredLanguage.first()
+            Log.d(TAG, "Loading topics with lang=$lang, bookmarked=$bookmarked")
+            topicRepository.getTopics(lang)
                 .onSuccess { response ->
                     val serverTopics = response.data?.topics ?: emptyList()
                     Log.d(TAG, "Server returned ${serverTopics.size} topics: ${serverTopics.map { it.id }}")
@@ -437,6 +449,13 @@ class HomeViewModel @Inject constructor(
                 language = language
             )
 
+            // Try on-device synthesis first when eligible (English only on Android
+            // — system TTS handles English best across devices). Falls back to
+            // cloud on any failure so the user always gets audio.
+            if (language.lowercase().startsWith("en")) {
+                if (tryGenerateOnDevice(email, preferences)) return@launch
+            }
+
             // Use async generation with polling for real-time progress
             try {
                 podcastRepository.generatePodcastAsync(email, preferences)
@@ -528,12 +547,20 @@ class HomeViewModel @Inject constructor(
     fun toggleBookmark(topicId: String) {
         viewModelScope.launch {
             val current = bookmarkedTopicIds.first()
-            val updated = if (topicId in current) {
+            val wasBookmarked = topicId in current
+            val updated = if (wasBookmarked) {
                 current - topicId
             } else {
                 current + topicId
             }
             preferencesManager.setBookmarkedTopics(updated)
+
+            // Keep the radio reminder schedule aligned with the bookmark set.
+            if (wasBookmarked) {
+                radioReminderManager.cancelForTopic(topicId)
+            } else {
+                radioReminderManager.refresh()
+            }
         }
     }
 
@@ -572,6 +599,114 @@ class HomeViewModel @Inject constructor(
 
     fun resetSuggestTopicResult() {
         _suggestTopicResult.value = SuggestTopicResult.Idle
+    }
+    // MARK: - On-device synthesis
+
+    /**
+     * Try to generate today's Daily Brief entirely on the device.
+     *
+     * Hits `/podcast/script` for the dialogue text, picks a female + male
+     * voice from the device's installed system voices, then routes Host 1 /
+     * Host 2 segments through [TtsEngine.speakSegments]. Returns true on a
+     * successful start (caller should not fall through to cloud); false on
+     * any failure so caller continues with cloud generation.
+     */
+    private suspend fun tryGenerateOnDevice(email: String, preferences: UserPreferences): Boolean {
+        // Smoothly ticks the on-device progress bar from 5% up to ~95% across
+        // an expected ~90 s window while the script-fetch + TTS-prep blocks run.
+        // The script endpoint doesn't stream progress, so without this the bar
+        // sits at 5% for the entire generation and users assume the app is hung.
+        // The ticker is cancelled as soon as we transition to .Playing.
+        val progressTicker = viewModelScope.launch {
+            try {
+                var p = 5
+                val expectedMs = 90_000L
+                val steps = 90 // 5 → 95
+                val stepMs = expectedMs / steps
+                while (p < 95) {
+                    delay(stepMs)
+                    p += 1
+                    val current = _dailyBriefState.value
+                    if (current is DailyBriefState.Generating && current.progress < p) {
+                        _dailyBriefState.value = DailyBriefState.Generating(p)
+                    }
+                }
+            } catch (_: Exception) { /* cancelled */ }
+        }
+        return try {
+            _dailyBriefState.value = DailyBriefState.Generating(5)
+            val today = SimpleDateFormat("yyyy-MM-dd", Locale.US).format(Date())
+            val req = com.kreativekoala.audexa.data.remote.GeneratePodcastRequest(
+                userId = email,
+                date = today,
+                preferences = preferences,
+            )
+            val resp = podcastRepository.fetchPodcastScript(req)
+            val segments = resp.script?.segments.orEmpty()
+            if (segments.isEmpty()) {
+                Log.w(TAG, "On-device: empty script — falling back to cloud")
+                progressTicker.cancel()
+                return false
+            }
+
+            // Jump forward only — the ticker has been climbing during the fetch.
+            val tickedProgress = (_dailyBriefState.value as? DailyBriefState.Generating)?.progress ?: 30
+            if (tickedProgress < 30) {
+                _dailyBriefState.value = DailyBriefState.Generating(30)
+            }
+            val manager = ReadAloudManager.get(context)
+            val engine = manager.engine
+            engine.prepare()
+            val voices = engine.voices.value
+            val (host1Voice, host2Voice) = pickHostVoices(voices)
+            val ttsSegments = segments.map { seg ->
+                TtsSegment(
+                    text = seg.text,
+                    voiceId = if (seg.speaker == "host2") host2Voice else host1Voice,
+                )
+            }
+
+            // Surface state as Playing immediately so the UI shows the player
+            // with a stop control. The audio plays through TTS engine, not
+            // audioManager — Phase A loses background/lock-screen controls.
+            progressTicker.cancel()
+            _dailyBriefState.value = DailyBriefState.Playing("ondevice://daily-brief")
+            engine.speakSegments(ttsSegments)
+
+            // Observe engine state to mirror Idle into Completed when done.
+            viewModelScope.launch {
+                engine.state.collect { st ->
+                    if (st is TtsState.Idle && _dailyBriefState.value is DailyBriefState.Playing) {
+                        _dailyBriefState.value = DailyBriefState.Completed("ondevice://daily-brief")
+                    } else if (st is TtsState.Failed) {
+                        _dailyBriefState.value = DailyBriefState.Error(st.message)
+                    }
+                }
+            }
+            true
+        } catch (e: Exception) {
+            Log.w(TAG, "On-device generation failed: ${e.message} — falling back to cloud")
+            progressTicker.cancel()
+            false
+        }
+    }
+
+    /**
+     * Pick a pair of (host1, host2) voice ids from available system voices.
+     * Prefers a female + male in the device's English locale; falls back to
+     * any English voice; returns nulls if nothing matches (engine then uses
+     * its own default for both hosts — single-voice playback, still works).
+     */
+    private fun pickHostVoices(voices: List<TtsVoice>): Pair<String?, String?> {
+        if (voices.isEmpty()) return null to null
+        val englishVoices = voices.filter { it.locale.startsWith("en", ignoreCase = true) }
+            .ifEmpty { voices }
+        val female = englishVoices.firstOrNull { it.isFemale == true }?.id
+            ?: englishVoices.firstOrNull()?.id
+        val male = englishVoices.firstOrNull { it.isFemale == false }?.id
+            ?: englishVoices.firstOrNull { it.id != female }?.id
+            ?: female
+        return female to male
     }
 }
 

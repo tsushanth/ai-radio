@@ -51,6 +51,7 @@ fun HomeScreen(
     val playingTopicId by viewModel.playingTopicId.collectAsState(initial = null)
     val discoverCategories by viewModel.discoverCategories.collectAsState()
     val radioLanguages by viewModel.radioLanguages.collectAsState(initial = emptySet())
+    val preferredLanguage by viewModel.preferredLanguage.collectAsState(initial = "en")
 
     // Search state for Discover tab
     var searchText by remember { mutableStateOf("") }
@@ -146,6 +147,7 @@ fun HomeScreen(
                     visibleTopics = visibleTopics,
                     bookmarkedIds = bookmarkedIds,
                     playingTopicId = playingTopicId,
+                    preferredLanguage = preferredLanguage,
                     onTopicClick = onTopicClick,
                     onBookmarkToggle = { viewModel.toggleBookmark(it) },
                     onHideTopic = { viewModel.hideTopic(it) },
@@ -172,6 +174,17 @@ fun HomeScreen(
     }
 }
 
+/** Locale-specific "Trending in …" row config. Add a case here when a new
+ * language gets enough culturally-curated topics to deserve a prominent row.
+ * The row only renders when the user's `preferredLanguage` is one of these
+ * AND there are matching topics in `visibleTopics` (non-"all" topics whose
+ * `languages` array includes that locale). */
+private fun localeRowHeader(lang: String): Pair<String, String>? = when (lang) {
+    "ja" -> "日本のトレンド" to "🇯🇵"
+    "es" -> "Tendencias en español" to "🌎"
+    else -> null
+}
+
 @Composable
 private fun ForYouTabContent(
     keepListening: List<com.kreativekoala.audexa.data.model.Episode>,
@@ -179,12 +192,61 @@ private fun ForYouTabContent(
     visibleTopics: List<Topic>,
     bookmarkedIds: Set<String>,
     playingTopicId: String?,
+    preferredLanguage: String,
     onTopicClick: (Topic) -> Unit,
     onBookmarkToggle: (String) -> Unit,
     onHideTopic: (String) -> Unit,
     onEpisodeClick: (com.kreativekoala.audexa.data.model.Episode) -> Unit
 ) {
+    // Compute locale-specific topics: present only when (a) we have a row
+    // header for this language, and (b) there are non-universal topics
+    // tagged for this locale. The backend already sorts these first.
+    val localeRow = remember(preferredLanguage, visibleTopics) {
+        val header = localeRowHeader(preferredLanguage) ?: return@remember null
+        val local = visibleTopics.filter { topic ->
+            !topic.languages.contains("all") && topic.languages.contains(preferredLanguage)
+        }
+        if (local.isEmpty()) null else Triple(header.first, header.second, local)
+    }
+
     Column(verticalArrangement = Arrangement.spacedBy(32.dp)) {
+        // Locale-specific featured row (only shown for users with curated
+        // catalogs in their language — today: ja, es). Sits above the
+        // generic Keep Listening / Bookmarked / Topic Podcasts rows so
+        // culturally-relevant content lands first.
+        localeRow?.let { (title, flag, local) ->
+            Column {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(6.dp),
+                    modifier = Modifier.padding(horizontal = Spacing.screenPadding.dp)
+                ) {
+                    Text(flag, style = MaterialTheme.typography.headlineLarge)
+                    Text(
+                        text = title,
+                        style = MaterialTheme.typography.headlineLarge,
+                        color = MaterialTheme.colorScheme.onBackground,
+                    )
+                }
+                Spacer(modifier = Modifier.height(16.dp))
+                LazyRow(
+                    contentPadding = PaddingValues(horizontal = Spacing.screenPadding.dp),
+                    horizontalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    items(local, key = { it.id }) { topic ->
+                        TopicCard(
+                            topic = topic,
+                            isBookmarked = bookmarkedIds.contains(topic.id),
+                            isPlaying = topic.id == playingTopicId,
+                            onClick = { onTopicClick(topic) },
+                            onBookmarkToggle = { onBookmarkToggle(topic.id) },
+                            onHide = { onHideTopic(topic.id) },
+                        )
+                    }
+                }
+            }
+        }
+
         // Keep Listening
         if (keepListening.isNotEmpty()) {
             Column {

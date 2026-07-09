@@ -1,0 +1,1 @@
+On-device Daily Brief synthesis: when your podcast language is English, your phone now speaks the brief locally using its built-in voices — faster start and works offline. The two hosts use distinct voices that match your device language. Cloud generation remains the fallback for non-English and ineligible devices.

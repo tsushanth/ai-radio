@@ -20,12 +20,14 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.kreativekoala.audexa.billing.BillingManager
 import com.kreativekoala.audexa.data.local.PreferencesManager
 import com.kreativekoala.audexa.data.model.Topic
 import com.kreativekoala.audexa.service.AudioManager
 import com.kreativekoala.audexa.service.NotificationService
+import com.kreativekoala.audexa.service.RadioReminderManager
 import com.kreativekoala.audexa.ui.components.MiniPlayer
 import com.kreativekoala.audexa.ui.components.SplashScreen
 import com.kreativekoala.audexa.ui.navigation.AudexaNavGraph
@@ -33,6 +35,7 @@ import com.kreativekoala.audexa.ui.navigation.Screen
 import com.kreativekoala.audexa.ui.theme.AppTheme
 import com.kreativekoala.audexa.ui.theme.AudexaTheme
 import com.kreativekoala.audexa.ui.topic.TopicDetailScreen
+import com.kreativekoala.paywallkit.manager.PromoCodeManager
 import com.kreativekoala.paywallkit.models.PaywallFeature
 import com.kreativekoala.paywallkit.models.PaywallProduct
 import com.kreativekoala.paywallkit.models.PaywallTheme
@@ -58,6 +61,9 @@ class MainActivity : AppCompatActivity() {
     @Inject
     lateinit var billingManager: BillingManager
 
+    @Inject
+    lateinit var radioReminderManager: RadioReminderManager
+
     // Permission launcher for notification permission (Android 13+)
     private val notificationPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
@@ -80,11 +86,21 @@ class MainActivity : AppCompatActivity() {
         // Request notification permission on Android 13+ and restore scheduled notifications
         requestNotificationPermissionIfNeeded()
 
+        // Extract promo code from deep link intent
+        PromoCodeManager.handleIntent(intent)
+
         // Increment app open count once per session (only on fresh create, not config changes)
         if (savedInstanceState == null) {
             lifecycleScope.launch {
                 preferencesManager.incrementAppOpenCount()
             }
+        }
+
+        // Pull predicted radio-topic plays and arm local-notification alarms
+        // for any bookmarked topic queued up next. Re-runs on every onResume
+        // to catch new bookmarks + queue drift.
+        lifecycleScope.launch {
+            radioReminderManager.refresh()
         }
 
         setContent {
@@ -95,6 +111,16 @@ class MainActivity : AppCompatActivity() {
             AudexaTheme(appTheme = appTheme) {
                 AudexaApp(audioManager = audioManager, billingManager = billingManager, preferencesManager = preferencesManager, appTheme = appTheme)
             }
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // Re-poll the orchestrator's upcoming queue on every foreground so
+        // freshly-bookmarked topics arm immediately and stale predictions
+        // (queue churn during the session) get cleaned up.
+        lifecycleScope.launch {
+            radioReminderManager.refresh()
         }
     }
 
@@ -250,6 +276,7 @@ fun AudexaApp(
 
                 PaywallView(
                     appId = "audexa",
+                    placement = if (PromoCodeManager.activeCode != null) "promo_code_onboarding" else "onboarding",
                     appName = "Audexa",
                     features = features,
                     products = paywallProducts,
@@ -295,7 +322,9 @@ private fun MainContent(
         contentWindowInsets = WindowInsets(0),
         bottomBar = {
             // Mini player shown when audio is available
-            if (currentEpisodeTitle != null) {
+            val currentRoute = navController.currentBackStackEntryAsState().value?.destination?.route
+            val onLiveRadio = currentRoute?.startsWith("live_radio") == true
+            if (currentEpisodeTitle != null && !onLiveRadio) {
                 val progress = if (duration > 0) currentPosition.toFloat() / duration.toFloat() else 0f
                 MiniPlayer(
                     title = currentEpisodeTitle,

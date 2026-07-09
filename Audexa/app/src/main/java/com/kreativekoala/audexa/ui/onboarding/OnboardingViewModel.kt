@@ -86,16 +86,21 @@ class OnboardingViewModel @Inject constructor(
                         ?.filter { it.isActive }
                         ?.distinctBy { it.name } // Deduplicate by name
                         ?: emptyList()
-                    if (activeTopics.isNotEmpty()) {
-                        _uiState.value = _uiState.value.copy(
-                            topics = activeTopics,
-                            isLoadingTopics = false
-                        )
-                    }
+                    // Always clear the loading state; an empty topics list is a
+                    // valid (if rare) response and the UI must still be usable.
+                    // Previously this branch ran only on non-empty results,
+                    // leaving the spinner spinning forever on empty responses.
+                    _uiState.value = _uiState.value.copy(
+                        topics = activeTopics,
+                        isLoadingTopics = false
+                    )
                 }
                 .onFailure { e ->
                     Log.e(TAG, "Failed to load topics: ${e.message}")
-                    _uiState.value = _uiState.value.copy(isLoadingTopics = false)
+                    _uiState.value = _uiState.value.copy(
+                        isLoadingTopics = false,
+                        error = "Couldn't load topics. You can continue and pick them later."
+                    )
                 }
         }
     }

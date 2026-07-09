@@ -4,8 +4,11 @@ import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.kreativekoala.audexa.billing.BillingManager
 import com.kreativekoala.audexa.service.AudioManager
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.receiveAsFlow
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.realtime.channel
 import io.github.jan.supabase.realtime.broadcastFlow
@@ -67,9 +70,15 @@ data class NowPlayingInfo(
 @HiltViewModel
 class LiveRadioViewModel @Inject constructor(
     private val audioManager: AudioManager,
+    private val billingManager: BillingManager,
     val supabase: SupabaseClient,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
+
+    // Emits when a non-premium user tries to submit — Screen collects to show paywall.
+    private val _paywallRequested = Channel<Unit>(Channel.BUFFERED)
+    val paywallRequested = _paywallRequested.receiveAsFlow()
+
 
     companion object {
         private const val TAG = "LiveRadioVM"
@@ -268,7 +277,12 @@ class LiveRadioViewModel @Inject constructor(
      */
     fun submitTopicRequest(topic: String, onComplete: (Boolean) -> Unit = {}) {
         val cleaned = topic.trim()
-        if (cleaned.length < 3) {
+        if (cleaned.length < 5) {
+            onComplete(false)
+            return
+        }
+        if (!billingManager.isSubscribed.value) {
+            _paywallRequested.trySend(Unit)
             onComplete(false)
             return
         }

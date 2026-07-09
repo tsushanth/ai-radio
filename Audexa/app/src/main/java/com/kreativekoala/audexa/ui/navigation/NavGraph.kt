@@ -38,6 +38,7 @@ sealed class Screen(val route: String) {
     data object LanguageSettings : Screen("language_settings")
     data object ThemeSettings : Screen("theme_settings")
     data object VoiceSettings : Screen("voice_settings")
+    data object KokoroTest : Screen("kokoro_test")
     data object NotificationSettings : Screen("notification_settings")
     data object Subscription : Screen("subscription")
     data object LiveRadio : Screen("live_radio/{streamUrl}/{stationName}") {
@@ -199,7 +200,16 @@ fun AudexaNavGraph(
             VoiceSettingsScreen(
                 onNavigateBack = {
                     navController.popBackStack()
-                }
+                },
+                onOpenKokoroTest = {
+                    navController.navigate(Screen.KokoroTest.route)
+                },
+            )
+        }
+
+        composable(Screen.KokoroTest.route) {
+            com.kreativekoala.audexa.ui.kokoro.KokoroTestScreen(
+                onNavigateBack = { navController.popBackStack() }
             )
         }
 

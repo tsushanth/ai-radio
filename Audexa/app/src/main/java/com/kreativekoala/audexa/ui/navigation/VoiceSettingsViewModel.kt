@@ -1,11 +1,17 @@
 package com.kreativekoala.audexa.ui.navigation
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.kreativekoala.audexa.data.local.PreferencesManager
 import com.kreativekoala.audexa.data.model.*
 import com.kreativekoala.audexa.data.repository.VoiceRepository
+import com.kreativekoala.audexa.tts.KokoroTtsEngine
+import com.kreativekoala.audexa.tts.TtsVoice
+import com.kreativekoala.audexa.tts.kokoro.KokoroModelDownloader
+import com.kreativekoala.audexa.tts.kokoro.KokoroPreferences
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -19,7 +25,13 @@ data class VoiceSettingsUiState(
     val voicePairs: List<VoicePair> = emptyList(),
     val providers: List<ProviderInfo> = emptyList(),
     val error: String? = null,
-    val selectedTab: VoiceTab = VoiceTab.PAIRS
+    val selectedTab: VoiceTab = VoiceTab.PAIRS,
+
+    // On-device Kokoro voice selection (beta)
+    val useKokoroEngine: Boolean = false,
+    val kokoroVoices: List<TtsVoice> = emptyList(),
+    val selectedKokoroVoiceId: String? = null,
+    val kokoroDownloadState: KokoroModelDownloader.State = KokoroModelDownloader.State.Idle
 )
 
 enum class VoiceTab(val title: String) {
@@ -29,9 +41,14 @@ enum class VoiceTab(val title: String) {
 
 @HiltViewModel
 class VoiceSettingsViewModel @Inject constructor(
+    @ApplicationContext private val appContext: Context,
     private val voiceRepository: VoiceRepository,
     private val preferencesManager: PreferencesManager
 ) : ViewModel() {
+
+    private val kokoroPrefs = KokoroPreferences.getInstance(appContext)
+    private val kokoroEngine = KokoroTtsEngine(appContext)
+    private val kokoroDownloader = KokoroModelDownloader.getInstance(appContext)
 
     private val _uiState = MutableStateFlow(VoiceSettingsUiState())
     val uiState: StateFlow<VoiceSettingsUiState> = _uiState.asStateFlow()
@@ -39,6 +56,63 @@ class VoiceSettingsViewModel @Inject constructor(
     init {
         loadSavedPreferences()
         loadVoices()
+        loadKokoroState()
+    }
+
+    private fun loadKokoroState() {
+        // Seed the Kokoro voice list from the engine's bundled catalog and
+        // stream user pref + download state into the UI.
+        _uiState.value = _uiState.value.copy(kokoroVoices = kokoroEngine.voices.value)
+        viewModelScope.launch {
+            kokoroPrefs.useKokoroEngine.collect { enabled ->
+                _uiState.value = _uiState.value.copy(useKokoroEngine = enabled)
+            }
+        }
+        viewModelScope.launch {
+            kokoroPrefs.selectedVoiceId.collect { voiceId ->
+                _uiState.value = _uiState.value.copy(selectedKokoroVoiceId = voiceId)
+            }
+        }
+        viewModelScope.launch {
+            kokoroDownloader.state.collect { state ->
+                _uiState.value = _uiState.value.copy(kokoroDownloadState = state)
+            }
+        }
+    }
+
+    /**
+     * Enable/disable the on-device Kokoro engine.
+     * Turning ON also kicks off the model download if the file isn't on disk.
+     */
+    fun setUseKokoroEngine(enabled: Boolean) {
+        kokoroPrefs.setUseKokoroEngine(enabled)
+        if (enabled && !kokoroDownloader.isModelOnDisk()) {
+            kokoroDownloader.startIfPossible()
+        }
+    }
+
+    /** Pick a specific Kokoro voice. Passing null clears the pick (engine picks default). */
+    fun selectKokoroVoice(voiceId: String?) {
+        kokoroPrefs.setSelectedVoiceId(voiceId)
+    }
+
+    /**
+     * Play a short sample in the given voice so the user can hear it before committing.
+     * No-ops silently if the Kokoro model isn't yet on disk — UI should disable the
+     * preview button when downloadState is anything but Ready.
+     */
+    fun previewKokoroVoice(voice: TtsVoice) {
+        viewModelScope.launch {
+            try {
+                kokoroEngine.prepare()
+                kokoroEngine.speak(
+                    text = "Hi, I'm ${voice.displayName}. This is how I sound on Audexa.",
+                    voiceId = voice.id,
+                )
+            } catch (_: Exception) {
+                // Preview failure is non-critical; swallow so the picker stays responsive.
+            }
+        }
     }
 
     private fun loadSavedPreferences() {

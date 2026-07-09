@@ -24,6 +24,8 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.kreativekoala.audexa.R
 import com.kreativekoala.audexa.data.model.*
+import com.kreativekoala.audexa.tts.TtsVoice
+import com.kreativekoala.audexa.tts.kokoro.KokoroModelDownloader
 import com.kreativekoala.audexa.ui.theme.*
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -79,6 +81,19 @@ fun VoiceSettingsScreen(
             ProviderSelector(
                 selectedProvider = uiState.selectedProvider,
                 onProviderSelected = { viewModel.setProvider(it) }
+            )
+
+            // On-device (Kokoro) voice section — beta. Appears above the tabs so
+            // users see it immediately, but is collapsed to a single toggle row
+            // when off so it doesn't dominate the screen.
+            OnDeviceVoiceSection(
+                enabled = uiState.useKokoroEngine,
+                voices = uiState.kokoroVoices,
+                selectedVoiceId = uiState.selectedKokoroVoiceId,
+                downloadState = uiState.kokoroDownloadState,
+                onEnabledChange = { viewModel.setUseKokoroEngine(it) },
+                onVoiceSelected = { viewModel.selectKokoroVoice(it) },
+                onPreviewVoice = { viewModel.previewKokoroVoice(it) }
             )
 
             // Tab selector
@@ -537,6 +552,141 @@ private fun EmptyState(message: String) {
                 style = MaterialTheme.typography.bodyMedium,
                 color = SecondaryText
             )
+        }
+    }
+}
+
+/**
+ * Collapsible "On-device voice (beta)" section. When the toggle is off, only a
+ * single row is visible. When on, shows a radio-list of the 5 bundled Kokoro
+ * voices plus a download progress line when the model isn't yet on disk.
+ */
+@Composable
+private fun OnDeviceVoiceSection(
+    enabled: Boolean,
+    voices: List<TtsVoice>,
+    selectedVoiceId: String?,
+    downloadState: KokoroModelDownloader.State,
+    onEnabledChange: (Boolean) -> Unit,
+    onVoiceSelected: (String?) -> Unit,
+    onPreviewVoice: (TtsVoice) -> Unit,
+) {
+    val previewsReady = downloadState is KokoroModelDownloader.State.Ready
+    Surface(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 8.dp),
+        shape = RoundedCornerShape(12.dp),
+        color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.4f)
+    ) {
+        Column(modifier = Modifier.padding(16.dp)) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(
+                        text = "On-device voice (beta)",
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.SemiBold,
+                        color = PrimaryText
+                    )
+                    Text(
+                        text = "Play deep dives and daily briefs on your device using Kokoro. Downloads a ~82 MB model on first use.",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = SecondaryText
+                    )
+                }
+                Spacer(modifier = Modifier.width(12.dp))
+                Switch(
+                    checked = enabled,
+                    onCheckedChange = onEnabledChange
+                )
+            }
+
+            if (enabled) {
+                Spacer(modifier = Modifier.height(12.dp))
+                when (val s = downloadState) {
+                    is KokoroModelDownloader.State.Downloading -> {
+                        LinearProgressIndicator(
+                            progress = { s.percent / 100f },
+                            modifier = Modifier.fillMaxWidth(),
+                            color = AccentOrange
+                        )
+                        Text(
+                            text = "Downloading model… ${s.downloadedMb}/${s.totalMb} MB (${s.percent}%)",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = SecondaryText,
+                            modifier = Modifier.padding(top = 6.dp)
+                        )
+                    }
+                    is KokoroModelDownloader.State.WaitingForWifi -> {
+                        Text(
+                            text = "Waiting for WiFi to download voice model…",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = SecondaryText
+                        )
+                    }
+                    is KokoroModelDownloader.State.Failed -> {
+                        Text(
+                            text = "Download failed: ${s.message}. Toggle off and back on to retry.",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = Error
+                        )
+                    }
+                    else -> Unit
+                }
+
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = "Voice",
+                    style = MaterialTheme.typography.labelLarge,
+                    color = SecondaryText,
+                    modifier = Modifier.padding(bottom = 4.dp)
+                )
+                voices.forEach { voice ->
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 4.dp)
+                    ) {
+                        RadioButton(
+                            selected = selectedVoiceId == voice.id,
+                            onClick = { onVoiceSelected(voice.id) }
+                        )
+                        Column(
+                            modifier = Modifier
+                                .padding(start = 8.dp)
+                                .weight(1f)
+                        ) {
+                            Text(
+                                text = voice.displayName,
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = PrimaryText
+                            )
+                            Text(
+                                text = voice.locale,
+                                style = MaterialTheme.typography.bodySmall,
+                                color = SecondaryText
+                            )
+                        }
+                        // Preview icon — only enabled once the Kokoro model is on disk.
+                        // Before that a play tap would silently no-op (engine.prepare()
+                        // in the ViewModel bails early), so we grey it out to match reality.
+                        IconButton(
+                            onClick = { onPreviewVoice(voice) },
+                            enabled = previewsReady
+                        ) {
+                            Icon(
+                                imageVector = Icons.Filled.PlayArrow,
+                                contentDescription = "Preview ${voice.displayName}",
+                                tint = if (previewsReady) AccentOrange else SecondaryText
+                            )
+                        }
+                    }
+                }
+            }
         }
     }
 }

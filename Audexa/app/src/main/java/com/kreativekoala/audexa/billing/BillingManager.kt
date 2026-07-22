@@ -38,7 +38,10 @@ class BillingManager @Inject constructor(
 
     private val scope = CoroutineScope(Dispatchers.Main + SupervisorJob())
 
-    private val _isSubscribed = MutableStateFlow(false)
+    // Paywall removed 2026-07-22 — every user is treated as subscribed so all
+    // premium-gated features are unlocked and MainActivity's paywall gate
+    // (shouldShowPaywall = ... && !isSubscribed) never fires.
+    private val _isSubscribed = MutableStateFlow(true)
     val isSubscribed: StateFlow<Boolean> = _isSubscribed.asStateFlow()
 
     private val _packages = MutableStateFlow<List<Package>>(emptyList())
@@ -48,17 +51,18 @@ class BillingManager @Inject constructor(
     val purchaseInProgress: StateFlow<Boolean> = _purchaseInProgress.asStateFlow()
 
     init {
-        // Load cached subscription status immediately
+        // Paywall removed 2026-07-22 — pin the cached flag on so that even
+        // a cold start with no RevenueCat network round-trip treats the user
+        // as subscribed. Skip the collect() from preferencesManager so that
+        // a stale false in DataStore can't flip us back to gated.
         scope.launch {
-            preferencesManager.isSubscribed.collect { cached ->
-                _isSubscribed.value = cached
-            }
+            preferencesManager.setSubscribed(true)
         }
-        // Delay initial fetch slightly to ensure RevenueCat SDK is fully configured
+        // Still fetch offerings in case the (now-orphaned) Paywall screen is
+        // reached via deep-link or restore-purchases — no gating side effect.
         scope.launch {
             delay(500)
             fetchOfferings()
-            checkSubscriptionStatus()
         }
     }
 
@@ -193,9 +197,11 @@ class BillingManager @Inject constructor(
     }
 
     private fun updateSubscriptionStatus(subscribed: Boolean) {
-        _isSubscribed.value = subscribed
+        // Paywall removed 2026-07-22 — always subscribed, ignore RevenueCat's
+        // negative signal so logout / expired-entitlement can't re-gate the app.
+        _isSubscribed.value = true
         scope.launch {
-            preferencesManager.setSubscribed(subscribed)
+            preferencesManager.setSubscribed(true)
         }
     }
 

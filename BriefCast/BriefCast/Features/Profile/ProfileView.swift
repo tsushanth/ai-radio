@@ -16,6 +16,7 @@ struct ProfileView: View {
     @State private var showHiddenTopics = false
     @State private var showDeleteConfirmation = false
     @State private var showRadioLanguages = false
+    @State private var showKokoroTest = false
     @State private var showSignOutConfirmation = false
     @State private var showPaywall = false
     @State private var isDeleting = false
@@ -77,6 +78,12 @@ struct ProfileView: View {
                                         showPaywall = true
                                     }
                                 }
+                            )
+                            SettingsRow(
+                                icon: "tag.fill",
+                                title: "Redeem Promo Code",
+                                subtitle: "Enter your offer code",
+                                action: { OfferCodeManager.shared.presentRedemptionSheet() }
                             )
                         }
                     }
@@ -193,6 +200,24 @@ struct ProfileView: View {
                                     }
                                 )
                             }
+
+                            #if DEBUG
+                            // Debug entry for the on-device Kokoro 82M pipeline.
+                            // Production users reach the model via the
+                            // onboarding "Voice runs on your phone" card.
+                            SettingsRow(
+                                icon: "waveform.path.ecg",
+                                title: "On-device voice (debug)",
+                                subtitle: "Test Kokoro 82M synth + playback",
+                                action: {
+                                    showKokoroTest = true
+                                }
+                            )
+
+                            // Debug-only paywall bypass for on-device testing.
+                            // Stripped from Release builds via the #if guard.
+                            ForcePremiumToggleRow()
+                            #endif
                         }
                     }
                     .padding(.horizontal, 16)
@@ -345,6 +370,9 @@ struct ProfileView: View {
             .sheet(isPresented: $showRadioLanguages) {
                 RadioLanguagesView()
                     .presentationDetents([.medium])
+            }
+            .sheet(isPresented: $showKokoroTest) {
+                KokoroTestView()
             }
             .sheet(isPresented: $showPaywall) {
                 RemotePaywallView(triggerSource: "profile")
@@ -877,3 +905,44 @@ struct RadioLanguagesView: View {
     ProfileView()
         .environmentObject(AuthService())
 }
+
+#if DEBUG
+/// Debug-only paywall bypass toggle. Persists in UserDefaults via
+/// `SubscriptionManager.debugForcePremiumEnabled`. Compiled out of Release
+/// builds so the row never exists in a shipped app.
+private struct ForcePremiumToggleRow: View {
+    @State private var isOn: Bool = SubscriptionManager.debugForcePremiumEnabled
+
+    var body: some View {
+        HStack(spacing: 12) {
+            Image(systemName: "lock.open.fill")
+                .font(.system(size: 20))
+                .foregroundColor(.orange)
+                .frame(width: 32)
+
+            VStack(alignment: .leading, spacing: 4) {
+                Text("Skip paywall (debug)")
+                    .font(.system(size: 16, weight: .semibold))
+                    .foregroundColor(Theme.Colors.primaryText)
+
+                Text(isOn ? "Pretending you're premium" : "Off — using real subscription state")
+                    .font(.system(size: 14, weight: .regular))
+                    .foregroundColor(Theme.Colors.secondaryText)
+                    .lineLimit(1)
+            }
+
+            Spacer()
+
+            Toggle("", isOn: $isOn)
+                .labelsHidden()
+                .onChange(of: isOn) { _, newValue in
+                    SubscriptionManager.debugForcePremiumEnabled = newValue
+                }
+        }
+        .padding(.horizontal, 16)
+        .padding(.vertical, 12)
+        .background(Theme.Colors.cardBackground)
+        .cornerRadius(12)
+    }
+}
+#endif

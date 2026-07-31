@@ -21,9 +21,17 @@ export const apiLimiter = rateLimit({
   },
   standardHeaders: true,
   legacyHeaders: false,
-  // Skip rate limiting for health checks
+  // Skip rate limiting for health checks and authenticated internal workers
+  // (audexa-radio orchestrator polls /api/topics + /api/topics/:id/episode
+  // every 2 min across 10 languages to inject podcast MP3s — hits the
+  // public IP limit fast; with BATCH_SECRET bearer it's clearly first-party).
   skip: (req) => {
-    return req.path === '/health' || req.path === '/';
+    if (req.path === '/health' || req.path === '/') return true;
+    const auth = req.headers.authorization;
+    if (auth && env.BATCH_SECRET && auth === `Bearer ${env.BATCH_SECRET}`) {
+      return true;
+    }
+    return false;
   },
 });
 

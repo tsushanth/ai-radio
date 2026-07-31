@@ -241,7 +241,7 @@ actor APIService {
                 throw APIError.notFound
             default:
                 // Try to extract error message from response
-                let errorMessage = try? jsonDecoder.decode(ErrorResponse.self, from: data).message
+                let errorMessage = try? jsonDecoder.decode(ErrorResponse.self, from: data).displayMessage ?? nil
                 throw APIError.serverError(httpResponse.statusCode, errorMessage)
             }
         } catch let error as APIError {
@@ -277,8 +277,14 @@ struct OAuthCallbackRequest: Codable {
 // MARK: - Response Models
 
 struct ErrorResponse: Codable {
-    let success: Bool
-    let message: String
+    let success: Bool?
+    let message: String?
+    let error: String?
+
+    /// Combined message field — backend uses `error`, legacy callers used `message`.
+    var displayMessage: String? {
+        message ?? error
+    }
 }
 
 struct EpisodesResponse: Codable {

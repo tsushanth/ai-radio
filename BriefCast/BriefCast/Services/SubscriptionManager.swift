@@ -27,9 +27,42 @@ class SubscriptionManager {
 
     // MARK: - Published State
 
-    var isSubscribed: Bool = false
+    /// Backing store for `isSubscribed`. Internal writers (refresh, purchase,
+    /// preferences sync) update this directly; the public `isSubscribed`
+    /// getter layers the DEBUG paywall-bypass on top.
+    private var _isSubscribed: Bool = false
+
+    var isSubscribed: Bool {
+        get {
+            #if DEBUG
+            if Self.debugForcePremiumEnabled { return true }
+            #endif
+            return _isSubscribed
+        }
+        set { _isSubscribed = newValue }
+    }
     var purchaseInProgress: Bool = false
     var errorMessage: String?
+
+    #if DEBUG
+    /// Debug-only paywall bypass. When true, `isSubscribed` reads as true
+    /// regardless of real StoreKit state. Persisted in UserDefaults so the
+    /// flag survives relaunches during testing. Compiled out of Release
+    /// builds entirely so there is no path to it in a shipped app.
+    ///
+    /// Defaults to ON in DEBUG so reinstalls (which wipe UserDefaults) don't
+    /// re-trap the dev behind the paywall. Flip the Profile toggle off to
+    /// see the real paywall.
+    static let debugForcePremiumKey = "BriefCast.Debug.ForcePremium"
+
+    static var debugForcePremiumEnabled: Bool {
+        get {
+            if UserDefaults.standard.object(forKey: debugForcePremiumKey) == nil { return true }
+            return UserDefaults.standard.bool(forKey: debugForcePremiumKey)
+        }
+        set { UserDefaults.standard.set(newValue, forKey: debugForcePremiumKey) }
+    }
+    #endif
 
     // MARK: - Private
 

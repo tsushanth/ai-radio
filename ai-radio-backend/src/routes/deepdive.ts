@@ -4,9 +4,21 @@
  */
 
 import { Router, Request, Response } from 'express';
+import { createClient } from '@supabase/supabase-js';
 import { deepDiveGenerator } from '../services/content/deepdive.generator';
+import { podcastLimiter } from '../middleware/rateLimiter';
+import { env } from '../config/environment';
 
 const router = Router();
+
+// Direct Supabase client for the in-flight pre-check (read-only).
+const supabase = createClient(env.SUPABASE_URL, env.SUPABASE_SERVICE_KEY);
+
+// Process-wide semaphore cap. Each in-flight generation peaks at 100-300 MB
+// (Anthropic + OpenAI TTS chunk buffers + concat). At 2 GB machine memory with
+// ~200 MB baseline overhead, MAX_CONCURRENT=3 leaves >1 GB headroom. Tune via env.
+const MAX_CONCURRENT_DEEPDIVES = Number(process.env.MAX_CONCURRENT_DEEPDIVES) || 3;
+let inFlightDeepDives = 0;
 
 /**
  * POST /deepdive/generate
@@ -17,9 +29,10 @@ const router = Router();
  *   - targetDurationMinutes: number (optional) - Target duration (default: 10)
  *   - userId: string (required) - User ID
  */
-router.post('/generate', async (req: Request, res: Response) => {
+router.post('/generate', podcastLimiter, async (req: Request, res: Response) => {
   try {
-    const { query, language, targetDurationMinutes, userId } = req.body;
+    const { query, language, targetDurationMinutes, userId, format } = req.body;
+    const outputFormat: 'audio' | 'script' = format === 'script' ? 'script' : 'audio';
 
     // Validate required fields
     if (!query || typeof query !== 'string') {
@@ -65,24 +78,89 @@ router.post('/generate', async (req: Request, res: Response) => {
       return;
     }
 
-    console.log(`[DeepDive] Generate request: "${query.substring(0, 50)}..." (user: ${userId})`);
+    // (1) Per-user in-flight check: hard-block duplicate submits from the same user.
+    // Returns 409 if the user already has a dive in researching/generating state.
+    const { data: inflightRows, error: inflightErr } = await supabase
+      .from('deep_dive_episodes')
+      .select('id, status, created_at')
+      .eq('user_id', userId)
+      .in('status', ['researching', 'generating'])
+      .limit(1);
 
-    const result = await deepDiveGenerator.generateDeepDive({
-      query: query.trim(),
-      language: language || 'en',
-      targetDurationMinutes: duration,
-      userId,
-    });
+    if (inflightErr) {
+      console.warn('[DeepDive] in-flight check failed (continuing):', inflightErr.message);
+    } else if (inflightRows && inflightRows.length > 0) {
+      const existing = inflightRows[0];
+      console.log(`[DeepDive] Reject duplicate: user ${userId} already has ${existing.id} in ${existing.status}`);
+      res.status(409).json({
+        success: false,
+        error: 'You already have a deep dive in progress. Please wait for it to finish.',
+        existingEpisodeId: existing.id,
+        existingStatus: existing.status,
+      });
+      return;
+    }
 
-    res.json({
+    // (2) Process-wide semaphore: cap concurrent generations to protect memory.
+    // When at cap, return 429 with Retry-After so the client can back off.
+    if (inFlightDeepDives >= MAX_CONCURRENT_DEEPDIVES) {
+      console.log(`[DeepDive] Reject: at concurrency cap (${inFlightDeepDives}/${MAX_CONCURRENT_DEEPDIVES})`);
+      res.status(429)
+        .set('Retry-After', '120')
+        .json({
+          success: false,
+          error: 'Server is generating other deep dives right now. Please try again in a couple of minutes.',
+          retryAfterSeconds: 120,
+        });
+      return;
+    }
+
+    console.log(`[DeepDive] Generate request: "${query.substring(0, 50)}..." (user: ${userId}, slot ${inFlightDeepDives + 1}/${MAX_CONCURRENT_DEEPDIVES})`);
+
+    // Fire-and-forget: generation takes 5-10 min which exceeds Fly's HTTP edge
+    // idle timeout. Return immediately with a pending stub; frontend polls
+    // /deepdive/history (or /deepdive/:id) to pick up the completed episode.
+    const pendingEpisodeId = `dd-${userId.substring(0, 8)}-${Date.now()}`;
+
+    inFlightDeepDives += 1;
+    deepDiveGenerator
+      .generateDeepDive({
+        query: query.trim(),
+        language: language || 'en',
+        targetDurationMinutes: duration,
+        userId,
+        format: outputFormat,
+      })
+      .then(() => {
+        console.log(`[DeepDive] Background generation complete for "${query.substring(0, 50)}..."`);
+      })
+      .catch(error => {
+        console.error('[DeepDive] Background generation error:', error);
+      })
+      .finally(() => {
+        inFlightDeepDives = Math.max(0, inFlightDeepDives - 1);
+      });
+
+    res.status(202).json({
       success: true,
-      data: result,
+      data: {
+        episode: {
+          id: pendingEpisodeId,
+          userId,
+          query: query.trim(),
+          status: 'researching',
+          language: language || 'en',
+          createdAt: new Date(),
+        },
+        pending: true,
+        message: 'Deep dive generation started. Poll /deepdive/history to see when ready (5-10 min).',
+      },
     });
   } catch (error) {
-    console.error('[DeepDive] Generation error:', error);
+    console.error('[DeepDive] Request error:', error);
     res.status(500).json({
       success: false,
-      error: error instanceof Error ? error.message : 'Failed to generate deep dive',
+      error: error instanceof Error ? error.message : 'Failed to start deep dive',
     });
   }
 });

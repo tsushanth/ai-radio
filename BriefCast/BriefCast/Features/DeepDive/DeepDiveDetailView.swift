@@ -196,19 +196,41 @@ struct DeepDiveDetailView: View {
                         .foregroundColor(Theme.Colors.primaryText)
                 }
 
-                // Play/Pause
+                // Play/Pause — locks out while the on-device synth is
+                // preparing audio so rapid taps don't re-enter the pipeline.
+                // During prep, the button becomes a circular progress ring
+                // with the live percentage so users see actual movement
+                // instead of a blank spinner for the 60–180s wait.
                 Button(action: { viewModel.togglePlayPause() }) {
                     ZStack {
                         Circle()
-                            .fill(Color(hex: DeepDiveEpisode.brandColor))
+                            .fill(Color(hex: DeepDiveEpisode.brandColor)
+                                .opacity(viewModel.isPreparingPlayback ? 0.5 : 1))
                             .frame(width: 64, height: 64)
 
-                        Image(systemName: viewModel.isPlaying ? "pause.fill" : "play.fill")
-                            .font(.system(size: 28, weight: .medium))
-                            .foregroundColor(.white)
-                            .offset(x: viewModel.isPlaying ? 0 : 2) // Center play icon
+                        if viewModel.isPreparingPlayback {
+                            // Progress ring around the button perimeter
+                            Circle()
+                                .stroke(Color.white.opacity(0.25), lineWidth: 3)
+                                .frame(width: 60, height: 60)
+                            Circle()
+                                .trim(from: 0, to: max(0.02, viewModel.synthProgress))
+                                .stroke(Color.white, style: StrokeStyle(lineWidth: 3, lineCap: .round))
+                                .frame(width: 60, height: 60)
+                                .rotationEffect(.degrees(-90))
+                                .animation(.easeInOut(duration: 0.25), value: viewModel.synthProgress)
+                            Text("\(Int(viewModel.synthProgress * 100))%")
+                                .font(.system(size: 13, weight: .bold).monospacedDigit())
+                                .foregroundColor(.white)
+                        } else {
+                            Image(systemName: viewModel.isPlaying ? "pause.fill" : "play.fill")
+                                .font(.system(size: 28, weight: .medium))
+                                .foregroundColor(.white)
+                                .offset(x: viewModel.isPlaying ? 0 : 2) // Center play icon
+                        }
                     }
                 }
+                .disabled(viewModel.isPreparingPlayback)
 
                 // Skip forward
                 Button(action: { viewModel.skipForward() }) {
@@ -216,6 +238,18 @@ struct DeepDiveDetailView: View {
                         .font(.system(size: 28, weight: .medium))
                         .foregroundColor(Theme.Colors.primaryText)
                 }
+            }
+
+            // Synth phase label — visible only during on-device prep so
+            // users see textual status ("Synthesizing segment 3 of 14…")
+            // alongside the percentage on the play button.
+            if viewModel.isPreparingPlayback && !viewModel.synthMessage.isEmpty {
+                Text(viewModel.synthMessage)
+                    .font(.system(size: 12, weight: .medium))
+                    .foregroundColor(Theme.Colors.secondaryText)
+                    .multilineTextAlignment(.center)
+                    .lineLimit(1)
+                    .padding(.top, 4)
             }
         }
         .padding(.horizontal, Theme.Spacing.screenPadding)

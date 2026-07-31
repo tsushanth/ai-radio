@@ -35,9 +35,15 @@ const envSchema = z.object({
   MICROSOFT_CLIENT_SECRET: z.string().optional(),
   MICROSOFT_REDIRECT_URI: z.string().optional(),
 
-  // OpenAI
-  OPENAI_API_KEY: z.string().min(1, 'OpenAI API key is required').startsWith('sk-', 'Invalid OpenAI API key format'),
+  // Anthropic (text generation)
+  ANTHROPIC_API_KEY: z.string().min(1, 'Anthropic API key is required'),
+
+  // OpenAI (no longer used — TTS now uses self-hosted Kokoro)
+  OPENAI_API_KEY: z.string().optional(),
   OPENAI_ORG_ID: z.string().optional(),
+
+  // Self-hosted Kokoro TTS
+  SELFHOSTED_TTS_URL: z.string().optional(),
 
   // Google Cloud Platform
   GCP_PROJECT_ID: z.string().optional(), // Optional - auto-detected in Cloud Run
@@ -100,6 +106,11 @@ const envSchema = z.object({
 
   // Radio Stream
   RADIO_STREAM_BASE_URL: z.string().default('http://178.156.192.31:8000'),
+
+  // Voice cloning service (self-hosted OpenVoice v2 on audexa-radio).
+  // Required for /api/voice/* routes; if unset, those routes return 503.
+  VOICE_SERVICE_URL: z.string().optional(),
+  VOICE_SERVICE_API_KEY: z.string().optional(),
 
   // Subscription Verification (optional)
   APPLE_SHARED_SECRET: z.string().optional(),

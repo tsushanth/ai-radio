@@ -98,6 +98,11 @@ class PreferencesService: ObservableObject {
         if bookmarks.contains(topicId) {
             bookmarks.remove(topicId)
             bookmarkedTopicIds = bookmarks
+            // Drop any pending radio-topic notification — listener
+            // un-bookmarked, no longer wants to be pinged.
+            Task { @MainActor in
+                RadioReminderScheduler.shared.cancel(topicId: topicId)
+            }
             return true
         } else {
             // Enforce 5-bookmark limit for free users
@@ -107,6 +112,12 @@ class PreferencesService: ObservableObject {
             }
             bookmarks.insert(topicId)
             bookmarkedTopicIds = bookmarks
+            // Newly-bookmarked topic might already be queued up; re-poll so
+            // its predicted play time gets armed within seconds, not on next
+            // app foreground.
+            Task { @MainActor in
+                await RadioReminderScheduler.shared.refresh()
+            }
             return true
         }
     }

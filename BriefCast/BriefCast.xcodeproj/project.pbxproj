@@ -242,7 +242,7 @@
 				881B33AB2EEA0167003270AA /* XCRemoteSwiftPackageReference "supabase-swift" */,
 				881B33B82EEA019B003270AA /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
 				4248B23A2A8836B7D53FE1D1 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
-				A1B2C3D4E5F60003 /* XCLocalSwiftPackageReference "PaywallKit" */,
+				A1B2C3D4E5F60003 /* XCLocalSwiftPackageReference "../../PaywallKit" */,
 				459C8322E195D4818A12B399 /* XCRemoteSwiftPackageReference "RatingKit" */,
 				GAD_PACKAGE /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */,
 				TT_AX_PACKAGE /* XCRemoteSwiftPackageReference "tiktok-business-ios-sdk" */,
@@ -448,7 +448,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = BriefCast/BriefCast.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 49;
+				CURRENT_PROJECT_VERSION = 57;
 				DEVELOPMENT_ASSET_PATHS = "\"BriefCast/Preview Content\"";
 				DEVELOPMENT_TEAM = 7RS696YC75;
 				ENABLE_PREVIEWS = YES;
@@ -466,7 +466,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 17.0.9;
+				MARKETING_VERSION = 17.0.12;
 				PRODUCT_BUNDLE_IDENTIFIER = com.kreativekoala.briefcast;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -484,7 +484,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = BriefCast/BriefCast.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 49;
+				CURRENT_PROJECT_VERSION = 57;
 				DEVELOPMENT_ASSET_PATHS = "\"BriefCast/Preview Content\"";
 				DEVELOPMENT_TEAM = 7RS696YC75;
 				ENABLE_PREVIEWS = YES;
@@ -502,7 +502,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 17.0.9;
+				MARKETING_VERSION = 17.0.12;
 				PRODUCT_BUNDLE_IDENTIFIER = com.kreativekoala.briefcast;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -561,7 +561,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
-		A1B2C3D4E5F60003 /* XCLocalSwiftPackageReference "PaywallKit" */ = {
+		A1B2C3D4E5F60003 /* XCLocalSwiftPackageReference "../../PaywallKit" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = ../../PaywallKit;
 		};
@@ -604,8 +604,8 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/FluidInference/FluidAudio";
 			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 0.14.4;
+				kind = exactVersion;
+				version = 0.14.5;
 			};
 		};
 		FB_AX_PACKAGE /* XCRemoteSwiftPackageReference "facebook-ios-sdk" */ = {

@@ -12,6 +12,8 @@ compatible with the ReadAloud AI backend.
 import os
 import io
 import re
+import gc
+import ctypes
 import time
 import hashlib
 import logging
@@ -145,6 +147,38 @@ class SynthesisMetrics:
 
 # Global metrics instance
 metrics = SynthesisMetrics()
+
+
+# ============================================================================
+# Memory hygiene
+# ============================================================================
+
+# Kokoro produces variable-shaped tensors per request (different text lengths,
+# different voices). Once those tensors are freed inside the Python heap, glibc
+# keeps the pages in its arena rather than returning them to the kernel —
+# which means the cgroup sees the process holding GiB it isn't actually using,
+# and eventually OOM-kills it. malloc_trim(0) forces glibc to release any
+# arenas above the top-of-heap threshold back to the OS. Called after each
+# /synthesize and /synthesize-long completion.
+#
+# We probe libc lazily so this still works on platforms without glibc
+# (musl, alpine) — the trim becomes a no-op rather than a crash.
+try:
+    _libc = ctypes.CDLL("libc.so.6")
+    _libc.malloc_trim.argtypes = [ctypes.c_int]
+    _libc.malloc_trim.restype = ctypes.c_int
+except (OSError, AttributeError):
+    _libc = None
+
+
+def free_unused_memory() -> None:
+    """Force a GC pass + return free arena pages to the OS."""
+    gc.collect()
+    if _libc is not None:
+        try:
+            _libc.malloc_trim(0)
+        except Exception:
+            pass
 
 
 # ============================================================================
@@ -1250,6 +1284,9 @@ async def synthesize(request: SynthesizeRequest, background_tasks: BackgroundTas
 
         # Cache in background
         background_tasks.add_task(save_to_cache, cache_key, audio_data)
+        # Free up arena pages so glibc returns them to the OS — without
+        # this the cgroup eventually OOMs us even though most pages are unused.
+        background_tasks.add_task(free_unused_memory)
 
         return StreamingResponse(
             io.BytesIO(audio_data),
@@ -1265,6 +1302,8 @@ async def synthesize(request: SynthesizeRequest, background_tasks: BackgroundTas
 
     except Exception as e:
         logger.error(f"Synthesis failed: {e}")
+        # Even on failure, partial allocations may be lingering — trim now.
+        free_unused_memory()
         raise HTTPException(status_code=500, detail=f"Synthesis failed: {str(e)}")
 
 @app.post("/synthesize-long")
@@ -1378,12 +1417,17 @@ async def synthesize_long(request: SynthesizeLongRequest):
 
     except Exception as e:
         logger.error(f"Long synthesis failed: {e}")
+        free_unused_memory()
         raise HTTPException(
             status_code=500,
             detail=f"Synthesis failed: {str(e)}"
         )
 
     logger.info(f"Long synthesis complete: {total_chunks} chunks, {len(audio_data)} bytes, {total_synthesis_time:.2f}s")
+
+    # Long synthesis allocates many intermediate tensors — trim now so the
+    # arena releases before the next request rather than carrying it across.
+    free_unused_memory()
 
     return StreamingResponse(
         io.BytesIO(audio_data),

@@ -11,7 +11,7 @@ FROM node:20-alpine AS builder
 WORKDIR /app
 
 # Build argument for API URL
-ARG NEXT_PUBLIC_API_URL=https://ai-radio-backend-917362189743.us-central1.run.app/api
+ARG NEXT_PUBLIC_API_URL=https://ai-radio-backend.fly.dev/api
 ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
 
 COPY --from=deps /app/node_modules ./node_modules

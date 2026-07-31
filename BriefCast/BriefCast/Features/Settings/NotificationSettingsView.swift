@@ -11,6 +11,11 @@ struct NotificationSettingsView: View {
     @State private var viewModel = NotificationSettingsViewModel()
     @Environment(\.dismiss) private var dismiss
 
+    // Daily briefing wiring
+    @State private var showBriefingGeneration = false
+    @State private var generatedBriefing: DailyBriefingGenerator.Result?
+    private let topicPrefs = UserTopicPreferences.shared
+
     var body: some View {
         NavigationStack {
             Form {
@@ -102,11 +107,29 @@ struct NotificationSettingsView: View {
                     .onChange(of: viewModel.includeTopicUpdates) { _, _ in
                         viewModel.saveTopicPreference()
                     }
+
+                    if viewModel.includeTopicUpdates {
+                        NavigationLink {
+                            TopicPickerView()
+                        } label: {
+                            HStack {
+                                Label("Briefing Topics", systemImage: "list.bullet.rectangle.portrait")
+                                Spacer()
+                                Text(topicPrefs.count == 0
+                                     ? "Pick"
+                                     : "\(topicPrefs.count) selected")
+                                    .foregroundStyle(.secondary)
+                            }
+                        }
+                    }
                 } header: {
                     Text("Daily Brief Content")
                 } footer: {
-                    Text("When enabled, your Daily Brief will include headlines and updates from your selected topics of interest.")
+                    Text("When enabled, your Daily Brief will include headlines and updates from the topics you select.")
                 }
+
+                // On-device daily briefing
+                dailyBriefingOnDeviceSection
 
                 // Preview Section
                 if viewModel.notificationsEnabled {
@@ -130,27 +153,6 @@ struct NotificationSettingsView: View {
                     }
                 }
 
-                // Manual Trigger (for testing)
-                Section {
-                    Button(action: {
-                        Task {
-                            await viewModel.triggerManualGeneration()
-                        }
-                    }) {
-                        HStack {
-                            Label("Generate Now", systemImage: "play.fill")
-                            Spacer()
-                            if viewModel.isGenerating {
-                                ProgressView()
-                            }
-                        }
-                    }
-                    .disabled(viewModel.isGenerating)
-                } header: {
-                    Text("Manual")
-                } footer: {
-                    Text("Generate your daily brief immediately instead of waiting for the scheduled time.")
-                }
             }
             .navigationTitle("Notifications")
             .navigationBarTitleDisplayMode(.inline)
@@ -163,6 +165,83 @@ struct NotificationSettingsView: View {
             }
             .task {
                 await viewModel.loadSettings()
+            }
+            .sheet(isPresented: $showBriefingGeneration) {
+                BriefingGenerationView { result in
+                    generatedBriefing = result
+                    AudioService.shared.playStream(
+                        url: result.fileURL,
+                        title: "Daily Briefing",
+                        showName: "Your Topics"
+                    )
+                }
+            }
+        }
+    }
+
+    // MARK: - On-device daily briefing
+
+    @ViewBuilder
+    private var dailyBriefingOnDeviceSection: some View {
+        let eligible = KokoroModelManager.isDeviceEligible
+        let premium = SubscriptionManager.shared.isSubscribed
+        let hasTopics = topicPrefs.count > 0
+        let canGenerate = eligible && premium && hasTopics && viewModel.includeTopicUpdates
+
+        Section {
+            if !eligible {
+                Label {
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text("Not supported on this device")
+                        Text("On-device briefings need iPhone 13 or newer with iOS 17+.")
+                            .font(.caption).foregroundStyle(.secondary)
+                    }
+                } icon: {
+                    Image(systemName: "iphone.slash")
+                        .foregroundStyle(.secondary)
+                }
+            } else if !premium {
+                Label {
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text("Audexa Premium required")
+                        Text("Premium unlocks on-device briefings tailored to your topics.")
+                            .font(.caption).foregroundStyle(.secondary)
+                    }
+                } icon: {
+                    Image(systemName: "lock.fill")
+                        .foregroundStyle(.orange)
+                }
+            } else if !viewModel.includeTopicUpdates {
+                Label("Enable 'Include Topic Updates' above to use the on-device briefing.",
+                      systemImage: "info.circle")
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+            } else if !hasTopics {
+                NavigationLink {
+                    TopicPickerView()
+                } label: {
+                    Label("Pick topics to enable on-device generation",
+                          systemImage: "list.bullet.rectangle.portrait")
+                }
+            } else {
+                Button {
+                    showBriefingGeneration = true
+                } label: {
+                    HStack {
+                        Label("Generate Briefing Now", systemImage: "waveform.circle.fill")
+                        Spacer()
+                        Image(systemName: "play.fill")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+                }
+                .disabled(!canGenerate)
+            }
+        } header: {
+            Text("On-Device Briefing")
+        } footer: {
+            if eligible && premium {
+                Text("Briefing audio is generated on this iPhone using your chosen topics. No cloud render, no waiting — synthesis runs in ~60-120 seconds the first time.")
             }
         }
     }

@@ -4,7 +4,7 @@
  */
 
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
-import OpenAI from 'openai';
+import Anthropic from '@anthropic-ai/sdk';
 import { env } from '../../config/environment';
 import { openaiTTS, type VoiceConfig } from '../tts/openai.tts';
 import type {
@@ -23,7 +23,7 @@ import type {
 
 export class QAGenerator {
   private supabase: SupabaseClient | null = null;
-  private openai: OpenAI;
+  private anthropic: Anthropic;
   private readonly BUCKET = 'qa-audio';
   private readonly SESSIONS_TABLE = 'qa_sessions';
   private readonly MESSAGES_TABLE = 'qa_messages';
@@ -33,7 +33,7 @@ export class QAGenerator {
       this.supabase = createClient(env.SUPABASE_URL, env.SUPABASE_SERVICE_KEY);
       this.initializeBucket();
     }
-    this.openai = new OpenAI({ apiKey: env.OPENAI_API_KEY });
+    this.anthropic = new Anthropic({ apiKey: env.ANTHROPIC_API_KEY });
   }
 
   /**
@@ -180,9 +180,7 @@ Return a JSON object:
 Return ONLY valid JSON.`;
 
     // Build conversation history
-    const messages: OpenAI.Chat.ChatCompletionMessageParam[] = [
-      { role: 'system', content: systemPrompt },
-    ];
+    const messages: Anthropic.MessageParam[] = [];
 
     // Add previous conversation (last 6 messages max)
     const recentMessages = previousMessages.slice(-6);
@@ -195,15 +193,15 @@ Return ONLY valid JSON.`;
     // Add current question
     messages.push({ role: 'user', content: question });
 
-    const response = await this.openai.chat.completions.create({
-      model: 'gpt-4o',
+    const response = await this.anthropic.messages.create({
+      model: 'claude-sonnet-4-6',
+      system: systemPrompt + '\n\nReturn ONLY valid JSON.',
       messages,
       temperature: 0.7,
       max_tokens: 1000,
-      response_format: { type: 'json_object' },
     });
 
-    const responseText = response.choices[0]?.message?.content || '{}';
+    const responseText = (response.content[0]?.type === 'text' ? response.content[0].text : '') || '{}';
     const parsed = JSON.parse(responseText);
 
     return {

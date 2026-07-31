@@ -19,14 +19,23 @@ RADIO GUIDELINES:
 5. End segments with teases: "Stick around, we've got more coming up after this track" or "Don't go anywhere"
 6. Vary energy — not everything needs to be high energy. Deep dives can be more reflective
 
-FORMAT YOUR RESPONSE as a JSON array of segments:
+FORMAT YOUR RESPONSE as a JSON array. STRICT FORMATTING RULES — your response must parse with Python's json.loads():
+
+- Output ONLY the JSON array. No preamble ("Here is the script:"). No commentary after. No markdown code fences (no ```json, no ```).
+- Escape every double-quote inside text values as \\". Example: {"text": "She said \\"hello\\" to him."}
+- Use \\n for line breaks inside text. NEVER put a literal newline inside a JSON string.
+- No trailing commas before ] or }.
+- No JS-style comments (no // and no /* */).
+- Every object MUST have all three keys: "speaker", "text", "type". Each as a string. No nulls, no missing fields.
+
+Shape (note: real arrays use commas between objects; the example uses correct JSON):
 [
-  {"speaker": "host1", "text": "...", "type": "intro"},
-  {"speaker": "host2", "text": "...", "type": "headlines"},
-  ...
+  {"speaker": "host1", "text": "Welcome back to Audexa Radio.", "type": "intro"},
+  {"speaker": "host2", "text": "Big story today — markets are up two percent.", "type": "headlines"}
 ]
 
-Valid segment types: "intro", "headlines", "deep_dive", "listener_request", "transition", "outro"
+Valid "speaker" values: "host1", "host2"
+Valid "type" values: "intro", "headlines", "deep_dive", "listener_request", "transition", "outro"
 Each segment should be a natural speaking turn, typically 1-3 sentences."""
 
 

@@ -148,7 +148,12 @@ class TopicsService {
         return this.getFallbackTopics();
       }
 
-      const topics = data.map(row => this.mapRowToTopicDefinition(row));
+      const supabaseTopics = data.map(row => this.mapRowToTopicDefinition(row));
+
+      // Merge with hardcoded topics: Supabase topics take precedence by ID
+      const supabaseIds = new Set(supabaseTopics.map(t => t.id));
+      const hardcodedOnly = getHardcodedActiveTopics().filter(t => !supabaseIds.has(t.id));
+      const topics = [...supabaseTopics, ...hardcodedOnly];
 
       // Update cache
       this.cache = {

@@ -54,6 +54,15 @@ export interface DeepDiveGenerateRequest {
   language?: string;
   targetDurationMinutes?: number;
   userId: string;
+  /**
+   * Output format.
+   * - `audio` (default): backend runs TTS + uploads MP3, populates `audio_url`.
+   * - `script`: backend stops after script generation; `audio_url` stays null
+   *   and `script` is populated. Used when the client can synthesize on-device
+   *   (e.g. iOS Kokoro 82M via FluidAudio). Saves a TTS + storage cycle per
+   *   eligible user and bypasses the cloud TTS concurrency cap.
+   */
+  format?: 'audio' | 'script';
 }
 
 /**

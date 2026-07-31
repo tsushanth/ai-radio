@@ -287,6 +287,103 @@ router.get('/job/:jobId', async (req: Request, res: Response, next: NextFunction
 });
 
 /**
+ * POST /podcast/script
+ * Script-only generation for clients that synthesize audio on-device (Kokoro).
+ * Runs prerequisites + data fetch + GPT script, skips TTS and upload.
+ * Synchronous: typical latency ~5-15s, no polling needed.
+ */
+router.post('/script', async (req: Request, res: Response, _next: NextFunction) => {
+  try {
+    const validated = generatePodcastSchema.parse(req.body);
+
+    console.log(`[POST /podcast/script] Script-only generation for: ${validated.user_id}`);
+
+    const prereqs = await podcastGenerator.validatePrerequisites(validated.user_id);
+    if (!prereqs.valid) {
+      return res.status(400).json({
+        error: 'Prerequisites not met',
+        issues: prereqs.issues,
+      });
+    }
+
+    const clientDate = validated.date || new Date().toISOString().split('T')[0];
+
+    const script = await podcastGenerator.generateScriptOnly(
+      validated.user_id,
+      validated.preferences,
+      {
+        ...validated.options,
+        date: clientDate,
+        include_topic_teasers: validated.preferences.include_topics,
+      }
+    );
+
+    const segments = script.segments.map((seg: any) => ({
+      speaker: seg.speaker,
+      text: seg.text,
+      type: seg.type,
+    }));
+
+    return res.status(200).json({
+      success: true,
+      script: {
+        segments,
+        totalSegments: segments.length,
+        language: validated.preferences.language || 'en',
+      },
+      title: 'Daily Brief',
+    });
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      return res.status(400).json({
+        error: 'Validation failed',
+        issues: error.errors,
+      });
+    }
+
+    const errorInstance = error instanceof Error ? error : new Error(String(error));
+    const errorCode = classifyError(errorInstance);
+    const podcastError = createPodcastError(errorCode, errorInstance);
+
+    if (isAuthError(errorInstance)) {
+      return res.status(401).json({
+        success: false,
+        error: {
+          code: podcastError.code,
+          message: podcastError.userMessage,
+          action: podcastError.action,
+          retryable: podcastError.retryable,
+        },
+      });
+    }
+
+    if (isContentError(errorInstance)) {
+      return res.status(200).json({
+        success: false,
+        error: {
+          code: podcastError.code,
+          message: podcastError.userMessage,
+          action: PodcastErrorAction.NONE,
+          retryable: false,
+        },
+        noContent: true,
+      });
+    }
+
+    console.error('Script-only generation failed:', error);
+    return res.status(podcastError.statusCode).json({
+      success: false,
+      error: {
+        code: podcastError.code,
+        message: podcastError.userMessage,
+        action: podcastError.action,
+        retryable: podcastError.retryable,
+      },
+    });
+  }
+});
+
+/**
  * POST /podcast/generate
  * Generate a new podcast episode (synchronous - kept for backwards compatibility)
  */

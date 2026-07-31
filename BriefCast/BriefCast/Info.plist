@@ -30,6 +30,8 @@
 	<string>517355381306-4lphf7btejm7at9sq4l5a5uc1t2aig4s.apps.googleusercontent.com</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Audexa uses your location to include local weather and traffic in your daily briefing. You can disable location at any time in Settings.</string>
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSAllowsArbitraryLoads</key>

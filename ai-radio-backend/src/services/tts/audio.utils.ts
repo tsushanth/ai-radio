@@ -167,10 +167,85 @@ export function splitByType(segments: AudioSegment[]): Record<string, AudioSegme
 }
 
 /**
- * Concatenate audio buffers
+ * Concatenate audio buffers.
+ *
+ * Naive Buffer.concat is wrong for both WAV and MP3 outputs — each segment
+ * carries its own headers, and a player honoring the first set of headers
+ * stops or garbles when it hits the second. For WAV input we splice out
+ * each segment's RIFF/fmt prologue and rewrite a single header describing
+ * the merged PCM length. For other formats (MP3 etc.) we still use the raw
+ * concat — MP3 frames are independently decodable after an ID3 header so
+ * the failure mode is gentler than WAV.
+ *
+ * Background: this bug caused all Audexa topic podcasts to silently truncate
+ * to ~25 seconds (the first segment's duration) for weeks, even though the
+ * file on disk was several MB and the API reported the script's expected
+ * 5-min duration. Verifiable with `ffprobe` on any pre-fix episode.
  */
 export function concatenateBuffers(buffers: Buffer[]): Buffer {
+  if (buffers.length === 0) return Buffer.alloc(0);
+  if (buffers.length === 1) return buffers[0];
+
+  const first = buffers[0];
+  const isWav =
+    first.length >= 12 &&
+    first.subarray(0, 4).toString('ascii') === 'RIFF' &&
+    first.subarray(8, 12).toString('ascii') === 'WAVE';
+
+  if (isWav) return concatWavBuffers(buffers);
   return Buffer.concat(buffers);
+}
+
+/** Walks the RIFF chunk list and returns the byte offset of the first
+ *  sample after the 'data' chunk header. Returns -1 if the buffer isn't a
+ *  parseable WAV. */
+function findWavDataOffset(buf: Buffer): number {
+  if (buf.length < 12) return -1;
+  let off = 12; // skip 'RIFF' + size + 'WAVE'
+  while (off + 8 <= buf.length) {
+    const tag = buf.subarray(off, off + 4).toString('ascii');
+    const size = buf.readUInt32LE(off + 4);
+    if (tag === 'data') return off + 8;
+    // RIFF chunks are word-aligned: skip an extra pad byte on odd sizes.
+    off += 8 + size + (size % 2);
+  }
+  return -1;
+}
+
+function concatWavBuffers(buffers: Buffer[]): Buffer {
+  const first = buffers[0];
+  const firstDataOff = findWavDataOffset(first);
+  if (firstDataOff < 0) {
+    // Couldn't parse the first segment — fall back to naive concat.
+    return Buffer.concat(buffers);
+  }
+
+  // Bytes [0 .. firstDataOff - 8) contain RIFF + WAVE + fmt + any other
+  // chunks before the data chunk header. We keep these as-is for the
+  // merged file (sample rate, channels, bits-per-sample all match across
+  // segments from the same TTS run).
+  const prologue = first.subarray(0, firstDataOff - 8);
+  const firstPcm = first.subarray(firstDataOff);
+
+  const pcmParts: Buffer[] = [firstPcm];
+  for (let i = 1; i < buffers.length; i++) {
+    const off = findWavDataOffset(buffers[i]);
+    pcmParts.push(off >= 0 ? buffers[i].subarray(off) : buffers[i]);
+  }
+
+  const mergedPcm = Buffer.concat(pcmParts);
+
+  // Rebuild: prologue + new 'data' header (size = mergedPcm.length) + PCM.
+  const out = Buffer.alloc(prologue.length + 8 + mergedPcm.length);
+  prologue.copy(out, 0);
+  out.write('data', prologue.length, 'ascii');
+  out.writeUInt32LE(mergedPcm.length, prologue.length + 4);
+  mergedPcm.copy(out, prologue.length + 8);
+
+  // Fix RIFF chunk size = (file length - 8).
+  out.writeUInt32LE(out.length - 8, 4);
+
+  return out;
 }
 
 /**

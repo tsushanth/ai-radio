@@ -11,6 +11,7 @@ import healthRoutes from './health';
 import linkedAccountsRoutes from './linked-accounts';
 import topicsRoutes from './topics';
 import voicesRoutes from './voices';
+import voiceCloneRoutes from './voice';
 import deepdiveRoutes from './deepdive';
 import livestationRoutes from './livestation';
 import qaRoutes from './qa';
@@ -33,6 +34,7 @@ router.use('/health', healthRoutes);
 router.use('/linked-accounts', linkedAccountsRoutes);
 router.use('/topics', topicsRoutes);
 router.use('/voices', voicesRoutes);
+router.use('/voice', voiceCloneRoutes);
 router.use('/deepdive', deepdiveRoutes);
 router.use('/livestation', livestationRoutes);
 router.use('/qa', qaRoutes);
@@ -56,6 +58,7 @@ router.get('/', (req, res) => {
       linked_accounts: '/api/linked-accounts',
       topics: '/api/topics',
       voices: '/api/voices',
+      voice: '/api/voice',
       deepdive: '/api/deepdive',
       livestation: '/api/livestation',
       qa: '/api/qa',

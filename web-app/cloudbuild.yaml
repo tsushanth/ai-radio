@@ -59,7 +59,7 @@ substitutions:
   _REGION: us-central1
   _REPOSITORY: ai-radio-backend
   _SERVICE_ACCOUNT: 917362189743-compute@developer.gserviceaccount.com
-  _API_URL: https://ai-radio-backend-917362189743.us-central1.run.app/api
+  _API_URL: https://ai-radio-backend.fly.dev/api
 
 options:
   machineType: 'N1_HIGHCPU_8'

@@ -19,9 +19,13 @@ struct LiveStationPlayerView: View {
 
     var body: some View {
         ZStack {
-            // Reaction overlay — full-screen, sits above all content
-            LiveReactionOverlay(viewModel: reactionViewModel)
-                .zIndex(10)
+            // Reaction overlay temporarily disabled — the floating-emoji
+            // animations were crowding the chat surface. Users can paste
+            // emojis directly into the chat input instead. Re-enable by
+            // restoring the LiveReactionOverlay(...) line below when we
+            // have a layout that keeps emojis from covering messages.
+            // LiveReactionOverlay(viewModel: reactionViewModel)
+            //     .zIndex(10)
 
             // Background gradient
             LinearGradient(

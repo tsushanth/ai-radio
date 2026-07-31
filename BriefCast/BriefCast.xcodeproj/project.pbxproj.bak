@@ -1,0 +1,715 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		1E56BAE8569D8A12EC16EB69 /* SnapshotHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = B07BA525E95057DFE5BA7437 /* SnapshotHelper.swift */; };
+		36383DB7960EEA3693C9F19E /* ScreenshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21325DC96DB64CC6490C9AA8 /* ScreenshotTests.swift */; };
+		881B33AD2EEA0167003270AA /* Auth in Frameworks */ = {isa = PBXBuildFile; productRef = 881B33AC2EEA0167003270AA /* Auth */; };
+		881B33AF2EEA0167003270AA /* Functions in Frameworks */ = {isa = PBXBuildFile; productRef = 881B33AE2EEA0167003270AA /* Functions */; };
+		881B33B12EEA0167003270AA /* PostgREST in Frameworks */ = {isa = PBXBuildFile; productRef = 881B33B02EEA0167003270AA /* PostgREST */; };
+		881B33B32EEA0167003270AA /* Realtime in Frameworks */ = {isa = PBXBuildFile; productRef = 881B33B22EEA0167003270AA /* Realtime */; };
+		881B33B52EEA0167003270AA /* Storage in Frameworks */ = {isa = PBXBuildFile; productRef = 881B33B42EEA0167003270AA /* Storage */; };
+		881B33B72EEA0167003270AA /* Supabase in Frameworks */ = {isa = PBXBuildFile; productRef = 881B33B62EEA0167003270AA /* Supabase */; };
+		881B33BA2EEA019B003270AA /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = 881B33B92EEA019B003270AA /* GoogleSignIn */; };
+		881B33BC2EEA019B003270AA /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 881B33BB2EEA019B003270AA /* GoogleSignInSwift */; };
+		88CE60892F6F781000D8F36E /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 40AD34D43873B64461C0D6B7 /* FirebaseAnalytics */; };
+		A1B2C3D4E5F60001 /* PaywallKit in Frameworks */ = {isa = PBXBuildFile; productRef = A1B2C3D4E5F60002 /* PaywallKit */; };
+		D42F8F426882710680F9E448 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 97BB906C960EE20ABBFC217A /* Foundation.framework */; };
+		F4CC70FD81E0BAF1AF007716 /* RatingKit in Frameworks */ = {isa = PBXBuildFile; productRef = B14BDB45A66CEFD64131416B /* RatingKit */; };
+		F5841277D5DCD503845ADD55 /* AdServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0D46641C83DEE5D00C5D22B /* AdServices.framework */; };
+		FAD0000000000000000003 /* FluidAudio in Frameworks */ = {isa = PBXBuildFile; productRef = FAD0000000000000000002 /* FluidAudio */; };
+		FB_AX_BUILD /* FacebookCore in Frameworks */ = {isa = PBXBuildFile; productRef = FB_AX_REF /* FacebookCore */; };
+		GAD_BUILD_001 /* GoogleMobileAds in Frameworks */ = {isa = PBXBuildFile; productRef = GAD_REF_001 /* GoogleMobileAds */; };
+		TT_AX_BUILD /* TikTokBusinessSDK in Frameworks */ = {isa = PBXBuildFile; productRef = TT_AX_REF /* TikTokBusinessSDK */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		2911D2EDE4AF3C176D62D9A6 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 881B32DA2EE8AE52003270AA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 881B32E12EE8AE52003270AA;
+			remoteInfo = BriefCast;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		21325DC96DB64CC6490C9AA8 /* ScreenshotTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ScreenshotTests.swift; sourceTree = "<group>"; };
+		881B32E22EE8AE52003270AA /* BriefCast.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BriefCast.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		9453BAE1ECCC432690688EBD /* BriefCastUITests */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = file; name = BriefCastUITests; path = BriefCastUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		97BB906C960EE20ABBFC217A /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS18.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
+		B07BA525E95057DFE5BA7437 /* SnapshotHelper.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SnapshotHelper.swift; sourceTree = "<group>"; };
+		D0D46641C83DEE5D00C5D22B /* AdServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdServices.framework; path = System/Library/Frameworks/AdServices.framework; sourceTree = SDKROOT; };
+/* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		881B33C02EEA61EB003270AA /* Exceptions for "BriefCast" folder in "BriefCast" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 881B32E12EE8AE52003270AA /* BriefCast */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		881B32E42EE8AE52003270AA /* BriefCast */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				881B33C02EEA61EB003270AA /* Exceptions for "BriefCast" folder in "BriefCast" target */,
+			);
+			path = BriefCast;
+			sourceTree = "<group>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		7622E3EB9155173EB62C07E0 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D42F8F426882710680F9E448 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		881B32DF2EE8AE52003270AA /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				88CE60892F6F781000D8F36E /* FirebaseAnalytics in Frameworks */,
+				881B33B12EEA0167003270AA /* PostgREST in Frameworks */,
+				881B33AF2EEA0167003270AA /* Functions in Frameworks */,
+				881B33B72EEA0167003270AA /* Supabase in Frameworks */,
+				881B33BC2EEA019B003270AA /* GoogleSignInSwift in Frameworks */,
+				881B33AD2EEA0167003270AA /* Auth in Frameworks */,
+				881B33B52EEA0167003270AA /* Storage in Frameworks */,
+				881B33B32EEA0167003270AA /* Realtime in Frameworks */,
+				881B33BA2EEA019B003270AA /* GoogleSignIn in Frameworks */,
+				A1B2C3D4E5F60001 /* PaywallKit in Frameworks */,
+				F4CC70FD81E0BAF1AF007716 /* RatingKit in Frameworks */,
+				GAD_BUILD_001 /* GoogleMobileAds in Frameworks */,
+				TT_AX_BUILD /* TikTokBusinessSDK in Frameworks */,
+				FB_AX_BUILD /* FacebookCore in Frameworks */,
+				FAD0000000000000000003 /* FluidAudio in Frameworks */,
+				F5841277D5DCD503845ADD55 /* AdServices.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		84E99ADDFE6AF644FF2FADAE /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				C96BE52FA8CA2F1419DF2962 /* iOS */,
+				D0D46641C83DEE5D00C5D22B /* AdServices.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		881B32D92EE8AE52003270AA = {
+			isa = PBXGroup;
+			children = (
+				881B32E42EE8AE52003270AA /* BriefCast */,
+				881B32E32EE8AE52003270AA /* Products */,
+				84E99ADDFE6AF644FF2FADAE /* Frameworks */,
+				F3F8E856DE2DFB27F7B697C8 /* BriefCastUITests */,
+			);
+			sourceTree = "<group>";
+		};
+		881B32E32EE8AE52003270AA /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				881B32E22EE8AE52003270AA /* BriefCast.app */,
+				9453BAE1ECCC432690688EBD /* BriefCastUITests */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		C96BE52FA8CA2F1419DF2962 /* iOS */ = {
+			isa = PBXGroup;
+			children = (
+				97BB906C960EE20ABBFC217A /* Foundation.framework */,
+			);
+			name = iOS;
+			sourceTree = "<group>";
+		};
+		F3F8E856DE2DFB27F7B697C8 /* BriefCastUITests */ = {
+			isa = PBXGroup;
+			children = (
+				B07BA525E95057DFE5BA7437 /* SnapshotHelper.swift */,
+				21325DC96DB64CC6490C9AA8 /* ScreenshotTests.swift */,
+			);
+			path = BriefCastUITests;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		881B32E12EE8AE52003270AA /* BriefCast */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 881B32F02EE8AE54003270AA /* Build configuration list for PBXNativeTarget "BriefCast" */;
+			buildPhases = (
+				881B32DE2EE8AE52003270AA /* Sources */,
+				881B32DF2EE8AE52003270AA /* Frameworks */,
+				881B32E02EE8AE52003270AA /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				881B32E42EE8AE52003270AA /* BriefCast */,
+			);
+			name = BriefCast;
+			packageProductDependencies = (
+				881B33AC2EEA0167003270AA /* Auth */,
+				881B33AE2EEA0167003270AA /* Functions */,
+				881B33B02EEA0167003270AA /* PostgREST */,
+				881B33B22EEA0167003270AA /* Realtime */,
+				881B33B42EEA0167003270AA /* Storage */,
+				881B33B62EEA0167003270AA /* Supabase */,
+				881B33B92EEA019B003270AA /* GoogleSignIn */,
+				881B33BB2EEA019B003270AA /* GoogleSignInSwift */,
+				40AD34D43873B64461C0D6B7 /* FirebaseAnalytics */,
+				A1B2C3D4E5F60002 /* PaywallKit */,
+				B14BDB45A66CEFD64131416B /* RatingKit */,
+				TT_AX_REF /* TikTokBusinessSDK */,
+				FB_AX_REF /* FacebookCore */,
+				FAD0000000000000000002 /* FluidAudio */,
+			);
+			productName = BriefCast;
+			productReference = 881B32E22EE8AE52003270AA /* BriefCast.app */;
+			productType = "com.apple.product-type.application";
+		};
+		EE00F7F010698C5F2EA57192 /* BriefCastUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 6B31C8B3E159FD48CB086279 /* Build configuration list for PBXNativeTarget "BriefCastUITests" */;
+			buildPhases = (
+				7142A5E5C8DDB5A1E3534988 /* Sources */,
+				7622E3EB9155173EB62C07E0 /* Frameworks */,
+				6BC649636D75343645C52CB6 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				10823B8C322548B19762B984 /* PBXTargetDependency */,
+			);
+			name = BriefCastUITests;
+			productName = BriefCastUITests;
+			productReference = 9453BAE1ECCC432690688EBD /* BriefCastUITests */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		881B32DA2EE8AE52003270AA /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1620;
+				LastUpgradeCheck = 1620;
+				TargetAttributes = {
+					881B32E12EE8AE52003270AA = {
+						CreatedOnToolsVersion = 16.2;
+					};
+				};
+			};
+			buildConfigurationList = 881B32DD2EE8AE52003270AA /* Build configuration list for PBXProject "BriefCast" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+				hi,
+				fr,
+				de,
+				"pt-BR",
+				ja,
+				it,
+				"zh-Hans",
+				ko,
+				es,
+			);
+			mainGroup = 881B32D92EE8AE52003270AA;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				881B33AB2EEA0167003270AA /* XCRemoteSwiftPackageReference "supabase-swift" */,
+				881B33B82EEA019B003270AA /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
+				4248B23A2A8836B7D53FE1D1 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				A1B2C3D4E5F60003 /* XCLocalSwiftPackageReference "../../PaywallKit" */,
+				459C8322E195D4818A12B399 /* XCRemoteSwiftPackageReference "RatingKit" */,
+				GAD_PACKAGE /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */,
+				TT_AX_PACKAGE /* XCRemoteSwiftPackageReference "tiktok-business-ios-sdk" */,
+				FB_AX_PACKAGE /* XCRemoteSwiftPackageReference "facebook-ios-sdk" */,
+				FAD0000000000000000001 /* XCRemoteSwiftPackageReference "FluidAudio" */,
+			);
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 881B32E32EE8AE52003270AA /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				881B32E12EE8AE52003270AA /* BriefCast */,
+				EE00F7F010698C5F2EA57192 /* BriefCastUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		6BC649636D75343645C52CB6 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		881B32E02EE8AE52003270AA /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		7142A5E5C8DDB5A1E3534988 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1E56BAE8569D8A12EC16EB69 /* SnapshotHelper.swift in Sources */,
+				36383DB7960EEA3693C9F19E /* ScreenshotTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		881B32DE2EE8AE52003270AA /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		10823B8C322548B19762B984 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = BriefCast;
+			target = 881B32E12EE8AE52003270AA /* BriefCast */;
+			targetProxy = 2911D2EDE4AF3C176D62D9A6 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		037C67D2E8B76E9E3318F44A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 7RS696YC75;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.kreativekoala.briefcast.UITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				TEST_TARGET_NAME = BriefCast;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		881B32EE2EE8AE54003270AA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		881B32EF2EE8AE54003270AA /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		881B32F12EE8AE54003270AA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = BriefCast/BriefCast.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 56;
+				DEVELOPMENT_ASSET_PATHS = "\"BriefCast/Preview Content\"";
+				DEVELOPMENT_TEAM = 7RS696YC75;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = BriefCast/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Audexa;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.news";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 17;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 17.0.11;
+				PRODUCT_BUNDLE_IDENTIFIER = com.kreativekoala.briefcast;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		881B32F22EE8AE54003270AA /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = BriefCast/BriefCast.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 56;
+				DEVELOPMENT_ASSET_PATHS = "\"BriefCast/Preview Content\"";
+				DEVELOPMENT_TEAM = 7RS696YC75;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = BriefCast/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Audexa;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.news";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 17;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 17.0.11;
+				PRODUCT_BUNDLE_IDENTIFIER = com.kreativekoala.briefcast;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		EA4FCB234DFCA03AE3CDA81B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 7RS696YC75;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.kreativekoala.briefcast.UITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				TEST_TARGET_NAME = BriefCast;
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		6B31C8B3E159FD48CB086279 /* Build configuration list for PBXNativeTarget "BriefCastUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				037C67D2E8B76E9E3318F44A /* Release */,
+				EA4FCB234DFCA03AE3CDA81B /* Debug */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		881B32DD2EE8AE52003270AA /* Build configuration list for PBXProject "BriefCast" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				881B32EE2EE8AE54003270AA /* Debug */,
+				881B32EF2EE8AE54003270AA /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		881B32F02EE8AE54003270AA /* Build configuration list for PBXNativeTarget "BriefCast" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				881B32F12EE8AE54003270AA /* Debug */,
+				881B32F22EE8AE54003270AA /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		A1B2C3D4E5F60003 /* XCLocalSwiftPackageReference "../../PaywallKit" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../../PaywallKit;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		4248B23A2A8836B7D53FE1D1 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 11.0.0;
+			};
+		};
+		459C8322E195D4818A12B399 /* XCRemoteSwiftPackageReference "RatingKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/tsushanth/RatingKit.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.0.1;
+			};
+		};
+		881B33AB2EEA0167003270AA /* XCRemoteSwiftPackageReference "supabase-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/supabase/supabase-swift";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.5.1;
+			};
+		};
+		881B33B82EEA019B003270AA /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/google/GoogleSignIn-iOS";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 9.0.0;
+			};
+		};
+		FAD0000000000000000001 /* XCRemoteSwiftPackageReference "FluidAudio" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/FluidInference/FluidAudio";
+			requirement = {
+				kind = exactVersion;
+				version = 0.14.5;
+			};
+		};
+		FB_AX_PACKAGE /* XCRemoteSwiftPackageReference "facebook-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/facebook/facebook-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 17.0.0;
+			};
+		};
+		GAD_PACKAGE /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/googleads/swift-package-manager-google-mobile-ads";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 11.0.0;
+			};
+		};
+		TT_AX_PACKAGE /* XCRemoteSwiftPackageReference "tiktok-business-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/tiktok/tiktok-business-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		40AD34D43873B64461C0D6B7 /* FirebaseAnalytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4248B23A2A8836B7D53FE1D1 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAnalytics;
+		};
+		881B33AC2EEA0167003270AA /* Auth */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 881B33AB2EEA0167003270AA /* XCRemoteSwiftPackageReference "supabase-swift" */;
+			productName = Auth;
+		};
+		881B33AE2EEA0167003270AA /* Functions */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 881B33AB2EEA0167003270AA /* XCRemoteSwiftPackageReference "supabase-swift" */;
+			productName = Functions;
+		};
+		881B33B02EEA0167003270AA /* PostgREST */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 881B33AB2EEA0167003270AA /* XCRemoteSwiftPackageReference "supabase-swift" */;
+			productName = PostgREST;
+		};
+		881B33B22EEA0167003270AA /* Realtime */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 881B33AB2EEA0167003270AA /* XCRemoteSwiftPackageReference "supabase-swift" */;
+			productName = Realtime;
+		};
+		881B33B42EEA0167003270AA /* Storage */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 881B33AB2EEA0167003270AA /* XCRemoteSwiftPackageReference "supabase-swift" */;
+			productName = Storage;
+		};
+		881B33B62EEA0167003270AA /* Supabase */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 881B33AB2EEA0167003270AA /* XCRemoteSwiftPackageReference "supabase-swift" */;
+			productName = Supabase;
+		};
+		881B33B92EEA019B003270AA /* GoogleSignIn */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 881B33B82EEA019B003270AA /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
+			productName = GoogleSignIn;
+		};
+		881B33BB2EEA019B003270AA /* GoogleSignInSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 881B33B82EEA019B003270AA /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
+			productName = GoogleSignInSwift;
+		};
+		A1B2C3D4E5F60002 /* PaywallKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = PaywallKit;
+		};
+		B14BDB45A66CEFD64131416B /* RatingKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 459C8322E195D4818A12B399 /* XCRemoteSwiftPackageReference "RatingKit" */;
+			productName = RatingKit;
+		};
+		FAD0000000000000000002 /* FluidAudio */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = FAD0000000000000000001 /* XCRemoteSwiftPackageReference "FluidAudio" */;
+			productName = FluidAudio;
+		};
+		FB_AX_REF /* FacebookCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = FB_AX_PACKAGE /* XCRemoteSwiftPackageReference "facebook-ios-sdk" */;
+			productName = FacebookCore;
+		};
+		GAD_REF_001 /* GoogleMobileAds */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = GAD_PACKAGE /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */;
+			productName = GoogleMobileAds;
+		};
+		TT_AX_REF /* TikTokBusinessSDK */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = TT_AX_PACKAGE /* XCRemoteSwiftPackageReference "tiktok-business-ios-sdk" */;
+			productName = TikTokBusinessSDK;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = 881B32DA2EE8AE52003270AA /* Project object */;
+}

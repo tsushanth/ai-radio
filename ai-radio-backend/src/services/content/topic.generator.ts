@@ -4,7 +4,7 @@
  */
 
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
-import OpenAI from 'openai';
+import Anthropic from '@anthropic-ai/sdk';
 import { env } from '../../config/environment';
 import { topicsService } from '../supabase/topics.service';
 import { contentAggregator } from './aggregator.service';
@@ -23,7 +23,7 @@ import type { SegmentTiming } from '../../types/ads';
 
 export class TopicPodcastGenerator {
   private supabase: SupabaseClient | null = null;
-  private openai: OpenAI;
+  private anthropic: Anthropic;
   private readonly BUCKET = 'topic-podcasts'; // Public bucket for topic podcasts
   private readonly TABLE = 'topic_episodes';
 
@@ -32,7 +32,7 @@ export class TopicPodcastGenerator {
       this.supabase = createClient(env.SUPABASE_URL, env.SUPABASE_SERVICE_KEY);
       this.initializeBucket();
     }
-    this.openai = new OpenAI({ apiKey: env.OPENAI_API_KEY });
+    this.anthropic = new Anthropic({ apiKey: env.ANTHROPIC_API_KEY });
   }
 
   /**
@@ -103,18 +103,23 @@ export class TopicPodcastGenerator {
         };
       }
 
-      // If failed, allow retry
-      if (existing.status === 'failed' && !forceRegenerate) {
-        return {
-          episode: existing,
-          isNew: false,
-          message: `Generation failed: ${existing.error}. Tap to retry.`,
-        };
+      // If failed, always retry (don't block on forceRegenerate)
+      if (existing.status === 'failed') {
+        console.log(`[TopicGenerator] Retrying failed episode for ${topicId}`);
+        // Fall through to regenerate below
       }
     }
 
     // Generate new episode
-    console.log(`🎙️ Generating new episode for ${topic.name} (${today}, lang: ${language})`);
+    // Localize the display name + description for the target language; falls
+    // back to the topic's primary name when no translation exists. Without
+    // this, topics whose primary `name` is non-EN (e.g. cricket-updates has
+    // a Hindi primary name with `localizedNames.en = "Cricket Updates"`)
+    // surfaced their Hindi title even on the EN episode.
+    const localizedName = topic.localizedNames?.[language] || topic.name;
+    const localizedDescription =
+      topic.localizedDescriptions?.[language] || topic.description;
+    console.log(`🎙️ Generating new episode for ${localizedName} (${today}, lang: ${language})`);
 
     // Create placeholder episode - include language in ID for uniqueness
     const episodeId = `${topicId}-${today}-${language}`;
@@ -123,8 +128,8 @@ export class TopicPodcastGenerator {
       topicId,
       date: today,
       status: 'generating',
-      title: `${topic.name} - ${this.formatDate(today)}`,
-      description: topic.description,
+      title: `${localizedName} - ${this.formatDate(today)}`,
+      description: localizedDescription,
       stories: [],
       createdAt: new Date(),
       updatedAt: new Date(),
@@ -187,11 +192,20 @@ export class TopicPodcastGenerator {
 
     // Step 3: Generate audio
     console.log(`  [3/4] Generating audio...`);
+    // Default female voice changed from 'nova' (Kokoro af_nicole) to
+    // 'shimmer' (Kokoro af_sarah) — feedback was that af_nicole sounded
+    // too sharp/strident for news narration; af_sarah is warmer.
+    // Voice IDs are kept as legacy OpenAI-style names; the Kokoro worker
+    // re-routes them to the correct language family voice based on
+    // `language`. JP scripts get jf_alpha/jm_kumo, ES gets ef_dora/em_alex,
+    // de/ko fall through to Edge TTS. Without `language`, the worker
+    // defaults to English voices and mispronounces non-EN text.
     const voiceConfig: VoiceConfig = {
-      host1: 'nova',
+      host1: 'shimmer',
       host2: 'onyx',
       model: 'tts-1-hd',
       speed: 1.0,
+      language,
     };
 
     const audioSegments = await openaiTTS.synthesizeScript(script, voiceConfig);
@@ -248,17 +262,17 @@ export class TopicPodcastGenerator {
     const systemPrompt = this.buildSystemPrompt(topic, language);
     const userPrompt = this.buildUserPrompt(topic, content, language);
 
-    const response = await this.openai.chat.completions.create({
-      model: 'gpt-4o',
+    const response = await this.anthropic.messages.create({
+      model: 'claude-sonnet-4-6',
+      system: systemPrompt,
       messages: [
-        { role: 'system', content: systemPrompt },
         { role: 'user', content: userPrompt },
       ],
       temperature: 0.7,
       max_tokens: 3000,
     });
 
-    const responseText = response.choices[0]?.message?.content || '';
+    const responseText = (response.content[0]?.type === 'text' ? response.content[0].text : '') || '';
 
     // Parse JSON from response
     const jsonMatch = responseText.match(/\[[\s\S]*\]/);
@@ -270,7 +284,7 @@ export class TopicPodcastGenerator {
       (seg: { speaker: string; text: string; type: string }, index: number) => ({
         sequence: index + 1,
         speaker: seg.speaker as 'host1' | 'host2',
-        text: seg.text,
+        text: this.sanitizeForLanguage(seg.text, language),
         type: seg.type,
       })
     );
@@ -284,14 +298,81 @@ export class TopicPodcastGenerator {
   }
 
   /**
+   * Strip Latin/English characters from non-EN scripts as a safety net
+   * in case the LLM didn't fully comply with the "no English" instruction.
+   * The Kokoro phonemizer can't render mixed scripts — un-transliterated
+   * proper nouns get rendered as gibberish ("Chinese alphabet" effect).
+   *
+   * Approach: drop runs of ASCII letters/digits and surrounding bracket
+   * decorations. Keep punctuation and language-native characters intact.
+   * Imperfect but defensive — better to lose "Crunchyroll" than to have
+   * the JP voice spell it out as garbage.
+   */
+  private sanitizeForLanguage(text: string, language: string): string {
+    // Only strip Latin characters for languages whose native script is NOT Latin.
+    // Spanish/French/Italian/Portuguese/German ARE Latin script — running the
+    // stripper on them nukes the whole episode (every word vanishes, leaving
+    // just punctuation and accented stray chars).
+    const NON_LATIN_SCRIPTS = new Set(['ja', 'zh', 'ko', 'hi']);
+    const lang = (language || 'en').toLowerCase();
+    if (!NON_LATIN_SCRIPTS.has(lang)) {
+      return text;
+    }
+    // 1. Strip bracketed Latin/numeric runs like 「Crunchyroll」 or (Ninja Scroll)
+    let out = text
+      .replace(/[「『\(\[][\sA-Za-z0-9.&'-]+[」』\)\]]/g, '')
+      // 2. Strip stray Latin/digit runs (3+ chars) that survived
+      .replace(/\b[A-Za-z][A-Za-z0-9.&'-]{2,}\b/g, '')
+      // 3. Strip 4-digit years like 2025 (LLM should have used 二〇二五 etc.)
+      .replace(/\b\d{4}\b/g, '')
+      // 4. Collapse double spaces / dangling punctuation
+      .replace(/\s{2,}/g, ' ')
+      .replace(/、\s*、/g, '、')
+      .replace(/。\s*。/g, '。')
+      .trim();
+    return out || text; // never return empty
+  }
+
+  /**
    * Build system prompt for topic podcasts
    */
   private buildSystemPrompt(topic: TopicDefinition, language: string = 'en'): string {
-    const languageInstruction = language !== 'en'
-      ? `\n\nIMPORTANT: Generate the ENTIRE script in ${this.getLanguageName(language)}. All dialogue must be in ${this.getLanguageName(language)}, not English.`
-      : '';
+    // Non-English scripts must NOT mix in raw English/Latin tokens — our
+    // Kokoro TTS phonemizer (espeak-ng) can only render one phoneme set
+    // per chunk, and mixed scripts emit "[en]" language-switch markers
+    // that the JP/ZH/etc. voice then mispronounces ("Chinese alphabet"
+    // gibberish). Tell the model to either transliterate (Japanese:
+    // katakana; Chinese: hanzi; Korean: hangul; Hindi: devanagari) or
+    // omit the foreign tokens entirely. Numbers/dates should also be
+    // expressed natively in the target language's writing system.
+    const NON_LATIN_SCRIPTS = new Set(['ja', 'zh', 'ko', 'hi']);
+    const needsScriptStripping = NON_LATIN_SCRIPTS.has(language);
 
-    return `You are a professional podcast script writer creating a short daily briefing about ${topic.name}.
+    let languageInstruction = '';
+    if (language !== 'en') {
+      languageInstruction = `\n\nIMPORTANT: Generate the ENTIRE script in ${this.getLanguageName(language)}. All dialogue must be in ${this.getLanguageName(language)}, not English.`;
+
+      if (needsScriptStripping) {
+        languageInstruction += `
+
+CRITICAL FOR TTS QUALITY:
+- Do NOT include any Latin / English characters in the dialogue text — not for proper nouns, brand names, dates, abbreviations, or anything else. The TTS engine mispronounces mixed scripts.
+- Transliterate ALL foreign names into the target language's writing system:
+  ${language === 'ja' ? '- Japanese: use katakana (e.g. クランチロール not Crunchyroll, ニンジャスクロール not Ninja Scroll)' : ''}${language === 'zh' ? '- Chinese: use hanzi (e.g. 优兔 not YouTube)' : ''}${language === 'ko' ? '- Korean: use hangul (e.g. 크런치롤 not Crunchyroll)' : ''}${language === 'hi' ? '- Hindi: use devanagari (e.g. यूट्यूब not YouTube)' : ''}
+- Numbers and dates: write them out in words in the target language (e.g. Japanese: 二千二十五年六月十一日, not 2025年6月11日).
+- Acronyms (4K, AI, NHL): spell out as full words or transliterate.
+- Keep each sentence short (under 60 characters in the target language) to fit Kokoro's phoneme limit.`;
+      }
+    }
+
+    // Resolve the topic name in the target language so the LLM sees the
+    // right cue. Without this, multilingual topics whose primary `name` is
+    // non-EN (e.g. `cricket-updates` has Hindi primary + en localization)
+    // would prompt Claude with the Hindi name even when language='en',
+    // pulling the script toward Hindi tone or transliterated output.
+    const displayName = topic.localizedNames?.[language] || topic.name;
+
+    return `You are a professional podcast script writer creating a short daily briefing about ${displayName}.
 
 HOST PERSONALITIES:
 - Host 1 (Alex): Upbeat, energetic, conversational. Drives the discussion.
@@ -307,7 +388,7 @@ GUIDELINES:
 
 FORMAT: Return ONLY a JSON array of segments:
 [
-  {"speaker": "host1", "text": "Welcome to today's ${topic.name}...", "type": "intro"},
+  {"speaker": "host1", "text": "Welcome to today's ${displayName}...", "type": "intro"},
   {"speaker": "host2", "text": "Great to be here...", "type": "intro"},
   ...
 ]
@@ -388,6 +469,69 @@ Create an engaging ${topic.targetDurationMinutes}-minute podcast covering the mo
    */
   async getExistingEpisode(topicId: string, date: string, language: string = 'en'): Promise<TopicEpisode | null> {
     return this.getEpisode(topicId, date, language);
+  }
+
+  /**
+   * Re-run TTS on an existing episode's stored script and overwrite the
+   * audio file at the same Supabase path. Used by the backfill endpoint to
+   * fix episodes that were generated before the concatenateBuffers WAV fix
+   * — at the time those files only had ~25s of playable audio even though
+   * the script described a 3-5 min episode.
+   *
+   * Does NOT re-fetch news or regenerate the script. The original
+   * narrative is preserved; only the audio bytes change.
+   */
+  async regenerateAudioFromScript(
+    topicId: string,
+    date: string,
+    language: string = 'en'
+  ): Promise<{ skipped?: string; durationSeconds?: number; audioPath?: string }> {
+    const episode = await this.getEpisode(topicId, date, language);
+    if (!episode) return { skipped: 'episode not found' };
+    if (episode.status !== 'completed') return { skipped: `status=${episode.status}` };
+    if (!episode.script) return { skipped: 'no stored script' };
+    if (!episode.audioPath) return { skipped: 'no audioPath' };
+
+    let script;
+    try {
+      script = typeof episode.script === 'string' ? JSON.parse(episode.script) : episode.script;
+    } catch {
+      return { skipped: 'unparseable script JSON' };
+    }
+    if (!script || !Array.isArray(script.segments) || script.segments.length === 0) {
+      return { skipped: 'empty/invalid segments' };
+    }
+
+    // Default female voice changed from 'nova' (Kokoro af_nicole) to
+    // 'shimmer' (Kokoro af_sarah) — feedback was that af_nicole sounded
+    // too sharp/strident for news narration; af_sarah is warmer.
+    // Voice IDs are kept as legacy OpenAI-style names; the Kokoro worker
+    // re-routes them to the correct language family voice based on
+    // `language`. JP scripts get jf_alpha/jm_kumo, ES gets ef_dora/em_alex,
+    // de/ko fall through to Edge TTS. Without `language`, the worker
+    // defaults to English voices and mispronounces non-EN text.
+    const voiceConfig: VoiceConfig = {
+      host1: 'shimmer',
+      host2: 'onyx',
+      model: 'tts-1-hd',
+      speed: 1.0,
+      language,
+    };
+
+    const audioSegments = await openaiTTS.synthesizeScript(script, voiceConfig);
+    const audioBuffer = concatenateBuffers(audioSegments.map(s => s.buffer));
+    const totalDuration = openaiTTS.calculateTotalDuration(audioSegments);
+
+    // Upsert to same path so the public URL is unchanged.
+    const audioUrl = await this.uploadAudio(audioBuffer, episode.audioPath);
+
+    // Update only the audio-related fields; keep stories/script/title intact.
+    episode.audioUrl = audioUrl;
+    episode.durationSeconds = totalDuration;
+    episode.updatedAt = new Date();
+    await this.saveEpisode(episode);
+
+    return { durationSeconds: totalDuration, audioPath: episode.audioPath };
   }
 
   /**

@@ -21,10 +21,11 @@ class TopicService {
     /// Long-running session for generation requests (3 min timeout)
     private let generationSession: URLSession
 
-    // Cache keys
-    private static let cachedTopicsKey = "cachedTopics"
-    private static let cachedCategoriesKey = "cachedCategories"
+    // Cache keys — suffixed with language so JP/ES/etc. users don't
+    // see English topic names from a stale cache after switching language.
     private static let cacheTimestampKey = "topicsCacheTimestamp"
+    private static func cachedTopicsKey(for lang: String) -> String { "cachedTopics_\(lang)" }
+    private static func cachedCategoriesKey(for lang: String) -> String { "cachedCategories_\(lang)" }
 
     // In-memory cache for instant access
     private var cachedTopicsData: TopicsData?
@@ -53,25 +54,26 @@ class TopicService {
 
     /// Load cached topics from UserDefaults into memory for instant access
     private func loadCachedTopicsIntoMemory() {
-        if let topicsData = UserDefaults.standard.data(forKey: Self.cachedTopicsKey),
-           let categoriesData = UserDefaults.standard.data(forKey: Self.cachedCategoriesKey),
+        let lang = PreferencesService.shared.preferredLanguage
+        if let topicsData = UserDefaults.standard.data(forKey: Self.cachedTopicsKey(for: lang)),
+           let categoriesData = UserDefaults.standard.data(forKey: Self.cachedCategoriesKey(for: lang)),
            let topics = try? jsonDecoder.decode([Topic].self, from: topicsData),
            let categories = try? jsonDecoder.decode([CategoryInfo].self, from: categoriesData) {
             cachedTopicsData = TopicsData(topics: topics, categories: categories)
-            print("📦 Loaded \(topics.count) cached topics into memory")
+            print("📦 Loaded \(topics.count) cached topics into memory (lang=\(lang))")
         }
     }
 
     /// Save topics to cache (UserDefaults + memory)
-    private func cacheTopics(_ data: TopicsData) {
+    private func cacheTopics(_ data: TopicsData, lang: String) {
         cachedTopicsData = data
 
         if let topicsData = try? jsonEncoder.encode(data.topics),
            let categoriesData = try? jsonEncoder.encode(data.categories) {
-            UserDefaults.standard.set(topicsData, forKey: Self.cachedTopicsKey)
-            UserDefaults.standard.set(categoriesData, forKey: Self.cachedCategoriesKey)
+            UserDefaults.standard.set(topicsData, forKey: Self.cachedTopicsKey(for: lang))
+            UserDefaults.standard.set(categoriesData, forKey: Self.cachedCategoriesKey(for: lang))
             UserDefaults.standard.set(Date().timeIntervalSince1970, forKey: Self.cacheTimestampKey)
-            print("💾 Cached \(data.topics.count) topics")
+            print("💾 Cached \(data.topics.count) topics (lang=\(lang))")
         }
     }
 
@@ -88,19 +90,21 @@ class TopicService {
     // MARK: - Topics
 
     /// Fetch all available topics - returns cached data immediately, then updates from server
-    /// Use this for initial load to show content instantly
+    /// Use this for initial load to show content instantly.
+    /// The `language` parameter falls back to `PreferencesService.preferredLanguage`
+    /// so JP/KR/ES/etc. users see localized topic names + locale-specific topics
+    /// (e.g. `日本ニュース` instead of "Daily News Brief"). The backend filters
+    /// topics by `languages` array + applies `localized_names[language]`.
     func fetchTopics(language: String? = nil) async throws -> TopicsData {
-        // Try to fetch from server
-        // Always fetch all topics in English — language preference affects episode content, not topic listing
-        let lang = "en"
+        let lang = language ?? PreferencesService.shared.preferredLanguage
         let endpoint = "\(baseURL)/topics?lang=\(lang)"
 
         do {
             let data = try await performRequest(endpoint: endpoint)
             let response = try jsonDecoder.decode(TopicsResponse.self, from: data)
 
-            // Cache the fresh data (server takes precedence)
-            cacheTopics(response.data)
+            // Cache the fresh data per-language (server takes precedence)
+            cacheTopics(response.data, lang: lang)
 
             return response.data
         } catch {

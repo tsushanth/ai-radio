@@ -255,6 +255,36 @@ export class PodcastGeneratorService {
   }
 
   /**
+   * Script-only generation: runs Steps 1+2 (data fetch + script) without TTS/upload.
+   * Used by clients that synthesize audio on-device (Kokoro).
+   */
+  async generateScriptOnly(
+    userId: string,
+    preferences: UserPreferences,
+    options: GenerationOptions = {}
+  ): Promise<PodcastScript> {
+    let topicPreviews: TopicPreviewCollection | null = null;
+    if (options.include_topic_teasers !== false && preferences.topics && preferences.topics.length > 0) {
+      try {
+        topicPreviews = await topicPreviewService.getTopicPreviews(preferences);
+      } catch (error) {
+        console.warn('Failed to fetch topic previews:', error);
+      }
+    }
+
+    const { emails, calendarEvents } = await this.fetchData(userId, preferences, options);
+
+    return this.generateScript(
+      userId,
+      emails,
+      calendarEvents,
+      preferences,
+      options,
+      topicPreviews
+    );
+  }
+
+  /**
    * Step 1: Fetch emails and calendar events
    * Includes fallback logic for users with few recent emails
    * Now fetches both read and unread emails with proper labeling

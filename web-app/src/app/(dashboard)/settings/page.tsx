@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/button';
 import { User, Mail, Bell, Trash2, Link2, Check, ExternalLink, Info, Smartphone, Clock, Calendar } from 'lucide-react';
 import { disconnectAccount } from '@/lib/api/episodes';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://ai-radio-backend-917362189743.us-central1.run.app/api';
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://ai-radio-backend.fly.dev/api';
 
 const VOICE_OPTIONS = [
   { id: 'alloy', name: 'Alloy' },
@@ -23,9 +23,15 @@ const VOICE_OPTIONS = [
 const LANGUAGES = [
   { code: 'en', name: 'English' },
   { code: 'es', name: 'Spanish' },
+  { code: 'hi', name: 'Hindi' },
+  { code: 'pt', name: 'Portuguese' },
   { code: 'fr', name: 'French' },
   { code: 'de', name: 'German' },
-  { code: 'pt', name: 'Portuguese' },
+  { code: 'ja', name: 'Japanese' },
+  { code: 'ko', name: 'Korean' },
+  { code: 'zh', name: 'Chinese' },
+  { code: 'it', name: 'Italian' },
+  { code: 'tl', name: 'Tagalog' },
 ];
 
 // Helper to format time for display

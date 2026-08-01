@@ -139,7 +139,7 @@ export default function LandingPage() {
                   </div>
                   <div className="text-left">
                     <p className="text-sm text-gray-400">Now Playing</p>
-                    <h3 className="text-xl font-bold">Climate Change Deep Dive</h3>
+                    <h3 className="text-xl font-bold">Climate Change Briefing</h3>
                     <p className="text-sm text-gray-500">AI Hosts discuss the latest research</p>
                   </div>
                 </div>
@@ -177,12 +177,6 @@ export default function LandingPage() {
               title="Any Topic, Anytime"
               description="From world news to quantum physics — pick a topic and get an audio briefing in minutes"
               color="from-blue-500 to-cyan-500"
-            />
-            <FeatureCard
-              icon={<Search className="w-6 h-6" />}
-              title="Deep Dive Research"
-              description="Ask any question and get a 10-minute AI-researched podcast with sources"
-              color="from-purple-500 to-pink-500"
             />
             <FeatureCard
               icon={<Mic className="w-6 h-6" />}

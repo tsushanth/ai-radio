@@ -6,7 +6,7 @@ const nextConfig: NextConfig = {
   // Environment variables available at runtime
   env: {
     NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL ||
-      "https://ai-radio-backend-917362189743.us-central1.run.app/api",
+      "https://ai-radio-backend.fly.dev/api",
   },
 };
 

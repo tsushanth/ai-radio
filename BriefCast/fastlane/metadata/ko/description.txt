@@ -32,3 +32,6 @@ AI 생성 팟캐스트
 당신의 프라이버시가 중요합니다. 브리핑 요약을 만들기 위해 이메일 제목과 발신자만 읽습니다. 이메일 내용을 저장하거나 데이터를 제3자와 공유하지 않습니다.
 
 지금 Audexa를 다운로드하고 개인화된 오디오의 미래를 경험하세요.
+
+Terms of Use (EULA): https://www.apple.com/legal/internet-services/itunes/dev/stdeula/
+Privacy Policy: https://kreativekoala.llc/privacy

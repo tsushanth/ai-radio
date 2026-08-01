@@ -4,7 +4,7 @@
  */
 
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
-import OpenAI from 'openai';
+import Anthropic from '@anthropic-ai/sdk';
 import { env } from '../../config/environment';
 import type {
   CustomSource,
@@ -25,7 +25,7 @@ import type {
 
 export class CustomSourceService {
   private supabase: SupabaseClient | null = null;
-  private openai: OpenAI;
+  private anthropic: Anthropic;
   private readonly SOURCES_TABLE = 'custom_sources';
   private readonly ITEMS_TABLE = 'custom_source_items';
 
@@ -33,7 +33,7 @@ export class CustomSourceService {
     if (env.SUPABASE_URL && env.SUPABASE_SERVICE_KEY) {
       this.supabase = createClient(env.SUPABASE_URL, env.SUPABASE_SERVICE_KEY);
     }
-    this.openai = new OpenAI({ apiKey: env.OPENAI_API_KEY });
+    this.anthropic = new Anthropic({ apiKey: env.ANTHROPIC_API_KEY });
   }
 
   /**
@@ -541,19 +541,16 @@ export class CustomSourceService {
     if (!content || content.length < 100) return content;
 
     try {
-      const response = await this.openai.chat.completions.create({
-        model: 'gpt-4o-mini',
+      const response = await this.anthropic.messages.create({
+        model: 'claude-haiku-4-5-20251001',
+        system: 'Summarize the following content in 1-2 sentences.',
         messages: [
-          {
-            role: 'system',
-            content: 'Summarize the following content in 1-2 sentences.',
-          },
           { role: 'user', content: content.substring(0, 2000) },
         ],
         max_tokens: 100,
       });
 
-      return response.choices[0]?.message?.content || content.substring(0, 200);
+      return (response.content[0]?.type === 'text' ? response.content[0].text : '') || content.substring(0, 200);
     } catch {
       return content.substring(0, 200);
     }

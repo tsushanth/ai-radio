@@ -402,6 +402,41 @@ router.get('/:topicId/episode', async (req: Request, res: Response) => {
  *   - language: Language code (default: 'en')
  *   - forceRegenerate: Force regeneration (default: false)
  */
+/**
+ * POST /topics/:topicId/regenerate-audio
+ *
+ * Admin-only: re-run TTS on an existing episode's stored script and
+ * overwrite the Supabase audio file at the same path. Used to backfill
+ * episodes generated before the concatenateBuffers WAV-merge fix
+ * (May/Jun 2026) — those files only had ~25s of playable audio.
+ *
+ * Auth: same BATCH_SECRET pattern as /batch/* — Bearer token in
+ * Authorization header.
+ *
+ * Body: { date?: string (YYYY-MM-DD, default today), language?: string }
+ */
+router.post('/:topicId/regenerate-audio', async (req: Request, res: Response) => {
+  const authHeader = req.headers.authorization;
+  const expectedToken = env.BATCH_SECRET;
+  if (!expectedToken || authHeader !== `Bearer ${expectedToken}`) {
+    res.status(401).json({ success: false, error: 'Unauthorized' });
+    return;
+  }
+  try {
+    const { topicId } = req.params;
+    const date = (req.body.date as string) || new Date().toISOString().slice(0, 10);
+    const language = (req.body.language as string) || 'en';
+    const result = await topicPodcastGenerator.regenerateAudioFromScript(topicId, date, language);
+    res.json({ success: true, data: { topicId, date, language, ...result } });
+  } catch (error) {
+    console.error('Error regenerating audio:', error);
+    res.status(500).json({
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error',
+    });
+  }
+});
+
 router.post('/:topicId/generate', async (req: Request, res: Response) => {
   try {
     const { topicId } = req.params;
@@ -412,6 +447,54 @@ router.post('/:topicId/generate', async (req: Request, res: Response) => {
 
     console.log(`📡 Generate request for topic: ${topicId} (force: ${forceRegenerate}, lang: ${language})`);
 
+    // Async regen: if there's already an episode for today, kick off the
+    // regeneration in the background and return immediately with the
+    // current episode in `generating` state. Mobile clients then poll
+    // GET /topics/:id/episode for completion. Full TTS generation on
+    // Kokoro/Fly takes 30-60 min for a multi-segment episode — blocking
+    // the response would always time out the iOS app's URLSession.
+    if (forceRegenerate) {
+      const today = new Date().toISOString().split('T')[0];
+      const existing = await topicPodcastGenerator.getExistingEpisode(topicId, today, language);
+
+      // Fire-and-forget the actual regeneration. Errors are logged but the
+      // HTTP response has already been sent.
+      void topicPodcastGenerator
+        .getOrGenerateEpisode(topicId, userId, true, language)
+        .catch(err => {
+          console.error(`Background regen failed for ${topicId}:`, err);
+        });
+
+      // Return whatever exists right now, or a synthetic "generating"
+      // placeholder if there's nothing yet. Either way the client will
+      // poll the GET endpoint until status=completed.
+      const stubMessage = 'Regeneration started. Poll GET /topics/:topicId/episode for status.';
+      res.json({
+        success: true,
+        data: {
+          episode: existing ?? {
+            id: `${topicId}-${today}-${language}`,
+            topicId,
+            date: today,
+            status: 'generating',
+            title: `Regenerating…`,
+            description: '',
+            stories: [],
+            playCount: 0,
+            language,
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
+          },
+          isNew: false,
+          message: stubMessage,
+        },
+      });
+      return;
+    }
+
+    // Non-force path: keep the existing blocking behavior. This is the
+    // first-load case (no episode exists yet for today), which on a cold
+    // start typically completes in well under iOS's default timeout.
     const result = await topicPodcastGenerator.getOrGenerateEpisode(
       topicId,
       userId,

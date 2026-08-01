@@ -46,6 +46,8 @@ struct BriefCastApp: App {
             ZStack {
                 ContentView()
                     .ratingPrompt()
+                    .winBackOffer()
+                    .promoOffer()
                     .environmentObject(authService)
                     .onOpenURL { url in
                         // Handle promo code deep links (e.g. audexa://open?code=FOCUS30)
@@ -57,6 +59,10 @@ struct BriefCastApp: App {
                         await authService.restoreSession()
                         // Sync subscription state from StoreManager
                         await subscriptionManager.refreshFromStore()
+                        // Arm local notifications for any bookmarked topic
+                        // about to play on the radio. Re-runs on foreground
+                        // via the willEnterForegroundNotification path below.
+                        await RadioReminderScheduler.shared.refresh()
                     }
                     .onReceive(NotificationCenter.default.publisher(for: .openDailyBriefPlayer)) { notification in
                         // Handle push notification to open daily brief player
@@ -72,6 +78,10 @@ struct BriefCastApp: App {
                     .onReceive(NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification)) { _ in
                         // Winback eligibility is checked after paywall dismiss only, not on foreground
                         _ = subscriptionManager.isSubscribed
+                        // Re-poll the radio queue on foreground to catch
+                        // new bookmarks set in another session + drift in
+                        // the orchestrator's predicted play times.
+                        Task { await RadioReminderScheduler.shared.refresh() }
                     }
 
                 // Splash screen overlay

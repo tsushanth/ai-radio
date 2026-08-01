@@ -1,9 +1,9 @@
 /**
  * AI Script Generator
- * Generates engaging two-host podcast scripts using GPT-4
+ * Generates engaging two-host podcast scripts using Claude
  */
 
-import OpenAI from 'openai';
+import Anthropic from '@anthropic-ai/sdk';
 import { env } from '../../config/environment';
 import {
   PODCAST_SYSTEM_PROMPT,
@@ -36,14 +36,14 @@ import {
 } from '../calendar/calendar.utils';
 
 export class ScriptGeneratorService {
-  private openai: OpenAI;
-  private readonly DEFAULT_MODEL = 'gpt-4-turbo-preview';
+  private anthropic: Anthropic;
+  private readonly DEFAULT_MODEL = 'claude-sonnet-4-6';
   private readonly MAX_TOKENS = 4000;
   private readonly TEMPERATURE = 0.7;
 
   constructor(apiKey?: string) {
-    this.openai = new OpenAI({
-      apiKey: apiKey || env.OPENAI_API_KEY,
+    this.anthropic = new Anthropic({
+      apiKey: apiKey || env.ANTHROPIC_API_KEY,
     });
   }
 
@@ -58,12 +58,12 @@ export class ScriptGeneratorService {
       // 2. Build generation context
       const context = this.buildContext(input, contentSummary);
 
-      // 3. Generate script with GPT-4
+      // 3. Generate script with Claude
       const segments = await this.generateWithGPT4(context);
 
       // 4. Check if we got enough segments - if not, use fallback
       if (segments.length < 5) {
-        console.warn(`GPT-4 returned only ${segments.length} segments, using fallback script instead`);
+        console.warn(`Claude returned only ${segments.length} segments, using fallback script instead`);
         return this.generateFallbackScript(input);
       }
 
@@ -192,19 +192,16 @@ export class ScriptGeneratorService {
   }
 
   /**
-   * Generate script using GPT-4
+   * Generate script using Claude
    */
   private async generateWithGPT4(context: ScriptGenerationContext): Promise<ScriptSegment[]> {
     try {
       const userPrompt = generatePodcastPrompt(context);
 
-      const completion = await this.openai.chat.completions.create({
+      const completion = await this.anthropic.messages.create({
         model: this.DEFAULT_MODEL,
+        system: PODCAST_SYSTEM_PROMPT + '\n\nYou must respond with valid JSON only.',
         messages: [
-          {
-            role: 'system',
-            content: PODCAST_SYSTEM_PROMPT,
-          },
           {
             role: 'user',
             content: userPrompt,
@@ -212,12 +209,11 @@ export class ScriptGeneratorService {
         ],
         max_tokens: this.MAX_TOKENS,
         temperature: this.TEMPERATURE,
-        response_format: { type: 'json_object' },
       });
 
-      const response = completion.choices[0]?.message?.content;
+      const response = completion.content[0]?.type === 'text' ? completion.content[0].text : '';
       if (!response) {
-        throw new Error('No response from GPT-4');
+        throw new Error('No response from Claude');
       }
 
       // Parse JSON response with better error handling
@@ -225,11 +221,11 @@ export class ScriptGeneratorService {
       try {
         parsed = JSON.parse(response);
       } catch (parseError) {
-        console.error('Failed to parse GPT-4 response as JSON:', response.substring(0, 500));
-        throw new Error('GPT-4 returned invalid JSON');
+        console.error('Failed to parse Claude response as JSON:', response.substring(0, 500));
+        throw new Error('Claude returned invalid JSON');
       }
 
-      // Handle multiple possible response formats from GPT-4
+      // Handle multiple possible response formats from Claude
       let segments: ScriptSegment[];
       if (Array.isArray(parsed)) {
         segments = parsed;
@@ -249,19 +245,19 @@ export class ScriptGeneratorService {
         // Try to find any array property in the response
         const arrayProps = Object.keys(parsed).filter(key => Array.isArray(parsed[key]));
         if (arrayProps.length > 0) {
-          console.log(`Found array property '${arrayProps[0]}' in GPT-4 response, using it`);
+          console.log(`Found array property '${arrayProps[0]}' in Claude response, using it`);
           segments = parsed[arrayProps[0]];
         } else if (parsed.speaker && parsed.text) {
-          // GPT-4 returned a single segment object instead of an array
+          // Claude returned a single segment object instead of an array
           // This happens sometimes - wrap it in an array
-          console.log('GPT-4 returned single segment object, wrapping in array');
+          console.log('Claude returned single segment object, wrapping in array');
           segments = [parsed];
         } else if (typeof parsed === 'object' && Object.keys(parsed).length > 0) {
           // Check if it's an object with numeric keys (pseudo-array)
           const keys = Object.keys(parsed);
           const isNumericKeys = keys.every(k => !isNaN(parseInt(k)));
           if (isNumericKeys) {
-            console.log('GPT-4 returned object with numeric keys, converting to array');
+            console.log('Claude returned object with numeric keys, converting to array');
             segments = keys.sort((a, b) => parseInt(a) - parseInt(b)).map(k => parsed[k]);
           } else {
             // Last resort: check if any nested object looks like a segment
@@ -272,13 +268,13 @@ export class ScriptGeneratorService {
               console.log(`Found ${potentialSegments.length} potential segments in nested objects`);
               segments = potentialSegments as ScriptSegment[];
             } else {
-              console.error('Invalid GPT-4 response structure:', JSON.stringify(parsed).substring(0, 500));
-              throw new Error('Invalid response format from GPT-4 - no valid segment array found');
+              console.error('Invalid Claude response structure:', JSON.stringify(parsed).substring(0, 500));
+              throw new Error('Invalid response format from Claude - no valid segment array found');
             }
           }
         } else {
-          console.error('Invalid GPT-4 response structure:', JSON.stringify(parsed).substring(0, 500));
-          throw new Error('Invalid response format from GPT-4 - no valid segment array found');
+          console.error('Invalid Claude response structure:', JSON.stringify(parsed).substring(0, 500));
+          throw new Error('Invalid response format from Claude - no valid segment array found');
         }
       }
 
@@ -290,11 +286,11 @@ export class ScriptGeneratorService {
       // If we got too few segments, log a warning but continue
       // The fallback will be triggered later if script validation fails
       if (segments.length < 5) {
-        console.warn(`GPT-4 returned only ${segments.length} segments (expected at least 5), will use fallback if needed`);
+        console.warn(`Claude returned only ${segments.length} segments (expected at least 5), will use fallback if needed`);
       }
 
       // Normalize and validate each segment with flexible field mapping
-      // Cast to any[] since GPT-4 may return various field names
+      // Cast to any[] since Claude may return various field names
       const validTypes = ['intro', 'email', 'calendar', 'news', 'weather', 'teaser', 'outro', 'pause'];
       const rawSegments = segments as any[];
       segments = rawSegments.map((segment, index) => {
@@ -372,10 +368,10 @@ export class ScriptGeneratorService {
 
       return segments;
     } catch (error) {
-      if (error instanceof OpenAI.APIError) {
-        throw this.createError(`OpenAI API error: ${error.message}`, error);
+      if (error instanceof Anthropic.APIError) {
+        throw this.createError(`Anthropic API error: ${error.message}`, error);
       }
-      throw this.createError('Failed to generate script with GPT-4', error);
+      throw this.createError('Failed to generate script with Claude', error);
     }
   }
 
@@ -427,9 +423,9 @@ export class ScriptGeneratorService {
         console.error(`Script generation attempt ${attempt} failed:`, lastError.message);
 
         // Don't retry on client errors (4xx)
-        if (error instanceof OpenAI.APIError && error.status && error.status >= 400 && error.status < 500) {
+        if (error instanceof Anthropic.APIError && error.status && error.status >= 400 && error.status < 500) {
           // For 4xx errors, try fallback instead of throwing
-          console.warn('OpenAI client error, attempting fallback script generation');
+          console.warn('Anthropic client error, attempting fallback script generation');
           break;
         }
 
@@ -679,7 +675,7 @@ export class ScriptGeneratorService {
     const outputTokens = this.MAX_TOKENS;
     const totalTokens = inputTokens + outputTokens;
 
-    // GPT-4 Turbo pricing (as of Jan 2024)
+    // Claude Turbo pricing (as of Jan 2024)
     const inputCostPer1k = 0.01; // $0.01 per 1K input tokens
     const outputCostPer1k = 0.03; // $0.03 per 1K output tokens
 

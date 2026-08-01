@@ -25,12 +25,19 @@ from fastapi.middleware.cors import CORSMiddleware
 from config import Config
 from content_fetcher import ContentFetcher
 from edge_tts_client import EdgeTTSClient, EDGE_TTS_VOICES, get_edge_voices_for_language
+from email_alerter import (
+    install_asyncio_exception_handler,
+    mark_generation_success,
+    report_error,
+    seconds_since_last_generation,
+)
 from queue_manager import QueueManager
 from retell_handler import router as retell_router
 from retell_handler import set_queue_manager
 from scheduler import TopicScheduler
 from script_generator import RadioScriptGenerator
 from segment_assembler import assemble_segment
+from topic_podcast_injector import TopicPodcastInjector
 from topics import get_sources_for_region
 from tts_client import TTSClient
 
@@ -203,9 +210,10 @@ async def generate_and_queue_listener_request(request) -> bool:
         )
         push_to_liquidsoap(filepath, queue_name=get_queue_name_for_language(lang))
         push_random_song()
+        mark_generation_success()
         return True
     except Exception as e:
-        logger.error(f"Failed to generate listener request: {e}")
+        report_error(e, source="listener_request", context={"topic": request.topic})
         return False
 
 
@@ -257,10 +265,13 @@ async def generate_and_queue_scheduled_for_language(lang: str) -> bool:
         queue_name = get_queue_name_for_language(lang)
         push_to_liquidsoap(filepath, queue_name=queue_name)
         push_random_song()
+        # Mark heartbeat for the scheduler-health endpoint + watchdog
+        mark_generation_success()
         return True
 
     except Exception as e:
-        logger.error(f"Failed to generate scheduled segment [{lang}]: {e}")
+        # Email-batched alert + structured log; the loop continues.
+        report_error(e, source="scheduled_gen", context={"lang": lang, "topic": getattr(topic, "name", "?"), "type": seg_type})
         return False
 
 
@@ -381,7 +392,8 @@ async def content_generation_loop():
                 await asyncio.sleep(30)
 
         except Exception as e:
-            logger.error(f"Generation loop error: {e}", exc_info=True)
+            # Send email + dedupe so a stuck failure mode tells us, not just logs
+            report_error(e, source="content_generation_loop")
             await asyncio.sleep(10)
 
 
@@ -405,8 +417,42 @@ async def lifespan(app: FastAPI):
 
     set_queue_manager(queue)
 
-    gen_task = asyncio.create_task(content_generation_loop())
-    reconcile_task = asyncio.create_task(reconcile_liquidsoap_queues())
+    # Wire the global asyncio exception handler BEFORE creating tasks so any
+    # silent task death surfaces in logs + alerts (this is what would have
+    # caught the 2026-06-11 06:09 scheduler stall instead of letting it
+    # disappear for 16 hours).
+    install_asyncio_exception_handler(asyncio.get_running_loop())
+
+    gen_task = asyncio.create_task(content_generation_loop(), name="content_generation_loop")
+    reconcile_task = asyncio.create_task(reconcile_liquidsoap_queues(), name="reconcile_liquidsoap_queues")
+
+    # Pull today's completed topic-podcast MP3s from the backend and inject
+    # them into the radio rotation. Adds ~55 episodes/lang of cached content
+    # alongside the 13 hardcoded topics — variety without burning TTS budget.
+    podcast_injector = TopicPodcastInjector(
+        queue=queue,
+        push_to_liquidsoap=push_to_liquidsoap,
+        get_queue_name_for_language=get_queue_name_for_language,
+        languages=RADIO_LANGUAGES,
+    )
+    podcast_inject_task = asyncio.create_task(
+        podcast_injector.run_loop(), name="topic_podcast_injector"
+    )
+
+    # Attach a done callback that promotes silent task failures into alerts.
+    # This is belt-and-suspenders next to the exception handler above —
+    # asyncio's behavior around task exceptions has changed across versions.
+    def _task_done(t: asyncio.Task) -> None:
+        if t.cancelled():
+            return
+        exc = t.exception()
+        if exc is not None:
+            report_error(exc, source=f"task:{t.get_name()}")
+
+    gen_task.add_done_callback(_task_done)
+    reconcile_task.add_done_callback(_task_done)
+    podcast_inject_task.add_done_callback(_task_done)
+
     logger.info(
         f"Audexa Radio started (region={config.radio_region}, "
         f"lang={config.radio_language}, multilingual={RADIO_LANGUAGES})"
@@ -416,6 +462,7 @@ async def lifespan(app: FastAPI):
 
     gen_task.cancel()
     reconcile_task.cancel()
+    podcast_inject_task.cancel()
     await fetcher.close()
     await tts.close()
     logger.info("Orchestrator shut down")
@@ -449,6 +496,34 @@ async def health():
         "buffer_target": config.max_buffer_segments,
         "estimated_wait_minutes": queue.estimate_wait_minutes(),
     }
+
+
+# Deep liveness check: validates that the SCHEDULER thread is alive, not
+# just that the HTTP server is up. /api/health stays cheap + always-200
+# for load balancers; this endpoint returns 503 when the scheduler has
+# been silent past a threshold, so an external watchdog (cron on Hetzner)
+# can auto-restart the container. The 2026-06-11 06:09 stall would have
+# been caught here within 15 minutes instead of 16 hours.
+SCHEDULER_STALE_THRESHOLD_SEC = int(os.getenv("SCHEDULER_STALE_THRESHOLD_SEC", "900"))
+
+
+@app.get("/api/scheduler-health")
+async def scheduler_health():
+    from fastapi import Response
+    secs = seconds_since_last_generation()
+    stale = secs > SCHEDULER_STALE_THRESHOLD_SEC
+    body = {
+        "scheduler_ok": not stale,
+        "seconds_since_last_generation": None if secs == float("inf") else int(secs),
+        "stale_threshold_sec": SCHEDULER_STALE_THRESHOLD_SEC,
+        "ready_segments": queue.count_ready_segments(),
+    }
+    import json
+    return Response(
+        content=json.dumps(body),
+        media_type="application/json",
+        status_code=503 if stale else 200,
+    )
 
 
 def _liq_cmd(cmd: str) -> str:
@@ -583,6 +658,71 @@ async def status(lang: str = "en"):
         "buffer_max": config.max_buffer_segments,
         "language": lang,
         "supported_languages": RADIO_LANGUAGES,
+    }
+
+
+@app.get("/api/upcoming-plays")
+async def upcoming_plays(lang: str = "en"):
+    """Predicted play times for segments already in the ready queue.
+
+    Powers client-side "your bookmarked topic is about to play" local
+    notifications: app pulls this, matches against the user's bookmarks,
+    schedules AlarmManager / UNUserNotificationCenter alarms.
+
+    Time model: now_playing's remaining_seconds + Nth-queued * 420s
+    (~4 min speech segment + ~3 min music interleave). Coarse — drift up
+    to ~minutes as the queue churns or listener requests preempt. Clients
+    should re-poll on app foreground.
+
+    Only returns segments currently in the ready queue (next ~30-60 min);
+    does not predict topics that haven't been enqueued yet.
+    """
+    from datetime import datetime, timedelta, timezone
+
+    now = datetime.now(timezone.utc)
+    segments = queue.list_ready_segments()
+    now_playing = get_liquidsoap_now_playing(lang)
+    remaining_seconds = float(now_playing.get("remaining_seconds") or 0)
+
+    # Filter to segments tagged for this language. The "en" branch keys off
+    # the absence of the bracket prefix — matches how reconcile + injector
+    # both label segments. Sort by filename (priority + timestamp) so the
+    # play order matches what Liquidsoap will see.
+    if lang == "en":
+        lang_segments = [s for s in segments if not s["topic_name"].startswith("[")]
+    else:
+        marker = f"[{lang}]"
+        lang_segments = [s for s in segments if s["topic_name"].startswith(marker)]
+    lang_segments.sort(key=lambda s: s.get("filename", ""))
+
+    # Each queued speech segment is followed by ~1 random song, so a topic
+    # at queue position N plays roughly (remaining + N * 420s) from now.
+    SEGMENT_GAP_SECONDS = 420
+    upcoming = []
+    for i, seg in enumerate(lang_segments):
+        play_time = now + timedelta(seconds=remaining_seconds + i * SEGMENT_GAP_SECONDS)
+        raw_name = seg.get("topic_name", "")
+        # Strip the [lang] prefix for non-EN before returning so clients
+        # can match against their cached topic catalog directly.
+        display_name = (
+            raw_name[len(f"[{lang}] "):] if raw_name.startswith(f"[{lang}] ") else raw_name
+        )
+        upcoming.append({
+            "topic_name": display_name,
+            "segment_type": seg.get("segment_type", ""),
+            "estimated_play_time": play_time.isoformat(),
+            "queue_position": i,
+        })
+
+    return {
+        "language": lang,
+        "now": now.isoformat(),
+        "now_playing": {
+            "topic_name": now_playing.get("topic_name", ""),
+            "remaining_seconds": remaining_seconds,
+        },
+        "upcoming": upcoming,
+        "segment_gap_seconds": SEGMENT_GAP_SECONDS,
     }
 
 

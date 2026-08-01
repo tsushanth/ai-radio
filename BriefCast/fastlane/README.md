@@ -31,6 +31,14 @@ Build and submit to App Store for review
 
 Upload screenshots + app previews from screenshots_final/ to App Store Connect
 
+### ios push_v17_0_10
+
+```sh
+[bundle exec] fastlane ios push_v17_0_10
+```
+
+Push hi+it screenshots + updated keywords for fr/it/pt/ko/zh/hi to v17.0.10
+
 ### ios submit_for_review
 
 ```sh

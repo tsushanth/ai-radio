@@ -37,9 +37,22 @@ struct NowPlaying: Decodable {
     let remaining_seconds: Double?
 }
 
+/// Listener request that's been submitted but is still being rendered
+/// (LLM + TTS). Lives in the orchestrator's pre-generation queue and only
+/// surfaces in `ready_queue` once the audio segment is ready ~30-60s later.
+struct PendingRadioRequest: Identifiable, Decodable, Equatable {
+    let topic: String
+    let language: String?
+    let position: Int
+    let requested_at: String?
+
+    var id: String { "\(topic)|\(requested_at ?? "")" }
+}
+
 private struct RadioStatusResponse: Decodable {
     let ready_queue: [RadioQueueSegment]
     let now_playing: NowPlaying?
+    let pending_requests: [PendingRadioRequest]?
 }
 
 @MainActor
@@ -47,6 +60,11 @@ final class RadioQueueService: ObservableObject {
     @Published var queue: [RadioQueueSegment] = []
     @Published var nowPlaying: NowPlaying?
     @Published var isLoading = false
+    /// Listener requests that have been submitted but are still being
+    /// generated (LLM + TTS, ~30-60s). Shown above the rendered queue so
+    /// users see their submission immediately instead of it appearing to
+    /// have vanished during the generation gap.
+    @Published var pendingRequests: [PendingRadioRequest] = []
 
     private var pollTimer: Timer?
 
@@ -95,6 +113,10 @@ final class RadioQueueService: ObservableObject {
                             return s
                         }
                     self.nowPlaying = response.now_playing
+                    // Backend already filters pending_requests by ?lang= so
+                    // we can use the array as-is. Default to empty for older
+                    // builds where the field is absent.
+                    self.pendingRequests = response.pending_requests ?? []
                 }
             } catch {
                 print("[RadioQueue] fetch error: \(error.localizedDescription)")
@@ -223,10 +245,13 @@ struct LiveRadioView: View {
                         queueList(title: "Up Next", icon: "list.bullet", segments: Array(programSegments.prefix(5)))
                     }
 
-                    // Requests
+                    // Requests — combines listener requests still generating
+                    // (pending_requests from backend, shown with a spinner)
+                    // with those already rendered and waiting in ready_queue.
                     let requestSegments = queueService.queue.filter { $0.segment_type == "listener_request" }
-                    if !requestSegments.isEmpty {
-                        queueList(title: "Requests", icon: "mic.fill", segments: requestSegments)
+                    let pending = queueService.pendingRequests
+                    if !requestSegments.isEmpty || !pending.isEmpty {
+                        requestsList(pending: pending, ready: requestSegments)
                     }
 
                     // Chat
@@ -311,8 +336,11 @@ struct LiveRadioView: View {
                 }
             }
 
-            // Floating emoji reactions + picker
-            LiveReactionOverlay(viewModel: reactionVM, username: displayUsername)
+            // Floating emoji reactions + picker temporarily disabled — the
+            // overlay was covering chat messages. Users paste emojis in
+            // chat input instead. Re-enable when the picker has a layout
+            // that doesn't overlap the chat surface.
+            // LiveReactionOverlay(viewModel: reactionVM, username: displayUsername)
 
             // Ad break overlay
             if showAdBreak {
@@ -469,6 +497,63 @@ struct LiveRadioView: View {
     }
 
     // MARK: - Queue List
+
+    /// Combined "Requests" section: pending (still generating) on top with
+    /// a spinner, then ready-to-play listener requests below. Numbered as
+    /// one continuous list so the user sees the real overall position.
+    private func requestsList(pending: [PendingRadioRequest], ready: [RadioQueueSegment]) -> some View {
+        VStack(alignment: .leading, spacing: 4) {
+            HStack {
+                Image(systemName: "mic.fill").font(.caption).foregroundColor(.white.opacity(0.5))
+                Text("Requests").font(.caption.bold()).foregroundColor(.white.opacity(0.7))
+                Text("\(pending.count + ready.count)")
+                    .font(.caption2.bold()).foregroundColor(.white.opacity(0.4))
+                    .padding(.horizontal, 6).padding(.vertical, 2)
+                    .background(Color.white.opacity(0.1)).cornerRadius(4)
+                Spacer()
+            }
+            .padding(.horizontal, 24)
+
+            // Pending (still being rendered) — show first with a spinner so
+            // the user knows their request was accepted and is being prepared.
+            ForEach(pending) { req in
+                HStack(spacing: 8) {
+                    ProgressView()
+                        .progressViewStyle(CircularProgressViewStyle(tint: .orange))
+                        .scaleEffect(0.55)
+                        .frame(width: 20)
+                    Text(req.topic)
+                        .font(.system(size: 12)).foregroundColor(.white.opacity(0.6)).lineLimit(1)
+                    Spacer()
+                    Text("Generating")
+                        .font(.system(size: 9, weight: .semibold))
+                        .foregroundColor(.white.opacity(0.9))
+                        .padding(.horizontal, 5).padding(.vertical, 2)
+                        .background(Color.orange.opacity(0.5)).cornerRadius(3)
+                }
+                .padding(.horizontal, 24)
+            }
+
+            // Ready listener requests — numbered after the pending ones.
+            ForEach(Array(ready.enumerated()), id: \.element.id) { index, segment in
+                HStack(spacing: 8) {
+                    Text("\(pending.count + index + 1)")
+                        .font(.system(size: 10, weight: .semibold).monospacedDigit())
+                        .foregroundColor(.white.opacity(0.35))
+                        .frame(width: 20)
+                    Text(segment.topic_name)
+                        .font(.system(size: 12)).foregroundColor(.white.opacity(0.6)).lineLimit(1)
+                    Spacer()
+                    Text(segment.segmentLabel)
+                        .font(.system(size: 9, weight: .semibold))
+                        .foregroundColor(.white.opacity(0.9))
+                        .padding(.horizontal, 5).padding(.vertical, 2)
+                        .background(segment.badgeColor.opacity(0.5)).cornerRadius(3)
+                }
+                .padding(.horizontal, 24)
+            }
+        }
+    }
 
     private func queueList(title: String, icon: String, segments: [RadioQueueSegment]) -> some View {
         VStack(alignment: .leading, spacing: 4) {

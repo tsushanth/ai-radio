@@ -32,3 +32,6 @@ COMMENT CA MARCHE :
 Votre vie privee compte. Nous ne lisons que les objets et expediteurs des e-mails pour creer des resumes. Nous ne stockons jamais le contenu de vos e-mails et ne partageons pas vos donnees avec des tiers.
 
 Telechargez Audexa aujourd\'hui et decouvrez le futur de l\'audio personnalise.
+
+Terms of Use (EULA): https://www.apple.com/legal/internet-services/itunes/dev/stdeula/
+Privacy Policy: https://kreativekoala.llc/privacy

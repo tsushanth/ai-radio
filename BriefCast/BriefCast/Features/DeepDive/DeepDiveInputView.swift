@@ -16,10 +16,35 @@ struct DeepDiveInputView: View {
     @State private var isGenerating: Bool = false
     @State private var generationState: DeepDiveGenerationState = .idle
     @State private var generatedEpisode: DeepDiveEpisode?
+    @State private var elapsedSeconds: Int = 0
+    @State private var generationStart: Date?
     @FocusState private var isQueryFocused: Bool
+
+    /// Heuristic ETA shown in the progress UI. Deep Dive is now on-device
+    /// only — script fetch + Kokoro synthesis runs ~60–120 s on eligible
+    /// devices. First-run includes a one-time model download (~250 MB).
+    private var etaSecondsEstimate: Int {
+        let kokoroReady = KokoroModelManager.shared.state == .ready
+        // Cold start adds time for the model download/load on first use.
+        return kokoroReady ? 90 : 180
+    }
 
     let onGenerated: (DeepDiveEpisode) -> Void
     let onDismiss: () -> Void
+    /// True when the user already has a deep dive in researching/generating state.
+    /// When true, this view blocks new submissions and shows a "already running" CTA.
+    /// Backend also enforces this via a 409 response.
+    let hasInFlightDeepDive: Bool
+
+    init(
+        onGenerated: @escaping (DeepDiveEpisode) -> Void,
+        onDismiss: @escaping () -> Void,
+        hasInFlightDeepDive: Bool = false
+    ) {
+        self.onGenerated = onGenerated
+        self.onDismiss = onDismiss
+        self.hasInFlightDeepDive = hasInFlightDeepDive
+    }
 
     private let deepDiveService = DeepDiveService.shared
 
@@ -274,41 +299,68 @@ struct DeepDiveInputView: View {
     // MARK: - Generate Button
 
     private var generateButton: some View {
-        Button(action: generateDeepDive) {
-            HStack(spacing: 10) {
-                if isGenerating {
-                    ProgressView()
-                        .progressViewStyle(CircularProgressViewStyle(tint: .white))
-                        .scaleEffect(0.9)
+        VStack(spacing: 8) {
+            Button(action: generateDeepDive) {
+                HStack(spacing: 10) {
+                    if isGenerating {
+                        ProgressView()
+                            .progressViewStyle(CircularProgressViewStyle(tint: .white))
+                            .scaleEffect(0.9)
 
-                    Text(generationState.progressMessage)
-                        .font(.system(size: 16, weight: .semibold))
-                } else {
-                    Image(systemName: "wand.and.stars")
-                        .font(.system(size: 18, weight: .medium))
+                        Text(generationState.progressMessage)
+                            .font(.system(size: 16, weight: .semibold))
+                    } else {
+                        Image(systemName: "wand.and.stars")
+                            .font(.system(size: 18, weight: .medium))
 
-                    Text("Generate Deep Dive")
-                        .font(.system(size: 16, weight: .semibold))
+                        Text("Generate Deep Dive")
+                            .font(.system(size: 16, weight: .semibold))
+                    }
                 }
+                .foregroundColor(.white)
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 16)
+                .background(
+                    isGenerating || !canGenerate
+                        ? Color(hex: DeepDiveEpisode.brandColor).opacity(0.5)
+                        : Color(hex: DeepDiveEpisode.brandColor)
+                )
+                .cornerRadius(25)
             }
-            .foregroundColor(.white)
-            .frame(maxWidth: .infinity)
-            .padding(.vertical, 16)
-            .background(
-                isGenerating || !canGenerate
-                    ? Color(hex: DeepDiveEpisode.brandColor).opacity(0.5)
-                    : Color(hex: DeepDiveEpisode.brandColor)
-            )
-            .cornerRadius(25)
+            .disabled(isGenerating || !canGenerate)
+
+            if isGenerating {
+                Text(progressLabel)
+                    .font(.system(size: 12, weight: .medium))
+                    .foregroundColor(Theme.Colors.secondaryText)
+                    .monospacedDigit()
+            }
         }
-        .disabled(isGenerating || !canGenerate)
         .padding(.horizontal, Theme.Spacing.screenPadding)
+    }
+
+    private var progressLabel: String {
+        let eta = etaSecondsEstimate
+        let elapsedMin = elapsedSeconds / 60
+        let elapsedSec = elapsedSeconds % 60
+        let elapsedStr = elapsedMin > 0
+            ? "\(elapsedMin)m \(elapsedSec)s"
+            : "\(elapsedSec)s"
+        let remaining = max(eta - elapsedSeconds, 0)
+        let remainingStr = remaining > 60 ? "~\(remaining/60)m" : "~\(remaining)s"
+        let kokoroReady = KokoroModelManager.shared.state == .ready
+        let path = (kokoroReady && selectedLanguage.rawValue.hasPrefix("en"))
+            ? "on-device"
+            : "cloud"
+        return "\(elapsedStr) elapsed • \(remainingStr) left • \(path)"
     }
 
     // MARK: - Computed Properties
 
     private var canGenerate: Bool {
-        !query.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty && query.count <= 500
+        !query.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+            && query.count <= 500
+            && !hasInFlightDeepDive
     }
 
     // MARK: - Actions
@@ -316,40 +368,17 @@ struct DeepDiveInputView: View {
     private func generateDeepDive() {
         guard canGenerate else { return }
 
-        isGenerating = true
-        generationState = .researching
-        isQueryFocused = false
-
-        Task {
-            do {
-                // Update to generating state after a delay
-                try await Task.sleep(nanoseconds: 2_000_000_000) // 2 seconds
-                await MainActor.run {
-                    generationState = .generating
-                }
-
-                let episode = try await deepDiveService.generateDeepDive(
-                    query: query.trimmingCharacters(in: .whitespacesAndNewlines),
-                    language: selectedLanguage.rawValue,
-                    targetDurationMinutes: selectedDuration
-                )
-
-                await MainActor.run {
-                    generationState = .completed(episode)
-                    generatedEpisode = episode
-                    isGenerating = false
-
-                    // Notify parent and dismiss
-                    onGenerated(episode)
-                    dismiss()
-                }
-            } catch {
-                await MainActor.run {
-                    generationState = .failed(error.localizedDescription)
-                    isGenerating = false
-                }
-            }
-        }
+        // Optimistic dismiss: create a placeholder on the client immediately
+        // so it appears in the home list right away, then let the network
+        // call finish in the background. The placeholder is replaced when
+        // the real episode lands (via .deepDiveListChanged notification).
+        let placeholder = deepDiveService.startBackgroundGeneration(
+            query: query.trimmingCharacters(in: .whitespacesAndNewlines),
+            language: selectedLanguage.rawValue,
+            targetDurationMinutes: selectedDuration
+        )
+        onGenerated(placeholder)
+        dismiss()
     }
 }
 

@@ -4,7 +4,7 @@
  */
 
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
-import OpenAI from 'openai';
+import Anthropic from '@anthropic-ai/sdk';
 import { env } from '../../config/environment';
 import { openaiTTS, type VoiceConfig } from '../tts/openai.tts';
 import { concatenateBuffers } from '../tts/audio.utils';
@@ -92,7 +92,7 @@ const DEFAULT_STATIONS: Omit<LiveStation, 'currentEpisode' | 'createdAt' | 'upda
 
 export class LiveStationGenerator {
   private supabase: SupabaseClient | null = null;
-  private openai: OpenAI;
+  private anthropic: Anthropic;
   private readonly BUCKET = 'live-station-audio';
   private readonly STATIONS_TABLE = 'live_stations';
   private readonly EPISODES_TABLE = 'live_station_episodes';
@@ -103,7 +103,7 @@ export class LiveStationGenerator {
       this.initializeBucket();
       this.initializeStations();
     }
-    this.openai = new OpenAI({ apiKey: env.OPENAI_API_KEY });
+    this.anthropic = new Anthropic({ apiKey: env.ANTHROPIC_API_KEY });
   }
 
   /**
@@ -362,18 +362,17 @@ Return a JSON object with:
 
 Return ONLY valid JSON, no markdown.`;
 
-    const response = await this.openai.chat.completions.create({
-      model: 'gpt-4o',
+    const response = await this.anthropic.messages.create({
+      model: 'claude-sonnet-4-6',
+      system: systemPrompt + '\n\nReturn ONLY valid JSON.',
       messages: [
-        { role: 'system', content: systemPrompt },
         { role: 'user', content: `Generate the latest ${category} news update for ${stationName}. Current time context: ${new Date().toISOString()}` },
       ],
       temperature: 0.8,
       max_tokens: 1500,
-      response_format: { type: 'json_object' },
     });
 
-    const responseText = response.choices[0]?.message?.content || '{}';
+    const responseText = (response.content[0]?.type === 'text' ? response.content[0].text : '') || '{}';
     const parsed = JSON.parse(responseText);
 
     return {
@@ -421,17 +420,17 @@ ${news.content}
 
 Return ONLY valid JSON array.`;
 
-    const response = await this.openai.chat.completions.create({
-      model: 'gpt-4o',
+    const response = await this.anthropic.messages.create({
+      model: 'claude-sonnet-4-6',
+      system: systemPrompt,
       messages: [
-        { role: 'system', content: systemPrompt },
         { role: 'user', content: userPrompt },
       ],
       temperature: 0.7,
       max_tokens: 2000,
     });
 
-    const responseText = response.choices[0]?.message?.content || '';
+    const responseText = (response.content[0]?.type === 'text' ? response.content[0].text : '') || '';
     const jsonMatch = responseText.match(/\[[\s\S]*\]/);
     if (!jsonMatch) {
       throw new Error('Failed to parse live station script');

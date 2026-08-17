@@ -150,6 +150,8 @@ class HomeViewModel {
     private nonisolated(unsafe) var playbackEndObserver: NSObjectProtocol?
     // Onboarding generation observer
     private nonisolated(unsafe) var onboardingGenerationObserver: NSObjectProtocol?
+    // Deep dive list change observer
+    private nonisolated(unsafe) var deepDiveListChangeObserver: NSObjectProtocol?
 
     init() {
         // Check linked account status immediately from UserDefaults
@@ -202,6 +204,7 @@ class HomeViewModel {
 
         setupPlaybackEndObserver()
         setupOnboardingGenerationObserver()
+        setupDeepDiveListObserver()
     }
 
     // MARK: - Episode Caching
@@ -261,6 +264,20 @@ class HomeViewModel {
         }
     }
 
+    private func setupDeepDiveListObserver() {
+        deepDiveListChangeObserver = NotificationCenter.default.addObserver(
+            forName: .deepDiveListChanged,
+            object: nil,
+            queue: .main
+        ) { [weak self] _ in
+            Task { @MainActor in
+                guard let self else { return }
+                // Re-read the cache (placeholder added, swapped, or failed)
+                self.deepDiveHistory = self.deepDiveService.getCachedDeepDives()
+            }
+        }
+    }
+
     private func setupOnboardingGenerationObserver() {
         onboardingGenerationObserver = NotificationCenter.default.addObserver(
             forName: .startDailyBriefGeneration,
@@ -285,6 +302,10 @@ class HomeViewModel {
         if let observer = playbackEndObserver {
             NotificationCenter.default.removeObserver(observer)
             playbackEndObserver = nil
+        }
+        if let observer = deepDiveListChangeObserver {
+            NotificationCenter.default.removeObserver(observer)
+            deepDiveListChangeObserver = nil
         }
         if let observer = onboardingGenerationObserver {
             NotificationCenter.default.removeObserver(observer)

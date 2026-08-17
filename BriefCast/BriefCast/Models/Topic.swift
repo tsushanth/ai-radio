@@ -19,6 +19,11 @@ struct Topic: Identifiable, Codable, Hashable {
     let category: TopicCategory
     let targetDurationMinutes: Int
     let isActive: Bool
+    /// Backend `languages` array. `["all"]` = universal (audio is translated
+    /// per user language at episode-gen time). A specific code like `["ja"]`
+    /// means the topic is curated for JP users only — these are the
+    /// "locale-specific" topics that show in the Trending row.
+    let languages: [String]
 
     // Computed property for SwiftUI color
     var swiftUIColor: Color {
@@ -57,10 +62,11 @@ struct Topic: Identifiable, Codable, Hashable {
         category = try container.decode(TopicCategory.self, forKey: .category)
         targetDurationMinutes = try container.decode(Int.self, forKey: .targetDurationMinutes)
         isActive = try container.decode(Bool.self, forKey: .isActive)
+        languages = try container.decodeIfPresent([String].self, forKey: .languages) ?? ["all"]
     }
 
     enum CodingKeys: String, CodingKey {
-        case id, name, description, icon, color, category
+        case id, name, description, icon, color, category, languages
         case targetDurationMinutes = "targetDurationMinutes"
         case isActive = "isActive"
     }

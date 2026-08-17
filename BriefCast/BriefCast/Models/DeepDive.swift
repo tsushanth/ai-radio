@@ -24,6 +24,11 @@ struct DeepDiveEpisode: Identifiable, Codable, Hashable {
     let generatedAt: String?
     let createdAt: String
     let errorMessage: String?
+    /// JSON-encoded PodcastScript. Populated when the backend ran the script
+    /// generator (always for `audio` mode, exclusively for `script` mode).
+    /// The on-device synth path decodes this to drive Kokoro 82M locally
+    /// when `audioUrl` is nil.
+    let script: String?
 
     enum CodingKeys: String, CodingKey {
         case id
@@ -35,6 +40,7 @@ struct DeepDiveEpisode: Identifiable, Codable, Hashable {
         case generatedAt = "generatedAt"
         case createdAt = "createdAt"
         case errorMessage = "error"  // Backend sends "error", iOS uses errorMessage
+        case script
     }
 
     // Custom init to handle missing fields gracefully
@@ -43,8 +49,11 @@ struct DeepDiveEpisode: Identifiable, Codable, Hashable {
         id = try container.decode(String.self, forKey: .id)
         userId = try container.decodeIfPresent(String.self, forKey: .userId) ?? ""
         query = try container.decode(String.self, forKey: .query)
-        title = try container.decode(String.self, forKey: .title)
-        description = try container.decode(String.self, forKey: .description)
+        // The backend's 202 fire-and-forget stub omits title/description until
+        // the dive is actually generated. Fall back to the query so the client
+        // can still decode the pending response.
+        title = try container.decodeIfPresent(String.self, forKey: .title) ?? (try container.decode(String.self, forKey: .query))
+        description = try container.decodeIfPresent(String.self, forKey: .description) ?? ""
         audioUrl = try container.decodeIfPresent(String.self, forKey: .audioUrl)
         durationSeconds = try container.decodeIfPresent(Int.self, forKey: .durationSeconds)
         status = try container.decode(DeepDiveStatus.self, forKey: .status)
@@ -53,6 +62,7 @@ struct DeepDiveEpisode: Identifiable, Codable, Hashable {
         generatedAt = try container.decodeIfPresent(String.self, forKey: .generatedAt)
         createdAt = try container.decodeIfPresent(String.self, forKey: .createdAt) ?? ""
         errorMessage = try container.decodeIfPresent(String.self, forKey: .errorMessage)
+        script = try container.decodeIfPresent(String.self, forKey: .script)
     }
 
     // Standard init for creating instances
@@ -69,7 +79,8 @@ struct DeepDiveEpisode: Identifiable, Codable, Hashable {
         sources: [DeepDiveSource],
         generatedAt: String?,
         createdAt: String,
-        errorMessage: String?
+        errorMessage: String?,
+        script: String? = nil
     ) {
         self.id = id
         self.userId = userId
@@ -84,12 +95,22 @@ struct DeepDiveEpisode: Identifiable, Codable, Hashable {
         self.generatedAt = generatedAt
         self.createdAt = createdAt
         self.errorMessage = errorMessage
+        self.script = script
     }
 
     // MARK: - Computed Properties
 
+    /// Has playable content — either a cloud audio URL OR a script we can
+    /// synthesize on device.
     var isAvailable: Bool {
-        status == .completed && audioUrl != nil
+        guard status == .completed else { return false }
+        return audioUrl != nil || script != nil
+    }
+
+    /// True when the on-device Kokoro path is required for playback
+    /// (cloud rendered no audio; the client is responsible for synth).
+    var requiresOnDeviceSynthesis: Bool {
+        status == .completed && audioUrl == nil && script != nil
     }
 
     var formattedDate: String {
@@ -207,9 +228,12 @@ struct DeepDiveGenerationRequest: Codable {
     let language: String
     let targetDurationMinutes: Int
     let userId: String
+    /// "audio" (default) = backend renders MP3 via OpenAI TTS + Supabase upload.
+    /// "script" = backend stops after the script; client synthesizes on device.
+    let format: String?
 
     enum CodingKeys: String, CodingKey {
-        case query, language, userId
+        case query, language, userId, format
         case targetDurationMinutes = "targetDurationMinutes"
     }
 }
@@ -221,8 +245,11 @@ struct DeepDiveResponse: Codable {
 
 struct DeepDiveData: Codable {
     let episode: DeepDiveEpisode
-    let isNew: Bool
-    let message: String
+    // The backend's fire-and-forget 202 response omits these; only the
+    // sync-style `getDeepDive(id:)` and history-detail responses include
+    // them. Decoded as optional so the same shape covers both.
+    let isNew: Bool?
+    let message: String?
 }
 
 struct DeepDiveHistoryResponse: Codable {

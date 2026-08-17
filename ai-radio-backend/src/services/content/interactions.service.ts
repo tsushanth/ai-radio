@@ -4,7 +4,7 @@
  */
 
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
-import OpenAI from 'openai';
+import Anthropic from '@anthropic-ai/sdk';
 import { env } from '../../config/environment';
 import { openaiTTS, type VoiceConfig } from '../tts/openai.tts';
 import type {
@@ -21,7 +21,7 @@ import type {
 
 export class InteractionsService {
   private supabase: SupabaseClient | null = null;
-  private openai: OpenAI;
+  private anthropic: Anthropic;
   private readonly INTERACTIONS_TABLE = 'playback_interactions';
   private readonly PREFERENCES_TABLE = 'user_preferences';
   private readonly AUDIO_BUCKET = 'expansion-audio';
@@ -31,7 +31,7 @@ export class InteractionsService {
       this.supabase = createClient(env.SUPABASE_URL, env.SUPABASE_SERVICE_KEY);
       this.initializeBucket();
     }
-    this.openai = new OpenAI({ apiKey: env.OPENAI_API_KEY });
+    this.anthropic = new Anthropic({ apiKey: env.ANTHROPIC_API_KEY });
   }
 
   private async initializeBucket(): Promise<void> {
@@ -309,15 +309,14 @@ Return JSON:
 
 Return ONLY valid JSON.`;
 
-    const response = await this.openai.chat.completions.create({
-      model: 'gpt-4o',
+    const response = await this.anthropic.messages.create({
+      model: 'claude-sonnet-4-6',
       messages: [{ role: 'user', content: prompt }],
       temperature: 0.7,
       max_tokens: 1000,
-      response_format: { type: 'json_object' },
     });
 
-    const responseText = response.choices[0]?.message?.content || '{}';
+    const responseText = (response.content[0]?.type === 'text' ? response.content[0].text : '') || '{}';
     const parsed = JSON.parse(responseText);
 
     return {

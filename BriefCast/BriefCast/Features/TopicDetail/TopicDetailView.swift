@@ -270,11 +270,37 @@ struct TopicDetailView: View {
                 .font(.system(size: 15, weight: .medium))
                 .foregroundColor(Theme.Colors.primaryText)
 
-            Text("Episodes are auto-generated daily. Check back shortly!")
+            Text("Episodes are auto-generated daily — or kick off this one right now.")
                 .font(.system(size: 13))
                 .foregroundColor(Theme.Colors.secondaryText)
                 .multilineTextAlignment(.center)
 
+            // Primary action: trigger backend generation for this topic
+            // immediately. Mirrors the regenerate path but fires when no
+            // episode exists yet — without this, brand-new locale-specific
+            // topics (e.g. アニメ・マンガ) have no way to play from iOS.
+            Button(action: {
+                Task {
+                    await viewModel.regenerateEpisode()
+                }
+            }) {
+                HStack(spacing: 6) {
+                    Image(systemName: "sparkles")
+                        .font(.system(size: 13, weight: .medium))
+                    Text("Generate now")
+                        .font(.system(size: 14, weight: .semibold))
+                }
+                .foregroundColor(.white)
+                .padding(.horizontal, 20)
+                .padding(.vertical, 10)
+                .background(topic.swiftUIColor)
+                .cornerRadius(20)
+            }
+            .padding(.top, 4)
+
+            // Secondary action: just re-poll the GET endpoint without
+            // triggering generation (useful when a scheduler is already
+            // producing the episode in the background).
             Button(action: {
                 Task {
                     await viewModel.loadInitialData()
@@ -282,17 +308,12 @@ struct TopicDetailView: View {
             }) {
                 HStack(spacing: 6) {
                     Image(systemName: "arrow.clockwise")
-                        .font(.system(size: 13, weight: .medium))
+                        .font(.system(size: 12, weight: .medium))
                     Text("Refresh")
-                        .font(.system(size: 14, weight: .medium))
+                        .font(.system(size: 13))
                 }
-                .foregroundColor(topic.swiftUIColor)
-                .padding(.horizontal, 16)
-                .padding(.vertical, 8)
-                .background(topic.swiftUIColor.opacity(0.1))
-                .cornerRadius(16)
+                .foregroundColor(Theme.Colors.secondaryText)
             }
-            .padding(.top, 4)
         }
         .padding(.vertical, 24)
         .padding(.horizontal, Theme.Spacing.screenPadding)

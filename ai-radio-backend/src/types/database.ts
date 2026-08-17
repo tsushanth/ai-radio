@@ -9,6 +9,8 @@ export interface User {
   name: string | null;
   timezone: string;
   preferences: UserPreferences;
+  voice_id: string | null;
+  voice_cloned_at: string | null;
   created_at: string;
   updated_at: string;
 }

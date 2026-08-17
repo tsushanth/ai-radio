@@ -34,22 +34,26 @@ struct OnboardingView: View {
                 )
                 .tag(1)
 
-                // Page 2: Link Account (with email/calendar options)
+                // Page 2: On-device voice (offered for eligible devices)
+                OnDeviceVoicePage(onContinue: viewModel.nextPage)
+                    .tag(2)
+
+                // Page 3: Link Account (with email/calendar options)
                 LinkAccountPage(
                     viewModel: viewModel,
                     onSkip: viewModel.nextPage,
                     onContinue: viewModel.nextPage
                 )
-                .tag(2)
+                .tag(3)
 
-                // Page 3: Topic Selection
+                // Page 4: Topic Selection
                 TopicSelectionPage(
                     viewModel: viewModel,
                     onComplete: completeOnboarding,
                     language: selectedLanguage.rawValue,
                     onTopicsFetched: { fetchedTopics = $0 }
                 )
-                .tag(3)
+                .tag(4)
             }
             .tabViewStyle(.page(indexDisplayMode: .never))
             .animation(.easeInOut, value: viewModel.currentPage)
@@ -59,7 +63,7 @@ struct OnboardingView: View {
                 Spacer()
 
                 HStack(spacing: 8) {
-                    ForEach(0..<4) { index in
+                    ForEach(0..<5) { index in
                         Circle()
                             .fill(index == viewModel.currentPage ? Theme.Colors.accent : Color.white.opacity(0.3))
                             .frame(width: 8, height: 8)
@@ -296,6 +300,207 @@ struct LanguageSelectionPage: View {
             }
             .padding(.horizontal, 24)
             .padding(.bottom, 60)
+        }
+    }
+}
+
+// MARK: - On-Device Voice Page
+
+/// Pre-loads the Kokoro 82M TTS model so deep dives and podcasts can render
+/// privately on-device. Shown only to eligible devices; the onboarding
+/// view-model auto-skips this page when `KokoroModelManager.isDeviceEligible`
+/// is false.
+struct OnDeviceVoicePage: View {
+    let onContinue: () -> Void
+
+    @ObservedObject private var modelManager = KokoroModelManager.shared
+    @State private var didStart: Bool = false
+    @State private var errorText: String? = nil
+
+    var body: some View {
+        ScrollView(showsIndicators: false) {
+            VStack(spacing: 28) {
+                // Icon
+                ZStack {
+                    Circle()
+                        .fill(
+                            LinearGradient(
+                                colors: [Theme.Colors.accent, Theme.Colors.accent.opacity(0.5)],
+                                startPoint: .topLeading,
+                                endPoint: .bottomTrailing
+                            )
+                        )
+                        .frame(width: 110, height: 110)
+
+                    Image(systemName: "waveform.badge.mic")
+                        .font(.system(size: 50))
+                        .foregroundColor(.white)
+                }
+
+                // Title + description
+                VStack(spacing: 12) {
+                    Text("Voice runs on your phone")
+                        .font(.system(size: 28, weight: .bold))
+                        .foregroundColor(Theme.Colors.primaryText)
+                        .multilineTextAlignment(.center)
+
+                    Text("Generate deep dives and podcasts on-device — faster, free, and private. The voice model is about 250 MB.")
+                        .font(.system(size: 16))
+                        .foregroundColor(Theme.Colors.secondaryText)
+                        .multilineTextAlignment(.center)
+                        .padding(.horizontal, 24)
+                }
+
+                // Bullets
+                VStack(alignment: .leading, spacing: 14) {
+                    bullet(icon: "bolt.fill",            title: "Faster",  subtitle: "~60–120s vs 3–10 min in the cloud")
+                    bullet(icon: "dollarsign.circle.fill", title: "Free",   subtitle: "No paid voice quota — generate as much as you want")
+                    bullet(icon: "lock.fill",            title: "Private", subtitle: "Your script never leaves the device")
+                    bullet(icon: "wifi.slash",           title: "Offline", subtitle: "Works on flights and patchy signal")
+                }
+                .padding(.horizontal, 28)
+
+                // Status / progress
+                statusBlock
+                    .padding(.horizontal, 24)
+
+                // Action buttons
+                VStack(spacing: 12) {
+                    Button(action: primaryAction) {
+                        Text(primaryButtonTitle)
+                            .font(.system(size: 17, weight: .semibold))
+                            .foregroundColor(.white)
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 16)
+                            .background(primaryButtonEnabled ? Theme.Colors.accent : Theme.Colors.accent.opacity(0.4))
+                            .cornerRadius(12)
+                    }
+                    .disabled(!primaryButtonEnabled)
+
+                    Button(action: onContinue) {
+                        Text(skipButtonTitle)
+                            .font(.system(size: 15, weight: .medium))
+                            .foregroundColor(Theme.Colors.secondaryText)
+                            .padding(.vertical, 8)
+                    }
+                }
+                .padding(.horizontal, 24)
+            }
+            .padding(.top, 60)
+            .padding(.bottom, 80)
+        }
+    }
+
+    // MARK: - Subviews
+
+    private func bullet(icon: String, title: String, subtitle: String) -> some View {
+        HStack(spacing: 12) {
+            Image(systemName: icon)
+                .font(.system(size: 18, weight: .medium))
+                .foregroundColor(Theme.Colors.accent)
+                .frame(width: 28, height: 28)
+
+            VStack(alignment: .leading, spacing: 2) {
+                Text(title)
+                    .font(.system(size: 15, weight: .semibold))
+                    .foregroundColor(Theme.Colors.primaryText)
+                Text(subtitle)
+                    .font(.system(size: 13))
+                    .foregroundColor(Theme.Colors.secondaryText)
+            }
+            Spacer()
+        }
+    }
+
+    @ViewBuilder
+    private var statusBlock: some View {
+        switch modelManager.state {
+        case .preparing:
+            VStack(alignment: .leading, spacing: 8) {
+                ProgressView(value: modelManager.downloadProgress)
+                    .tint(Theme.Colors.accent)
+                Text(modelManager.phaseDescription.isEmpty
+                     ? "Downloading…"
+                     : modelManager.phaseDescription)
+                    .font(.system(size: 12))
+                    .foregroundColor(Theme.Colors.secondaryText)
+            }
+        case .ready:
+            HStack(spacing: 8) {
+                Image(systemName: "checkmark.circle.fill")
+                    .foregroundColor(.green)
+                Text("Voice ready")
+                    .font(.system(size: 14, weight: .medium))
+                    .foregroundColor(Theme.Colors.primaryText)
+                Spacer()
+            }
+        case .failed(let message):
+            HStack(spacing: 8) {
+                Image(systemName: "exclamationmark.triangle.fill")
+                    .foregroundColor(.orange)
+                Text(message)
+                    .font(.system(size: 13))
+                    .foregroundColor(Theme.Colors.secondaryText)
+                    .lineLimit(2)
+                Spacer()
+            }
+        case .notReady:
+            EmptyView()
+        }
+    }
+
+    // MARK: - Button logic
+
+    private var primaryButtonTitle: String {
+        switch modelManager.state {
+        case .preparing:
+            let pct = Int(modelManager.downloadProgress * 100)
+            return "Downloading… \(pct)%"
+        case .ready:    return "Continue"
+        case .failed:   return "Try again"
+        case .notReady: return "Download (~250 MB)"
+        }
+    }
+
+    private var primaryButtonEnabled: Bool {
+        switch modelManager.state {
+        case .preparing: return false
+        default:         return true
+        }
+    }
+
+    private var skipButtonTitle: String {
+        switch modelManager.state {
+        case .ready: return "Use cloud voices instead"
+        default:     return "Skip for now"
+        }
+    }
+
+    private func primaryAction() {
+        switch modelManager.state {
+        case .ready:
+            // Persist the user preference so the rest of the app routes through
+            // on-device synthesis where eligible.
+            KokoroModelManager.isOnDeviceEnabledByUser = true
+            onContinue()
+        case .preparing:
+            return
+        case .notReady, .failed:
+            startDownload()
+        }
+    }
+
+    private func startDownload() {
+        didStart = true
+        errorText = nil
+        Task {
+            do {
+                try await KokoroPodcastSynthesizer.shared.prepare()
+            } catch {
+                await MainActor.run {
+                    errorText = error.localizedDescription
+                }
+            }
         }
     }
 }
@@ -1055,7 +1260,14 @@ class OnboardingViewModel: ObservableObject {
     }
 
     func nextPage() {
-        if currentPage < 3 {
+        // Skip the on-device voice page (index 2) when the device isn't
+        // eligible — those users would just see a "your device uses cloud
+        // voices" screen with one Continue button, so we don't bother showing it.
+        if currentPage == 1 && !KokoroModelManager.isDeviceEligible {
+            currentPage = 3
+            return
+        }
+        if currentPage < 4 {
             currentPage += 1
         }
     }

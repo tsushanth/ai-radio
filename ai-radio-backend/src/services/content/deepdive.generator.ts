@@ -4,7 +4,7 @@
  */
 
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
-import OpenAI from 'openai';
+import Anthropic from '@anthropic-ai/sdk';
 import { env } from '../../config/environment';
 import { openaiTTS, type VoiceConfig } from '../tts/openai.tts';
 import { concatenateBuffers } from '../tts/audio.utils';
@@ -21,7 +21,7 @@ import type { PodcastScript, ScriptSegment } from '../../types/database';
 
 export class DeepDiveGenerator {
   private supabase: SupabaseClient | null = null;
-  private openai: OpenAI;
+  private anthropic: Anthropic;
   private readonly BUCKET = 'deep-dive-podcasts';
   private readonly TABLE = 'deep_dive_episodes';
 
@@ -30,7 +30,7 @@ export class DeepDiveGenerator {
       this.supabase = createClient(env.SUPABASE_URL, env.SUPABASE_SERVICE_KEY);
       this.initializeBucket();
     }
-    this.openai = new OpenAI({ apiKey: env.OPENAI_API_KEY });
+    this.anthropic = new Anthropic({ apiKey: env.ANTHROPIC_API_KEY });
   }
 
   /**
@@ -45,12 +45,16 @@ export class DeepDiveGenerator {
 
       if (!bucketExists) {
         console.log(`Creating bucket '${this.BUCKET}'...`);
-        await this.supabase.storage.createBucket(this.BUCKET, {
+        const { error: createError } = await this.supabase.storage.createBucket(this.BUCKET, {
           public: true,
-          fileSizeLimit: 104857600, // 100MB for longer deep dives
+          fileSizeLimit: 52428800, // 50MB — matches Supabase plan ceiling (100MB silently fails)
           allowedMimeTypes: ['audio/mpeg', 'audio/mp3'],
         });
-        console.log(`Bucket '${this.BUCKET}' created`);
+        if (createError) {
+          console.error(`Bucket '${this.BUCKET}' create failed:`, createError);
+        } else {
+          console.log(`Bucket '${this.BUCKET}' created`);
+        }
       }
     } catch (error) {
       console.error('Failed to initialize deep dive bucket:', error);
@@ -61,7 +65,7 @@ export class DeepDiveGenerator {
    * Generate a deep dive podcast from a user query
    */
   async generateDeepDive(request: DeepDiveGenerateRequest): Promise<DeepDiveGenerateResponse> {
-    const { query, userId, language = 'en', targetDurationMinutes = 10 } = request;
+    const { query, userId, language = 'en', targetDurationMinutes = 10, format = 'audio' } = request;
 
     // Validate query
     if (!query || query.trim().length === 0) {
@@ -104,10 +108,44 @@ export class DeepDiveGenerator {
       await this.saveEpisode(episode);
 
       // Step 2: Generate script
-      console.log(`  [2/4] Generating script...`);
+      console.log(`  [2/${format === 'script' ? '2' : '4'}] Generating script...`);
       const script = await this.generateScript(query, research, language, targetDurationMinutes);
       episode.script = JSON.stringify(script);
       episode.description = this.generateDescription(query, research);
+
+      if (format === 'script') {
+        // On-device-TTS clients: stop after the script. No audio is generated
+        // server-side; the client (e.g. iOS BriefCast running Kokoro 82M)
+        // synthesizes from `episode.script` locally. Saves an OpenAI TTS call
+        // and a Supabase storage round-trip per eligible user, and avoids the
+        // MAX_CONCURRENT_DEEPDIVES semaphore entirely.
+        //
+        // Estimated audio duration is derived from script char count
+        // (~150 chars/sec @ Kokoro's 24 kHz output) so the row has a
+        // reasonable `durationSeconds` without us having to render anything.
+        const totalChars = script.segments.reduce(
+          (n: number, s: { text: string }) => n + (s.text?.length ?? 0),
+          0
+        );
+        const estimatedDuration = Math.round(totalChars / 15); // ~15 chars/sec spoken
+
+        episode.status = 'completed';
+        episode.audioUrl = undefined;
+        episode.audioPath = undefined;
+        episode.durationSeconds = estimatedDuration;
+        episode.generatedAt = new Date();
+        episode.updatedAt = new Date();
+
+        await this.saveEpisode(episode);
+
+        console.log(`[DeepDive] Script-only generation complete: ${episode.title} (estimated ${estimatedDuration}s of on-device audio)`);
+
+        return {
+          episode,
+          isNew: true,
+          message: 'Deep Dive script ready — synthesize on device.',
+        };
+      }
 
       // Step 3: Generate audio
       console.log(`  [3/4] Generating audio...`);
@@ -198,18 +236,22 @@ Return a JSON object with this structure:
 
 Return ONLY valid JSON, no markdown or additional text.`;
 
-    const response = await this.openai.chat.completions.create({
-      model: 'gpt-4o',
+    const response = await this.anthropic.messages.create({
+      model: 'claude-sonnet-4-6',
+      system: systemPrompt,
       messages: [
-        { role: 'system', content: systemPrompt },
         { role: 'user', content: userPrompt },
       ],
       temperature: 0.7,
       max_tokens: 2000,
-      response_format: { type: 'json_object' },
     });
 
-    const responseText = response.choices[0]?.message?.content || '{}';
+    const rawText = (response.content[0]?.type === 'text' ? response.content[0].text : '') || '{}';
+    // Strip ```json ... ``` fences if the model returned them despite instructions.
+    const responseText = rawText.trim()
+      .replace(/^```(?:json)?\s*/i, '')
+      .replace(/```\s*$/i, '')
+      .trim();
     const parsed = JSON.parse(responseText);
 
     return {
@@ -280,17 +322,17 @@ ${sourceSummaries}
 
 Create an engaging ${targetDurationMinutes}-minute research podcast. Return ONLY valid JSON array.`;
 
-    const response = await this.openai.chat.completions.create({
-      model: 'gpt-4o',
+    const response = await this.anthropic.messages.create({
+      model: 'claude-sonnet-4-6',
+      system: systemPrompt,
       messages: [
-        { role: 'system', content: systemPrompt },
         { role: 'user', content: userPrompt },
       ],
       temperature: 0.7,
       max_tokens: 4000,
     });
 
-    const responseText = response.choices[0]?.message?.content || '';
+    const responseText = (response.content[0]?.type === 'text' ? response.content[0].text : '') || '';
 
     // Parse JSON from response
     const jsonMatch = responseText.match(/\[[\s\S]*\]/);

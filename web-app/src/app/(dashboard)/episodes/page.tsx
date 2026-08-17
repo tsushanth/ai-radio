@@ -11,11 +11,10 @@ import { LiveStationCard } from '@/components/home/LiveStationCard';
 import { ScriptViewer } from '@/components/episodes/ScriptViewer';
 import { LiveReactions } from '@/components/live/LiveReactions';
 import { LiveChat } from '@/components/live/LiveChat';
-import { generateEpisode, getJobStatus, getDeepDiveHistory, generateDeepDive, LIVE_STATIONS } from '@/lib/api/episodes';
-import type { LiveStation, DeepDiveEpisode } from '@/lib/api/episodes';
-import { DeepDiveModal } from '@/components/deepdive/DeepDiveModal';
+import { generateEpisode, getJobStatus, LIVE_STATIONS } from '@/lib/api/episodes';
+import type { LiveStation } from '@/lib/api/episodes';
 import { DailyBriefStatus, Topic, Episode } from '@/types';
-import { Loader2, Search, Radio, Sparkles, Bookmark, X, Play, Pause, Plus, Phone } from 'lucide-react';
+import { Loader2, Search, Radio, Bookmark, X, Play, Pause, Phone } from 'lucide-react';
 
 type TabType = 'forYou' | 'discover';
 
@@ -50,11 +49,6 @@ export default function HomePage() {
   const [showQueue, setShowQueue] = useState(false);
   const [queueSegments, setQueueSegments] = useState<Array<{ segmentType: string; topicName: string }>>([]);
   const [pendingRequests, setPendingRequests] = useState<Array<{ topic: string; requestedAt: string }>>([]);
-
-  // Deep Dive history state
-  const [deepDiveHistory, setDeepDiveHistory] = useState<DeepDiveEpisode[]>([]);
-  const [showDeepDiveModal, setShowDeepDiveModal] = useState(false);
-  const [isGeneratingDeepDive, setIsGeneratingDeepDive] = useState(false);
 
   // Update status based on linked accounts
   useEffect(() => {
@@ -124,20 +118,6 @@ export default function HomePage() {
     const interval = setInterval(fetchNowPlaying, 15000);
     return () => clearInterval(interval);
   }, [playingStation, isStationPlaying]);
-
-  // Load deep dive history
-  useEffect(() => {
-    async function loadDeepDives() {
-      if (!user?.email) return;
-      try {
-        const history = await getDeepDiveHistory(user.email, 5);
-        setDeepDiveHistory(history);
-      } catch (err) {
-        console.log('Failed to load deep dive history:', err);
-      }
-    }
-    loadDeepDives();
-  }, [user?.email]);
 
   // Filter topics
   const visibleTopics = topics.filter((t) => !preferences.hiddenTopicIds.includes(t.id));
@@ -278,33 +258,6 @@ export default function HomePage() {
     setShowChat(false);
   }, []);
 
-  const handleGenerateDeepDive = useCallback(async (query: string, options: { language: string; durationMinutes: number }) => {
-    if (!user?.email) return;
-
-    setIsGeneratingDeepDive(true);
-    try {
-      const episode = await generateDeepDive(user.email, query, {
-        language: options.language,
-        targetDurationMinutes: options.durationMinutes,
-      });
-
-      // Add to history
-      setDeepDiveHistory(prev => [episode, ...prev]);
-      setShowDeepDiveModal(false);
-
-      // Auto-play the generated episode
-      if (episode.audioUrl) {
-        const audio = new Audio(episode.audioUrl);
-        audio.play().catch(console.error);
-      }
-    } catch (err) {
-      console.error('Failed to generate deep dive:', err);
-      alert('Failed to generate deep dive. Please try again.');
-    } finally {
-      setIsGeneratingDeepDive(false);
-    }
-  }, [user?.email]);
-
   if (topicsLoading) {
     return (
       <div className="flex items-center justify-center h-full">
@@ -405,31 +358,6 @@ export default function HomePage() {
               ))}
             </div>
           </section>
-
-          {/* Deep Dive History */}
-          {deepDiveHistory.length > 0 && (
-            <section className="px-4">
-              <div className="flex items-center gap-2 mb-3">
-                <Sparkles className="w-5 h-5 text-purple-500" />
-                <h2 className="text-lg font-bold">Your Deep Dives</h2>
-              </div>
-              <div className="flex gap-4 overflow-x-auto pb-2 -mx-4 px-4 scrollbar-hide">
-                {deepDiveHistory.map((dive) => (
-                  <button
-                    key={dive.id}
-                    className="flex-shrink-0 w-48 p-4 bg-gradient-to-br from-purple-500 to-indigo-600 rounded-xl text-left hover:scale-105 transition-transform"
-                  >
-                    <p className="text-white font-medium text-sm line-clamp-2 mb-2">
-                      {dive.query}
-                    </p>
-                    <p className="text-white/70 text-xs">
-                      {Math.round(dive.durationSeconds / 60)} min
-                    </p>
-                  </button>
-                ))}
-              </div>
-            </section>
-          )}
 
           {/* Your Topics (Bookmarked) */}
           {bookmarkedTopics.length > 0 && (
@@ -710,24 +638,6 @@ export default function HomePage() {
         </div>
       )}
 
-      {/* Deep Dive FAB */}
-      {!playingStation && (
-        <button
-          onClick={() => setShowDeepDiveModal(true)}
-          className="fixed bottom-6 right-6 w-14 h-14 bg-gradient-to-br from-purple-500 to-indigo-600 text-white rounded-full shadow-lg hover:shadow-xl hover:scale-105 transition-all flex items-center justify-center z-40"
-          title="Create Deep Dive"
-        >
-          <Plus className="w-6 h-6" />
-        </button>
-      )}
-
-      {/* Deep Dive Modal */}
-      <DeepDiveModal
-        isOpen={showDeepDiveModal}
-        onClose={() => setShowDeepDiveModal(false)}
-        onGenerate={handleGenerateDeepDive}
-        isGenerating={isGeneratingDeepDive}
-      />
     </div>
   );
 }

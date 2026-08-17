@@ -60,10 +60,23 @@ actor KokoroPodcastSynthesizer {
 
         progress(Progress(fraction: 0, message: "Synthesizing on device…"))
 
+        // Per-device chunk cap, matching ReadAloud's production heuristic.
+        // 4 GB devices (iPhone 11 / 12 / 13 / SE3) must stay under FluidAudio's
+        // 5 s short-variant threshold (~71 phoneme tokens) or the runtime
+        // promotes to the 15 s long variant and OOMs. 6 GB+ devices can carry
+        // bigger chunks for noticeably more natural prosody.
+        let physicalRAM = ProcessInfo.processInfo.physicalMemory
+        let isHighMemoryDevice = physicalRAM >= 5 * 1024 * 1024 * 1024 // 5 GiB cutoff = 6 GB+ devices
+        let chunkSize = isHighMemoryDevice ? 120 : 40
+
+        let synthStart = Date()
+        print("[Kokoro] synthesize start — \(speakable.count) segments, \(totalChars) chars, chunkSize=\(chunkSize), RAM=\(physicalRAM / (1024*1024*1024))GB")
+
         for (idx, segment) in speakable.enumerated() {
             try Task.checkCancellation()
             let voice = (segment.speaker == "host2") ? v2 : v1
-            let chunks = Self.splitIntoSafeChunks(segment.text, maxChars: 70)
+            let chunks = Self.splitIntoSafeChunks(segment.text, maxChars: chunkSize)
+            let segStart = Date()
 
             for chunk in chunks {
                 try Task.checkCancellation()
@@ -77,6 +90,15 @@ actor KokoroPodcastSynthesizer {
                 ))
             }
 
+            let segElapsed = Date().timeIntervalSince(segStart)
+            let totalElapsed = Date().timeIntervalSince(synthStart)
+            let frac = Double(processedChars) / Double(max(1, totalChars))
+            let etaRemaining = frac > 0.01 ? totalElapsed * (1 - frac) / frac : 0
+            print(String(format: "[Kokoro] seg %d/%d (%@) — %d chars in %.1fs — total %.1fs, %.0f%% — ETA %.0fs",
+                idx + 1, speakable.count, voice,
+                segment.text.count, segElapsed,
+                totalElapsed, frac * 100, etaRemaining))
+
             if idx < speakable.count - 1 {
                 allSamples.append(contentsOf: [Int16](repeating: 0, count: interSegmentPauseSamples))
             }
@@ -84,11 +106,22 @@ actor KokoroPodcastSynthesizer {
 
         let url = try writeWAV(samples: allSamples, sampleRate: sampleRate)
         let duration = Double(allSamples.count) / Double(sampleRate)
+        let totalElapsed = Date().timeIntervalSince(synthStart)
+        print(String(format: "[Kokoro] synthesize done in %.1fs — audio %.1fs (RTF %.2fx)",
+            totalElapsed, duration, totalElapsed / max(0.01, duration)))
         progress(Progress(fraction: 1.0, message: "Complete"))
         return Result(fileURL: url, durationSeconds: duration)
     }
 
     // MARK: - Setup
+
+    /// Pre-download + load the Kokoro model without triggering synthesis.
+    /// Idempotent. Callable from a settings UI so the user can pre-warm the
+    /// model with progress feedback before their first dive. Synthesis paths
+    /// call the same underlying [ensureReady] internally.
+    func prepare() async throws {
+        try await ensureReady()
+    }
 
     private func ensureReady() async throws {
         guard KokoroModelManager.isDeviceEligible else {
@@ -239,14 +272,20 @@ actor KokoroManagerHandle {
     }
 
     static func create() async throws -> KokoroManagerHandle {
-        // iOS 26+ has a known ANE compiler regression that corrupts Kokoro's
-        // output. FluidAudio's recommended workaround is to route to CPU+GPU.
-        let computeUnits: MLComputeUnits
-        if #available(iOS 26.0, *) {
-            computeUnits = .cpuAndGPU
-        } else {
-            computeUnits = .all
-        }
+        // The ANE compiler bug "Cannot retrieve vector from IRValue format int32"
+        // surfaces on both iOS 18 (iPhone 12 / A14) and iOS 26+. Use .cpuAndGPU
+        // unconditionally — Apple Neural Engine path is too unreliable across
+        // OS versions for this model and was producing silent audio on iPhone 12
+        // in ReadAloud production. The perf hit on newer Apple Silicon is
+        // acceptable given the alternative.
+        let computeUnits: MLComputeUnits = .cpuAndGPU
+
+        // One-time migration: earlier BriefCast builds may have downloaded the
+        // 15 s variant which OOMs on iPhone 11/12/13/SE3 (~3.6 GB usable). Remove
+        // cached 15 s files so FluidAudio doesn't try to load them. Idempotent —
+        // does nothing if already cleaned. Only runs once per device per app
+        // version (guarded by a UserDefaults flag).
+        Self.cleanup15sVariantIfNeeded()
 
         let progressHandler: DownloadUtils.ProgressHandler = { snapshot in
             let description: String
@@ -287,6 +326,33 @@ actor KokoroManagerHandle {
         return PCMResult(samples: samples, sampleRate: 24_000)
     }
 
+    /// Remove cached 15 s variant files left over from earlier builds.
+    /// FluidAudio caches under Library/Caches/fluidaudio/Models/kokoro.
+    /// Files for the 15 s variant include "15s" in their name. Idempotent:
+    /// guarded by a UserDefaults flag so it runs once per app version.
+    static func cleanup15sVariantIfNeeded() {
+        let flagKey = "Audexa.kokoroCache.cleaned15s.v1"
+        if UserDefaults.standard.bool(forKey: flagKey) { return }
+
+        let fm = FileManager.default
+        guard let cacheDir = fm.urls(for: .cachesDirectory, in: .userDomainMask).first else { return }
+        let kokoroDir = cacheDir.appendingPathComponent("fluidaudio/Models/kokoro", isDirectory: true)
+        guard fm.fileExists(atPath: kokoroDir.path) else {
+            // No cache yet → nothing to clean. Mark done so we don't keep checking.
+            UserDefaults.standard.set(true, forKey: flagKey)
+            return
+        }
+
+        var removed = 0
+        if let enumerator = fm.enumerator(at: kokoroDir, includingPropertiesForKeys: nil) {
+            for case let url as URL in enumerator where url.lastPathComponent.contains("15s") {
+                if (try? fm.removeItem(at: url)) != nil { removed += 1 }
+            }
+        }
+        print("[KokoroCache] cleanup15s: removed \(removed) file(s) from \(kokoroDir.path)")
+        UserDefaults.standard.set(true, forKey: flagKey)
+    }
+
     #else
 
     static func create() async throws -> KokoroManagerHandle {
@@ -296,6 +362,8 @@ actor KokoroManagerHandle {
     func synthesize(text: String, voice: String, speed: Float) async throws -> PCMResult {
         throw KokoroError.inferenceFailed("FluidAudio SwiftPM package not linked")
     }
+
+    static func cleanup15sVariantIfNeeded() { /* no-op without FluidAudio */ }
 
     #endif
 }

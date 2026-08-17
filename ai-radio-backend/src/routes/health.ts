@@ -40,7 +40,7 @@ router.get('/detailed', async (req: Request, res: Response) => {
         status: 'unknown',
         configured: false,
       },
-      openai: {
+      anthropic: {
         status: 'unknown',
         model: '',
       },
@@ -74,15 +74,15 @@ router.get('/detailed', async (req: Request, res: Response) => {
     };
   }
 
-  // Check OpenAI service
+  // Check Anthropic service (text generation)
   try {
     const modelInfo = scriptGenerator.getModelInfo();
-    checks.services.openai = {
-      status: process.env.OPENAI_API_KEY ? 'configured' : 'not_configured',
+    checks.services.anthropic = {
+      status: process.env.ANTHROPIC_API_KEY ? 'configured' : 'not_configured',
       model: modelInfo.model,
     };
   } catch (error) {
-    checks.services.openai = {
+    checks.services.anthropic = {
       status: 'error',
       model: '',
     };

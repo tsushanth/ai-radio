@@ -149,54 +149,6 @@ export const LIVE_STATIONS: LiveStation[] = [
   { id: 'it', name: 'Audexa Italiano', description: 'Italian \u2022 Notizie e Consigli', icon: '\u{1F1EE}\u{1F1F9}', color: '#059669', streamUrl: 'https://radio.audexa.app/stream-it', language: 'it' },
 ];
 
-// Deep Dive
-export interface DeepDiveEpisode {
-  id: string;
-  query: string;
-  title: string;
-  description: string;
-  audioUrl: string;
-  durationSeconds: number;
-  status: 'pending' | 'researching' | 'generating' | 'completed' | 'failed';
-  language: string;
-  sources: {
-    url: string;
-    title: string;
-    domain: string;
-    snippet: string;
-  }[];
-  generatedAt: string;
-  userId: string;
-}
-
-interface DeepDiveHistoryResponse {
-  success: boolean;
-  data: {
-    episodes: DeepDiveEpisode[];
-  };
-}
-
-export async function getDeepDiveHistory(userId: string, limit: number = 10): Promise<DeepDiveEpisode[]> {
-  const response = await apiClient<DeepDiveHistoryResponse>(`/deepdive/history?userId=${encodeURIComponent(userId)}&limit=${limit}`);
-  return response.data.episodes || [];
-}
-
-export async function generateDeepDive(
-  userId: string,
-  query: string,
-  options?: {
-    language?: string;
-    targetDurationMinutes?: number;
-  }
-): Promise<DeepDiveEpisode> {
-  const response = await apiClient<{ success: boolean; data: { episode: DeepDiveEpisode } }>('/deepdive/generate', {
-    method: 'POST',
-    body: JSON.stringify({
-      userId,
-      query,
-      language: options?.language || 'en',
-      targetDurationMinutes: options?.targetDurationMinutes || 10,
-    }),
-  });
-  return response.data.episode;
-}
+// Deep Dive removed from web. Feature is iOS-only (on-device synthesis on
+// eligible devices). Cloud rendering was too slow + expensive to be worth
+// keeping a web surface.

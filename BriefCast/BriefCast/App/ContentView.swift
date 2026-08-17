@@ -116,20 +116,25 @@ struct ContentView: View {
                 TabRouter(selectedTab: $selectedTab)
             }
 
-            // Deep Dive FAB (bottom-right, above mini player and tab bar)
-            VStack {
-                Spacer()
-                HStack {
+            // Deep Dive FAB (bottom-right, above mini player and tab bar).
+            // Deep Dive is on-device only — hidden on iOS 17 / <3.7 GB RAM
+            // devices where Kokoro can't load (cloud rendering removed
+            // because it was slow + costly).
+            if KokoroModelManager.isDeviceEligible {
+                VStack {
                     Spacer()
-                    DeepDiveFAB {
-                        if SubscriptionManager.shared.isSubscribed {
-                            showDeepDiveInput = true
-                        } else {
-                            showDeepDiveAdChoice = true
+                    HStack {
+                        Spacer()
+                        DeepDiveFAB {
+                            if SubscriptionManager.shared.isSubscribed {
+                                showDeepDiveInput = true
+                            } else {
+                                showDeepDiveAdChoice = true
+                            }
                         }
+                        .padding(.trailing, 20)
+                        .padding(.bottom, audioService.currentEpisode != nil ? 180 : 100) // Adjust for mini player
                     }
-                    .padding(.trailing, 20)
-                    .padding(.bottom, audioService.currentEpisode != nil ? 180 : 100) // Adjust for mini player
                 }
             }
         }
@@ -146,6 +151,9 @@ struct ContentView: View {
                 },
                 onDismiss: {
                     showDeepDiveInput = false
+                },
+                hasInFlightDeepDive: homeViewModel.deepDiveHistory.contains {
+                    $0.status == .researching || $0.status == .generating
                 }
             )
         }

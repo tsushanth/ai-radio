@@ -299,8 +299,9 @@ struct ForYouTabContent: View {
             // Will resurface when orchestrator detects developing stories and creates
             // temporary live stations. The 24/7 radio banners above replace the static version.
 
-            // Deep Dives history section
-            if !viewModel.deepDiveHistory.isEmpty {
+            // Deep Dives history section. Hidden on ineligible devices to
+            // match the FAB visibility — Deep Dive is on-device only.
+            if KokoroModelManager.isDeviceEligible && !viewModel.deepDiveHistory.isEmpty {
                 VStack(alignment: .leading, spacing: 16) {
                     Text("Your Deep Dives")
                         .font(.system(size: 22, weight: .bold))
@@ -315,6 +316,46 @@ struct ForYouTabContent: View {
                                     isPlaying: isPlayingDeepDive(deepDive.id),
                                     onTap: {
                                         onDeepDiveTapped?(deepDive)
+                                    },
+                                    onPlay: {
+                                        Task { await playDeepDive(deepDive) }
+                                    }
+                                )
+                            }
+                        }
+                        .padding(.horizontal, Theme.Spacing.screenPadding)
+                    }
+                }
+            }
+
+            // Locale-specific featured row: shown for users whose preferred
+            // language has dedicated cultural topics (today: ja). Sits above
+            // "Keep listening" so new users see immediately-relevant content
+            // before generic recs. The row reads from `viewModel.topics` —
+            // the backend already sorts locale-specific topics first when
+            // it gets `lang=ja`, so we just filter to the non-"all" ones.
+            if let row = featuredLocaleRow {
+                VStack(alignment: .leading, spacing: 16) {
+                    HStack(spacing: 6) {
+                        Text(row.flag).font(.system(size: 20))
+                        Text(row.title)
+                            .font(.system(size: 22, weight: .bold))
+                            .foregroundColor(Theme.Colors.primaryText)
+                    }
+                    .padding(.horizontal, Theme.Spacing.screenPadding)
+
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack(spacing: 16) {
+                            ForEach(row.topics) { topic in
+                                let wasBookmarked = viewModel.bookmarkedTopics.contains(where: { $0.id == topic.id })
+                                TopicCard(
+                                    topic: topic,
+                                    isLoading: isLoadingTopic(topic.id),
+                                    isBookmarked: wasBookmarked,
+                                    isPlaying: isPlayingTopic(topic.id),
+                                    onTap: { onTopicTapped(topic) },
+                                    onBookmarkToggle: {
+                                        onBookmarkToggled?(topic, !wasBookmarked)
                                     }
                                 )
                             }
@@ -520,6 +561,75 @@ struct ForYouTabContent: View {
             return false
         }
         return currentEpisode.id == deepDiveId
+    }
+
+    // MARK: - Locale-specific featured row
+
+    private struct LocaleRow {
+        let title: String
+        let flag: String
+        let topics: [Topic]
+    }
+
+    /// Returns a "Trending in <Country>" row when the user's preferred
+    /// language has dedicated cultural topics. Surfaces above the generic
+    /// Popular/Recommended rows so locale users see culturally-relevant
+    /// content immediately. New languages plug in here with their own
+    /// flag + native-language section title.
+    private var featuredLocaleRow: LocaleRow? {
+        let lang = PreferencesService.shared.preferredLanguage
+        let header: (title: String, flag: String)?
+        switch lang {
+        case "ja": header = ("日本のトレンド",      "🇯🇵")
+        case "es": header = ("Tendencias en español", "🌎")
+        // Add more locales here as their catalogs grow (hi/de/ko/zh/fr/it/pt)
+        default:   header = nil
+        }
+        guard let header else { return nil }
+        let local = viewModel.topics.filter { topic in
+            !topic.languages.contains("all") && topic.languages.contains(lang)
+        }
+        guard !local.isEmpty else { return nil }
+        return LocaleRow(title: header.title, flag: header.flag, topics: local)
+    }
+
+    /// Resolve a playable URL for the dive (cloud cache when present,
+    /// on-device synth otherwise) and start playback via AudioService.
+    /// Mirrors `DeepDiveDetailViewModel.play()` so the card play button
+    /// produces identical behavior to the detail-view play button.
+    private func playDeepDive(_ deepDive: DeepDiveEpisode) async {
+        let resolvedURL: String?
+        do {
+            resolvedURL = try await DeepDivePlaybackPreparer.shared.playableURLString(for: deepDive)
+        } catch {
+            print("🎵 [HomeView] DeepDive prepare failed: \(error.localizedDescription)")
+            return
+        }
+        guard let urlString = resolvedURL, URL(string: urlString) != nil else {
+            print("🎵 [HomeView] DeepDive has no playable URL")
+            return
+        }
+        await MainActor.run {
+            let playable = Episode(
+                id: deepDive.id,
+                userId: deepDive.userId,
+                title: deepDive.title,
+                description: deepDive.description,
+                audioUrl: urlString,
+                durationSeconds: deepDive.durationSeconds,
+                status: .completed,
+                errorMessage: nil,
+                generatedAt: Date(),
+                createdAt: Date(),
+                showId: "deep-dive",
+                showName: "Deep Dive",
+                imageColor: DeepDiveEpisode.brandColor,
+                progress: 0,
+                isCompleted: false,
+                lastPlayedAt: nil
+            )
+            audioService.play(episode: playable)
+        }
     }
 
     private func formatDate(_ date: Date) -> String {

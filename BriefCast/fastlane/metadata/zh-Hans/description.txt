@@ -32,3 +32,6 @@ AI生成播客
 你的隐私很重要。我们只读取邮件主题和发件人来创建简报摘要。我们从不存储你的邮件内容，也不与第三方共享你的数据。
 
 立即下载Audexa，体验个性化音频的未来。
+
+Terms of Use (EULA): https://www.apple.com/legal/internet-services/itunes/dev/stdeula/
+Privacy Policy: https://kreativekoala.llc/privacy

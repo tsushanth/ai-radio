@@ -81,7 +81,19 @@ export class ContentAggregatorService {
 
     console.log(`📰 Aggregating content for topic: ${topic.name}`);
 
-    for (const source of topic.sources) {
+    // If no sources configured, fall back to HackerNews search using topic name
+    const sources = topic.sources && topic.sources.length > 0
+      ? topic.sources
+      : [{
+          type: 'hackernews' as const,
+          name: 'HackerNews',
+          keywords: topic.name.split(/\s+/).concat(
+            topic.description ? topic.description.split(/\s+/).slice(0, 5) : []
+          ),
+          maxItems: 15,
+        }];
+
+    for (const source of sources) {
       try {
         const sourceStories = await this.fetchFromSource(source);
         stories.push(...sourceStories);
@@ -92,6 +104,27 @@ export class ContentAggregatorService {
       }
     }
 
+    // If all configured sources failed or returned nothing, fall back to HackerNews keyword search
+    if (stories.length === 0) {
+      console.log(`  ⚠️ No stories from configured sources, falling back to HackerNews for "${topic.name}"`);
+      try {
+        const fallbackSource = {
+          type: 'hackernews' as const,
+          name: 'HackerNews (fallback)',
+          keywords: topic.name.split(/\s+/).concat(
+            topic.description ? topic.description.split(/\s+/).slice(0, 5) : []
+          ),
+          maxItems: 15,
+        };
+        const fallbackStories = await this.fetchFromSource(fallbackSource);
+        stories.push(...fallbackStories);
+        successfulSources++;
+        console.log(`  ✅ HackerNews fallback: ${fallbackStories.length} stories`);
+      } catch (error) {
+        console.error(`  ❌ HackerNews fallback failed:`, error instanceof Error ? error.message : error);
+      }
+    }
+
     // Sort by score/relevance and deduplicate
     const uniqueStories = this.deduplicateStories(stories);
     const sortedStories = this.sortByRelevance(uniqueStories);
@@ -99,14 +132,14 @@ export class ContentAggregatorService {
     // Limit to top stories
     const topStories = sortedStories.slice(0, 15);
 
-    console.log(`📊 Total: ${topStories.length} unique stories from ${successfulSources}/${topic.sources.length} sources`);
+    console.log(`📊 Total: ${topStories.length} unique stories from ${successfulSources}/${sources.length} sources`);
 
     return {
       topicId: topic.id,
       date: this.getTodayDate(),
       stories: topStories,
       fetchedAt: new Date(),
-      totalSources: topic.sources.length,
+      totalSources: sources.length,
       successfulSources,
     };
   }

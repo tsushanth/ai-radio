@@ -70,6 +70,13 @@ class AudioService {
         print("🎵 AudioService.play() called for episode: \(episode.id)")
         print("🎵 Episode audioUrl: \(episode.audioUrl ?? "nil")")
 
+        // Re-assert exclusive session ownership right before playback starts. AudioService.shared
+        // is instantiated once (often at app launch, well before the user taps play), so the
+        // one-shot setup in init() can be stale by the time audio actually starts — anything else
+        // that touched the shared AVAudioSession in the meantime (e.g. ad SDK initialization) is
+        // overridden here, guaranteeing we're non-mixable/exclusive at the moment it matters.
+        setupAudioSession()
+
         guard let urlString = episode.audioUrl,
               let remoteUrl = URL(string: urlString) else {
             print("❌ AudioService: Invalid audio URL for episode \(episode.id)")
@@ -182,6 +189,9 @@ class AudioService {
         print("🎵 AudioService.resume() called")
         print("🎵 Player exists: \(player != nil)")
         print("🎵 Player rate before: \(player?.rate ?? -1)")
+
+        // Re-assert exclusive session ownership — see comment in play(episode:).
+        setupAudioSession()
 
         player?.play()
         player?.rate = playbackRate

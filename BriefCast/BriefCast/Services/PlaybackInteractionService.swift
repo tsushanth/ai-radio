@@ -3,7 +3,9 @@
 //  BriefCast
 //
 //  Service for tracking playback interactions (skip/tell me more) and adaptive learning
-//  Note: Server-side interaction tracking is not yet implemented
+//  Interactions are cached locally for instant UI feedback and posted to
+//  POST /api/interactions/record, which is what drives server-side
+//  user_preferences aggregation (skipped_topics / expanded_topics).
 //
 //  Models are defined in PlaybackInteraction.swift
 //
@@ -76,6 +78,8 @@ class PlaybackInteractionService {
         userPreferences.lastUpdated = Date()
         cachePreferences()
 
+        await postInteraction(interaction)
+
         print("📊 Recorded skip interaction for \(contextId)")
     }
 
@@ -110,6 +114,8 @@ class PlaybackInteractionService {
         }
         userPreferences.lastUpdated = Date()
         cachePreferences()
+
+        await postInteraction(interaction)
 
         print("📊 Recorded tell-me-more interaction for \(contextId)")
 
@@ -218,6 +224,8 @@ class PlaybackInteractionService {
         userPreferences.lastUpdated = Date()
         cachePreferences()
 
+        await postInteraction(interaction)
+
         print("📊 Recorded completion for \(contextId)")
     }
 
@@ -241,6 +249,46 @@ class PlaybackInteractionService {
     /// Get preference score for a segment type (0-1)
     func preferenceScore(for segmentType: String) -> Double {
         userPreferences.preferredSegmentTypes[segmentType] ?? 0.5
+    }
+
+    // MARK: - Network
+
+    /// POST the interaction to the backend so it lands in `playback_interactions`
+    /// and drives server-side `user_preferences` aggregation. Best-effort: local
+    /// state and UI already updated, so failures here are logged and swallowed.
+    private func postInteraction(_ interaction: PlaybackInteraction) async {
+        guard let url = URL(string: "\(baseURL)/interactions/record") else { return }
+
+        var body: [String: Any] = [
+            "context_type": interaction.contextType,
+            "context_id": interaction.contextId,
+            "interaction_type": interaction.interactionType.rawValue,
+            "timestamp": interaction.timestamp
+        ]
+        if let segmentType = interaction.segmentType {
+            body["segment_type"] = segmentType
+        }
+        if let segmentIndex = interaction.segmentIndex {
+            body["segment_index"] = segmentIndex
+        }
+        if let metadata = interaction.metadata {
+            body["metadata"] = metadata
+        }
+
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.setValue(currentUserId, forHTTPHeaderField: "x-user-id")
+
+        do {
+            request.httpBody = try JSONSerialization.data(withJSONObject: body)
+            let (_, response) = try await generationSession.data(for: request)
+            if let httpResponse = response as? HTTPURLResponse, !(200...299).contains(httpResponse.statusCode) {
+                print("⚠️ Failed to post interaction: HTTP \(httpResponse.statusCode)")
+            }
+        } catch {
+            print("⚠️ Failed to post interaction: \(error.localizedDescription)")
+        }
     }
 
     // MARK: - Private Helpers

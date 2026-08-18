@@ -1,6 +1,5 @@
 import GoogleMobileAds
 import UIKit
-import AVFoundation
 
 /// Manages AdMob interstitial and rewarded ads for Audexa.
 /// - Interstitial: plays during radio ad breaks
@@ -30,14 +29,19 @@ final class AdManager: ObservableObject {
     // MARK: - Initialize
 
     func configure() {
-        // Disable AdMob's automatic audio session management to avoid conflicts with radio playback
+        // Disable AdMob's automatic audio session management to avoid conflicts with radio playback.
+        // AudioService is the single owner of AVAudioSession — it configures the exclusive
+        // .playback/.spokenAudio category and re-asserts it on every play()/resume(). AdManager
+        // must NOT also touch AVAudioSession: GADMobileAds.start() (and later ad loads) can
+        // internally mutate the shared session on its own async timeline regardless of this flag,
+        // and a second, uncoordinated setCategory/setActive call here raced against AudioService's
+        // setup — sometimes landing *after* playback had already started and briefly reconfiguring
+        // the session out from under it, which is what let another app's audio session request slip
+        // through without BriefCast getting cleanly interrupted/paused.
         GADMobileAds.sharedInstance().audioVideoManager.audioSessionIsApplicationManaged = true
 
         GADMobileAds.sharedInstance().start { _ in
             print("[AdManager] AdMob SDK initialized")
-            // Restore audio session for playback after AdMob init
-            try? AVAudioSession.sharedInstance().setCategory(.playback, mode: .default)
-            try? AVAudioSession.sharedInstance().setActive(true)
         }
         loadInterstitial()
         loadRewarded()

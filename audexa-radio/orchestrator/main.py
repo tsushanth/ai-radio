@@ -407,7 +407,11 @@ async def lifespan(app: FastAPI):
     config = Config()
     fetcher = ContentFetcher(config.reddit_client_id, config.reddit_client_secret)
     script_gen = RadioScriptGenerator(config.claude_bin, config.claude_model)
-    tts = TTSClient(config.tts_service_url, config.tts_model, config.tts_speed)
+    if os.environ.get("TTS_BACKEND", "kokoro").strip().lower() == "piper":
+        import piper_client
+        tts = piper_client.from_env(config.tts_speed)  # English via the shared Piper app (low priority)
+    else:
+        tts = TTSClient(config.tts_service_url, config.tts_model, config.tts_speed)
     edge_tts_client = EdgeTTSClient(rate="+5%")
     queue = QueueManager(config.queue_ready_dir, config.queue_rendering_dir)
     scheduler = TopicScheduler()

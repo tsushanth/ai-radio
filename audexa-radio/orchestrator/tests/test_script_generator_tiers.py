@@ -41,10 +41,14 @@ def ok_payload(text="[]"):
     }
 
 
-def make_gen(key=FAKE_KEY, claude_bin="", api_key=None):
+def make_gen(key=FAKE_KEY, claude_bin="", api_key=None, fallback_model="", script_claude=None):
     env = {"OPENROUTER_API_KEY": key} if key else {}
     clean = {k: v for k, v in os.environ.items() if not k.startswith("OPENROUTER_")}
     clean.pop("ANTHROPIC_FALLBACK_KEY", None)
+    clean.pop("SCRIPT_CLAUDE", None)
+    clean["OPENROUTER_FALLBACK_MODEL"] = fallback_model  # blank by default: one HTTP call per attempt
+    if script_claude:
+        clean["SCRIPT_CLAUDE"] = script_claude
     if api_key:
         clean["ANTHROPIC_FALLBACK_KEY"] = api_key
     clean.update(env)
@@ -52,7 +56,8 @@ def make_gen(key=FAKE_KEY, claude_bin="", api_key=None):
             mock.patch.object(sg.RadioScriptGenerator, "_check_ollama_available", return_value=False):
         gen = sg.RadioScriptGenerator(claude_bin=claude_bin or "/nonexistent/claude")
     # An empty claude_bin would auto-detect a real CLI; force the tier off instead.
-    gen.claude_bin = claude_bin
+    if gen._claude_enabled:
+        gen.claude_bin = claude_bin
     return gen
 
 
@@ -77,6 +82,47 @@ class TierTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(await gen._call_smart("p"), "api-text")
         self.assertEqual(calls, ["cli", "openrouter", "ollama", "api"])
         self.assertEqual(gen.last_backend, "anthropic-api")
+
+    async def test_claude_off_never_touches_cli_or_api(self):
+        gen = make_gen(claude_bin="/bin/claude", api_key="anthropic-test", script_claude="off")
+        self.assertIsNone(gen.claude_bin)
+        self.assertIsNone(gen.api_key)
+        gen._call_cli = mock.AsyncMock(side_effect=AssertionError("cli must not be called"))
+        gen._call_api = mock.AsyncMock(side_effect=AssertionError("api must not be called"))
+        with mock.patch("urllib.request.urlopen", return_value=FakeResp(ok_payload("luna-text"))):
+            self.assertEqual(await gen._call_smart("p"), "luna-text")
+        self.assertEqual(gen.last_backend, "openrouter:openai/gpt-6-luna")
+
+    async def test_claude_off_all_fail_raises_without_claude(self):
+        gen = make_gen(claude_bin="/bin/claude", api_key="anthropic-test", script_claude="off")
+        gen._call_ollama = mock.AsyncMock(side_effect=RuntimeError("down"))
+        with mock.patch("urllib.request.urlopen", side_effect=TimeoutError("t")):
+            with self.assertRaises(RuntimeError):
+                await gen._call_smart("p")
+
+    async def test_fallback_model_used_when_primary_errors(self):
+        gen = make_gen(fallback_model="openai/gpt-5.6-luna", script_claude="off")
+        seen = []
+
+        def fake_urlopen(req, timeout=None):
+            model = json.loads(req.data)["model"]
+            seen.append(model)
+            if model == "openai/gpt-6-luna":
+                raise TimeoutError("t")
+            return FakeResp(ok_payload("fallback-text"))
+
+        with mock.patch("urllib.request.urlopen", side_effect=fake_urlopen):
+            self.assertEqual(await gen._call_smart("p"), "fallback-text")
+        self.assertEqual(seen, ["openai/gpt-6-luna", "openai/gpt-5.6-luna"])
+        self.assertEqual(gen.last_backend, "openrouter:openai/gpt-5.6-luna")
+
+    async def test_fallback_skipped_on_auth_or_credit_error(self):
+        gen = make_gen(fallback_model="openai/gpt-5.6-luna", script_claude="off")
+        gen._call_ollama = mock.AsyncMock(return_value="ollama-text")
+        err = urllib.error.HTTPError(sg.OPENROUTER_URL, 402, "Payment Required", {}, io.BytesIO(b"credits"))
+        with mock.patch("urllib.request.urlopen", side_effect=err) as u:
+            self.assertEqual(await gen._call_smart("p"), "ollama-text")
+        self.assertEqual(u.call_count, 1)  # 402 means no credits: a second model would fail the same way
 
     async def test_cli_success_short_circuits(self):
         gen = make_gen(claude_bin="/bin/claude")

@@ -1,0 +1,8 @@
+.git
+bakeoff
+tts-service
+docs
+**/__pycache__
+**/tests
+queue
+logs

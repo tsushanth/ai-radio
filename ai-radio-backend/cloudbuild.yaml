@@ -1,3 +1,4 @@
+# Required substitutions (pass via --substitutions or trigger settings, never commit values): _GOOGLE_CLIENT_SECRET, _BATCH_SECRET
 # Google Cloud Build configuration for Cloud Run deployment
 # Optimized for TypeScript Node.js application
 
@@ -48,7 +49,7 @@ steps:
       - '--service-account'
       - '${_SERVICE_ACCOUNT}'
       - '--set-env-vars'
-      - 'NODE_ENV=production,GCP_PROJECT_ID=$PROJECT_ID,GOOGLE_REDIRECT_URI=https://ai-radio-backend.fly.dev/api/auth/oauth/google/callback,GOOGLE_CLIENT_ID=517355381306-o9vf858ti99540b6s21l15gj5dk3d8e2.apps.googleusercontent.com,GOOGLE_CLIENT_SECRET=REDACTED_SECRET,BATCH_SECRET=REDACTED_SECRET'
+      - 'NODE_ENV=production,GCP_PROJECT_ID=$PROJECT_ID,GOOGLE_REDIRECT_URI=https://ai-radio-backend.fly.dev/api/auth/oauth/google/callback,GOOGLE_CLIENT_ID=517355381306-o9vf858ti99540b6s21l15gj5dk3d8e2.apps.googleusercontent.com,GOOGLE_CLIENT_SECRET=$_GOOGLE_CLIENT_SECRET,BATCH_SECRET=$_BATCH_SECRET'
       # Secrets from Secret Manager
       - '--update-secrets'
       - 'SUPABASE_URL=SUPABASE_URL:latest,SUPABASE_SERVICE_KEY=SUPABASE_SERVICE_KEY:latest,OPENAI_API_KEY=openai-key:latest,JWT_SECRET=JWT_SECRET:latest,ELEVENLABS_API_KEY=ELEVENLABS_API_KEY:latest'

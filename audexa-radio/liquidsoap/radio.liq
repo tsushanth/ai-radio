@@ -38,7 +38,7 @@ music_it = playlist(id="music_it", mode="randomize", reload_mode="watch", reload
 jingle_en = single(id="jingle_en", "/jingles/station_id.mp3")
 
 # Icecast output settings
-icecast_password = "REDACTED_SECRET"
+icecast_password = "CHANGE_ME_ICECAST_SOURCE_PASSWORD" # set at deploy time; must match icecast.xml source-password
 icecast_format = %mp3(bitrate=128, samplerate=44100, stereo=true)
 
 # ── English (legacy /stream + /stream-en) ────────────────────────────────────

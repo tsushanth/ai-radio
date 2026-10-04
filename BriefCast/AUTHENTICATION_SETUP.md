@@ -154,7 +154,7 @@ struct BriefCastApp: App {
 3. Configure:
    - **Enabled**: Toggle ON
    - **Client ID (for OAuth)**: `917362189743-4n98540e37mh504qer0m1lihiero6dfh.apps.googleusercontent.com`
-   - **Client Secret (for OAuth)**: `REDACTED_SECRET`
+   - **Client Secret (for OAuth)**: `<your-google-oauth-client-secret>`
    - **Authorized Client IDs** (IMPORTANT): Add your iOS client ID here:
      - `917362189743-4n98540e37mh504qer0m1lihiero6dfh.apps.googleusercontent.com`
    - **Skip nonce verification**: Toggle ON for Google

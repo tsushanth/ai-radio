@@ -198,7 +198,7 @@ func restoreSession() async
 
 **Google**:
 - Client ID: `917362189743-4n98540e37mh504qer0m1lihiero6dfh.apps.googleusercontent.com`
-- Client Secret: `REDACTED_SECRET`
+- Client Secret: `<your-google-oauth-client-secret>`
 
 **App**:
 - Bundle ID: `com.kreativekoala.briefcast`

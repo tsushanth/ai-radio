@@ -14,7 +14,7 @@
     </limits>
 
     <authentication>
-        <source-password>REDACTED_SECRET</source-password>
+        <source-password>CHANGE_ME_ICECAST_SOURCE_PASSWORD</source-password>
         <relay-password>u65i5he3L7PcIspnoS4ouA</relay-password>
         <admin-user>admin</admin-user>
         <admin-password>u65i5he3L7PcIspnoS4ouA</admin-password>

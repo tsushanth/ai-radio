@@ -10,6 +10,11 @@ primary_region = "sjc"   # same region as piper-tts-sjc; reached over Fly's priv
   PIPER_URL = "http://piper-tts-sjc.internal:8080"
   OPENROUTER_FALLBACK_MODEL = "openai/gpt-5.6-luna"
   OPENROUTER_MODEL = "openai/gpt-6-luna"
+  # Piper voices: male host / female host (UK region uses the same voices)
+  TTS_HOST1_VOICES = "custom:en-us-warm-m"
+  TTS_HOST2_VOICES = "custom:en-us-warm-f"
+  TTS_HOST1_VOICES_UK = "custom:en-us-warm-m"
+  TTS_HOST2_VOICES_UK = "custom:en-us-warm-f"
 
 [mounts]
   source = "audexa_data"

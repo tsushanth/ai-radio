@@ -52,7 +52,9 @@ logging.basicConfig(
 logger = logging.getLogger("audexa-radio")
 
 # ── Supported languages ──────────────────────────────────────────────────────
-RADIO_LANGUAGES = ["en", "es", "hi", "pt", "fr", "de", "ja", "ko", "zh", "it"]
+_ALL_LANGUAGES = ["en", "es", "hi", "pt", "fr", "de", "ja", "ko", "zh", "it"]
+# RADIO_LANGUAGES_ACTIVE=en limits generation to the languages whose streams actually run (default: all, as before).
+RADIO_LANGUAGES = [l for l in (os.environ.get("RADIO_LANGUAGES_ACTIVE") or ",".join(_ALL_LANGUAGES)).replace(" ", "").split(",") if l in _ALL_LANGUAGES] or ["en"]
 
 # Map language code to region for source selection
 LANGUAGE_TO_REGION = {

@@ -27,6 +27,19 @@ sed -e "s|5J688etweykEMVfTkGXBdw|$SRC|g" \
     -e "s|<port>8000</port>|<port>8000</port><bind-address>127.0.0.1</bind-address>|" \
     -e 's|<user>icecast</user>|<user>icecast2</user>|; s|<group>icecast</group>|<group>icecast</group>|' \
     /opt/audexa/icecast.xml.tpl > /etc/icecast2/icecast.xml
+# Which language streams to run. Each stream is one live MP3 encoder; ten of them starve a shared CPU
+# (steal time hit 94% and the stream stalled), so the default is English only. STREAM_LANGS=all keeps everything.
+STREAM_LANGS="${STREAM_LANGS:-en}"
+if [ "$STREAM_LANGS" != "all" ]; then
+  drop=""
+  for pair in en:English es:Spanish hi:Hindi pt:Portuguese fr:French de:German ja:Japanese ko:Korean zh:Chinese it:Italian; do
+    code=${pair%%:*}; name=${pair##*:}
+    case ",$STREAM_LANGS," in *",$code,"*) ;; *) drop="$drop $name";; esac
+  done
+  awk -v drop="$drop" 'BEGIN{n=split(drop,d," "); for(i=1;i<=n;i++) bad[d[i]]=1}
+    /^# ── [A-Za-z]+/ { skip=0; for (k in bad) if (index($0, "# ── " k)==1) skip=1 }
+    !skip' /opt/audexa/radio.liq > /opt/audexa/radio.liq.filtered && mv /opt/audexa/radio.liq.filtered /opt/audexa/radio.liq
+fi
 # fail loudly if any literal old secret survived
 if grep -q -e 5J688etweykEMVfTkGXBdw -e u65i5he3L7PcIspnoS4ouA /opt/audexa/radio.liq /etc/icecast2/icecast.xml; then
   echo "refusing to start: template secret not replaced" >&2; exit 1

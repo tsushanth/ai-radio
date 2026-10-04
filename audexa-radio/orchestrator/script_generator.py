@@ -33,18 +33,16 @@ OLLAMA_URL = os.environ.get("OLLAMA_URL", "http://172.17.0.1:11434")
 OLLAMA_MODEL = os.environ.get("OLLAMA_MODEL", "qwen2.5:3b")
 
 OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions"
-# Default model choice (looked up against /api/v1/models, 2026-10):
-#   deepseek/deepseek-v4-flash  $0.028/M in, $0.056/M out, 1M context.
-# A ~500 word script is ~1.5k output tokens, so a call costs well under
-# $0.001. It was the cheapest paid model with writing quality clearly above a
-# 3B local model; llama-3.1-8b / mistral-nemo are similar in price but weaker
-# at holding a strict JSON shape plus two distinct host voices. Runner-up:
-# mistralai/mistral-small-3.2-24b-instruct ($0.094/$0.25, non-reasoning, so no
-# hidden reasoning tokens). The model is reasoning-capable, so requests set
-# reasoning.enabled=false to avoid paying for and waiting on thinking tokens.
-# ":free" models are avoided on purpose: shared rate limits would make a
-# 24/7 station flaky. Override with OPENROUTER_MODEL.
-OPENROUTER_DEFAULT_MODEL = "deepseek/deepseek-v4-flash"
+# Default model: chosen by bake-off, see bakeoff/RESULTS.md (2026-10-04). 58 real Audexa
+# prompts x 2 runs, gates + two blind LLM judges, finalists compared case by case:
+#   openai/gpt-6-luna  $0.10/M in, $0.50/M out, ~$0.0005/script (about $6/mo at 430/day).
+# It passed every format gate (116/116), invented fewer facts than gpt-5.6-luna
+# (2.3 vs 3.3 per script, Claude judge, 30 of 58 cases) and is ~2.5x cheaper.
+# gpt-5.6-luna read slightly more natural to the Gemini judge (+0.19) but costs more and
+# failed 5 gates. Both trail Claude Sonnet clearly: this is a backup tier, not a replacement.
+# Requests set reasoning.enabled=false, as in the bake-off. ":free" models are avoided on
+# purpose: shared rate limits made them fail on most calls. Override with OPENROUTER_MODEL.
+OPENROUTER_DEFAULT_MODEL = "openai/gpt-6-luna"
 OPENROUTER_MAX_TOKENS = 4096
 # After this many consecutive failures the tier is skipped for the cooldown.
 OPENROUTER_FAIL_THRESHOLD = 3

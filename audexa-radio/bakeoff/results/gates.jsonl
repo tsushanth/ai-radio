@@ -1,0 +1,621 @@
+{"model": "anthropic/claude-sonnet-5.5", "case": "headlines:sports-roundup", "task": "headlines", "words": 385, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "anthropic/claude-sonnet-5.5", "case": "headlines:us-politics", "task": "headlines", "words": 429, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "anthropic/claude-sonnet-5.5", "case": "headlines:ai-ml", "task": "headlines", "words": 461, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "anthropic/claude-sonnet-5.5", "case": "headlines:markets-finance", "task": "headlines", "words": 419, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "anthropic/claude-sonnet-5.5", "case": "headlines:daily-news", "task": "headlines", "words": 421, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "anthropic/claude-sonnet-5.5", "case": "headlines:health-wellness", "task": "headlines", "words": 361, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "anthropic/claude-sonnet-5.5", "case": "headlines:space-nasa", "task": "headlines", "words": 465, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "anthropic/claude-sonnet-5.5", "case": "headlines:tech-news", "task": "headlines", "words": 459, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "anthropic/claude-sonnet-5.5", "case": "listener:0", "task": "listener_request", "words": 650, "rep": 0.002, "fail": [], "ok": true}
+{"model": "anthropic/claude-sonnet-5.5", "case": "deep_dive:daily-news", "task": "deep_dive", "words": 717, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "anthropic/claude-sonnet-5.5", "case": "deep_dive:markets-finance", "task": "deep_dive", "words": 749, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "anthropic/claude-sonnet-5.5", "case": "deep_dive:world-update", "task": "deep_dive", "words": 709, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "anthropic/claude-sonnet-5.5", "case": "deep_dive:gaming", "task": "deep_dive", "words": 715, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "anthropic/claude-sonnet-5.5", "case": "transition:0", "task": "transition", "words": 61, "rep": 0.0, "fail": [], "ok": true}
+{"model": "anthropic/claude-sonnet-5.5", "case": "deep_dive:science-discoveries", "task": "deep_dive", "words": 709, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "anthropic/claude-sonnet-5.5", "case": "listener:1", "task": "listener_request", "words": 542, "rep": 0.0, "fail": [], "ok": true}
+{"model": "anthropic/claude-sonnet-5.5", "case": "deep_dive:ai-ml", "task": "deep_dive", "words": 823, "rep": 0.004, "ungrounded_nums": ["350"], "fail": [], "ok": true}
+{"model": "anthropic/claude-sonnet-5.5", "case": "transition:1", "task": "transition", "words": 60, "rep": 0.0, "fail": [], "ok": true}
+{"model": "anthropic/claude-haiku-4.5", "case": "headlines:daily-news", "task": "headlines", "words": 387, "rep": 0.0, "fenced": true, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "anthropic/claude-haiku-4.5", "case": "headlines:us-politics", "task": "headlines", "words": 423, "rep": 0.0, "fenced": true, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "anthropic/claude-sonnet-5.5", "case": "listener:3", "task": "listener_request", "words": 667, "rep": 0.006, "fail": [], "ok": true}
+{"model": "anthropic/claude-haiku-4.5", "case": "headlines:ai-ml", "task": "headlines", "words": 491, "rep": 0.0, "fenced": true, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "anthropic/claude-sonnet-5.5", "case": "listener:2", "task": "listener_request", "words": 546, "rep": 0.0, "fail": [], "ok": true}
+{"model": "anthropic/claude-haiku-4.5", "case": "headlines:tech-news", "task": "headlines", "words": 424, "rep": 0.0, "fenced": true, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "anthropic/claude-sonnet-5.5", "case": "headlines:tech-news:es", "task": "headlines", "words": 504, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "anthropic/claude-sonnet-5.5", "case": "headlines:tech-news:de", "task": "headlines", "words": 443, "rep": 0.0, "ungrounded_nums": ["16", "600"], "fail": [], "ok": true}
+{"model": "anthropic/claude-haiku-4.5", "case": "headlines:markets-finance", "task": "headlines", "words": 486, "rep": 0.0, "fenced": true, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "anthropic/claude-haiku-4.5", "case": "headlines:space-nasa", "task": "headlines", "words": 496, "rep": 0.0, "fenced": true, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "anthropic/claude-haiku-4.5", "case": "headlines:health-wellness", "task": "headlines", "words": 476, "rep": 0.002, "fenced": true, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "anthropic/claude-haiku-4.5", "case": "headlines:sports-roundup", "task": "headlines", "words": 467, "rep": 0.0, "fenced": true, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "anthropic/claude-sonnet-5.5", "case": "headlines:tech-news:ja", "task": "headlines", "words": 23, "rep": 0.0, "ungrounded_nums": ["1250"], "fail": [], "ok": true}
+{"model": "anthropic/claude-haiku-4.5", "case": "deep_dive:world-update", "task": "deep_dive", "words": 609, "rep": 0.0, "fenced": true, "ungrounded_nums": ["1990"], "fail": [], "ok": true}
+{"model": "anthropic/claude-haiku-4.5", "case": "listener:1", "task": "listener_request", "words": 395, "rep": 0.003, "fenced": true, "fail": [], "ok": true}
+{"model": "anthropic/claude-haiku-4.5", "case": "deep_dive:ai-ml", "task": "deep_dive", "words": 610, "rep": 0.005, "fenced": true, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "anthropic/claude-haiku-4.5", "case": "listener:0", "task": "listener_request", "words": 469, "rep": 0.0, "fenced": true, "fail": [], "ok": true}
+{"model": "anthropic/claude-haiku-4.5", "case": "deep_dive:daily-news", "task": "deep_dive", "words": 776, "rep": 0.0, "fenced": true, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "anthropic/claude-haiku-4.5", "case": "transition:0", "task": "transition", "words": 61, "rep": 0.0, "fail": [], "ok": true}
+{"model": "anthropic/claude-haiku-4.5", "case": "deep_dive:markets-finance", "task": "deep_dive", "words": 674, "rep": 0.0, "fenced": true, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "anthropic/claude-haiku-4.5", "case": "transition:1", "task": "transition", "words": 57, "rep": 0.0, "fenced": true, "fail": [], "ok": true}
+{"model": "anthropic/claude-haiku-4.5", "case": "deep_dive:science-discoveries", "task": "deep_dive", "words": 671, "rep": 0.0, "fenced": true, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "anthropic/claude-haiku-4.5", "case": "deep_dive:gaming", "task": "deep_dive", "words": 776, "rep": 0.001, "fenced": true, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "anthropic/claude-haiku-4.5", "case": "listener:2", "task": "listener_request", "words": 434, "rep": 0.007, "fenced": true, "fail": [], "ok": true}
+{"model": "anthropic/claude-haiku-4.5", "case": "listener:3", "task": "listener_request", "words": 461, "rep": 0.007, "fenced": true, "fail": [], "ok": true}
+{"model": "anthropic/claude-haiku-4.5", "case": "headlines:tech-news:es", "task": "headlines", "words": 445, "rep": 0.0, "fenced": true, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "anthropic/claude-haiku-4.5", "case": "headlines:tech-news:de", "task": "headlines", "words": 0, "rep": 0.0, "fenced": true, "ungrounded_nums": [], "fail": ["parse", "length:0", "wrong_language"], "ok": false}
+{"model": "qwen/qwen3.8-27b:free", "case": "headlines:daily-news", "task": "headlines", "words": 406, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "qwen/qwen3.8-27b:free", "case": "headlines:us-politics", "task": "headlines", "words": 577, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "anthropic/claude-haiku-4.5", "case": "headlines:tech-news:ja", "task": "headlines", "words": 14, "rep": 0.0, "fenced": true, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "qwen/qwen3.8-27b:free", "case": "headlines:ai-ml", "task": "headlines", "words": 492, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "qwen/qwen3.8-27b:free", "case": "headlines:tech-news", "task": "headlines", "words": 382, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "qwen/qwen3.8-27b:free", "case": "deep_dive:world-update", "task": "deep_dive", "words": 0, "rep": 0.0, "ungrounded_nums": [], "fail": ["parse", "length:0", "wrong_language"], "ok": false}
+{"model": "qwen/qwen3.8-27b:free", "case": "headlines:health-wellness", "task": "headlines", "words": 0, "rep": 0.0, "ungrounded_nums": [], "fail": ["parse", "length:0", "wrong_language"], "ok": false}
+{"model": "qwen/qwen3.8-27b:free", "case": "headlines:markets-finance", "task": "headlines", "words": 0, "rep": 0.0, "ungrounded_nums": [], "fail": ["parse", "length:0", "wrong_language"], "ok": false}
+{"model": "qwen/qwen3.8-27b:free", "case": "headlines:space-nasa", "task": "headlines", "words": 0, "rep": 0.0, "ungrounded_nums": [], "fail": ["parse", "length:0", "wrong_language"], "ok": false}
+{"model": "qwen/qwen3.8-27b:free", "case": "deep_dive:daily-news", "task": "deep_dive", "words": 0, "rep": 0.0, "ungrounded_nums": [], "fail": ["parse", "length:0", "wrong_language"], "ok": false}
+{"model": "qwen/qwen3.8-27b:free", "case": "headlines:sports-roundup", "task": "headlines", "words": 575, "rep": 0.0, "ungrounded_nums": ["12"], "fail": [], "ok": true}
+{"model": "qwen/qwen3.8-27b:free", "case": "listener:2", "task": "listener_request", "words": 674, "rep": 0.003, "fail": [], "ok": true}
+{"model": "qwen/qwen3.8-27b:free", "case": "deep_dive:science-discoveries", "task": "deep_dive", "words": 802, "rep": 0.004, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "qwen/qwen3.8-27b:free", "case": "listener:1", "task": "listener_request", "words": 734, "rep": 0.005, "fail": [], "ok": true}
+{"model": "qwen/qwen3.8-27b:free", "case": "transition:0", "task": "transition", "words": 25, "rep": 0.0, "fail": ["length:25"], "ok": false}
+{"model": "qwen/qwen3.8-27b:free", "case": "transition:1", "task": "transition", "words": 54, "rep": 0.0, "fail": [], "ok": true}
+{"model": "qwen/qwen3.8-27b:free", "case": "deep_dive:ai-ml", "task": "deep_dive", "words": 750, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "qwen/qwen3.8-27b:free", "case": "listener:0", "task": "listener_request", "words": 0, "rep": 0.0, "fail": ["parse", "length:0", "wrong_language"], "ok": false}
+{"model": "qwen/qwen3.8-27b:free", "case": "deep_dive:gaming", "task": "deep_dive", "words": 989, "rep": 0.0, "ungrounded_nums": ["2000"], "fail": [], "ok": true}
+{"model": "qwen/qwen3.8-27b:free", "case": "deep_dive:markets-finance", "task": "deep_dive", "words": 867, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "qwen/qwen3.8-27b:free", "case": "listener:3", "task": "listener_request", "words": 742, "rep": 0.004, "fail": [], "ok": true}
+{"model": "qwen/qwen3.8-27b:free", "case": "headlines:tech-news:de", "task": "headlines", "words": 522, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "qwen/qwen3.8-27b:free", "case": "headlines:tech-news:ja", "task": "headlines", "words": 24, "rep": 0.0, "ungrounded_nums": ["1250", "280", "600"], "fail": ["ungrounded_numbers:3"], "ok": false}
+{"model": "qwen/qwen3.8-27b:free", "case": "headlines:tech-news:es", "task": "headlines", "words": 570, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "google/gemma-4-31b-it:free", "case": "headlines:daily-news", "task": "headlines", "ok": false, "fail": ["api_error"]}
+{"model": "google/gemma-4-31b-it:free", "case": "headlines:us-politics", "task": "headlines", "ok": false, "fail": ["api_error"]}
+{"model": "google/gemma-4-31b-it:free", "case": "headlines:ai-ml", "task": "headlines", "ok": false, "fail": ["api_error"]}
+{"model": "google/gemma-4-31b-it:free", "case": "headlines:tech-news", "task": "headlines", "ok": false, "fail": ["api_error"]}
+{"model": "google/gemma-4-31b-it:free", "case": "headlines:markets-finance", "task": "headlines", "words": 418, "rep": 0.002, "ungrounded_nums": ["24"], "fail": [], "ok": true}
+{"model": "google/gemma-4-31b-it:free", "case": "headlines:space-nasa", "task": "headlines", "ok": false, "fail": ["api_error"]}
+{"model": "google/gemma-4-31b-it:free", "case": "headlines:health-wellness", "task": "headlines", "ok": false, "fail": ["api_error"]}
+{"model": "google/gemma-4-31b-it:free", "case": "headlines:sports-roundup", "task": "headlines", "ok": false, "fail": ["api_error"]}
+{"model": "google/gemma-4-31b-it:free", "case": "deep_dive:daily-news", "task": "deep_dive", "ok": false, "fail": ["api_error"]}
+{"model": "google/gemma-4-31b-it:free", "case": "deep_dive:world-update", "task": "deep_dive", "ok": false, "fail": ["api_error"]}
+{"model": "google/gemma-4-31b-it:free", "case": "deep_dive:ai-ml", "task": "deep_dive", "ok": false, "fail": ["api_error"]}
+{"model": "google/gemma-4-31b-it:free", "case": "deep_dive:markets-finance", "task": "deep_dive", "ok": false, "fail": ["api_error"]}
+{"model": "google/gemma-4-31b-it:free", "case": "deep_dive:science-discoveries", "task": "deep_dive", "ok": false, "fail": ["api_error"]}
+{"model": "google/gemma-4-31b-it:free", "case": "deep_dive:gaming", "task": "deep_dive", "ok": false, "fail": ["api_error"]}
+{"model": "google/gemma-4-31b-it:free", "case": "listener:0", "task": "listener_request", "ok": false, "fail": ["api_error"]}
+{"model": "google/gemma-4-31b-it:free", "case": "listener:1", "task": "listener_request", "ok": false, "fail": ["api_error"]}
+{"model": "nvidia/nemotron-3-super-120b-a12b:free", "case": "headlines:daily-news", "task": "headlines", "words": 338, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "nvidia/nemotron-3-super-120b-a12b:free", "case": "headlines:us-politics", "task": "headlines", "words": 482, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "google/gemma-4-31b-it:free", "case": "listener:2", "task": "listener_request", "ok": false, "fail": ["api_error"]}
+{"model": "google/gemma-4-31b-it:free", "case": "listener:3", "task": "listener_request", "ok": false, "fail": ["api_error"]}
+{"model": "google/gemma-4-31b-it:free", "case": "transition:0", "task": "transition", "ok": false, "fail": ["api_error"]}
+{"model": "nvidia/nemotron-3-super-120b-a12b:free", "case": "headlines:tech-news", "task": "headlines", "words": 582, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "nvidia/nemotron-3-super-120b-a12b:free", "case": "headlines:ai-ml", "task": "headlines", "words": 746, "rep": 0.0, "ungrounded_nums": [], "fail": ["length:746"], "ok": false}
+{"model": "nvidia/nemotron-3-super-120b-a12b:free", "case": "headlines:markets-finance", "task": "headlines", "words": 693, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "nvidia/nemotron-3-super-120b-a12b:free", "case": "headlines:space-nasa", "task": "headlines", "words": 725, "rep": 0.0, "ungrounded_nums": ["300", "1960"], "fail": ["length:725"], "ok": false}
+{"model": "google/gemma-4-31b-it:free", "case": "headlines:tech-news:es", "task": "headlines", "ok": false, "fail": ["api_error"]}
+{"model": "nvidia/nemotron-3-super-120b-a12b:free", "case": "headlines:sports-roundup", "task": "headlines", "words": 459, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "nvidia/nemotron-3-super-120b-a12b:free", "case": "headlines:health-wellness", "task": "headlines", "words": 623, "rep": 0.002, "ungrounded_nums": ["30", "40"], "fail": [], "ok": true}
+{"model": "google/gemma-4-31b-it:free", "case": "transition:1", "task": "transition", "words": 62, "rep": 0.0, "fail": [], "ok": true}
+{"model": "nvidia/nemotron-3-super-120b-a12b:free", "case": "deep_dive:daily-news", "task": "deep_dive", "words": 967, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "nvidia/nemotron-3-super-120b-a12b:free", "case": "deep_dive:markets-finance", "task": "deep_dive", "words": 502, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "nvidia/nemotron-3-super-120b-a12b:free", "case": "deep_dive:world-update", "task": "deep_dive", "words": 1058, "rep": 0.001, "ungrounded_nums": ["70", "12", "50,000", "1995"], "fail": ["length:1058", "ungrounded_numbers:4"], "ok": false}
+{"model": "nvidia/nemotron-3-super-120b-a12b:free", "case": "deep_dive:ai-ml", "task": "deep_dive", "words": 626, "rep": 0.0, "ungrounded_nums": ["24"], "fail": [], "ok": true}
+{"model": "nvidia/nemotron-3-super-120b-a12b:free", "case": "deep_dive:science-discoveries", "task": "deep_dive", "words": 500, "rep": 0.002, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "nvidia/nemotron-3-super-120b-a12b:free", "case": "listener:1", "task": "listener_request", "words": 398, "rep": 0.0, "fail": [], "ok": true}
+{"model": "nvidia/nemotron-3-super-120b-a12b:free", "case": "transition:1", "task": "transition", "words": 63, "rep": 0.0, "fail": [], "ok": true}
+{"model": "nvidia/nemotron-3-super-120b-a12b:free", "case": "transition:0", "task": "transition", "words": 61, "rep": 0.0, "fail": [], "ok": true}
+{"model": "nvidia/nemotron-3-super-120b-a12b:free", "case": "listener:2", "task": "listener_request", "words": 394, "rep": 0.003, "fail": [], "ok": true}
+{"model": "nvidia/nemotron-3-super-120b-a12b:free", "case": "listener:0", "task": "listener_request", "words": 465, "rep": 0.004, "fail": [], "ok": true}
+{"model": "nvidia/nemotron-3-super-120b-a12b:free", "case": "deep_dive:gaming", "task": "deep_dive", "words": 667, "rep": 0.0, "ungrounded_nums": ["16", "2000"], "fail": [], "ok": true}
+{"model": "google/gemma-4-31b-it:free", "case": "headlines:tech-news:de", "task": "headlines", "ok": false, "fail": ["api_error"]}
+{"model": "nvidia/nemotron-3-super-120b-a12b:free", "case": "listener:3", "task": "listener_request", "words": 546, "rep": 0.0, "fail": [], "ok": true}
+{"model": "nvidia/nemotron-3-ultra-550b-a55b:free", "case": "headlines:ai-ml", "task": "headlines", "ok": false, "fail": ["api_error"]}
+{"model": "google/gemma-4-31b-it:free", "case": "headlines:tech-news:ja", "task": "headlines", "ok": false, "fail": ["api_error"]}
+{"model": "nvidia/nemotron-3-super-120b-a12b:free", "case": "headlines:tech-news:de", "task": "headlines", "words": 506, "rep": 0.0, "ungrounded_nums": ["16"], "fail": [], "ok": true}
+{"model": "nvidia/nemotron-3-super-120b-a12b:free", "case": "headlines:tech-news:ja", "task": "headlines", "words": 58, "rep": 0.0, "ungrounded_nums": ["1250", "40901", "600"], "fail": ["ungrounded_numbers:3"], "ok": false}
+{"model": "nvidia/nemotron-3-super-120b-a12b:free", "case": "headlines:tech-news:es", "task": "headlines", "words": 940, "rep": 0.003, "ungrounded_nums": [], "fail": ["length:940"], "ok": false}
+{"model": "nvidia/nemotron-3-ultra-550b-a55b:free", "case": "headlines:health-wellness", "task": "headlines", "words": 398, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "nvidia/nemotron-3-ultra-550b-a55b:free", "case": "deep_dive:world-update", "task": "deep_dive", "ok": false, "fail": ["api_error"]}
+{"model": "nvidia/nemotron-3-ultra-550b-a55b:free", "case": "deep_dive:ai-ml", "task": "deep_dive", "ok": false, "fail": ["api_error"]}
+{"model": "nvidia/nemotron-3-ultra-550b-a55b:free", "case": "headlines:us-politics", "task": "headlines", "words": 680, "rep": 0.0, "ungrounded_nums": ["529"], "fail": [], "ok": true}
+{"model": "nvidia/nemotron-3-ultra-550b-a55b:free", "case": "headlines:daily-news", "task": "headlines", "words": 542, "rep": 0.004, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "nvidia/nemotron-3-ultra-550b-a55b:free", "case": "deep_dive:daily-news", "task": "deep_dive", "words": 558, "rep": 0.0, "ungrounded_nums": ["11", "15"], "fail": [], "ok": true}
+{"model": "nvidia/nemotron-3-ultra-550b-a55b:free", "case": "headlines:tech-news", "task": "headlines", "words": 800, "rep": 0.005, "ungrounded_nums": ["380", "650", "7000", "20,000", "2012", "1,600"], "fail": ["length:800", "ungrounded_numbers:6"], "ok": false}
+{"model": "nvidia/nemotron-3-ultra-550b-a55b:free", "case": "listener:1", "task": "listener_request", "ok": false, "fail": ["api_error"]}
+{"model": "nvidia/nemotron-3-ultra-550b-a55b:free", "case": "headlines:markets-finance", "task": "headlines", "words": 672, "rep": 0.001, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "nvidia/nemotron-3-ultra-550b-a55b:free", "case": "headlines:space-nasa", "task": "headlines", "words": 0, "rep": 0.0, "ungrounded_nums": [], "fail": ["parse", "length:0", "wrong_language"], "ok": false}
+{"model": "nvidia/nemotron-3-ultra-550b-a55b:free", "case": "transition:0", "task": "transition", "words": 37, "rep": 0.0, "fail": [], "ok": true}
+{"model": "nvidia/nemotron-3-ultra-550b-a55b:free", "case": "transition:1", "task": "transition", "ok": false, "fail": ["api_error"]}
+{"model": "nvidia/nemotron-3-ultra-550b-a55b:free", "case": "headlines:tech-news:es", "task": "headlines", "ok": false, "fail": ["api_error"]}
+{"model": "nvidia/nemotron-3-ultra-550b-a55b:free", "case": "headlines:tech-news:de", "task": "headlines", "ok": false, "fail": ["api_error"]}
+{"model": "nvidia/nemotron-3-ultra-550b-a55b:free", "case": "deep_dive:markets-finance", "task": "deep_dive", "words": 689, "rep": 0.0, "ungrounded_nums": ["2008", "2020", "1929", "401", "15", "1987"], "fail": ["ungrounded_numbers:6"], "ok": false}
+{"model": "thinkingmachines/inkling:free", "case": "headlines:daily-news", "task": "headlines", "ok": false, "fail": ["api_error"]}
+{"model": "thinkingmachines/inkling:free", "case": "headlines:us-politics", "task": "headlines", "ok": false, "fail": ["api_error"]}
+{"model": "thinkingmachines/inkling:free", "case": "headlines:ai-ml", "task": "headlines", "ok": false, "fail": ["api_error"]}
+{"model": "thinkingmachines/inkling:free", "case": "headlines:tech-news", "task": "headlines", "ok": false, "fail": ["api_error"]}
+{"model": "thinkingmachines/inkling:free", "case": "headlines:markets-finance", "task": "headlines", "ok": false, "fail": ["api_error"]}
+{"model": "thinkingmachines/inkling:free", "case": "headlines:space-nasa", "task": "headlines", "ok": false, "fail": ["api_error"]}
+{"model": "thinkingmachines/inkling:free", "case": "headlines:health-wellness", "task": "headlines", "ok": false, "fail": ["api_error"]}
+{"model": "thinkingmachines/inkling:free", "case": "headlines:sports-roundup", "task": "headlines", "ok": false, "fail": ["api_error"]}
+{"model": "thinkingmachines/inkling:free", "case": "deep_dive:daily-news", "task": "deep_dive", "ok": false, "fail": ["api_error"]}
+{"model": "thinkingmachines/inkling:free", "case": "deep_dive:world-update", "task": "deep_dive", "ok": false, "fail": ["api_error"]}
+{"model": "thinkingmachines/inkling:free", "case": "deep_dive:ai-ml", "task": "deep_dive", "ok": false, "fail": ["api_error"]}
+{"model": "thinkingmachines/inkling:free", "case": "deep_dive:markets-finance", "task": "deep_dive", "ok": false, "fail": ["api_error"]}
+{"model": "thinkingmachines/inkling:free", "case": "deep_dive:science-discoveries", "task": "deep_dive", "ok": false, "fail": ["api_error"]}
+{"model": "thinkingmachines/inkling:free", "case": "deep_dive:gaming", "task": "deep_dive", "ok": false, "fail": ["api_error"]}
+{"model": "thinkingmachines/inkling:free", "case": "listener:0", "task": "listener_request", "ok": false, "fail": ["api_error"]}
+{"model": "thinkingmachines/inkling:free", "case": "listener:1", "task": "listener_request", "ok": false, "fail": ["api_error"]}
+{"model": "thinkingmachines/inkling:free", "case": "listener:2", "task": "listener_request", "ok": false, "fail": ["api_error"]}
+{"model": "thinkingmachines/inkling:free", "case": "listener:3", "task": "listener_request", "ok": false, "fail": ["api_error"]}
+{"model": "thinkingmachines/inkling:free", "case": "transition:0", "task": "transition", "ok": false, "fail": ["api_error"]}
+{"model": "thinkingmachines/inkling:free", "case": "transition:1", "task": "transition", "ok": false, "fail": ["api_error"]}
+{"model": "thinkingmachines/inkling:free", "case": "headlines:tech-news:es", "task": "headlines", "ok": false, "fail": ["api_error"]}
+{"model": "thinkingmachines/inkling:free", "case": "headlines:tech-news:de", "task": "headlines", "ok": false, "fail": ["api_error"]}
+{"model": "thinkingmachines/inkling:free", "case": "headlines:tech-news:ja", "task": "headlines", "ok": false, "fail": ["api_error"]}
+{"model": "nvidia/nemotron-3-ultra-550b-a55b:free", "case": "listener:0", "task": "listener_request", "words": 546, "rep": 0.002, "fail": [], "ok": true}
+{"model": "nvidia/nemotron-3-ultra-550b-a55b:free", "case": "headlines:sports-roundup", "task": "headlines", "words": 837, "rep": 0.001, "ungrounded_nums": ["889", "86"], "fail": ["length:837"], "ok": false}
+{"model": "nvidia/nemotron-3-ultra-550b-a55b:free", "case": "listener:2", "task": "listener_request", "words": 643, "rep": 0.002, "fail": [], "ok": true}
+{"model": "inclusionai/ling-3.1-flash", "case": "headlines:daily-news", "task": "headlines", "words": 399, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "inclusionai/ling-3.1-flash", "case": "headlines:us-politics", "task": "headlines", "words": 444, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "inclusionai/ling-3.1-flash", "case": "headlines:tech-news", "task": "headlines", "words": 335, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "inclusionai/ling-3.1-flash", "case": "headlines:ai-ml", "task": "headlines", "words": 405, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "nvidia/nemotron-3-ultra-550b-a55b:free", "case": "deep_dive:gaming", "task": "deep_dive", "words": 0, "rep": 0.0, "ungrounded_nums": [], "fail": ["parse", "length:0", "wrong_language"], "ok": false}
+{"model": "nvidia/nemotron-3-ultra-550b-a55b:free", "case": "headlines:tech-news:ja", "task": "headlines", "words": 39, "rep": 0.0, "ungrounded_nums": ["1250", "400", "24"], "fail": ["ungrounded_numbers:3"], "ok": false}
+{"model": "nvidia/nemotron-3-ultra-550b-a55b:free", "case": "listener:3", "task": "listener_request", "words": 793, "rep": 0.0, "fail": [], "ok": true}
+{"model": "nvidia/nemotron-3-ultra-550b-a55b:free", "case": "deep_dive:science-discoveries", "task": "deep_dive", "words": 771, "rep": 0.0, "ungrounded_nums": ["470", "800", "300", "67", "73"], "fail": ["ungrounded_numbers:5"], "ok": false}
+{"model": "inclusionai/ling-3.1-flash", "case": "headlines:space-nasa", "task": "headlines", "words": 345, "rep": 0.0, "ungrounded_nums": ["7,000", "40,000"], "fail": [], "ok": true}
+{"model": "inclusionai/ling-3.1-flash", "case": "headlines:health-wellness", "task": "headlines", "words": 301, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "inclusionai/ling-3.1-flash", "case": "headlines:markets-finance", "task": "headlines", "words": 487, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "inclusionai/ling-3.1-flash", "case": "headlines:sports-roundup", "task": "headlines", "words": 390, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "inclusionai/ling-3.1-flash", "case": "deep_dive:world-update", "task": "deep_dive", "ok": false, "fail": ["api_error"]}
+{"model": "inclusionai/ling-3.1-flash", "case": "deep_dive:markets-finance", "task": "deep_dive", "words": 404, "rep": 0.0, "ungrounded_nums": ["1929", "1987"], "fail": [], "ok": true}
+{"model": "inclusionai/ling-3.1-flash", "case": "deep_dive:daily-news", "task": "deep_dive", "words": 464, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "inclusionai/ling-3.1-flash", "case": "deep_dive:gaming", "task": "deep_dive", "words": 494, "rep": 0.002, "ungrounded_nums": ["2001", "2000"], "fail": [], "ok": true}
+{"model": "inclusionai/ling-3.1-flash", "case": "listener:0", "task": "listener_request", "words": 504, "rep": 0.002, "fail": [], "ok": true}
+{"model": "inclusionai/ling-3.1-flash", "case": "deep_dive:science-discoveries", "task": "deep_dive", "words": 585, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "inclusionai/ling-3.1-flash", "case": "listener:1", "task": "listener_request", "words": 404, "rep": 0.002, "fail": [], "ok": true}
+{"model": "inclusionai/ling-3.1-flash", "case": "deep_dive:ai-ml", "task": "deep_dive", "words": 511, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "inclusionai/ling-3.1-flash", "case": "listener:2", "task": "listener_request", "words": 366, "rep": 0.0, "fail": [], "ok": true}
+{"model": "inclusionai/ling-3.1-flash", "case": "transition:1", "task": "transition", "words": 41, "rep": 0.0, "fail": [], "ok": true}
+{"model": "inclusionai/ling-3.1-flash", "case": "transition:0", "task": "transition", "words": 49, "rep": 0.0, "fail": [], "ok": true}
+{"model": "openai/gpt-oss-120b", "case": "headlines:us-politics", "task": "headlines", "words": 350, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "openai/gpt-oss-120b", "case": "headlines:daily-news", "task": "headlines", "words": 342, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "inclusionai/ling-3.1-flash", "case": "listener:3", "task": "listener_request", "words": 481, "rep": 0.0, "fail": [], "ok": true}
+{"model": "inclusionai/ling-3.1-flash", "case": "headlines:tech-news:es", "task": "headlines", "words": 322, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "inclusionai/ling-3.1-flash", "case": "headlines:tech-news:de", "task": "headlines", "words": 366, "rep": 0.003, "ungrounded_nums": ["270", "16", "380"], "fail": ["ungrounded_numbers:3"], "ok": false}
+{"model": "openai/gpt-oss-120b", "case": "headlines:tech-news", "task": "headlines", "words": 366, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "openai/gpt-oss-120b", "case": "headlines:sports-roundup", "task": "headlines", "words": 315, "rep": 0.0, "ungrounded_nums": ["150"], "fail": [], "ok": true}
+{"model": "openai/gpt-oss-120b", "case": "headlines:health-wellness", "task": "headlines", "words": 342, "rep": 0.0, "ungrounded_nums": ["13", "2023", "12", "18", "15"], "fail": ["ungrounded_numbers:5"], "ok": false}
+{"model": "openai/gpt-oss-120b", "case": "headlines:space-nasa", "task": "headlines", "words": 359, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "inclusionai/ling-3.1-flash", "case": "headlines:tech-news:ja", "task": "headlines", "words": 28, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "openai/gpt-oss-120b", "case": "deep_dive:ai-ml", "task": "deep_dive", "words": 0, "rep": 0.0, "ungrounded_nums": [], "fail": ["truncated", "parse", "length:0", "wrong_language"], "ok": false}
+{"model": "openai/gpt-oss-120b", "case": "listener:0", "task": "listener_request", "words": 444, "rep": 0.0, "fail": [], "ok": true}
+{"model": "openai/gpt-oss-120b", "case": "deep_dive:world-update", "task": "deep_dive", "words": 454, "rep": 0.0, "ungrounded_nums": ["212", "15"], "fail": [], "ok": true}
+{"model": "openai/gpt-oss-120b", "case": "listener:2", "task": "listener_request", "words": 489, "rep": 0.0, "fail": [], "ok": true}
+{"model": "openai/gpt-oss-120b", "case": "deep_dive:markets-finance", "task": "deep_dive", "words": 447, "rep": 0.0, "ungrounded_nums": ["20", "2008", "15", "200"], "fail": ["ungrounded_numbers:4"], "ok": false}
+{"model": "openai/gpt-oss-120b", "case": "listener:1", "task": "listener_request", "words": 512, "rep": 0.002, "fail": [], "ok": true}
+{"model": "openai/gpt-oss-120b", "case": "headlines:ai-ml", "task": "headlines", "words": 0, "rep": 0.0, "ungrounded_nums": [], "fail": ["parse", "length:0", "wrong_language"], "ok": false}
+{"model": "openai/gpt-oss-120b", "case": "listener:3", "task": "listener_request", "words": 395, "rep": 0.0, "fail": [], "ok": true}
+{"model": "openai/gpt-oss-120b", "case": "headlines:tech-news:es", "task": "headlines", "words": 327, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "openai/gpt-oss-120b", "case": "deep_dive:science-discoveries", "task": "deep_dive", "words": 450, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "openai/gpt-oss-120b", "case": "deep_dive:daily-news", "task": "deep_dive", "words": 447, "rep": 0.007, "ungrounded_nums": ["300", "30", "2035"], "fail": ["ungrounded_numbers:3"], "ok": false}
+{"model": "openai/gpt-oss-120b", "case": "transition:1", "task": "transition", "words": 71, "rep": 0.0, "fail": [], "ok": true}
+{"model": "openai/gpt-oss-20b", "case": "headlines:daily-news", "task": "headlines", "words": 276, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "openai/gpt-oss-120b", "case": "deep_dive:gaming", "task": "deep_dive", "words": 520, "rep": 0.0, "ungrounded_nums": ["2001"], "fail": [], "ok": true}
+{"model": "openai/gpt-oss-120b", "case": "transition:0", "task": "transition", "words": 59, "rep": 0.0, "fail": [], "ok": true}
+{"model": "openai/gpt-oss-20b", "case": "headlines:ai-ml", "task": "headlines", "words": 330, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "openai/gpt-oss-20b", "case": "headlines:tech-news", "task": "headlines", "words": 270, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "openai/gpt-oss-120b", "case": "headlines:tech-news:ja", "task": "headlines", "words": 18, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "openai/gpt-oss-20b", "case": "headlines:markets-finance", "task": "headlines", "words": 207, "rep": 0.0, "ungrounded_nums": [], "fail": ["type_labels:5"], "ok": false}
+{"model": "openai/gpt-oss-120b", "case": "headlines:tech-news:de", "task": "headlines", "words": 303, "rep": 0.0, "ungrounded_nums": ["16", "2010"], "fail": [], "ok": true}
+{"model": "openai/gpt-oss-120b", "case": "headlines:markets-finance", "task": "headlines", "words": 468, "rep": 0.0, "ungrounded_nums": ["20", "15", "22", "12"], "fail": ["ungrounded_numbers:4"], "ok": false}
+{"model": "openai/gpt-oss-20b", "case": "deep_dive:daily-news", "task": "deep_dive", "ok": false, "fail": ["empty"]}
+{"model": "openai/gpt-oss-20b", "case": "deep_dive:science-discoveries", "task": "deep_dive", "words": 414, "rep": 0.0, "ungrounded_nums": ["1,500", "1,200", "15"], "fail": ["ungrounded_numbers:3"], "ok": false}
+{"model": "openai/gpt-oss-20b", "case": "headlines:sports-roundup", "task": "headlines", "words": 317, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "openai/gpt-oss-20b", "case": "deep_dive:gaming", "task": "deep_dive", "words": 485, "rep": 0.0, "ungrounded_nums": ["2000"], "fail": [], "ok": true}
+{"model": "openai/gpt-oss-20b", "case": "deep_dive:world-update", "task": "deep_dive", "words": 527, "rep": 0.0, "ungrounded_nums": ["1968"], "fail": [], "ok": true}
+{"model": "openai/gpt-oss-20b", "case": "listener:0", "task": "listener_request", "words": 359, "rep": 0.0, "fail": [], "ok": true}
+{"model": "openai/gpt-oss-20b", "case": "headlines:space-nasa", "task": "headlines", "words": 380, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "openai/gpt-oss-20b", "case": "headlines:health-wellness", "task": "headlines", "words": 0, "rep": 0.0, "ungrounded_nums": [], "fail": ["truncated", "parse", "length:0", "wrong_language"], "ok": false}
+{"model": "openai/gpt-oss-20b", "case": "listener:1", "task": "listener_request", "words": 374, "rep": 0.0, "fail": [], "ok": true}
+{"model": "openai/gpt-oss-20b", "case": "listener:3", "task": "listener_request", "words": 368, "rep": 0.003, "fail": [], "ok": true}
+{"model": "openai/gpt-oss-20b", "case": "headlines:us-politics", "task": "headlines", "words": 333, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "openai/gpt-oss-20b", "case": "transition:1", "task": "transition", "words": 58, "rep": 0.0, "fail": [], "ok": true}
+{"model": "inclusionai/ling-3.0-flash", "case": "headlines:daily-news", "task": "headlines", "words": 371, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "inclusionai/ling-3.0-flash", "case": "headlines:us-politics", "task": "headlines", "words": 435, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "openai/gpt-oss-20b", "case": "headlines:tech-news:es", "task": "headlines", "words": 243, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "inclusionai/ling-3.0-flash", "case": "headlines:ai-ml", "task": "headlines", "words": 430, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "openai/gpt-oss-20b", "case": "deep_dive:ai-ml", "task": "deep_dive", "words": 567, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "inclusionai/ling-3.0-flash", "case": "headlines:tech-news", "task": "headlines", "words": 461, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "openai/gpt-oss-20b", "case": "headlines:tech-news:ja", "task": "headlines", "words": 29, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "inclusionai/ling-3.0-flash", "case": "headlines:space-nasa", "task": "headlines", "words": 427, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "inclusionai/ling-3.0-flash", "case": "headlines:markets-finance", "task": "headlines", "words": 414, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "inclusionai/ling-3.0-flash", "case": "headlines:health-wellness", "task": "headlines", "words": 393, "rep": 0.005, "ungrounded_nums": ["24"], "fail": [], "ok": true}
+{"model": "inclusionai/ling-3.0-flash", "case": "deep_dive:daily-news", "task": "deep_dive", "words": 517, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "inclusionai/ling-3.0-flash", "case": "headlines:sports-roundup", "task": "headlines", "words": 430, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "inclusionai/ling-3.0-flash", "case": "deep_dive:world-update", "task": "deep_dive", "words": 0, "rep": 0.0, "ungrounded_nums": [], "fail": ["parse", "length:0", "wrong_language"], "ok": false}
+{"model": "inclusionai/ling-3.0-flash", "case": "deep_dive:markets-finance", "task": "deep_dive", "words": 565, "rep": 0.002, "ungrounded_nums": ["401"], "fail": [], "ok": true}
+{"model": "inclusionai/ling-3.0-flash", "case": "deep_dive:ai-ml", "task": "deep_dive", "words": 813, "rep": 0.001, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "inclusionai/ling-3.0-flash", "case": "deep_dive:science-discoveries", "task": "deep_dive", "words": 817, "rep": 0.004, "ungrounded_nums": ["470"], "fail": [], "ok": true}
+{"model": "inclusionai/ling-3.0-flash", "case": "listener:0", "task": "listener_request", "words": 542, "rep": 0.0, "fail": [], "ok": true}
+{"model": "inclusionai/ling-3.0-flash", "case": "listener:1", "task": "listener_request", "words": 448, "rep": 0.0, "fail": ["type_labels:4"], "ok": false}
+{"model": "inclusionai/ling-3.0-flash", "case": "deep_dive:gaming", "task": "deep_dive", "words": 0, "rep": 0.0, "ungrounded_nums": [], "fail": ["parse", "length:0", "wrong_language"], "ok": false}
+{"model": "inclusionai/ling-3.0-flash", "case": "transition:0", "task": "transition", "words": 50, "rep": 0.0, "fail": [], "ok": true}
+{"model": "inclusionai/ling-3.0-flash", "case": "listener:2", "task": "listener_request", "words": 456, "rep": 0.0, "fail": [], "ok": true}
+{"model": "inclusionai/ling-3.0-flash", "case": "transition:1", "task": "transition", "words": 46, "rep": 0.0, "fail": [], "ok": true}
+{"model": "inclusionai/ling-3.0-flash", "case": "listener:3", "task": "listener_request", "words": 551, "rep": 0.004, "fail": [], "ok": true}
+{"model": "openai/gpt-oss-20b", "case": "transition:0", "task": "transition", "words": 63, "rep": 0.0, "fail": [], "ok": true}
+{"model": "openai/gpt-oss-20b", "case": "listener:2", "task": "listener_request", "words": 491, "rep": 0.0, "fail": [], "ok": true}
+{"model": "inclusionai/ling-3.0-flash", "case": "headlines:tech-news:es", "task": "headlines", "words": 425, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "inclusionai/ling-3.0-flash", "case": "headlines:tech-news:de", "task": "headlines", "words": 601, "rep": 0.0, "ungrounded_nums": ["16"], "fail": [], "ok": true}
+{"model": "inclusionai/ling-3.0-flash", "case": "headlines:tech-news:ja", "task": "headlines", "words": 70, "rep": 0.0, "ungrounded_nums": ["24"], "fail": [], "ok": true}
+{"model": "qwen/qwen3.7-flash", "case": "headlines:us-politics", "task": "headlines", "words": 388, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "qwen/qwen3.7-flash", "case": "headlines:daily-news", "task": "headlines", "words": 466, "rep": 0.0, "ungrounded_nums": ["24"], "fail": [], "ok": true}
+{"model": "qwen/qwen3.7-flash", "case": "headlines:markets-finance", "task": "headlines", "words": 412, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "qwen/qwen3.7-flash", "case": "headlines:tech-news", "task": "headlines", "words": 434, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "qwen/qwen3.7-flash", "case": "headlines:space-nasa", "task": "headlines", "words": 417, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "qwen/qwen3.7-flash", "case": "headlines:ai-ml", "task": "headlines", "words": 566, "rep": 0.0, "ungrounded_nums": ["24"], "fail": [], "ok": true}
+{"model": "qwen/qwen3.7-flash", "case": "headlines:sports-roundup", "task": "headlines", "words": 360, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "qwen/qwen3.7-flash", "case": "headlines:health-wellness", "task": "headlines", "words": 465, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "qwen/qwen3.7-flash", "case": "deep_dive:world-update", "task": "deep_dive", "words": 543, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "qwen/qwen3.7-flash", "case": "deep_dive:markets-finance", "task": "deep_dive", "words": 473, "rep": 0.0, "ungrounded_nums": ["24"], "fail": [], "ok": true}
+{"model": "qwen/qwen3.7-flash", "case": "deep_dive:daily-news", "task": "deep_dive", "words": 554, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "qwen/qwen3.7-flash", "case": "deep_dive:ai-ml", "task": "deep_dive", "words": 586, "rep": 0.0, "ungrounded_nums": ["24"], "fail": [], "ok": true}
+{"model": "qwen/qwen3.7-flash", "case": "listener:2", "task": "listener_request", "words": 264, "rep": 0.008, "fail": [], "ok": true}
+{"model": "qwen/qwen3.7-flash", "case": "deep_dive:gaming", "task": "deep_dive", "words": 423, "rep": 0.0, "ungrounded_nums": ["24"], "fail": [], "ok": true}
+{"model": "qwen/qwen3.7-flash", "case": "deep_dive:science-discoveries", "task": "deep_dive", "words": 616, "rep": 0.0, "ungrounded_nums": ["24"], "fail": ["type_labels:1"], "ok": false}
+{"model": "qwen/qwen3.7-flash", "case": "listener:0", "task": "listener_request", "words": 420, "rep": 0.0, "fail": [], "ok": true}
+{"model": "qwen/qwen3.7-flash", "case": "listener:1", "task": "listener_request", "words": 388, "rep": 0.0, "fail": [], "ok": true}
+{"model": "qwen/qwen3.7-flash", "case": "transition:0", "task": "transition", "words": 50, "rep": 0.0, "fail": [], "ok": true}
+{"model": "qwen/qwen3.7-flash", "case": "transition:1", "task": "transition", "words": 85, "rep": 0.0, "fail": [], "ok": true}
+{"model": "qwen/qwen3.7-flash", "case": "listener:3", "task": "listener_request", "words": 313, "rep": 0.0, "fail": [], "ok": true}
+{"model": "openai/gpt-oss-20b", "case": "headlines:tech-news:de", "task": "headlines", "words": 402, "rep": 0.015, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "qwen/qwen3.7-flash", "case": "headlines:tech-news:es", "task": "headlines", "words": 336, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "qwen/qwen3.7-flash", "case": "headlines:tech-news:ja", "task": "headlines", "words": 26, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "qwen/qwen3.7-flash", "case": "headlines:tech-news:de", "task": "headlines", "words": 372, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "google/gemma-4-31b-it", "case": "headlines:daily-news", "task": "headlines", "words": 415, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "google/gemma-4-31b-it", "case": "headlines:tech-news", "task": "headlines", "words": 402, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "google/gemma-4-31b-it", "case": "headlines:sports-roundup", "task": "headlines", "words": 371, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "google/gemma-4-31b-it", "case": "headlines:health-wellness", "task": "headlines", "words": 459, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "google/gemma-4-31b-it", "case": "deep_dive:ai-ml", "task": "deep_dive", "words": 496, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "google/gemma-4-31b-it", "case": "deep_dive:daily-news", "task": "deep_dive", "words": 403, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "google/gemma-4-31b-it", "case": "deep_dive:world-update", "task": "deep_dive", "words": 501, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "google/gemma-4-31b-it", "case": "headlines:ai-ml", "task": "headlines", "words": 386, "rep": 0.003, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "google/gemma-4-31b-it", "case": "headlines:us-politics", "task": "headlines", "words": 455, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "google/gemma-4-31b-it", "case": "headlines:space-nasa", "task": "headlines", "words": 441, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "google/gemma-4-31b-it", "case": "deep_dive:science-discoveries", "task": "deep_dive", "words": 472, "rep": 0.0, "ungrounded_nums": ["15"], "fail": [], "ok": true}
+{"model": "openai/gpt-oss-20b", "case": "deep_dive:markets-finance", "task": "deep_dive", "words": 391, "rep": 0.0, "ungrounded_nums": ["15"], "fail": ["type_labels:1"], "ok": false}
+{"model": "google/gemma-4-31b-it", "case": "listener:1", "task": "listener_request", "words": 385, "rep": 0.0, "fail": [], "ok": true}
+{"model": "google/gemma-4-31b-it", "case": "headlines:markets-finance", "task": "headlines", "words": 440, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "google/gemma-4-31b-it", "case": "deep_dive:gaming", "task": "deep_dive", "words": 541, "rep": 0.002, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "google/gemma-4-31b-it", "case": "listener:2", "task": "listener_request", "words": 367, "rep": 0.0, "fail": [], "ok": true}
+{"model": "google/gemma-4-31b-it", "case": "transition:0", "task": "transition", "words": 52, "rep": 0.0, "fail": [], "ok": true}
+{"model": "google/gemma-4-31b-it", "case": "listener:3", "task": "listener_request", "words": 418, "rep": 0.0, "fail": [], "ok": true}
+{"model": "google/gemma-4-31b-it", "case": "transition:1", "task": "transition", "words": 58, "rep": 0.0, "fail": [], "ok": true}
+{"model": "openai/gpt-6-luna", "case": "headlines:daily-news", "task": "headlines", "words": 454, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "openai/gpt-6-luna", "case": "headlines:us-politics", "task": "headlines", "words": 451, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "openai/gpt-6-luna", "case": "headlines:ai-ml", "task": "headlines", "words": 506, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "openai/gpt-6-luna", "case": "headlines:tech-news", "task": "headlines", "words": 465, "rep": 0.002, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "openai/gpt-6-luna", "case": "headlines:markets-finance", "task": "headlines", "words": 483, "rep": 0.008, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "openai/gpt-6-luna", "case": "headlines:space-nasa", "task": "headlines", "words": 479, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "openai/gpt-6-luna", "case": "headlines:health-wellness", "task": "headlines", "words": 267, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "openai/gpt-6-luna", "case": "headlines:sports-roundup", "task": "headlines", "words": 408, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "google/gemma-4-31b-it", "case": "deep_dive:markets-finance", "task": "deep_dive", "words": 441, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "openai/gpt-6-luna", "case": "deep_dive:daily-news", "task": "deep_dive", "words": 732, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "google/gemma-4-31b-it", "case": "listener:0", "task": "listener_request", "words": 454, "rep": 0.0, "fail": [], "ok": true}
+{"model": "openai/gpt-6-luna", "case": "deep_dive:world-update", "task": "deep_dive", "words": 821, "rep": 0.001, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "openai/gpt-6-luna", "case": "deep_dive:markets-finance", "task": "deep_dive", "words": 843, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "google/gemma-4-31b-it", "case": "headlines:tech-news:es", "task": "headlines", "words": 384, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "openai/gpt-6-luna", "case": "deep_dive:ai-ml", "task": "deep_dive", "words": 844, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "google/gemma-4-31b-it", "case": "headlines:tech-news:de", "task": "headlines", "words": 352, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "google/gemma-4-31b-it", "case": "headlines:tech-news:ja", "task": "headlines", "words": 23, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "openai/gpt-6-luna", "case": "listener:0", "task": "listener_request", "words": 547, "rep": 0.0, "fail": [], "ok": true}
+{"model": "openai/gpt-6-luna", "case": "listener:1", "task": "listener_request", "words": 520, "rep": 0.0, "fail": [], "ok": true}
+{"model": "openai/gpt-6-luna", "case": "transition:1", "task": "transition", "words": 47, "rep": 0.0, "fail": [], "ok": true}
+{"model": "openai/gpt-6-luna", "case": "transition:0", "task": "transition", "words": 44, "rep": 0.0, "fail": [], "ok": true}
+{"model": "openai/gpt-6-luna", "case": "deep_dive:science-discoveries", "task": "deep_dive", "words": 793, "rep": 0.001, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "openai/gpt-6-luna", "case": "deep_dive:gaming", "task": "deep_dive", "words": 917, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "openai/gpt-6-luna", "case": "listener:2", "task": "listener_request", "words": 568, "rep": 0.0, "fail": [], "ok": true}
+{"model": "openai/gpt-6-luna", "case": "listener:3", "task": "listener_request", "words": 545, "rep": 0.0, "fail": [], "ok": true}
+{"model": "openai/gpt-6-luna", "case": "headlines:tech-news:es", "task": "headlines", "words": 489, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "openai/gpt-6-luna", "case": "headlines:tech-news:de", "task": "headlines", "words": 466, "rep": 0.0, "ungrounded_nums": ["16"], "fail": [], "ok": true}
+{"model": "deepseek/deepseek-v4.1-flash", "case": "headlines:us-politics", "task": "headlines", "words": 659, "rep": 0.002, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "deepseek/deepseek-v4.1-flash", "case": "headlines:markets-finance", "task": "headlines", "words": 512, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "deepseek/deepseek-v4.1-flash", "case": "headlines:daily-news", "task": "headlines", "words": 444, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "deepseek/deepseek-v4.1-flash", "case": "headlines:ai-ml", "task": "headlines", "words": 583, "rep": 0.0, "ungrounded_nums": ["200"], "fail": [], "ok": true}
+{"model": "deepseek/deepseek-v4.1-flash", "case": "headlines:tech-news", "task": "headlines", "words": 570, "rep": 0.0, "ungrounded_nums": ["1996"], "fail": [], "ok": true}
+{"model": "openai/gpt-6-luna", "case": "headlines:tech-news:ja", "task": "headlines", "words": 22, "rep": 0.0, "ungrounded_nums": ["1250"], "fail": [], "ok": true}
+{"model": "deepseek/deepseek-v4.1-flash", "case": "deep_dive:markets-finance", "task": "deep_dive", "words": 512, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "deepseek/deepseek-v4.1-flash", "case": "headlines:space-nasa", "task": "headlines", "words": 684, "rep": 0.001, "ungrounded_nums": ["2030", "900"], "fail": [], "ok": true}
+{"model": "deepseek/deepseek-v4.1-flash", "case": "headlines:health-wellness", "task": "headlines", "words": 515, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "deepseek/deepseek-v4.1-flash", "case": "deep_dive:daily-news", "task": "deep_dive", "words": 579, "rep": 0.0, "ungrounded_nums": ["30", "11"], "fail": [], "ok": true}
+{"model": "deepseek/deepseek-v4.1-flash", "case": "headlines:sports-roundup", "task": "headlines", "words": 638, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "deepseek/deepseek-v4.1-flash", "case": "deep_dive:ai-ml", "task": "deep_dive", "words": 707, "rep": 0.001, "ungrounded_nums": ["350", "76"], "fail": [], "ok": true}
+{"model": "deepseek/deepseek-v4.1-flash", "case": "transition:0", "task": "transition", "words": 76, "rep": 0.0, "fail": [], "ok": true}
+{"model": "deepseek/deepseek-v4.1-flash", "case": "listener:0", "task": "listener_request", "words": 751, "rep": 0.004, "fail": [], "ok": true}
+{"model": "deepseek/deepseek-v4.1-flash", "case": "listener:1", "task": "listener_request", "words": 626, "rep": 0.0, "fail": [], "ok": true}
+{"model": "deepseek/deepseek-v4.1-flash", "case": "deep_dive:science-discoveries", "task": "deep_dive", "words": 777, "rep": 0.001, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "deepseek/deepseek-v4.1-flash", "case": "transition:1", "task": "transition", "words": 60, "rep": 0.0, "fail": [], "ok": true}
+{"model": "deepseek/deepseek-v4.1-flash", "case": "deep_dive:world-update", "task": "deep_dive", "words": 889, "rep": 0.0, "ungrounded_nums": ["70", "1952"], "fail": [], "ok": true}
+{"model": "deepseek/deepseek-v4.1-flash", "case": "deep_dive:gaming", "task": "deep_dive", "words": 768, "rep": 0.004, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "deepseek/deepseek-v4.1-flash", "case": "listener:2", "task": "listener_request", "words": 728, "rep": 0.003, "fail": [], "ok": true}
+{"model": "deepseek/deepseek-v4.1-flash", "case": "listener:3", "task": "listener_request", "words": 658, "rep": 0.002, "fail": [], "ok": true}
+{"model": "deepseek/deepseek-v4.1-flash", "case": "headlines:tech-news:de", "task": "headlines", "words": 427, "rep": 0.0, "ungrounded_nums": ["16", "80", "660", "18"], "fail": ["ungrounded_numbers:4"], "ok": false}
+{"model": "deepseek/deepseek-v4.1-flash", "case": "headlines:tech-news:es", "task": "headlines", "words": 683, "rep": 0.0, "ungrounded_nums": ["24"], "fail": [], "ok": true}
+{"model": "deepseek/deepseek-v3.2", "case": "headlines:us-politics", "task": "headlines", "words": 442, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "deepseek/deepseek-v4.1-flash", "case": "headlines:tech-news:ja", "task": "headlines", "words": 32, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "deepseek/deepseek-v3.2", "case": "headlines:markets-finance", "task": "headlines", "words": 365, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "deepseek/deepseek-v3.2", "case": "headlines:daily-news", "task": "headlines", "words": 372, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "deepseek/deepseek-v3.2", "case": "headlines:space-nasa", "task": "headlines", "words": 617, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "deepseek/deepseek-v3.2", "case": "deep_dive:daily-news", "task": "deep_dive", "words": 434, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "deepseek/deepseek-v3.2", "case": "headlines:tech-news", "task": "headlines", "words": 464, "rep": 0.0, "ungrounded_nums": ["6000"], "fail": [], "ok": true}
+{"model": "deepseek/deepseek-v3.2", "case": "headlines:ai-ml", "task": "headlines", "words": 450, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "deepseek/deepseek-v3.2", "case": "deep_dive:world-update", "task": "deep_dive", "words": 551, "rep": 0.004, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "deepseek/deepseek-v3.2", "case": "headlines:health-wellness", "task": "headlines", "words": 453, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "deepseek/deepseek-v3.2", "case": "deep_dive:ai-ml", "task": "deep_dive", "words": 778, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "deepseek/deepseek-v3.2", "case": "deep_dive:markets-finance", "task": "deep_dive", "words": 595, "rep": 0.0, "ungrounded_nums": ["180"], "fail": [], "ok": true}
+{"model": "deepseek/deepseek-v3.2", "case": "transition:0", "task": "transition", "words": 48, "rep": 0.0, "fail": [], "ok": true}
+{"model": "deepseek/deepseek-v3.2", "case": "listener:2", "task": "listener_request", "words": 504, "rep": 0.0, "fail": [], "ok": true}
+{"model": "deepseek/deepseek-v3.2", "case": "listener:1", "task": "listener_request", "words": 579, "rep": 0.003, "fail": [], "ok": true}
+{"model": "deepseek/deepseek-v3.2", "case": "transition:1", "task": "transition", "words": 45, "rep": 0.0, "fail": [], "ok": true}
+{"model": "deepseek/deepseek-v3.2", "case": "listener:0", "task": "listener_request", "words": 484, "rep": 0.0, "fail": [], "ok": true}
+{"model": "google/gemini-3.5-flash-lite", "case": "headlines:daily-news", "task": "headlines", "words": 343, "rep": 0.0, "ungrounded_nums": ["24"], "fail": [], "ok": true}
+{"model": "deepseek/deepseek-v3.2", "case": "listener:3", "task": "listener_request", "words": 560, "rep": 0.0, "fail": [], "ok": true}
+{"model": "google/gemini-3.5-flash-lite", "case": "headlines:us-politics", "task": "headlines", "words": 491, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "deepseek/deepseek-v3.2", "case": "headlines:tech-news:es", "task": "headlines", "words": 475, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "google/gemini-3.5-flash-lite", "case": "headlines:tech-news", "task": "headlines", "words": 358, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "google/gemini-3.5-flash-lite", "case": "headlines:ai-ml", "task": "headlines", "words": 453, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "google/gemini-3.5-flash-lite", "case": "headlines:health-wellness", "task": "headlines", "words": 243, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "google/gemini-3.5-flash-lite", "case": "headlines:markets-finance", "task": "headlines", "words": 464, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "google/gemini-3.5-flash-lite", "case": "headlines:space-nasa", "task": "headlines", "words": 512, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "deepseek/deepseek-v3.2", "case": "headlines:tech-news:de", "task": "headlines", "ok": false, "fail": ["api_error"]}
+{"model": "google/gemini-3.5-flash-lite", "case": "headlines:sports-roundup", "task": "headlines", "words": 499, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "google/gemini-3.5-flash-lite", "case": "deep_dive:daily-news", "task": "deep_dive", "words": 418, "rep": 0.0, "ungrounded_nums": ["24"], "fail": [], "ok": true}
+{"model": "google/gemini-3.5-flash-lite", "case": "deep_dive:world-update", "task": "deep_dive", "words": 444, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "deepseek/deepseek-v3.2", "case": "headlines:tech-news:ja", "task": "headlines", "words": 19, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "google/gemini-3.5-flash-lite", "case": "deep_dive:markets-finance", "task": "deep_dive", "words": 435, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "google/gemini-3.5-flash-lite", "case": "deep_dive:ai-ml", "task": "deep_dive", "words": 483, "rep": 0.004, "ungrounded_nums": ["24"], "fail": [], "ok": true}
+{"model": "google/gemini-3.5-flash-lite", "case": "listener:0", "task": "listener_request", "words": 362, "rep": 0.0, "fail": [], "ok": true}
+{"model": "google/gemini-3.5-flash-lite", "case": "listener:1", "task": "listener_request", "words": 377, "rep": 0.0, "fail": [], "ok": true}
+{"model": "google/gemini-3.5-flash-lite", "case": "deep_dive:gaming", "task": "deep_dive", "words": 546, "rep": 0.0, "ungrounded_nums": ["2000"], "fail": [], "ok": true}
+{"model": "google/gemini-3.5-flash-lite", "case": "deep_dive:science-discoveries", "task": "deep_dive", "words": 559, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "google/gemini-3.5-flash-lite", "case": "listener:2", "task": "listener_request", "words": 408, "rep": 0.0, "fail": [], "ok": true}
+{"model": "google/gemini-3.5-flash-lite", "case": "transition:0", "task": "transition", "words": 71, "rep": 0.0, "fail": [], "ok": true}
+{"model": "google/gemini-3.5-flash-lite", "case": "transition:1", "task": "transition", "words": 86, "rep": 0.0, "fail": [], "ok": true}
+{"model": "google/gemini-3.5-flash-lite", "case": "listener:3", "task": "listener_request", "words": 426, "rep": 0.0, "fail": [], "ok": true}
+{"model": "google/gemini-3.5-flash-lite", "case": "headlines:tech-news:es", "task": "headlines", "words": 494, "rep": 0.006, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "google/gemini-3.5-flash-lite", "case": "headlines:tech-news:ja", "task": "headlines", "words": 17, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "google/gemini-3.1-flash-lite", "case": "headlines:daily-news", "task": "headlines", "words": 390, "rep": 0.005, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "google/gemini-3.5-flash-lite", "case": "headlines:tech-news:de", "task": "headlines", "words": 436, "rep": 0.002, "ungrounded_nums": ["16"], "fail": [], "ok": true}
+{"model": "google/gemini-3.1-flash-lite", "case": "headlines:us-politics", "task": "headlines", "words": 486, "rep": 0.004, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "google/gemini-3.1-flash-lite", "case": "headlines:tech-news", "task": "headlines", "words": 368, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "google/gemini-3.1-flash-lite", "case": "headlines:markets-finance", "task": "headlines", "words": 458, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "google/gemini-3.1-flash-lite", "case": "headlines:ai-ml", "task": "headlines", "words": 453, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "google/gemini-3.1-flash-lite", "case": "headlines:space-nasa", "task": "headlines", "words": 455, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "google/gemini-3.1-flash-lite", "case": "headlines:sports-roundup", "task": "headlines", "words": 466, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "google/gemini-3.1-flash-lite", "case": "deep_dive:daily-news", "task": "deep_dive", "words": 360, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "google/gemini-3.1-flash-lite", "case": "headlines:health-wellness", "task": "headlines", "words": 464, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "google/gemini-3.1-flash-lite", "case": "deep_dive:world-update", "task": "deep_dive", "words": 505, "rep": 0.002, "ungrounded_nums": ["200"], "fail": [], "ok": true}
+{"model": "google/gemini-3.1-flash-lite", "case": "deep_dive:markets-finance", "task": "deep_dive", "words": 0, "rep": 0.0, "ungrounded_nums": [], "fail": ["parse", "length:0", "wrong_language"], "ok": false}
+{"model": "google/gemini-3.1-flash-lite", "case": "deep_dive:ai-ml", "task": "deep_dive", "words": 468, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "google/gemini-3.1-flash-lite", "case": "deep_dive:gaming", "task": "deep_dive", "words": 422, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "google/gemini-3.1-flash-lite", "case": "listener:0", "task": "listener_request", "words": 374, "rep": 0.0, "fail": [], "ok": true}
+{"model": "google/gemini-3.1-flash-lite", "case": "deep_dive:science-discoveries", "task": "deep_dive", "words": 435, "rep": 0.002, "ungrounded_nums": ["15"], "fail": [], "ok": true}
+{"model": "google/gemini-3.1-flash-lite", "case": "listener:2", "task": "listener_request", "words": 411, "rep": 0.005, "fail": [], "ok": true}
+{"model": "google/gemini-3.1-flash-lite", "case": "listener:1", "task": "listener_request", "words": 444, "rep": 0.0, "fail": [], "ok": true}
+{"model": "google/gemini-3.1-flash-lite", "case": "transition:0", "task": "transition", "words": 72, "rep": 0.0, "fail": [], "ok": true}
+{"model": "google/gemini-3.1-flash-lite", "case": "transition:1", "task": "transition", "words": 78, "rep": 0.0, "fail": [], "ok": true}
+{"model": "google/gemini-3.1-flash-lite", "case": "listener:3", "task": "listener_request", "words": 378, "rep": 0.003, "fail": [], "ok": true}
+{"model": "google/gemini-3.1-flash-lite", "case": "headlines:tech-news:es", "task": "headlines", "words": 416, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "google/gemini-3.1-flash-lite", "case": "headlines:tech-news:de", "task": "headlines", "words": 364, "rep": 0.0, "ungrounded_nums": ["16"], "fail": [], "ok": true}
+{"model": "google/gemini-3.1-flash-lite", "case": "headlines:tech-news:ja", "task": "headlines", "words": 17, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "mistralai/mistral-small-2603", "case": "headlines:daily-news", "task": "headlines", "words": 288, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "mistralai/mistral-small-2603", "case": "headlines:us-politics", "task": "headlines", "words": 615, "rep": 0.002, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "mistralai/mistral-small-2603", "case": "headlines:space-nasa", "task": "headlines", "words": 1130, "rep": 0.001, "ungrounded_nums": ["360", "62"], "fail": ["length:1130"], "ok": false}
+{"model": "deepseek/deepseek-v3.2", "case": "headlines:sports-roundup", "task": "headlines", "words": 465, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "mistralai/mistral-small-2603", "case": "headlines:markets-finance", "task": "headlines", "words": 418, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "mistralai/mistral-small-2603", "case": "headlines:tech-news", "task": "headlines", "words": 508, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "mistralai/mistral-small-2603", "case": "headlines:sports-roundup", "task": "headlines", "words": 447, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "mistralai/mistral-small-2603", "case": "headlines:ai-ml", "task": "headlines", "words": 565, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "mistralai/mistral-small-2603", "case": "deep_dive:daily-news", "task": "deep_dive", "words": 538, "rep": 0.002, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "mistralai/mistral-small-2603", "case": "headlines:health-wellness", "task": "headlines", "words": 523, "rep": 0.004, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "mistralai/mistral-small-2603", "case": "deep_dive:markets-finance", "task": "deep_dive", "words": 583, "rep": 0.0, "ungrounded_nums": ["2008", "12", "2022"], "fail": ["ungrounded_numbers:3"], "ok": false}
+{"model": "mistralai/mistral-small-2603", "case": "deep_dive:gaming", "task": "deep_dive", "words": 543, "rep": 0.0, "ungrounded_nums": ["90"], "fail": [], "ok": true}
+{"model": "mistralai/mistral-small-2603", "case": "deep_dive:world-update", "task": "deep_dive", "words": 713, "rep": 0.0, "ungrounded_nums": ["20", "1950"], "fail": [], "ok": true}
+{"model": "mistralai/mistral-small-2603", "case": "deep_dive:science-discoveries", "task": "deep_dive", "words": 735, "rep": 0.0, "ungrounded_nums": ["800", "2030", "2050"], "fail": ["ungrounded_numbers:3"], "ok": false}
+{"model": "mistralai/mistral-small-2603", "case": "transition:0", "task": "transition", "words": 25, "rep": 0.0, "fail": ["length:25"], "ok": false}
+{"model": "mistralai/mistral-small-2603", "case": "listener:1", "task": "listener_request", "words": 312, "rep": 0.006, "fail": [], "ok": true}
+{"model": "mistralai/mistral-small-2603", "case": "transition:1", "task": "transition", "words": 32, "rep": 0.0, "fail": [], "ok": true}
+{"model": "mistralai/mistral-small-2603", "case": "deep_dive:ai-ml", "task": "deep_dive", "words": 1015, "rep": 0.0, "ungrounded_nums": [], "fail": ["length:1015"], "ok": false}
+{"model": "mistralai/mistral-small-2603", "case": "listener:2", "task": "listener_request", "words": 547, "rep": 0.002, "fail": [], "ok": true}
+{"model": "mistralai/mistral-small-2603", "case": "listener:0", "task": "listener_request", "words": 717, "rep": 0.004, "fail": [], "ok": true}
+{"model": "mistralai/mistral-small-2603", "case": "listener:3", "task": "listener_request", "words": 516, "rep": 0.0, "fail": [], "ok": true}
+{"model": "mistralai/mistral-small-2603", "case": "headlines:tech-news:de", "task": "headlines", "words": 355, "rep": 0.003, "ungrounded_nums": ["16"], "fail": [], "ok": true}
+{"model": "mistralai/mistral-small-2603", "case": "headlines:tech-news:es", "task": "headlines", "words": 678, "rep": 0.018, "ungrounded_nums": ["24", "1080"], "fail": [], "ok": true}
+{"model": "mistralai/mistral-small-2603", "case": "headlines:tech-news:ja", "task": "headlines", "words": 34, "rep": 0.0, "ungrounded_nums": ["230", "380", "260", "600"], "fail": ["ungrounded_numbers:4"], "ok": false}
+{"model": "meta-llama/llama-4-maverick", "case": "headlines:daily-news", "task": "headlines", "words": 247, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "meta-llama/llama-4-maverick", "case": "headlines:tech-news", "task": "headlines", "words": 313, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "meta-llama/llama-4-maverick", "case": "headlines:ai-ml", "task": "headlines", "words": 295, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "deepseek/deepseek-v3.2", "case": "deep_dive:gaming", "task": "deep_dive", "words": 521, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "meta-llama/llama-4-maverick", "case": "headlines:markets-finance", "task": "headlines", "words": 416, "rep": 0.0, "ungrounded_nums": ["24"], "fail": [], "ok": true}
+{"model": "meta-llama/llama-4-maverick", "case": "headlines:space-nasa", "task": "headlines", "words": 415, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "meta-llama/llama-4-maverick", "case": "headlines:us-politics", "task": "headlines", "words": 437, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "meta-llama/llama-4-maverick", "case": "headlines:sports-roundup", "task": "headlines", "words": 384, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "meta-llama/llama-4-maverick", "case": "deep_dive:daily-news", "task": "deep_dive", "words": 346, "rep": 0.0, "ungrounded_nums": ["45"], "fail": [], "ok": true}
+{"model": "deepseek/deepseek-v3.2", "case": "deep_dive:science-discoveries", "task": "deep_dive", "words": 657, "rep": 0.002, "ungrounded_nums": ["470"], "fail": [], "ok": true}
+{"model": "meta-llama/llama-4-maverick", "case": "deep_dive:markets-finance", "task": "deep_dive", "words": 239, "rep": 0.0, "ungrounded_nums": ["45"], "fail": ["length:239"], "ok": false}
+{"model": "meta-llama/llama-4-maverick", "case": "deep_dive:world-update", "task": "deep_dive", "words": 472, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "meta-llama/llama-4-maverick", "case": "headlines:health-wellness", "task": "headlines", "words": 468, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "meta-llama/llama-4-maverick", "case": "transition:0", "task": "transition", "words": 51, "rep": 0.0, "fail": [], "ok": true}
+{"model": "meta-llama/llama-4-maverick", "case": "deep_dive:ai-ml", "task": "deep_dive", "words": 383, "rep": 0.0, "ungrounded_nums": ["45"], "fail": [], "ok": true}
+{"model": "meta-llama/llama-4-maverick", "case": "transition:1", "task": "transition", "words": 46, "rep": 0.0, "fail": [], "ok": true}
+{"model": "meta-llama/llama-4-maverick", "case": "deep_dive:gaming", "task": "deep_dive", "words": 456, "rep": 0.0, "ungrounded_nums": ["2000"], "fail": [], "ok": true}
+{"model": "meta-llama/llama-4-maverick", "case": "deep_dive:science-discoveries", "task": "deep_dive", "words": 435, "rep": 0.002, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "meta-llama/llama-4-maverick", "case": "listener:0", "task": "listener_request", "words": 409, "rep": 0.0, "fail": [], "ok": true}
+{"model": "meta-llama/llama-4-maverick", "case": "listener:2", "task": "listener_request", "words": 314, "rep": 0.003, "fail": [], "ok": true}
+{"model": "meta-llama/llama-4-maverick", "case": "listener:1", "task": "listener_request", "words": 384, "rep": 0.008, "fail": [], "ok": true}
+{"model": "meta-llama/llama-4-maverick", "case": "listener:3", "task": "listener_request", "words": 322, "rep": 0.003, "fail": [], "ok": true}
+{"model": "qwen/qwen3.8-flash", "case": "headlines:daily-news", "task": "headlines", "words": 400, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "meta-llama/llama-4-maverick", "case": "headlines:tech-news:es", "task": "headlines", "words": 279, "rep": 0.004, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "qwen/qwen3.8-flash", "case": "headlines:us-politics", "task": "headlines", "words": 354, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "qwen/qwen3.8-flash", "case": "headlines:health-wellness", "task": "headlines", "words": 236, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "meta-llama/llama-4-maverick", "case": "headlines:tech-news:de", "task": "headlines", "words": 280, "rep": 0.018, "ungrounded_nums": ["16"], "fail": [], "ok": true}
+{"model": "qwen/qwen3.8-flash", "case": "headlines:tech-news", "task": "headlines", "words": 352, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "qwen/qwen3.8-flash", "case": "headlines:ai-ml", "task": "headlines", "words": 482, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "qwen/qwen3.8-flash", "case": "headlines:space-nasa", "task": "headlines", "words": 411, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "qwen/qwen3.8-flash", "case": "headlines:markets-finance", "task": "headlines", "words": 424, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "meta-llama/llama-4-maverick", "case": "headlines:tech-news:ja", "task": "headlines", "words": 24, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "qwen/qwen3.8-flash", "case": "headlines:sports-roundup", "task": "headlines", "words": 467, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "qwen/qwen3.8-flash", "case": "deep_dive:ai-ml", "task": "deep_dive", "words": 440, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "qwen/qwen3.8-flash", "case": "deep_dive:daily-news", "task": "deep_dive", "words": 685, "rep": 0.0, "ungrounded_nums": ["11"], "fail": [], "ok": true}
+{"model": "qwen/qwen3.8-flash", "case": "listener:0", "task": "listener_request", "words": 373, "rep": 0.0, "fail": [], "ok": true}
+{"model": "qwen/qwen3.8-flash", "case": "deep_dive:science-discoveries", "task": "deep_dive", "words": 549, "rep": 0.0, "ungrounded_nums": [], "fail": ["type_labels:2"], "ok": false}
+{"model": "qwen/qwen3.8-flash", "case": "deep_dive:world-update", "task": "deep_dive", "words": 777, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "qwen/qwen3.8-flash", "case": "transition:1", "task": "transition", "words": 44, "rep": 0.0, "fail": [], "ok": true}
+{"model": "qwen/qwen3.8-flash", "case": "transition:0", "task": "transition", "words": 43, "rep": 0.0, "fail": [], "ok": true}
+{"model": "qwen/qwen3.8-flash", "case": "deep_dive:markets-finance", "task": "deep_dive", "words": 633, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "qwen/qwen3.8-flash", "case": "listener:1", "task": "listener_request", "words": 412, "rep": 0.0, "fail": [], "ok": true}
+{"model": "qwen/qwen3.8-flash", "case": "deep_dive:gaming", "task": "deep_dive", "words": 585, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "qwen/qwen3.8-flash", "case": "listener:2", "task": "listener_request", "words": 419, "rep": 0.0, "fail": [], "ok": true}
+{"model": "qwen/qwen3.8-flash", "case": "listener:3", "task": "listener_request", "words": 371, "rep": 0.0, "fail": [], "ok": true}
+{"model": "qwen/qwen3.8-flash", "case": "headlines:tech-news:ja", "task": "headlines", "words": 21, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "qwen/qwen3.8-flash", "case": "headlines:tech-news:es", "task": "headlines", "words": 499, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "qwen/qwen3.8-flash", "case": "headlines:tech-news:de", "task": "headlines", "words": 426, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "z-ai/glm-5.3-flash", "case": "headlines:us-politics", "task": "headlines", "words": 500, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "z-ai/glm-5.3-flash", "case": "headlines:tech-news", "task": "headlines", "words": 453, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "z-ai/glm-5.3-flash", "case": "headlines:sports-roundup", "task": "headlines", "words": 403, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "z-ai/glm-5.3-flash", "case": "headlines:daily-news", "task": "headlines", "words": 0, "rep": 0.0, "ungrounded_nums": [], "fail": ["truncated", "parse", "length:0", "wrong_language"], "ok": false}
+{"model": "z-ai/glm-5.3-flash", "case": "headlines:space-nasa", "task": "headlines", "words": 506, "rep": 0.0, "ungrounded_nums": ["900", "328"], "fail": [], "ok": true}
+{"model": "z-ai/glm-5.3-flash", "case": "headlines:health-wellness", "task": "headlines", "words": 443, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "z-ai/glm-5.3-flash", "case": "headlines:ai-ml", "task": "headlines", "words": 507, "rep": 0.0, "ungrounded_nums": ["76"], "fail": [], "ok": true}
+{"model": "z-ai/glm-5.3-flash", "case": "headlines:markets-finance", "task": "headlines", "words": 457, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "z-ai/glm-5.3-flash", "case": "deep_dive:science-discoveries", "task": "deep_dive", "words": 685, "rep": 0.0, "ungrounded_nums": ["460"], "fail": [], "ok": true}
+{"model": "z-ai/glm-5.3-flash", "case": "deep_dive:ai-ml", "task": "deep_dive", "words": 0, "rep": 0.0, "ungrounded_nums": [], "fail": ["truncated", "parse", "length:0", "wrong_language"], "ok": false}
+{"model": "z-ai/glm-5.3-flash", "case": "deep_dive:markets-finance", "task": "deep_dive", "words": 755, "rep": 0.0, "ungrounded_nums": ["2008", "1929", "15", "1987"], "fail": ["ungrounded_numbers:4"], "ok": false}
+{"model": "z-ai/glm-5.3-flash", "case": "transition:0", "task": "transition", "words": 58, "rep": 0.0, "fail": [], "ok": true}
+{"model": "z-ai/glm-5.3-flash", "case": "transition:1", "task": "transition", "words": 50, "rep": 0.0, "fail": [], "ok": true}
+{"model": "z-ai/glm-5.3-flash", "case": "deep_dive:daily-news", "task": "deep_dive", "words": 0, "rep": 0.0, "ungrounded_nums": [], "fail": ["truncated", "parse", "length:0", "wrong_language"], "ok": false}
+{"model": "z-ai/glm-5.3-flash", "case": "deep_dive:world-update", "task": "deep_dive", "words": 0, "rep": 0.0, "ungrounded_nums": [], "fail": ["truncated", "parse", "length:0", "wrong_language"], "ok": false}
+{"model": "z-ai/glm-5.3-flash", "case": "deep_dive:gaming", "task": "deep_dive", "words": 0, "rep": 0.0, "ungrounded_nums": [], "fail": ["truncated", "parse", "length:0", "wrong_language"], "ok": false}
+{"model": "xiaomi/mimo-v2.6-flash", "case": "headlines:daily-news", "task": "headlines", "words": 328, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "z-ai/glm-5.3-flash", "case": "listener:2", "task": "listener_request", "ok": false, "fail": ["empty"]}
+{"model": "xiaomi/mimo-v2.6-flash", "case": "headlines:us-politics", "task": "headlines", "words": 437, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "z-ai/glm-5.3-flash", "case": "listener:0", "task": "listener_request", "words": 603, "rep": 0.002, "fail": [], "ok": true}
+{"model": "z-ai/glm-5.3-flash", "case": "headlines:tech-news:es", "task": "headlines", "words": 0, "rep": 0.0, "ungrounded_nums": [], "fail": ["truncated", "parse", "length:0", "wrong_language"], "ok": false}
+{"model": "z-ai/glm-5.3-flash", "case": "listener:3", "task": "listener_request", "words": 495, "rep": 0.0, "fail": [], "ok": true}
+{"model": "z-ai/glm-5.3-flash", "case": "headlines:tech-news:de", "task": "headlines", "ok": false, "fail": ["empty"]}
+{"model": "xiaomi/mimo-v2.6-flash", "case": "headlines:tech-news", "task": "headlines", "words": 325, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "xiaomi/mimo-v2.6-flash", "case": "headlines:space-nasa", "task": "headlines", "words": 294, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "z-ai/glm-5.3-flash", "case": "listener:1", "task": "listener_request", "words": 498, "rep": 0.0, "fail": [], "ok": true}
+{"model": "xiaomi/mimo-v2.6-flash", "case": "headlines:sports-roundup", "task": "headlines", "words": 500, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "z-ai/glm-5.3-flash", "case": "headlines:tech-news:ja", "task": "headlines", "words": 0, "rep": 0.0, "ungrounded_nums": [], "fail": ["truncated", "parse", "wrong_language"], "ok": false}
+{"model": "xiaomi/mimo-v2.6-flash", "case": "deep_dive:daily-news", "task": "deep_dive", "words": 572, "rep": 0.0, "ungrounded_nums": ["15"], "fail": [], "ok": true}
+{"model": "xiaomi/mimo-v2.6-flash", "case": "headlines:markets-finance", "task": "headlines", "words": 526, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "xiaomi/mimo-v2.6-flash", "case": "deep_dive:ai-ml", "task": "deep_dive", "words": 597, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "xiaomi/mimo-v2.6-flash", "case": "deep_dive:world-update", "task": "deep_dive", "words": 440, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "xiaomi/mimo-v2.6-flash", "case": "deep_dive:science-discoveries", "task": "deep_dive", "words": 390, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "xiaomi/mimo-v2.6-flash", "case": "deep_dive:markets-finance", "task": "deep_dive", "words": 439, "rep": 0.0, "ungrounded_nums": ["401"], "fail": [], "ok": true}
+{"model": "xiaomi/mimo-v2.6-flash", "case": "transition:0", "task": "transition", "words": 33, "rep": 0.0, "fail": [], "ok": true}
+{"model": "xiaomi/mimo-v2.6-flash", "case": "transition:1", "task": "transition", "words": 42, "rep": 0.0, "fail": [], "ok": true}
+{"model": "xiaomi/mimo-v2.6-flash", "case": "listener:0", "task": "listener_request", "words": 570, "rep": 0.002, "fail": [], "ok": true}
+{"model": "xiaomi/mimo-v2.6-flash", "case": "deep_dive:gaming", "task": "deep_dive", "words": 574, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "xiaomi/mimo-v2.6-flash", "case": "listener:1", "task": "listener_request", "words": 368, "rep": 0.0, "fail": [], "ok": true}
+{"model": "xiaomi/mimo-v2.6-flash", "case": "listener:2", "task": "listener_request", "words": 424, "rep": 0.0, "fail": [], "ok": true}
+{"model": "xiaomi/mimo-v2.6-flash", "case": "listener:3", "task": "listener_request", "words": 473, "rep": 0.0, "fail": [], "ok": true}
+{"model": "xiaomi/mimo-v2.6-flash", "case": "headlines:tech-news:de", "task": "headlines", "words": 194, "rep": 0.0, "ungrounded_nums": ["16"], "fail": [], "ok": true}
+{"model": "xiaomi/mimo-v2.6-flash", "case": "headlines:health-wellness", "task": "headlines", "words": 598, "rep": 0.002, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "xiaomi/mimo-v2.6-flash", "case": "headlines:tech-news:ja", "task": "headlines", "words": 23, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "moonshotai/kimi-k2.5", "case": "headlines:daily-news", "task": "headlines", "words": 443, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "xiaomi/mimo-v2.6-flash", "case": "headlines:tech-news:es", "task": "headlines", "words": 566, "rep": 0.0, "ungrounded_nums": ["600"], "fail": [], "ok": true}
+{"model": "moonshotai/kimi-k2.5", "case": "headlines:markets-finance", "task": "headlines", "words": 588, "rep": 0.0, "ungrounded_nums": ["2024"], "fail": [], "ok": true}
+{"model": "moonshotai/kimi-k2.5", "case": "headlines:sports-roundup", "task": "headlines", "words": 357, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "xiaomi/mimo-v2.6-flash", "case": "headlines:ai-ml", "task": "headlines", "words": 336, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "moonshotai/kimi-k2.5", "case": "headlines:space-nasa", "task": "headlines", "words": 575, "rep": 0.0, "ungrounded_nums": ["900", "320", "1960"], "fail": ["ungrounded_numbers:3"], "ok": false}
+{"model": "moonshotai/kimi-k2.5", "case": "headlines:tech-news", "task": "headlines", "words": 659, "rep": 0.002, "ungrounded_nums": ["1980", "2019"], "fail": [], "ok": true}
+{"model": "moonshotai/kimi-k2.5", "case": "headlines:ai-ml", "task": "headlines", "words": 839, "rep": 0.001, "ungrounded_nums": ["76"], "fail": ["length:839"], "ok": false}
+{"model": "moonshotai/kimi-k2.5", "case": "headlines:us-politics", "task": "headlines", "words": 947, "rep": 0.001, "ungrounded_nums": ["24"], "fail": ["length:947"], "ok": false}
+{"model": "moonshotai/kimi-k2.5", "case": "deep_dive:world-update", "task": "deep_dive", "words": 751, "rep": 0.0, "ungrounded_nums": ["2016"], "fail": [], "ok": true}
+{"model": "moonshotai/kimi-k2.5", "case": "deep_dive:markets-finance", "task": "deep_dive", "words": 691, "rep": 0.0, "ungrounded_nums": ["401"], "fail": [], "ok": true}
+{"model": "moonshotai/kimi-k2.5", "case": "deep_dive:ai-ml", "task": "deep_dive", "words": 904, "rep": 0.0, "ungrounded_nums": ["76"], "fail": [], "ok": true}
+{"model": "moonshotai/kimi-k2.5", "case": "headlines:health-wellness", "task": "headlines", "words": 733, "rep": 0.0, "ungrounded_nums": ["41", "20", "7,500", "16", "2020", "29", "27", "17"], "fail": ["length:733", "ungrounded_numbers:12"], "ok": false}
+{"model": "moonshotai/kimi-k2.5", "case": "deep_dive:daily-news", "task": "deep_dive", "words": 836, "rep": 0.0, "ungrounded_nums": ["93", "11", "1995"], "fail": ["ungrounded_numbers:3"], "ok": false}
+{"model": "moonshotai/kimi-k2.5", "case": "transition:0", "task": "transition", "words": 44, "rep": 0.0, "fail": [], "ok": true}
+{"model": "moonshotai/kimi-k2.5", "case": "listener:0", "task": "listener_request", "words": 566, "rep": 0.005, "fail": [], "ok": true}
+{"model": "moonshotai/kimi-k2.5", "case": "listener:1", "task": "listener_request", "words": 581, "rep": 0.0, "fail": [], "ok": true}
+{"model": "moonshotai/kimi-k2.5", "case": "transition:1", "task": "transition", "words": 44, "rep": 0.0, "fail": [], "ok": true}
+{"model": "moonshotai/kimi-k2.5", "case": "listener:3", "task": "listener_request", "words": 614, "rep": 0.002, "fail": [], "ok": true}
+{"model": "moonshotai/kimi-k2.5", "case": "deep_dive:science-discoveries", "task": "deep_dive", "words": 893, "rep": 0.0, "ungrounded_nums": ["470"], "fail": [], "ok": true}
+{"model": "moonshotai/kimi-k2.5", "case": "listener:2", "task": "listener_request", "words": 724, "rep": 0.001, "fail": [], "ok": true}
+{"model": "moonshotai/kimi-k2.5", "case": "deep_dive:gaming", "task": "deep_dive", "words": 876, "rep": 0.0, "ungrounded_nums": ["450", "2020", "30", "2000", "2024", "1999"], "fail": ["ungrounded_numbers:6"], "ok": false}
+{"model": "openai/gpt-5.6-luna", "case": "headlines:daily-news", "task": "headlines", "words": 468, "rep": 0.002, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "openai/gpt-5.6-luna", "case": "headlines:ai-ml", "task": "headlines", "words": 541, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "openai/gpt-5.6-luna", "case": "headlines:us-politics", "task": "headlines", "words": 548, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "openai/gpt-5.6-luna", "case": "headlines:markets-finance", "task": "headlines", "words": 492, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "openai/gpt-5.6-luna", "case": "headlines:tech-news", "task": "headlines", "words": 524, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "openai/gpt-5.6-luna", "case": "headlines:space-nasa", "task": "headlines", "words": 530, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "openai/gpt-5.6-luna", "case": "headlines:health-wellness", "task": "headlines", "words": 365, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "openai/gpt-5.6-luna", "case": "headlines:sports-roundup", "task": "headlines", "words": 445, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "moonshotai/kimi-k2.5", "case": "headlines:tech-news:es", "task": "headlines", "words": 597, "rep": 0.003, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "moonshotai/kimi-k2.5", "case": "headlines:tech-news:ja", "task": "headlines", "words": 35, "rep": 0.0, "ungrounded_nums": ["1250", "77"], "fail": [], "ok": true}
+{"model": "moonshotai/kimi-k2.5", "case": "headlines:tech-news:de", "task": "headlines", "words": 564, "rep": 0.0, "ungrounded_nums": ["16"], "fail": [], "ok": true}
+{"model": "openai/gpt-5.6-luna", "case": "deep_dive:daily-news", "task": "deep_dive", "words": 901, "rep": 0.001, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "openai/gpt-5.6-luna", "case": "deep_dive:ai-ml", "task": "deep_dive", "words": 833, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "openai/gpt-5.6-luna", "case": "deep_dive:world-update", "task": "deep_dive", "words": 845, "rep": 0.001, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "openai/gpt-5.6-luna", "case": "transition:0", "task": "transition", "words": 63, "rep": 0.0, "fail": [], "ok": true}
+{"model": "openai/gpt-5.6-luna", "case": "deep_dive:markets-finance", "task": "deep_dive", "words": 849, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "openai/gpt-5.6-luna", "case": "listener:0", "task": "listener_request", "words": 616, "rep": 0.0, "fail": [], "ok": true}
+{"model": "openai/gpt-5.6-luna", "case": "deep_dive:science-discoveries", "task": "deep_dive", "words": 856, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "openai/gpt-5.6-luna", "case": "transition:1", "task": "transition", "words": 56, "rep": 0.0, "fail": [], "ok": true}
+{"model": "openai/gpt-5.6-luna", "case": "deep_dive:gaming", "task": "deep_dive", "words": 803, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "openai/gpt-5.6-luna", "case": "listener:1", "task": "listener_request", "words": 576, "rep": 0.0, "fail": [], "ok": true}
+{"model": "openai/gpt-5.6-luna", "case": "listener:2", "task": "listener_request", "words": 479, "rep": 0.0, "fail": [], "ok": true}
+{"model": "openai/gpt-5.6-luna", "case": "listener:3", "task": "listener_request", "words": 527, "rep": 0.002, "fail": [], "ok": true}
+{"model": "openai/gpt-5.6-luna", "case": "headlines:tech-news:de", "task": "headlines", "words": 403, "rep": 0.0, "ungrounded_nums": ["16"], "fail": [], "ok": true}
+{"model": "openai/gpt-5.6-luna", "case": "headlines:tech-news:es", "task": "headlines", "words": 585, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "openai/gpt-5.6-luna", "case": "headlines:tech-news:ja", "task": "headlines", "words": 21, "rep": 0.0, "ungrounded_nums": ["1250"], "fail": [], "ok": true}
+{"model": "google/gemini-3.8-flash", "case": "headlines:us-politics", "task": "headlines", "words": 407, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "google/gemini-3.8-flash", "case": "headlines:daily-news", "task": "headlines", "words": 413, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "google/gemini-3.8-flash", "case": "headlines:tech-news", "task": "headlines", "words": 350, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "google/gemini-3.8-flash", "case": "headlines:ai-ml", "task": "headlines", "words": 387, "rep": 0.0, "ungrounded_nums": ["76"], "fail": [], "ok": true}
+{"model": "google/gemini-3.8-flash", "case": "headlines:health-wellness", "task": "headlines", "words": 402, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "google/gemini-3.8-flash", "case": "headlines:space-nasa", "task": "headlines", "words": 341, "rep": 0.006, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "google/gemini-3.8-flash", "case": "headlines:markets-finance", "task": "headlines", "words": 426, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "google/gemini-3.8-flash", "case": "headlines:sports-roundup", "task": "headlines", "words": 406, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "google/gemini-3.8-flash", "case": "deep_dive:world-update", "task": "deep_dive", "words": 613, "rep": 0.0, "ungrounded_nums": ["1995"], "fail": [], "ok": true}
+{"model": "google/gemini-3.8-flash", "case": "deep_dive:markets-finance", "task": "deep_dive", "words": 594, "rep": 0.0, "ungrounded_nums": ["1929", "2008", "1987"], "fail": ["ungrounded_numbers:3"], "ok": false}
+{"model": "google/gemini-3.8-flash", "case": "deep_dive:ai-ml", "task": "deep_dive", "words": 470, "rep": 0.0, "ungrounded_nums": ["76"], "fail": [], "ok": true}
+{"model": "google/gemini-3.8-flash", "case": "listener:0", "task": "listener_request", "words": 465, "rep": 0.002, "fail": [], "ok": true}
+{"model": "google/gemini-3.8-flash", "case": "deep_dive:daily-news", "task": "deep_dive", "words": 554, "rep": 0.0, "ungrounded_nums": ["2015", "11"], "fail": [], "ok": true}
+{"model": "google/gemini-3.8-flash", "case": "listener:1", "task": "listener_request", "words": 413, "rep": 0.0, "fail": [], "ok": true}
+{"model": "google/gemini-3.8-flash", "case": "transition:0", "task": "transition", "words": 70, "rep": 0.0, "fail": [], "ok": true}
+{"model": "google/gemini-3.8-flash", "case": "transition:1", "task": "transition", "words": 64, "rep": 0.0, "fail": [], "ok": true}
+{"model": "google/gemini-3.8-flash", "case": "deep_dive:science-discoveries", "task": "deep_dive", "words": 566, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "x-ai/grok-4.3", "case": "headlines:daily-news", "task": "headlines", "words": 194, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "google/gemini-3.8-flash", "case": "deep_dive:gaming", "task": "deep_dive", "words": 651, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "google/gemini-3.8-flash", "case": "listener:3", "task": "listener_request", "words": 451, "rep": 0.0, "fail": [], "ok": true}
+{"model": "x-ai/grok-4.3", "case": "headlines:ai-ml", "task": "headlines", "words": 202, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "x-ai/grok-4.3", "case": "headlines:us-politics", "task": "headlines", "words": 198, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "google/gemini-3.8-flash", "case": "listener:2", "task": "listener_request", "words": 481, "rep": 0.0, "fail": [], "ok": true}
+{"model": "x-ai/grok-4.3", "case": "headlines:markets-finance", "task": "headlines", "words": 245, "rep": 0.0, "ungrounded_nums": ["24"], "fail": [], "ok": true}
+{"model": "x-ai/grok-4.3", "case": "headlines:tech-news", "task": "headlines", "words": 348, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "google/gemini-3.8-flash", "case": "headlines:tech-news:de", "task": "headlines", "words": 325, "rep": 0.0, "ungrounded_nums": ["16"], "fail": [], "ok": true}
+{"model": "x-ai/grok-4.3", "case": "headlines:health-wellness", "task": "headlines", "words": 198, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "x-ai/grok-4.3", "case": "headlines:sports-roundup", "task": "headlines", "words": 226, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "google/gemini-3.8-flash", "case": "headlines:tech-news:es", "task": "headlines", "words": 386, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "x-ai/grok-4.3", "case": "headlines:space-nasa", "task": "headlines", "words": 338, "rep": 0.0, "ungrounded_nums": ["1960"], "fail": [], "ok": true}
+{"model": "x-ai/grok-4.3", "case": "deep_dive:daily-news", "task": "deep_dive", "words": 269, "rep": 0.0, "ungrounded_nums": ["1995", "2016"], "fail": [], "ok": true}
+{"model": "x-ai/grok-4.3", "case": "deep_dive:markets-finance", "task": "deep_dive", "words": 348, "rep": 0.0, "ungrounded_nums": ["80", "18", "15"], "fail": ["ungrounded_numbers:3"], "ok": false}
+{"model": "x-ai/grok-4.3", "case": "deep_dive:world-update", "task": "deep_dive", "words": 396, "rep": 0.0, "ungrounded_nums": ["45", "1996", "50,000"], "fail": ["ungrounded_numbers:3"], "ok": false}
+{"model": "x-ai/grok-4.3", "case": "deep_dive:science-discoveries", "task": "deep_dive", "words": 341, "rep": 0.0, "ungrounded_nums": ["42", "1,200", "140"], "fail": ["ungrounded_numbers:3"], "ok": false}
+{"model": "x-ai/grok-4.3", "case": "deep_dive:ai-ml", "task": "deep_dive", "words": 370, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "google/gemini-3.8-flash", "case": "headlines:tech-news:ja", "task": "headlines", "words": 22, "rep": 0.0, "ungrounded_nums": ["1250", "80"], "fail": [], "ok": true}
+{"model": "x-ai/grok-4.3", "case": "transition:0", "task": "transition", "words": 50, "rep": 0.0, "fail": [], "ok": true}
+{"model": "x-ai/grok-4.3", "case": "listener:1", "task": "listener_request", "words": 229, "rep": 0.0, "fail": [], "ok": true}
+{"model": "x-ai/grok-4.3", "case": "transition:1", "task": "transition", "words": 40, "rep": 0.0, "fail": [], "ok": true}
+{"model": "x-ai/grok-4.3", "case": "deep_dive:gaming", "task": "deep_dive", "words": 473, "rep": 0.0, "ungrounded_nums": ["2001", "2000"], "fail": [], "ok": true}
+{"model": "x-ai/grok-4.3", "case": "listener:0", "task": "listener_request", "words": 376, "rep": 0.0, "fail": [], "ok": true}
+{"model": "x-ai/grok-4.3", "case": "listener:3", "task": "listener_request", "words": 326, "rep": 0.0, "fail": [], "ok": true}
+{"model": "x-ai/grok-4.3", "case": "listener:2", "task": "listener_request", "words": 355, "rep": 0.0, "fail": [], "ok": true}
+{"model": "x-ai/grok-4.3", "case": "headlines:tech-news:es", "task": "headlines", "words": 270, "rep": 0.0, "ungrounded_nums": ["2024"], "fail": [], "ok": true}
+{"model": "x-ai/grok-4.3", "case": "headlines:tech-news:ja", "task": "headlines", "words": 23, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "x-ai/grok-4.3", "case": "headlines:tech-news:de", "task": "headlines", "words": 278, "rep": 0.0, "ungrounded_nums": ["16"], "fail": [], "ok": true}

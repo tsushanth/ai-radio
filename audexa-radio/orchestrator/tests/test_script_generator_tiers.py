@@ -35,7 +35,7 @@ class FakeResp:
 
 def ok_payload(text="[]"):
     return {
-        "model": "deepseek/deepseek-v4-flash",
+        "model": "openai/gpt-6-luna",
         "choices": [{"message": {"content": text}, "finish_reason": "stop"}],
         "usage": {"prompt_tokens": 10, "completion_tokens": 5, "cost": 0.000001},
     }

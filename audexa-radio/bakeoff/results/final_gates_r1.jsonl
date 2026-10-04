@@ -1,0 +1,174 @@
+{"model": "anthropic/claude-sonnet-5.5", "case": "F-headlines:coding-dev", "task": "headlines", "words": 423, "rep": 0.002, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "anthropic/claude-sonnet-5.5", "case": "F-headlines:science-discoveries", "task": "headlines", "words": 426, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "anthropic/claude-sonnet-5.5", "case": "F-headlines:daily-news", "task": "headlines", "words": 366, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "anthropic/claude-sonnet-5.5", "case": "F-headlines:world-update", "task": "headlines", "words": 412, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "anthropic/claude-sonnet-5.5", "case": "F-headlines:us-politics", "task": "headlines", "words": 474, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "anthropic/claude-sonnet-5.5", "case": "F-headlines:startups-vc", "task": "headlines", "words": 467, "rep": 0.002, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "anthropic/claude-sonnet-5.5", "case": "F-headlines:space-nasa", "task": "headlines", "words": 439, "rep": 0.0, "ungrounded_nums": ["900"], "fail": [], "ok": true}
+{"model": "anthropic/claude-sonnet-5.5", "case": "F-headlines:ai-ml", "task": "headlines", "words": 460, "rep": 0.0, "ungrounded_nums": ["370"], "fail": [], "ok": true}
+{"model": "anthropic/claude-sonnet-5.5", "case": "F-headlines:markets-finance", "task": "headlines", "words": 426, "rep": 0.002, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "anthropic/claude-sonnet-5.5", "case": "F-headlines:tech-news", "task": "headlines", "words": 435, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "anthropic/claude-sonnet-5.5", "case": "F-headlines:gaming", "task": "headlines", "words": 428, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "anthropic/claude-sonnet-5.5", "case": "F-headlines:health-wellness", "task": "headlines", "words": 279, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "anthropic/claude-sonnet-5.5", "case": "F-headlines:sports-roundup", "task": "headlines", "words": 432, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "anthropic/claude-sonnet-5.5", "case": "F-deep_dive:coding-dev", "task": "deep_dive", "words": 712, "rep": 0.006, "ungrounded_nums": ["220"], "fail": [], "ok": true}
+{"model": "anthropic/claude-sonnet-5.5", "case": "F-deep_dive:us-politics", "task": "deep_dive", "words": 723, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "anthropic/claude-sonnet-5.5", "case": "F-deep_dive:world-update", "task": "deep_dive", "words": 704, "rep": 0.007, "ungrounded_nums": ["2023", "2015", "2014"], "fail": ["ungrounded_numbers:3"], "ok": false}
+{"model": "anthropic/claude-sonnet-5.5", "case": "F-deep_dive:startups-vc", "task": "deep_dive", "words": 781, "rep": 0.005, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "anthropic/claude-sonnet-5.5", "case": "F-deep_dive:tech-news", "task": "deep_dive", "words": 695, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "anthropic/claude-sonnet-5.5", "case": "F-transition:0", "task": "transition", "words": 54, "rep": 0.0, "fail": [], "ok": true}
+{"model": "anthropic/claude-sonnet-5.5", "case": "F-listener:0", "task": "listener_request", "words": 559, "rep": 0.002, "fail": [], "ok": true}
+{"model": "anthropic/claude-sonnet-5.5", "case": "F-deep_dive:sports-roundup", "task": "deep_dive", "words": 693, "rep": 0.003, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "anthropic/claude-sonnet-5.5", "case": "F-listener:1", "task": "listener_request", "words": 611, "rep": 0.0, "fail": [], "ok": true}
+{"model": "anthropic/claude-sonnet-5.5", "case": "F-transition:1", "task": "transition", "words": 56, "rep": 0.0, "fail": [], "ok": true}
+{"model": "anthropic/claude-sonnet-5.5", "case": "F-transition:2", "task": "transition", "words": 59, "rep": 0.0, "fail": [], "ok": true}
+{"model": "anthropic/claude-sonnet-5.5", "case": "F-deep_dive:space-nasa", "task": "deep_dive", "words": 839, "rep": 0.0, "ungrounded_nums": ["17,000", "900", "90"], "fail": ["ungrounded_numbers:3"], "ok": false}
+{"model": "anthropic/claude-sonnet-5.5", "case": "F-deep_dive:science-discoveries", "task": "deep_dive", "words": 745, "rep": 0.003, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "anthropic/claude-sonnet-5.5", "case": "F-listener:3", "task": "listener_request", "words": 616, "rep": 0.003, "fail": [], "ok": true}
+{"model": "anthropic/claude-sonnet-5.5", "case": "F-listener:4", "task": "listener_request", "words": 582, "rep": 0.0, "fail": [], "ok": true}
+{"model": "anthropic/claude-sonnet-5.5", "case": "F-listener:2", "task": "listener_request", "words": 546, "rep": 0.0, "fail": [], "ok": true}
+{"model": "anthropic/claude-sonnet-5.5", "case": "F-listener:5", "task": "listener_request", "words": 591, "rep": 0.0, "fail": [], "ok": true}
+{"model": "anthropic/claude-sonnet-5.5", "case": "F-headlines-thin1:space-nasa", "task": "headlines", "words": 451, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "anthropic/claude-sonnet-5.5", "case": "headlines:daily-news", "task": "headlines", "words": 412, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "anthropic/claude-sonnet-5.5", "case": "F-headlines-thin2:gaming", "task": "headlines", "words": 480, "rep": 0.002, "ungrounded_nums": ["2003", "90"], "fail": [], "ok": true}
+{"model": "anthropic/claude-sonnet-5.5", "case": "headlines:us-politics", "task": "headlines", "words": 480, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "anthropic/claude-sonnet-5.5", "case": "F-headlines:tech-news:fr", "task": "headlines", "words": 491, "rep": 0.0, "ungrounded_nums": ["16", "700"], "fail": [], "ok": true}
+{"model": "anthropic/claude-sonnet-5.5", "case": "F-headlines:tech-news:pt", "task": "headlines", "words": 576, "rep": 0.0, "ungrounded_nums": ["14", "700"], "fail": [], "ok": true}
+{"model": "anthropic/claude-sonnet-5.5", "case": "F-headlines:tech-news:hi", "task": "headlines", "words": 520, "rep": 0.004, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "anthropic/claude-sonnet-5.5", "case": "headlines:ai-ml", "task": "headlines", "words": 446, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "anthropic/claude-sonnet-5.5", "case": "headlines:tech-news", "task": "headlines", "words": 439, "rep": 0.0, "ungrounded_nums": ["600"], "fail": [], "ok": true}
+{"model": "anthropic/claude-sonnet-5.5", "case": "headlines:markets-finance", "task": "headlines", "words": 434, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "anthropic/claude-sonnet-5.5", "case": "headlines:health-wellness", "task": "headlines", "words": 372, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "anthropic/claude-sonnet-5.5", "case": "headlines:space-nasa", "task": "headlines", "words": 466, "rep": 0.0, "ungrounded_nums": ["900"], "fail": [], "ok": true}
+{"model": "anthropic/claude-sonnet-5.5", "case": "headlines:sports-roundup", "task": "headlines", "words": 398, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "anthropic/claude-sonnet-5.5", "case": "deep_dive:daily-news", "task": "deep_dive", "words": 677, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "anthropic/claude-sonnet-5.5", "case": "deep_dive:markets-finance", "task": "deep_dive", "words": 707, "rep": 0.0, "ungrounded_nums": ["13"], "fail": [], "ok": true}
+{"model": "anthropic/claude-sonnet-5.5", "case": "deep_dive:world-update", "task": "deep_dive", "words": 718, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "anthropic/claude-sonnet-5.5", "case": "listener:0", "task": "listener_request", "words": 648, "rep": 0.005, "fail": [], "ok": true}
+{"model": "anthropic/claude-sonnet-5.5", "case": "transition:1", "task": "transition", "words": 54, "rep": 0.0, "fail": [], "ok": true}
+{"model": "anthropic/claude-sonnet-5.5", "case": "transition:0", "task": "transition", "words": 51, "rep": 0.0, "fail": [], "ok": true}
+{"model": "anthropic/claude-sonnet-5.5", "case": "deep_dive:science-discoveries", "task": "deep_dive", "words": 732, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "anthropic/claude-sonnet-5.5", "case": "deep_dive:gaming", "task": "deep_dive", "words": 719, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "anthropic/claude-sonnet-5.5", "case": "deep_dive:ai-ml", "task": "deep_dive", "words": 805, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "anthropic/claude-sonnet-5.5", "case": "listener:1", "task": "listener_request", "words": 525, "rep": 0.002, "fail": [], "ok": true}
+{"model": "openai/gpt-5.6-luna", "case": "F-headlines:daily-news", "task": "headlines", "words": 459, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "anthropic/claude-sonnet-5.5", "case": "listener:3", "task": "listener_request", "words": 709, "rep": 0.001, "fail": [], "ok": true}
+{"model": "openai/gpt-5.6-luna", "case": "F-headlines:us-politics", "task": "headlines", "words": 497, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "openai/gpt-5.6-luna", "case": "F-headlines:world-update", "task": "headlines", "words": 523, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "openai/gpt-5.6-luna", "case": "F-headlines:ai-ml", "task": "headlines", "words": 553, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "anthropic/claude-sonnet-5.5", "case": "listener:2", "task": "listener_request", "words": 575, "rep": 0.0, "fail": [], "ok": true}
+{"model": "openai/gpt-5.6-luna", "case": "F-headlines:tech-news", "task": "headlines", "words": 538, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "anthropic/claude-sonnet-5.5", "case": "headlines:tech-news:de", "task": "headlines", "words": 448, "rep": 0.0, "ungrounded_nums": ["600"], "fail": [], "ok": true}
+{"model": "openai/gpt-5.6-luna", "case": "F-headlines:coding-dev", "task": "headlines", "words": 498, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "openai/gpt-5.6-luna", "case": "F-headlines:startups-vc", "task": "headlines", "words": 490, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "anthropic/claude-sonnet-5.5", "case": "headlines:tech-news:es", "task": "headlines", "words": 520, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "openai/gpt-5.6-luna", "case": "F-headlines:markets-finance", "task": "headlines", "words": 526, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "anthropic/claude-sonnet-5.5", "case": "headlines:tech-news:ja", "task": "headlines", "words": 29, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "openai/gpt-5.6-luna", "case": "F-headlines:space-nasa", "task": "headlines", "words": 570, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "openai/gpt-5.6-luna", "case": "F-headlines:science-discoveries", "task": "headlines", "words": 535, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "openai/gpt-5.6-luna", "case": "F-headlines:gaming", "task": "headlines", "words": 531, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "openai/gpt-5.6-luna", "case": "F-headlines:health-wellness", "task": "headlines", "words": 481, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "openai/gpt-5.6-luna", "case": "F-headlines:sports-roundup", "task": "headlines", "words": 592, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "openai/gpt-5.6-luna", "case": "F-deep_dive:us-politics", "task": "deep_dive", "words": 706, "rep": 0.001, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "openai/gpt-5.6-luna", "case": "F-deep_dive:world-update", "task": "deep_dive", "words": 773, "rep": 0.001, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "openai/gpt-5.6-luna", "case": "F-deep_dive:coding-dev", "task": "deep_dive", "words": 972, "rep": 0.001, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "openai/gpt-5.6-luna", "case": "F-listener:1", "task": "listener_request", "words": 515, "rep": 0.0, "fail": [], "ok": true}
+{"model": "openai/gpt-5.6-luna", "case": "F-listener:0", "task": "listener_request", "words": 498, "rep": 0.0, "fail": [], "ok": true}
+{"model": "openai/gpt-5.6-luna", "case": "F-deep_dive:tech-news", "task": "deep_dive", "words": 852, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "openai/gpt-5.6-luna", "case": "F-deep_dive:space-nasa", "task": "deep_dive", "words": 914, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "openai/gpt-5.6-luna", "case": "F-listener:2", "task": "listener_request", "words": 478, "rep": 0.002, "fail": [], "ok": true}
+{"model": "openai/gpt-5.6-luna", "case": "F-transition:0", "task": "transition", "words": 63, "rep": 0.0, "fail": [], "ok": true}
+{"model": "openai/gpt-5.6-luna", "case": "F-transition:1", "task": "transition", "words": 50, "rep": 0.0, "fail": [], "ok": true}
+{"model": "openai/gpt-5.6-luna", "case": "F-transition:2", "task": "transition", "words": 57, "rep": 0.0, "fail": [], "ok": true}
+{"model": "openai/gpt-5.6-luna", "case": "F-deep_dive:science-discoveries", "task": "deep_dive", "words": 765, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "openai/gpt-5.6-luna", "case": "F-deep_dive:startups-vc", "task": "deep_dive", "words": 1071, "rep": 0.001, "ungrounded_nums": [], "fail": ["length:1071"], "ok": false}
+{"model": "openai/gpt-5.6-luna", "case": "F-listener:3", "task": "listener_request", "words": 621, "rep": 0.0, "fail": [], "ok": true}
+{"model": "openai/gpt-5.6-luna", "case": "F-deep_dive:sports-roundup", "task": "deep_dive", "words": 1010, "rep": 0.002, "ungrounded_nums": [], "fail": ["length:1010"], "ok": false}
+{"model": "openai/gpt-5.6-luna", "case": "F-headlines-thin1:space-nasa", "task": "headlines", "words": 357, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "openai/gpt-5.6-luna", "case": "F-listener:5", "task": "listener_request", "words": 608, "rep": 0.0, "fail": [], "ok": true}
+{"model": "openai/gpt-5.6-luna", "case": "F-listener:4", "task": "listener_request", "words": 551, "rep": 0.0, "fail": [], "ok": true}
+{"model": "openai/gpt-5.6-luna", "case": "F-headlines-thin2:gaming", "task": "headlines", "words": 441, "rep": 0.002, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "openai/gpt-5.6-luna", "case": "F-headlines:tech-news:fr", "task": "headlines", "words": 562, "rep": 0.0, "ungrounded_nums": ["16", "2017"], "fail": [], "ok": true}
+{"model": "openai/gpt-5.6-luna", "case": "F-headlines:tech-news:pt", "task": "headlines", "words": 519, "rep": 0.0, "ungrounded_nums": ["16"], "fail": [], "ok": true}
+{"model": "openai/gpt-5.6-luna", "case": "headlines:us-politics", "task": "headlines", "words": 484, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "openai/gpt-5.6-luna", "case": "headlines:daily-news", "task": "headlines", "words": 546, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "openai/gpt-5.6-luna", "case": "headlines:ai-ml", "task": "headlines", "words": 510, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "openai/gpt-5.6-luna", "case": "F-headlines:tech-news:hi", "task": "headlines", "words": 589, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "openai/gpt-5.6-luna", "case": "headlines:health-wellness", "task": "headlines", "words": 318, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "openai/gpt-5.6-luna", "case": "headlines:tech-news", "task": "headlines", "words": 593, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "openai/gpt-5.6-luna", "case": "headlines:markets-finance", "task": "headlines", "words": 500, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "openai/gpt-5.6-luna", "case": "headlines:space-nasa", "task": "headlines", "words": 541, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "openai/gpt-5.6-luna", "case": "headlines:sports-roundup", "task": "headlines", "words": 526, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "openai/gpt-5.6-luna", "case": "deep_dive:daily-news", "task": "deep_dive", "words": 826, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "openai/gpt-5.6-luna", "case": "listener:0", "task": "listener_request", "words": 585, "rep": 0.005, "fail": [], "ok": true}
+{"model": "openai/gpt-5.6-luna", "case": "listener:1", "task": "listener_request", "words": 501, "rep": 0.0, "fail": [], "ok": true}
+{"model": "openai/gpt-5.6-luna", "case": "deep_dive:markets-finance", "task": "deep_dive", "words": 818, "rep": 0.001, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "openai/gpt-5.6-luna", "case": "deep_dive:science-discoveries", "task": "deep_dive", "words": 880, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "openai/gpt-5.6-luna", "case": "transition:0", "task": "transition", "words": 57, "rep": 0.0, "fail": [], "ok": true}
+{"model": "openai/gpt-5.6-luna", "case": "deep_dive:world-update", "task": "deep_dive", "words": 860, "rep": 0.001, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "openai/gpt-5.6-luna", "case": "transition:1", "task": "transition", "words": 62, "rep": 0.0, "fail": [], "ok": true}
+{"model": "openai/gpt-5.6-luna", "case": "listener:3", "task": "listener_request", "words": 568, "rep": 0.0, "fail": [], "ok": true}
+{"model": "openai/gpt-5.6-luna", "case": "deep_dive:ai-ml", "task": "deep_dive", "words": 963, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "openai/gpt-5.6-luna", "case": "listener:2", "task": "listener_request", "words": 632, "rep": 0.003, "fail": [], "ok": true}
+{"model": "openai/gpt-5.6-luna", "case": "deep_dive:gaming", "task": "deep_dive", "words": 943, "rep": 0.001, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "openai/gpt-6-luna", "case": "F-headlines:daily-news", "task": "headlines", "words": 469, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "openai/gpt-6-luna", "case": "F-headlines:us-politics", "task": "headlines", "words": 483, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "openai/gpt-6-luna", "case": "F-headlines:world-update", "task": "headlines", "words": 449, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "openai/gpt-5.6-luna", "case": "headlines:tech-news:es", "task": "headlines", "words": 503, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "openai/gpt-5.6-luna", "case": "headlines:tech-news:de", "task": "headlines", "words": 446, "rep": 0.0, "ungrounded_nums": ["16"], "fail": [], "ok": true}
+{"model": "openai/gpt-6-luna", "case": "F-headlines:ai-ml", "task": "headlines", "words": 431, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "openai/gpt-6-luna", "case": "F-headlines:tech-news", "task": "headlines", "words": 464, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "openai/gpt-6-luna", "case": "F-headlines:coding-dev", "task": "headlines", "words": 477, "rep": 0.004, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "openai/gpt-5.6-luna", "case": "headlines:tech-news:ja", "task": "headlines", "words": 22, "rep": 0.0, "ungrounded_nums": ["1250"], "fail": [], "ok": true}
+{"model": "openai/gpt-6-luna", "case": "F-headlines:startups-vc", "task": "headlines", "words": 513, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "openai/gpt-6-luna", "case": "F-headlines:markets-finance", "task": "headlines", "words": 506, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "openai/gpt-6-luna", "case": "F-headlines:sports-roundup", "task": "headlines", "words": 465, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "openai/gpt-6-luna", "case": "F-headlines:science-discoveries", "task": "headlines", "words": 421, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "openai/gpt-6-luna", "case": "F-headlines:gaming", "task": "headlines", "words": 452, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "openai/gpt-6-luna", "case": "F-headlines:health-wellness", "task": "headlines", "words": 274, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "openai/gpt-6-luna", "case": "F-headlines:space-nasa", "task": "headlines", "words": 639, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "openai/gpt-6-luna", "case": "F-deep_dive:world-update", "task": "deep_dive", "words": 857, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "openai/gpt-6-luna", "case": "F-deep_dive:us-politics", "task": "deep_dive", "words": 766, "rep": 0.001, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "openai/gpt-6-luna", "case": "F-listener:0", "task": "listener_request", "words": 502, "rep": 0.0, "fail": [], "ok": true}
+{"model": "openai/gpt-6-luna", "case": "F-deep_dive:tech-news", "task": "deep_dive", "words": 778, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "openai/gpt-6-luna", "case": "F-deep_dive:startups-vc", "task": "deep_dive", "words": 714, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "openai/gpt-6-luna", "case": "F-deep_dive:coding-dev", "task": "deep_dive", "words": 796, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "openai/gpt-6-luna", "case": "F-deep_dive:science-discoveries", "task": "deep_dive", "words": 732, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "openai/gpt-6-luna", "case": "F-deep_dive:space-nasa", "task": "deep_dive", "words": 756, "rep": 0.001, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "openai/gpt-6-luna", "case": "F-listener:1", "task": "listener_request", "words": 602, "rep": 0.003, "fail": [], "ok": true}
+{"model": "openai/gpt-6-luna", "case": "F-transition:0", "task": "transition", "words": 42, "rep": 0.0, "fail": [], "ok": true}
+{"model": "openai/gpt-6-luna", "case": "F-transition:1", "task": "transition", "words": 37, "rep": 0.0, "fail": [], "ok": true}
+{"model": "openai/gpt-6-luna", "case": "F-transition:2", "task": "transition", "words": 49, "rep": 0.0, "fail": [], "ok": true}
+{"model": "openai/gpt-6-luna", "case": "F-deep_dive:sports-roundup", "task": "deep_dive", "words": 867, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "openai/gpt-6-luna", "case": "F-listener:3", "task": "listener_request", "words": 590, "rep": 0.0, "fail": [], "ok": true}
+{"model": "openai/gpt-6-luna", "case": "F-listener:5", "task": "listener_request", "words": 545, "rep": 0.0, "fail": [], "ok": true}
+{"model": "openai/gpt-6-luna", "case": "F-headlines-thin2:gaming", "task": "headlines", "words": 342, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "openai/gpt-6-luna", "case": "F-listener:4", "task": "listener_request", "words": 536, "rep": 0.0, "fail": [], "ok": true}
+{"model": "openai/gpt-6-luna", "case": "F-listener:2", "task": "listener_request", "words": 547, "rep": 0.0, "fail": [], "ok": true}
+{"model": "openai/gpt-6-luna", "case": "F-headlines-thin1:space-nasa", "task": "headlines", "words": 429, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "openai/gpt-6-luna", "case": "F-headlines:tech-news:fr", "task": "headlines", "words": 416, "rep": 0.0, "ungrounded_nums": ["16"], "fail": [], "ok": true}
+{"model": "openai/gpt-6-luna", "case": "headlines:daily-news", "task": "headlines", "words": 411, "rep": 0.0, "ungrounded_nums": ["30,000"], "fail": [], "ok": true}
+{"model": "openai/gpt-6-luna", "case": "F-headlines:tech-news:pt", "task": "headlines", "words": 567, "rep": 0.0, "ungrounded_nums": ["16"], "fail": [], "ok": true}
+{"model": "openai/gpt-6-luna", "case": "F-headlines:tech-news:hi", "task": "headlines", "words": 521, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "openai/gpt-6-luna", "case": "headlines:us-politics", "task": "headlines", "words": 433, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "openai/gpt-6-luna", "case": "headlines:health-wellness", "task": "headlines", "words": 274, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "openai/gpt-6-luna", "case": "headlines:ai-ml", "task": "headlines", "words": 392, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "openai/gpt-6-luna", "case": "headlines:markets-finance", "task": "headlines", "words": 425, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "openai/gpt-6-luna", "case": "headlines:tech-news", "task": "headlines", "words": 473, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "openai/gpt-6-luna", "case": "headlines:sports-roundup", "task": "headlines", "words": 421, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "openai/gpt-6-luna", "case": "headlines:space-nasa", "task": "headlines", "words": 481, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "openai/gpt-6-luna", "case": "deep_dive:daily-news", "task": "deep_dive", "words": 709, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "openai/gpt-6-luna", "case": "listener:1", "task": "listener_request", "words": 457, "rep": 0.002, "fail": [], "ok": true}
+{"model": "openai/gpt-6-luna", "case": "listener:0", "task": "listener_request", "words": 425, "rep": 0.0, "fail": [], "ok": true}
+{"model": "openai/gpt-6-luna", "case": "transition:0", "task": "transition", "words": 51, "rep": 0.0, "fail": [], "ok": true}
+{"model": "openai/gpt-6-luna", "case": "deep_dive:world-update", "task": "deep_dive", "words": 814, "rep": 0.005, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "openai/gpt-6-luna", "case": "listener:2", "task": "listener_request", "words": 544, "rep": 0.0, "fail": [], "ok": true}
+{"model": "openai/gpt-6-luna", "case": "transition:1", "task": "transition", "words": 44, "rep": 0.0, "fail": [], "ok": true}
+{"model": "openai/gpt-6-luna", "case": "deep_dive:ai-ml", "task": "deep_dive", "words": 819, "rep": 0.0, "ungrounded_nums": ["76"], "fail": [], "ok": true}
+{"model": "openai/gpt-6-luna", "case": "deep_dive:science-discoveries", "task": "deep_dive", "words": 768, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "openai/gpt-6-luna", "case": "deep_dive:gaming", "task": "deep_dive", "words": 751, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "openai/gpt-6-luna", "case": "deep_dive:markets-finance", "task": "deep_dive", "words": 803, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "openai/gpt-6-luna", "case": "listener:3", "task": "listener_request", "words": 640, "rep": 0.0, "fail": [], "ok": true}
+{"model": "openai/gpt-6-luna", "case": "headlines:tech-news:es", "task": "headlines", "words": 528, "rep": 0.0, "ungrounded_nums": [], "fail": [], "ok": true}
+{"model": "openai/gpt-6-luna", "case": "headlines:tech-news:de", "task": "headlines", "words": 430, "rep": 0.0, "ungrounded_nums": ["16", "5.000"], "fail": [], "ok": true}
+{"model": "openai/gpt-6-luna", "case": "headlines:tech-news:ja", "task": "headlines", "words": 20, "rep": 0.0, "ungrounded_nums": ["1250"], "fail": [], "ok": true}

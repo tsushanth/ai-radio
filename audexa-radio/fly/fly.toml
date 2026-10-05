@@ -1,0 +1,44 @@
+app = "audexa-radio-fly"
+primary_region = "sjc"   # same region as piper-tts-sjc; reached over Fly's private network
+
+[build]
+  dockerfile = "Dockerfile"
+
+[env]
+  RADIO_REGION = "us"
+  RADIO_LANGUAGE = "en"
+  RADIO_LANGUAGES_ACTIVE = "en"   # generate only English; other languages are paused
+  STREAM_LANGS = "en"             # run only the English MP3 encoder (see entrypoint.sh)
+  PIPER_URL = "http://piper-tts-sjc.internal:8080"
+  OPENROUTER_FALLBACK_MODEL = "openai/gpt-5.6-luna"
+  OPENROUTER_MODEL = "openai/gpt-6-luna"
+  # Piper voices: male host / female host (UK region uses the same voices)
+  TTS_HOST1_VOICES = "custom:en-us-warm-m"
+  TTS_HOST2_VOICES = "custom:en-us-warm-f"
+  TTS_HOST1_VOICES_UK = "custom:en-us-warm-m"
+  TTS_HOST2_VOICES_UK = "custom:en-us-warm-f"
+
+[mounts]
+  source = "audexa_data"
+  destination = "/data"
+
+[http_service]
+  internal_port = 8080
+  force_https = false   # Cloudflare (SSL mode flexible) reaches the origin over HTTP; a redirect would loop
+  auto_stop_machines = "off"     # a radio station must not scale to zero
+  auto_start_machines = false
+  min_machines_running = 1
+  [http_service.concurrency]
+    type = "connections"
+    soft_limit = 400
+    hard_limit = 500
+  [[http_service.checks]]
+    interval = "30s"
+    timeout = "5s"
+    grace_period = "90s"
+    method = "GET"
+    path = "/healthz"
+
+[[vm]]
+  size = "shared-cpu-2x"
+  memory = "2gb"

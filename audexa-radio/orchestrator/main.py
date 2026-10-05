@@ -52,7 +52,9 @@ logging.basicConfig(
 logger = logging.getLogger("audexa-radio")
 
 # ── Supported languages ──────────────────────────────────────────────────────
-RADIO_LANGUAGES = ["en", "es", "hi", "pt", "fr", "de", "ja", "ko", "zh", "it"]
+_ALL_LANGUAGES = ["en", "es", "hi", "pt", "fr", "de", "ja", "ko", "zh", "it"]
+# RADIO_LANGUAGES_ACTIVE=en limits generation to the languages whose streams actually run (default: all, as before).
+RADIO_LANGUAGES = [l for l in (os.environ.get("RADIO_LANGUAGES_ACTIVE") or ",".join(_ALL_LANGUAGES)).replace(" ", "").split(",") if l in _ALL_LANGUAGES] or ["en"]
 
 # Map language code to region for source selection
 LANGUAGE_TO_REGION = {
@@ -407,7 +409,11 @@ async def lifespan(app: FastAPI):
     config = Config()
     fetcher = ContentFetcher(config.reddit_client_id, config.reddit_client_secret)
     script_gen = RadioScriptGenerator(config.claude_bin, config.claude_model)
-    tts = TTSClient(config.tts_service_url, config.tts_model, config.tts_speed)
+    if os.environ.get("TTS_BACKEND", "kokoro").strip().lower() == "piper":
+        import piper_client
+        tts = piper_client.from_env(config.tts_speed)  # English via the shared Piper app (low priority)
+    else:
+        tts = TTSClient(config.tts_service_url, config.tts_model, config.tts_speed)
     edge_tts_client = EdgeTTSClient(rate="+5%")
     queue = QueueManager(config.queue_ready_dir, config.queue_rendering_dir)
     scheduler = TopicScheduler()

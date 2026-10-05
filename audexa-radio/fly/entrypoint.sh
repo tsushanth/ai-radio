@@ -17,16 +17,19 @@ ln -sfn /data/queue/ready /queue; ln -sfn /data/music /music; ln -sfn /data/jing
 esc() { printf '%s' "$1" | sed -e 's/[\/&|]/\\&/g'; }
 SRC=$(esc "$ICECAST_SOURCE_PASSWORD"); ADM=$(esc "$ICECAST_ADMIN_PASSWORD")
 
-# The repo's old literal passwords are replaced; telnet control port and icecast host go to loopback only.
-sed -e "s|5J688etweykEMVfTkGXBdw|$SRC|g" \
+# Inject secrets by PATTERN (not by a literal old value), so this works whether the tracked files hold a
+# placeholder (CHANGE_ME_...) or a real password. Telnet control port and icecast host go to loopback only.
+sed -E -e "s|^(icecast_password = )\"[^\"]*\"|\1\"$SRC\"|" \
     -e 's|host="icecast"|host="127.0.0.1"|g' \
-    -e 's|telnet.bind_addr.set("0.0.0.0")|telnet.bind_addr.set("127.0.0.1")|' \
+    -e 's|telnet.bind_addr.set\("0.0.0.0"\)|telnet.bind_addr.set("127.0.0.1")|' \
     /opt/audexa/radio.liq.tpl > /opt/audexa/radio.liq
-sed -e "s|5J688etweykEMVfTkGXBdw|$SRC|g" \
-    -e "s|u65i5he3L7PcIspnoS4ouA|$ADM|g" \
-    -e "s|<port>8000</port>|<port>8000</port><bind-address>127.0.0.1</bind-address>|" \
-    -e 's|<user>icecast</user>|<user>icecast2</user>|; s|<group>icecast</group>|<group>icecast</group>|' \
+sed -E -e "s|<source-password>[^<]*</source-password>|<source-password>$SRC</source-password>|" \
+       -e "s|<relay-password>[^<]*</relay-password>|<relay-password>$ADM</relay-password>|" \
+       -e "s|<admin-password>[^<]*</admin-password>|<admin-password>$ADM</admin-password>|" \
+       -e "s|<port>8000</port>|<port>8000</port><bind-address>127.0.0.1</bind-address>|" \
+       -e 's|<user>icecast</user>|<user>icecast2</user>|' \
     /opt/audexa/icecast.xml.tpl > /etc/icecast2/icecast.xml
+
 # Which language streams to run. Each stream is one live MP3 encoder; ten of them starve a shared CPU
 # (steal time hit 94% and the stream stalled), so the default is English only. STREAM_LANGS=all keeps everything.
 STREAM_LANGS="${STREAM_LANGS:-en}"
@@ -40,10 +43,12 @@ if [ "$STREAM_LANGS" != "all" ]; then
     /^# ── [A-Za-z]+/ { skip=0; for (k in bad) if (index($0, "# ── " k)==1) skip=1 }
     !skip' /opt/audexa/radio.liq > /opt/audexa/radio.liq.filtered && mv /opt/audexa/radio.liq.filtered /opt/audexa/radio.liq
 fi
-# fail loudly if any literal old secret survived
-if grep -q -e 5J688etweykEMVfTkGXBdw -e u65i5he3L7PcIspnoS4ouA /opt/audexa/radio.liq /etc/icecast2/icecast.xml; then
-  echo "refusing to start: template secret not replaced" >&2; exit 1
-fi
+# Fail loudly unless the rendered files really carry the injected passwords (and no placeholder survived)
+grep -q "^icecast_password = \"$ICECAST_SOURCE_PASSWORD\"" /opt/audexa/radio.liq \
+  && grep -q "<source-password>$ICECAST_SOURCE_PASSWORD</source-password>" /etc/icecast2/icecast.xml \
+  && grep -q "<admin-password>$ICECAST_ADMIN_PASSWORD</admin-password>" /etc/icecast2/icecast.xml \
+  && ! grep -q -i "CHANGE_ME" /opt/audexa/radio.liq /etc/icecast2/icecast.xml \
+  || { echo "refusing to start: icecast passwords were not injected into the rendered config" >&2; exit 1; }
 chown -R icecast2:icecast /var/log/icecast 2>/dev/null || true
 chown -R liquidsoap:liquidsoap /data/queue /data/music /data/jingles 2>/dev/null || true
 exec /usr/bin/supervisord -c /etc/supervisor/supervisord.conf

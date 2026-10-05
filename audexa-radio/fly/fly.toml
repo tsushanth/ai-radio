@@ -24,7 +24,7 @@ primary_region = "sjc"   # same region as piper-tts-sjc; reached over Fly's priv
 
 [http_service]
   internal_port = 8080
-  force_https = true
+  force_https = false   # Cloudflare (SSL mode flexible) reaches the origin over HTTP; a redirect would loop
   auto_stop_machines = "off"     # a radio station must not scale to zero
   auto_start_machines = false
   min_machines_running = 1

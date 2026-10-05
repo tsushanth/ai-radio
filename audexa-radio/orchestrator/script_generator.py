@@ -1,9 +1,10 @@
 """
 Script Generator — auto-switching backend:
   1. Try Claude CLI (OAuth) first — free, uses subscription
-  2. If CLI fails, fall back to Ollama (local on-device model)
-  3. If Ollama fails, fall back to Anthropic API key (if set)
-  4. Static fallback segments as last resort
+  2. If CLI fails, try OpenRouter (cheap hosted model; needs OPENROUTER_API_KEY)
+  3. If OpenRouter is disabled or fails, fall back to Ollama (local model)
+  4. If Ollama fails, fall back to Anthropic API key (if set)
+  5. Static fallback segments as last resort
 """
 
 import asyncio
@@ -11,6 +12,9 @@ import json
 import logging
 import os
 import shutil
+import time
+import urllib.error
+import urllib.request
 from dataclasses import dataclass
 from typing import Literal
 
@@ -27,6 +31,29 @@ logger = logging.getLogger(__name__)
 
 OLLAMA_URL = os.environ.get("OLLAMA_URL", "http://172.17.0.1:11434")
 OLLAMA_MODEL = os.environ.get("OLLAMA_MODEL", "qwen2.5:3b")
+
+OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions"
+# Default model: chosen by bake-off, see bakeoff/RESULTS.md (2026-10-04). 58 real Audexa
+# prompts x 2 runs, gates + two blind LLM judges, finalists compared case by case:
+#   openai/gpt-6-luna  $0.10/M in, $0.50/M out, ~$0.0005/script (about $6/mo at 430/day).
+# It passed every format gate (116/116), invented fewer facts than gpt-5.6-luna
+# (2.3 vs 3.3 per script, Claude judge, 30 of 58 cases) and is ~2.5x cheaper.
+# gpt-5.6-luna read slightly more natural to the Gemini judge (+0.19) but costs more and
+# failed 5 gates. Both trail Claude Sonnet clearly: this is a backup tier, not a replacement.
+# Requests set reasoning.enabled=false, as in the bake-off. ":free" models are avoided on
+# purpose: shared rate limits made them fail on most calls. Override with OPENROUTER_MODEL.
+OPENROUTER_DEFAULT_MODEL = "openai/gpt-6-luna"
+OPENROUTER_FALLBACK_MODEL = "openai/gpt-5.6-luna"  # bake-off runner-up; different model, same provider
+OPENROUTER_MAX_TOKENS = 4096
+# After this many consecutive failures the tier is skipped for the cooldown.
+OPENROUTER_FAIL_THRESHOLD = 3
+OPENROUTER_COOLDOWN_SEC = 300
+
+
+class OpenRouterError(RuntimeError):
+    def __init__(self, message: str, status: int | None = None):
+        super().__init__(message)
+        self.status = status
 
 
 @dataclass
@@ -49,13 +76,50 @@ class RadioScriptGenerator:
         # Track Ollama health
         self._ollama_healthy = True
         self._ollama_fail_count = 0
+        # OpenRouter tier: disabled when no key. Key is only ever held in
+        # this attribute and sent in the Authorization header; never logged.
+        self._openrouter_key = (os.environ.get("OPENROUTER_API_KEY") or "").strip()
+        self._openrouter_model = os.environ.get("OPENROUTER_MODEL") or OPENROUTER_DEFAULT_MODEL
+        self._openrouter_timeout = self._env_float("OPENROUTER_TIMEOUT_SEC", 90.0)
+        self._openrouter_fail_count = 0
+        self._openrouter_skip_until = 0.0
+        # Second OpenRouter model, tried within the same tier when the primary errors
+        # (model outage, 5xx). Blank disables. Default is the bake-off runner-up.
+        fb = os.environ.get("OPENROUTER_FALLBACK_MODEL")
+        fb = OPENROUTER_FALLBACK_MODEL if fb is None else fb.strip()
+        self._openrouter_fallback_model = fb if fb and fb != self._openrouter_model else ""
+        # SCRIPT_CLAUDE=off removes both Claude tiers (CLI/broker and Anthropic API key), so
+        # the generator needs no broker and no Anthropic credentials. Default "on" keeps today's behaviour.
+        self._claude_enabled = (os.environ.get("SCRIPT_CLAUDE") or "on").strip().lower() not in ("off", "0", "false", "no")
+        if not self._claude_enabled:
+            self.claude_bin = None
+            self.api_key = None
+        self.last_backend: str | None = None
 
-        backends = ["CLI"]
+        backends = ["CLI"] if self._claude_enabled else []
+        if self._openrouter_key:
+            backends.append(f"OpenRouter ({self._openrouter_model})")
+            if self._openrouter_fallback_model:
+                backends.append(f"OpenRouter ({self._openrouter_fallback_model})")
+        else:
+            logger.info("OpenRouter tier disabled: OPENROUTER_API_KEY not set")
         if self._check_ollama_available():
             backends.append(f"Ollama ({OLLAMA_MODEL})")
         if self.api_key:
             backends.append("API key")
         logger.info(f"Script generator backends: {' → '.join(backends)}")
+
+    @staticmethod
+    def _env_float(name: str, default: float) -> float:
+        raw = os.environ.get(name)
+        if not raw:
+            return default
+        try:
+            value = float(raw)
+            return value if value > 0 else default
+        except ValueError:
+            logger.warning(f"Invalid {name}, using default {default}")
+            return default
 
     def _check_ollama_available(self) -> bool:
         try:
@@ -129,9 +193,7 @@ class RadioScriptGenerator:
         return self._fallback_segments(language)
 
     async def _call_smart(self, prompt: str) -> str:
-        """Try CLI first, then Ollama, then API key."""
-        import time
-
+        """Try CLI, then OpenRouter, then Ollama, then API key."""
         # Every 5 minutes, retry CLI even if it was failing
         now = time.time()
         if not self._cli_healthy and (now - self._cli_last_check) > 300:
@@ -139,14 +201,14 @@ class RadioScriptGenerator:
             self._cli_healthy = True
             self._cli_fail_count = 0
 
-        # 1. Try Claude CLI
+        # 1. Try Claude CLI (skipped entirely when SCRIPT_CLAUDE=off)
         if self._cli_healthy and self.claude_bin:
             try:
                 result = await self._call_cli(prompt)
                 if self._cli_fail_count > 0:
                     logger.info("CLI recovered — switching back from fallback")
                 self._cli_fail_count = 0
-                return result
+                return self._used("claude-cli", result)
             except RuntimeError as e:
                 self._cli_fail_count += 1
                 self._cli_last_check = now
@@ -156,19 +218,45 @@ class RadioScriptGenerator:
 
                 if is_auth or is_quota or self._cli_fail_count >= 2:
                     self._cli_healthy = False
-                    logger.warning(f"CLI failed ({self._cli_fail_count}x): {str(e)[:100]} — trying Ollama")
+                    logger.warning(f"CLI failed ({self._cli_fail_count}x): {str(e)[:100]} — trying next backend")
                 else:
                     logger.warning(f"CLI error (attempt {self._cli_fail_count}): {str(e)[:100]}")
                     raise
 
-        # 2. Try Ollama (local model)
+        # 2. Try OpenRouter (cheap hosted model)
+        if self._openrouter_key and now >= self._openrouter_skip_until:
+            try:
+                try:
+                    used_model = self._openrouter_model
+                    result = await self._call_openrouter(prompt)
+                except Exception as primary_err:
+                    fatal_primary = isinstance(primary_err, OpenRouterError) and primary_err.status in (401, 402, 403)
+                    if not self._openrouter_fallback_model or fatal_primary:
+                        raise
+                    logger.warning(f"OpenRouter {self._openrouter_model} failed ({self._scrub(str(primary_err))[:100]}); trying {self._openrouter_fallback_model}")
+                    used_model = self._openrouter_fallback_model
+                    result = await self._call_openrouter(prompt, model=used_model)
+                if self._openrouter_fail_count > 0:
+                    logger.info("OpenRouter recovered")
+                self._openrouter_fail_count = 0
+                return self._used(f"openrouter:{used_model}", result)
+            except Exception as e:
+                self._openrouter_fail_count += 1
+                fatal = isinstance(e, OpenRouterError) and e.status in (401, 402, 403)
+                logger.warning(f"OpenRouter failed ({self._openrouter_fail_count}x): {self._scrub(str(e))[:150]} — trying next backend")
+                if fatal or self._openrouter_fail_count >= OPENROUTER_FAIL_THRESHOLD:
+                    self._openrouter_skip_until = time.time() + OPENROUTER_COOLDOWN_SEC
+                    self._openrouter_fail_count = 0
+                    logger.error(f"OpenRouter skipped for {OPENROUTER_COOLDOWN_SEC}s")
+
+        # 3. Try Ollama (local model)
         if self._ollama_healthy:
             try:
                 result = await self._call_ollama(prompt)
                 if self._ollama_fail_count > 0:
                     logger.info("Ollama recovered")
                 self._ollama_fail_count = 0
-                return result
+                return self._used(f"ollama:{OLLAMA_MODEL}", result)
             except Exception as e:
                 self._ollama_fail_count += 1
                 logger.warning(f"Ollama failed ({self._ollama_fail_count}x): {str(e)[:100]}")
@@ -176,12 +264,96 @@ class RadioScriptGenerator:
                     self._ollama_healthy = False
                     logger.error("Ollama marked unhealthy after 3 failures")
 
-        # 3. Try Anthropic API key
+        # 4. Try Anthropic API key
         if self.api_key:
             logger.info("Falling back to Anthropic API key")
-            return await self._call_api(prompt)
+            return self._used("anthropic-api", await self._call_api(prompt))
 
-        raise RuntimeError("All backends failed: CLI unavailable, Ollama failed, no API key")
+        raise RuntimeError("All backends failed: CLI unavailable or disabled, OpenRouter/Ollama failed, no API key")
+
+    def _used(self, backend: str, text: str) -> str:
+        self.last_backend = backend
+        logger.info(f"Script backend: {backend} ({len(text)} chars)")
+        return text
+
+    def _scrub(self, msg: str) -> str:
+        if self._openrouter_key:
+            msg = msg.replace(self._openrouter_key, "[redacted]")
+        return msg
+
+    async def _call_openrouter(self, prompt: str, model: str | None = None) -> str:
+        # Blocking urllib call run in a worker thread so the event loop stays free.
+        # urllib's timeout is per socket read, not total (a real call took 112s with
+        # a 90s timeout while tokens trickled in), so enforce a hard overall deadline.
+        # On expiry the worker thread is abandoned; it ends when its socket does.
+        try:
+            return await asyncio.wait_for(
+                asyncio.to_thread(self._call_openrouter_sync, prompt, model),
+                timeout=self._openrouter_timeout,
+            )
+        except asyncio.TimeoutError:
+            raise OpenRouterError(f"OpenRouter exceeded {self._openrouter_timeout:.0f}s deadline") from None
+
+    def _call_openrouter_sync(self, prompt: str, model: str | None = None) -> str:
+        # Never log the prompt or key; only sizes and the model name.
+        model = model or self._openrouter_model
+        logger.debug(f"Calling OpenRouter ({model}, {len(prompt)} chars)")
+        body = json.dumps({
+            "model": model,
+            "messages": [{"role": "user", "content": prompt}],
+            "temperature": 0.7,
+            "max_tokens": OPENROUTER_MAX_TOKENS,
+            "reasoning": {"enabled": False},
+        }).encode("utf-8")
+        req = urllib.request.Request(
+            OPENROUTER_URL,
+            data=body,
+            method="POST",
+            headers={
+                "Authorization": f"Bearer {self._openrouter_key}",
+                "Content-Type": "application/json",
+                "X-Title": "Audexa Radio",
+            },
+        )
+        started = time.time()
+        try:
+            with urllib.request.urlopen(req, timeout=self._openrouter_timeout) as resp:
+                raw = resp.read()
+        except urllib.error.HTTPError as e:
+            detail = ""
+            try:
+                detail = e.read().decode("utf-8", "replace")[:200]
+            except Exception:
+                pass
+            raise OpenRouterError(f"OpenRouter error {e.code}: {detail}", status=e.code) from None
+        except (urllib.error.URLError, TimeoutError, OSError) as e:
+            raise OpenRouterError(f"OpenRouter request failed: {type(e).__name__}: {e}") from None
+
+        try:
+            data = json.loads(raw)
+        except ValueError:
+            raise OpenRouterError("OpenRouter returned malformed JSON") from None
+        if not isinstance(data, dict):
+            raise OpenRouterError("OpenRouter returned unexpected JSON shape")
+        if data.get("error"):
+            raise OpenRouterError(f"OpenRouter error in body: {str(data['error'])[:200]}")
+        try:
+            choice = data["choices"][0]
+            text = choice["message"]["content"]
+        except (KeyError, IndexError, TypeError):
+            raise OpenRouterError("OpenRouter response missing choices[0].message.content") from None
+        if not isinstance(text, str) or not text.strip():
+            raise OpenRouterError("OpenRouter returned empty content")
+
+        usage = data.get("usage") or {}
+        if choice.get("finish_reason") == "length":
+            logger.warning("OpenRouter output hit max_tokens; script may be truncated")
+        logger.info(
+            f"OpenRouter response: {len(text)} chars ({data.get('model', model)}), "
+            f"tokens in/out={usage.get('prompt_tokens')}/{usage.get('completion_tokens')}, "
+            f"cost={usage.get('cost')}, {time.time() - started:.1f}s"
+        )
+        return text
 
     async def _call_ollama(self, prompt: str) -> str:
         import aiohttp

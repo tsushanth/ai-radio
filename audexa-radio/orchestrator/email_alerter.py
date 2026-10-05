@@ -85,13 +85,20 @@ def _check_daily_reset() -> None:
         _state.recent.clear()
 
 
+def _error_message(error: BaseException | str) -> str:
+    """Human message for an error. Exceptions can have empty args (a bare TimeoutError()), so never index args blindly."""
+    if isinstance(error, str):
+        return error
+    args = getattr(error, "args", ())
+    return str(args[0]) if args else (str(error) or type(error).__name__)
+
+
 def _fingerprint(error: BaseException | str, context: Dict[str, Any]) -> str:
     """Identity for deduplication. Endpoint + first 100 chars of message + first stack line."""
     if isinstance(error, str):
         msg = error
     else:
-        args = getattr(error, "args", ())
-        msg = str(args[0]) if args else type(error).__name__
+        msg = _error_message(error)
     endpoint = context.get("endpoint", context.get("source", "unknown"))
     stack_head = ""
     if isinstance(error, BaseException):
@@ -268,11 +275,7 @@ def report_error(
     _state.recent[fp] = now
 
     # Build a structured payload
-    msg = (
-        str(getattr(error, "args", [error])[0])
-        if not isinstance(error, str)
-        else error
-    )
+    msg = _error_message(error)
     stack = ""
     if isinstance(error, BaseException):
         stack = "".join(traceback.format_exception(type(error), error, error.__traceback__))

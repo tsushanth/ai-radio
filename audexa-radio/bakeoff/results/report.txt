@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/Users/sushanthtiruvaipati/Documents/GitHub/worktrees/audexa-llm-tier/audexa-radio/bakeoff/report.py", line 3, in <module>
+    gen=[json.loads(l) for l in open(R+"gen.jsonl")]; gates={ (x["model"],x["case"]):x for x in map(json.loads,open(R+"gates.jsonl"))}
+                                ~~~~^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'bakeoff/results/gen.jsonl'

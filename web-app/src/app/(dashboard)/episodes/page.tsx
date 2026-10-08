@@ -13,6 +13,7 @@ import { LiveReactions } from '@/components/live/LiveReactions';
 import { LiveChat } from '@/components/live/LiveChat';
 import { generateEpisode, getJobStatus } from '@/lib/api/episodes';
 import { useActiveStations } from '@/hooks/useActiveStations';
+import { RADIO_STATUS_URL } from '@/lib/radio';
 import { LiveStationBanner } from '@/components/home/LiveStationBanner';
 import { playbackUrl } from '@/lib/api/stations';
 import type { LiveStation } from '@/lib/api/episodes';
@@ -87,7 +88,7 @@ export default function HomePage() {
 
     async function fetchNowPlaying() {
       try {
-        const res = await fetch('https://radio.audexa.app/api/status');
+        const res = await fetch(RADIO_STATUS_URL);
         if (res.ok) {
           const data = await res.json();
           if (data.now_playing) {

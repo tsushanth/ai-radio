@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { pickActiveStations } from './stations.ts';
+import { pickActiveStations, playbackUrl, upstreamStreamUrl } from './stations.ts';
 
 const ALL = ['en', 'es', 'fr', 'de'].map((language) => ({ id: language, language }));
 const langs = (xs: { language: string }[]) => xs.map((x) => x.language);
@@ -26,4 +26,20 @@ test('falls back to English when the answer is missing, empty or malformed', () 
 
 test('never returns an empty list, even if English is not in the catalogue', () => {
   assert.deepEqual(pickActiveStations([{ language: 'es' }], ['en']), []);
+});
+
+test('plays stations from this site, one path per language', () => {
+  assert.equal(playbackUrl('en'), '/api/stream/en');
+  assert.equal(playbackUrl('es'), '/api/stream/es');
+});
+
+test('maps a language to the radio mount, English on the plain stream', () => {
+  assert.equal(upstreamStreamUrl('en'), 'https://radio.audexa.app/stream');
+  assert.equal(upstreamStreamUrl('fr'), 'https://radio.audexa.app/stream-fr');
+});
+
+test('refuses anything that is not a known station language', () => {
+  for (const bad of ['', 'xx', 'EN', 'en/../api', '../x', 'http://evil.example', 'es?x=1', 'stream-es']) {
+    assert.equal(upstreamStreamUrl(bad), null, bad);
+  }
 });

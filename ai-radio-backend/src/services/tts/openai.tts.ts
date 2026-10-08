@@ -6,6 +6,7 @@
 
 import type { TTSRequest, TTSResponse, AudioSegment } from '../../types/podcast';
 import type { PodcastScript, ScriptSegment } from '../../types/database';
+import { getPiperClient, PiperBusyError } from './piper.client';
 
 /**
  * Voice options (kept as OpenAI-style names for backwards compatibility)
@@ -48,6 +49,19 @@ const KOKORO_VOICE_MAP: Record<OpenAIVoice, string> = {
   fable: 'am_adam',
   onyx: 'am_michael',
 };
+
+// Piper (TTS_BACKEND=piper) has two English voices: a warm female and a warm male. Same split as the Kokoro map above.
+const PIPER_VOICE_MAP: Record<OpenAIVoice, string> = {
+  nova: 'custom:en-us-warm-f',
+  shimmer: 'custom:en-us-warm-f',
+  alloy: 'custom:en-us-warm-m',
+  echo: 'custom:en-us-warm-m',
+  fable: 'custom:en-us-warm-m',
+  onyx: 'custom:en-us-warm-m',
+};
+
+/** An episode needs at least this share of its segments spoken. Below it the episode fails and is retried, instead of being published as a fragment (a 19 second "episode"). */
+export const MIN_SEGMENT_SUCCESS_RATIO = Number(process.env.TTS_MIN_SEGMENT_RATIO) || 0.75;
 
 const TTS_BASE_URL = process.env.SELFHOSTED_TTS_URL || 'https://listenai-tts-worker.fly.dev';
 
@@ -98,6 +112,7 @@ export class OpenAITTSService {
    * Convert single text segment to audio via Kokoro
    */
   async synthesize(request: TTSRequest): Promise<TTSResponse> {
+    if (process.env.TTS_BACKEND === 'piper') return this.synthesizeWithPiper(request);
     try {
       const voice = this.validateVoice(request.voice);
       const kokoroVoice = KOKORO_VOICE_MAP[voice];
@@ -154,6 +169,15 @@ export class OpenAITTSService {
     }
   }
 
+  /** Speak one segment through the shared Piper app. English only; the client itself waits while Calldesk calls are using Piper. */
+  private async synthesizeWithPiper(request: TTSRequest): Promise<TTSResponse> {
+    const language = (request.language_code || 'en').toLowerCase();
+    if (language !== 'en') throw new Error(`Piper voices are English only (requested "${language}")`);
+    const voice = PIPER_VOICE_MAP[this.validateVoice(request.voice)];
+    const { wav, durationSeconds } = await getPiperClient().synthesize(request.text, voice, this.clampSpeed(request.speed || this.DEFAULT_SPEED));
+    return { audio_buffer: wav, duration_seconds: durationSeconds, format: 'wav' };
+  }
+
   async synthesizeWithRetry(request: TTSRequest, maxRetries?: number): Promise<TTSResponse> {
     const retries = maxRetries || this.MAX_RETRIES;
     let lastError: Error | undefined;
@@ -164,6 +188,7 @@ export class OpenAITTSService {
       } catch (error) {
         lastError = error instanceof Error ? error : new Error(String(error));
         console.error(`TTS attempt ${attempt} failed:`, lastError.message);
+        if (error instanceof PiperBusyError) throw error; // a call is using Piper: defer the whole episode, do not retry here
 
         if (attempt < retries) {
           const delayMs = 1000 * Math.pow(2, attempt - 1);
@@ -196,6 +221,7 @@ export class OpenAITTSService {
         segment_type: normalizeSegmentType(segment.type),
       };
     } catch (error) {
+      if (error instanceof PiperBusyError) throw error;
       throw this.createError(`Failed to synthesize segment ${segment.sequence}`, error);
     }
   }
@@ -213,6 +239,7 @@ export class OpenAITTSService {
         const audioSegment = await this.synthesizeSegment(segment, voiceConfig);
         audioSegments.push(audioSegment);
       } catch (error) {
+        if (error instanceof PiperBusyError) throw error; // defer the whole episode: skipping segments would publish a fragment
         // Skip the failed segment instead of failing the entire script.
         // Shared-CPU Kokoro is occasionally slow on individual segments; losing
         // one segment out of 30+ produces a slightly shorter but listenable podcast.
@@ -226,6 +253,12 @@ export class OpenAITTSService {
 
     if (audioSegments.length === 0) {
       throw this.createError('Failed to synthesize any segments', new Error('all segments failed'));
+    }
+    if (audioSegments.length / script.segments.length < MIN_SEGMENT_SUCCESS_RATIO) {
+      throw this.createError(
+        'Too many segments failed to synthesize',
+        new Error(`${audioSegments.length}/${script.segments.length} spoken, at least ${Math.round(MIN_SEGMENT_SUCCESS_RATIO * 100)}% needed`)
+      );
     }
     if (skipped.length > 0) {
       console.log(`Synthesis complete: ${audioSegments.length}/${script.segments.length} segments OK; skipped: [${skipped.join(', ')}]`);

@@ -7,6 +7,7 @@
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { env } from '../../config/environment';
 import { topicsService } from '../supabase/topics.service';
+import { languagesForTopic } from './batch-languages';
 import { topicPodcastGenerator } from '../content/topic.generator';
 import type { TopicDefinition } from '../../types/topics';
 
@@ -149,9 +150,11 @@ export class TopicBatchScheduler {
   private async generateForTopic(topic: TopicDefinition): Promise<TopicResult> {
     try {
       // Determine which languages to generate for this topic
-      const languages = topic.languages?.includes('all')
-        ? ['en'] // Universal topics generate in English
-        : (topic.languages || ['en']); // Locale topics generate in their specific languages
+      const languages = languagesForTopic(topic.languages, process.env.TTS_BACKEND);
+      if (languages.length === 0) {
+        console.log(`[BatchScheduler] Skipped ${topic.name} (no language the current voice can speak)`);
+        return { topicId: topic.id, topicName: topic.name, success: true, isNew: false, skipped: true };
+      }
 
       let lastResult: any;
       for (const lang of languages) {

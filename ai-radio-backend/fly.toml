@@ -4,6 +4,11 @@ primary_region = "iad"
 [build]
   dockerfile = "Dockerfile"
 
+[env]
+  # Topic episodes are spoken by the shared Piper app (low priority: waits while Calldesk calls use it). The auth token is the PIPER_AUTH_TOKEN secret.
+  TTS_BACKEND = "piper"
+  PIPER_URL = "http://piper-tts-sjc.internal:8080"
+
 [http_service]
   internal_port = 8080
   force_https = true

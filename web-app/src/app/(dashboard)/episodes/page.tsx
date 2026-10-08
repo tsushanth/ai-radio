@@ -11,7 +11,9 @@ import { LiveStationCard } from '@/components/home/LiveStationCard';
 import { ScriptViewer } from '@/components/episodes/ScriptViewer';
 import { LiveReactions } from '@/components/live/LiveReactions';
 import { LiveChat } from '@/components/live/LiveChat';
-import { generateEpisode, getJobStatus, LIVE_STATIONS } from '@/lib/api/episodes';
+import { generateEpisode, getJobStatus } from '@/lib/api/episodes';
+import { useActiveStations } from '@/hooks/useActiveStations';
+import { LiveStationBanner } from '@/components/home/LiveStationBanner';
 import type { LiveStation } from '@/lib/api/episodes';
 import { DailyBriefStatus, Topic, Episode } from '@/types';
 import { Loader2, Search, Radio, Bookmark, X, Play, Pause, Phone } from 'lucide-react';
@@ -28,6 +30,7 @@ export default function HomePage() {
   const router = useRouter();
   const { user, isLinked, preferences, toggleBookmark, hideTopic } = useAuth();
   const { topics, categories, isLoading: topicsLoading } = useTopics();
+  const stations = useActiveStations();
 
   // Tab state
   const [activeTab, setActiveTab] = useState<TabType>('forYou');
@@ -347,16 +350,24 @@ export default function HomePage() {
               </div>
             </div>
 
-            <div className="flex gap-4 overflow-x-auto pb-2 -mx-4 px-4 scrollbar-hide">
-              {LIVE_STATIONS.map((station) => (
-                <LiveStationCard
-                  key={station.id}
-                  station={station}
-                  isPlaying={playingStation?.id === station.id && isStationPlaying}
-                  onTap={() => handleStationTap(station)}
-                />
-              ))}
-            </div>
+            {stations.length === 1 ? (
+              <LiveStationBanner
+                station={stations[0]}
+                isPlaying={playingStation?.id === stations[0].id && isStationPlaying}
+                onTap={() => handleStationTap(stations[0])}
+              />
+            ) : (
+              <div className="flex gap-4 overflow-x-auto pb-2 -mx-4 px-4 scrollbar-hide">
+                {stations.map((station) => (
+                  <LiveStationCard
+                    key={station.id}
+                    station={station}
+                    isPlaying={playingStation?.id === station.id && isStationPlaying}
+                    onTap={() => handleStationTap(station)}
+                  />
+                ))}
+              </div>
+            )}
           </section>
 
           {/* Your Topics (Bookmarked) */}

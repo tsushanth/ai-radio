@@ -14,6 +14,7 @@ import { LiveChat } from '@/components/live/LiveChat';
 import { generateEpisode, getJobStatus } from '@/lib/api/episodes';
 import { useActiveStations } from '@/hooks/useActiveStations';
 import { LiveStationBanner } from '@/components/home/LiveStationBanner';
+import { playbackUrl } from '@/lib/api/stations';
 import type { LiveStation } from '@/lib/api/episodes';
 import { DailyBriefStatus, Topic, Episode } from '@/types';
 import { Loader2, Search, Radio, Bookmark, X, Play, Pause, Phone } from 'lucide-react';
@@ -233,7 +234,7 @@ export default function HomePage() {
     }
 
     // Create new audio element pointing to the Icecast stream
-    const audio = new Audio(station.streamUrl);
+    const audio = new Audio(playbackUrl(station.language));
     audio.onplay = () => setIsStationPlaying(true);
     audio.onpause = () => setIsStationPlaying(false);
     audio.onerror = () => {

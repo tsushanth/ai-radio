@@ -579,7 +579,8 @@ Create an engaging ${topic.targetDurationMinutes}-minute podcast covering the mo
       description: episode.description,
       audio_url: episode.audioUrl,
       audio_path: episode.audioPath,
-      duration_seconds: episode.durationSeconds,
+      // integer column; Piper durations are fractional
+      duration_seconds: episode.durationSeconds == null ? episode.durationSeconds : Math.round(episode.durationSeconds),
       script: episode.script,
       stories: JSON.stringify(episode.stories),
       generated_at: episode.generatedAt?.toISOString(),

@@ -4,6 +4,7 @@
  */
 
 import Anthropic from '@anthropic-ai/sdk';
+import { instrumentAnthropic, withDefaultFeature } from '../../lib/llm';
 import { env } from '../../config/environment';
 import {
   PODCAST_SYSTEM_PROMPT,
@@ -42,9 +43,9 @@ export class ScriptGeneratorService {
   private readonly TEMPERATURE = 0.7;
 
   constructor(apiKey?: string) {
-    this.anthropic = new Anthropic({
+    this.anthropic = instrumentAnthropic(new Anthropic({
       apiKey: apiKey || env.ANTHROPIC_API_KEY,
-    });
+    }));
   }
 
   /**
@@ -198,7 +199,7 @@ export class ScriptGeneratorService {
     try {
       const userPrompt = generatePodcastPrompt(context);
 
-      const completion = await this.anthropic.messages.create({
+      const completion = await withDefaultFeature('script', () => this.anthropic.messages.create({
         model: this.DEFAULT_MODEL,
         system: PODCAST_SYSTEM_PROMPT + '\n\nYou must respond with valid JSON only.',
         messages: [
@@ -209,7 +210,7 @@ export class ScriptGeneratorService {
         ],
         max_tokens: this.MAX_TOKENS,
         temperature: this.TEMPERATURE,
-      });
+      }));
 
       const response = completion.content[0]?.type === 'text' ? completion.content[0].text : '';
       if (!response) {

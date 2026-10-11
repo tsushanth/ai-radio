@@ -6,6 +6,7 @@
 
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { env } from '../../config/environment';
+import { withFeature } from '../../lib/llm';
 import { podcastGenerator } from '../podcast/podcast.generator';
 import { pushNotificationService } from '../notifications/push.service';
 import type { UserPreferences } from '../../types/database';
@@ -175,7 +176,12 @@ export class DailyBriefScheduler {
   /**
    * Generate daily brief for a single user
    */
-  private async generateForUser(user: ScheduledUser): Promise<GenerationResult> {
+  /** Label every Claude call made while generating a user's brief (no user id is attached to the label). */
+  private generateForUser(user: ScheduledUser): Promise<GenerationResult> {
+    return withFeature('daily_brief', () => this.generateForUserUnlabelled(user));
+  }
+
+  private async generateForUserUnlabelled(user: ScheduledUser): Promise<GenerationResult> {
     const today = new Date().toISOString().split('T')[0];
 
     console.log(`[Scheduler] Generating brief for user: ${user.user_id}`);

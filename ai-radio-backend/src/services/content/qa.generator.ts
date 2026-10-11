@@ -5,6 +5,7 @@
 
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import Anthropic from '@anthropic-ai/sdk';
+import { instrumentAnthropic, withFeature } from '../../lib/llm';
 import { env } from '../../config/environment';
 import { openaiTTS, type VoiceConfig } from '../tts/openai.tts';
 import type {
@@ -33,7 +34,7 @@ export class QAGenerator {
       this.supabase = createClient(env.SUPABASE_URL, env.SUPABASE_SERVICE_KEY);
       this.initializeBucket();
     }
-    this.anthropic = new Anthropic({ apiKey: env.ANTHROPIC_API_KEY });
+    this.anthropic = instrumentAnthropic(new Anthropic({ apiKey: env.ANTHROPIC_API_KEY }));
   }
 
   /**
@@ -193,13 +194,13 @@ Return ONLY valid JSON.`;
     // Add current question
     messages.push({ role: 'user', content: question });
 
-    const response = await this.anthropic.messages.create({
+    const response = await withFeature('qa', () => this.anthropic.messages.create({
       model: 'claude-sonnet-4-6',
       system: systemPrompt + '\n\nReturn ONLY valid JSON.',
       messages,
       temperature: 0.7,
       max_tokens: 1000,
-    });
+    }));
 
     const responseText = (response.content[0]?.type === 'text' ? response.content[0].text : '') || '{}';
     const parsed = JSON.parse(responseText);

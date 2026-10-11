@@ -7,6 +7,7 @@ import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import { env } from './config/environment';
+import { flushLlmUsage } from './lib/llm';
 import { dailyBriefScheduler } from './services/scheduler/daily-brief.scheduler';
 
 // Import middleware
@@ -79,6 +80,14 @@ app.listen(PORT, HOST, () => {
     console.log(`⏰ Daily brief scheduler started`);
   }
 });
+
+// On SIGTERM/SIGINT send pending Claude usage rows (capped at 2.5 s), then re-raise the signal with the default handler so the
+// process ends exactly as it did before this handler existed.
+for (const signal of ['SIGTERM', 'SIGINT'] as const) {
+  process.once(signal, () => {
+    void flushLlmUsage(2500).finally(() => process.kill(process.pid, signal));
+  });
+}
 
 // Handle uncaught exceptions
 process.on('uncaughtException', (error) => {

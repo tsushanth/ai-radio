@@ -5,6 +5,7 @@
 
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import Anthropic from '@anthropic-ai/sdk';
+import { instrumentAnthropic, withFeature } from '../../lib/llm';
 import { env } from '../../config/environment';
 import { openaiTTS, type VoiceConfig } from '../tts/openai.tts';
 import { concatenateBuffers } from '../tts/audio.utils';
@@ -30,7 +31,7 @@ export class DeepDiveGenerator {
       this.supabase = createClient(env.SUPABASE_URL, env.SUPABASE_SERVICE_KEY);
       this.initializeBucket();
     }
-    this.anthropic = new Anthropic({ apiKey: env.ANTHROPIC_API_KEY });
+    this.anthropic = instrumentAnthropic(new Anthropic({ apiKey: env.ANTHROPIC_API_KEY }));
   }
 
   /**
@@ -236,7 +237,7 @@ Return a JSON object with this structure:
 
 Return ONLY valid JSON, no markdown or additional text.`;
 
-    const response = await this.anthropic.messages.create({
+    const response = await withFeature('deepdive_research', () => this.anthropic.messages.create({
       model: 'claude-sonnet-4-6',
       system: systemPrompt,
       messages: [
@@ -244,7 +245,7 @@ Return ONLY valid JSON, no markdown or additional text.`;
       ],
       temperature: 0.7,
       max_tokens: 2000,
-    });
+    }));
 
     const rawText = (response.content[0]?.type === 'text' ? response.content[0].text : '') || '{}';
     // Strip ```json ... ``` fences if the model returned them despite instructions.
@@ -322,7 +323,7 @@ ${sourceSummaries}
 
 Create an engaging ${targetDurationMinutes}-minute research podcast. Return ONLY valid JSON array.`;
 
-    const response = await this.anthropic.messages.create({
+    const response = await withFeature('deepdive', () => this.anthropic.messages.create({
       model: 'claude-sonnet-4-6',
       system: systemPrompt,
       messages: [
@@ -330,7 +331,7 @@ Create an engaging ${targetDurationMinutes}-minute research podcast. Return ONLY
       ],
       temperature: 0.7,
       max_tokens: 4000,
-    });
+    }));
 
     const responseText = (response.content[0]?.type === 'text' ? response.content[0].text : '') || '';
 

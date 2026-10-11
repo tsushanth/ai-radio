@@ -5,6 +5,7 @@
 
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import Anthropic from '@anthropic-ai/sdk';
+import { instrumentAnthropic, withFeature } from '../../lib/llm';
 import { env } from '../../config/environment';
 import { topicsService } from '../supabase/topics.service';
 import { contentAggregator } from './aggregator.service';
@@ -32,7 +33,7 @@ export class TopicPodcastGenerator {
       this.supabase = createClient(env.SUPABASE_URL, env.SUPABASE_SERVICE_KEY);
       this.initializeBucket();
     }
-    this.anthropic = new Anthropic({ apiKey: env.ANTHROPIC_API_KEY });
+    this.anthropic = instrumentAnthropic(new Anthropic({ apiKey: env.ANTHROPIC_API_KEY }));
   }
 
   /**
@@ -262,7 +263,7 @@ export class TopicPodcastGenerator {
     const systemPrompt = this.buildSystemPrompt(topic, language);
     const userPrompt = this.buildUserPrompt(topic, content, language);
 
-    const response = await this.anthropic.messages.create({
+    const response = await withFeature('topic_script', () => this.anthropic.messages.create({
       model: 'claude-sonnet-4-6',
       system: systemPrompt,
       messages: [
@@ -270,7 +271,7 @@ export class TopicPodcastGenerator {
       ],
       temperature: 0.7,
       max_tokens: 3000,
-    });
+    }));
 
     const responseText = (response.content[0]?.type === 'text' ? response.content[0].text : '') || '';
 

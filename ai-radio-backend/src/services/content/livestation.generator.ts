@@ -5,6 +5,7 @@
 
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import Anthropic from '@anthropic-ai/sdk';
+import { instrumentAnthropic, withFeature } from '../../lib/llm';
 import { env } from '../../config/environment';
 import { openaiTTS, type VoiceConfig } from '../tts/openai.tts';
 import { concatenateBuffers } from '../tts/audio.utils';
@@ -103,7 +104,7 @@ export class LiveStationGenerator {
       this.initializeBucket();
       this.initializeStations();
     }
-    this.anthropic = new Anthropic({ apiKey: env.ANTHROPIC_API_KEY });
+    this.anthropic = instrumentAnthropic(new Anthropic({ apiKey: env.ANTHROPIC_API_KEY }));
   }
 
   /**
@@ -362,7 +363,7 @@ Return a JSON object with:
 
 Return ONLY valid JSON, no markdown.`;
 
-    const response = await this.anthropic.messages.create({
+    const response = await withFeature('live_station_news', () => this.anthropic.messages.create({
       model: 'claude-sonnet-4-6',
       system: systemPrompt + '\n\nReturn ONLY valid JSON.',
       messages: [
@@ -370,7 +371,7 @@ Return ONLY valid JSON, no markdown.`;
       ],
       temperature: 0.8,
       max_tokens: 1500,
-    });
+    }));
 
     const responseText = (response.content[0]?.type === 'text' ? response.content[0].text : '') || '{}';
     const parsed = JSON.parse(responseText);
@@ -420,7 +421,7 @@ ${news.content}
 
 Return ONLY valid JSON array.`;
 
-    const response = await this.anthropic.messages.create({
+    const response = await withFeature('live_station', () => this.anthropic.messages.create({
       model: 'claude-sonnet-4-6',
       system: systemPrompt,
       messages: [
@@ -428,7 +429,7 @@ Return ONLY valid JSON array.`;
       ],
       temperature: 0.7,
       max_tokens: 2000,
-    });
+    }));
 
     const responseText = (response.content[0]?.type === 'text' ? response.content[0].text : '') || '';
     const jsonMatch = responseText.match(/\[[\s\S]*\]/);

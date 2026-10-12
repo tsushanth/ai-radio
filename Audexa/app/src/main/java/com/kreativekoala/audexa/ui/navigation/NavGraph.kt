@@ -8,6 +8,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.kreativekoala.audexa.data.model.SupportedLanguage
 import com.kreativekoala.audexa.data.model.Topic
 import com.kreativekoala.audexa.ui.auth.AuthScreen
 import com.kreativekoala.audexa.ui.home.HomeScreen
@@ -70,9 +71,14 @@ fun AudexaNavGraph(
         composable(Screen.Auth.route) {
             AuthScreen(
                 onAuthSuccess = {
-                    navController.navigate(Screen.Onboarding.route) {
+                    // First-play: Home underneath, live radio on top (auto-starts the stream).
+                    navController.navigate(Screen.Home.route) {
                         popUpTo(Screen.Auth.route) { inclusive = true }
                     }
+                    val station = SupportedLanguage.ENGLISH
+                    navController.navigate(
+                        Screen.LiveRadio.createRoute(station.radioStreamURL, station.radioStationName)
+                    )
                 }
             )
         }

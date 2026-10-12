@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.kreativekoala.audexa",
+      "sha256_cert_fingerprints": [
+        "REPLACE_ME_PLAY_APP_SIGNING_KEY_SHA256_AA:BB:CC:...:ZZ (32 colon-separated hex bytes; see commit message. Do NOT deploy with this placeholder.)"
+      ]
+    }
+  }
+]

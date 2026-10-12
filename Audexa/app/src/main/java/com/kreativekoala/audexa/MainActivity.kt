@@ -7,6 +7,7 @@ import android.os.Build
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.*
@@ -26,6 +27,7 @@ import com.kreativekoala.audexa.billing.BillingManager
 import com.kreativekoala.audexa.data.local.PreferencesManager
 import com.kreativekoala.audexa.data.model.Topic
 import com.kreativekoala.audexa.service.AudioManager
+import com.kreativekoala.audexa.service.BriefingManager
 import com.kreativekoala.audexa.service.NotificationService
 import com.kreativekoala.audexa.service.RadioReminderManager
 import com.kreativekoala.audexa.ui.components.MiniPlayer
@@ -42,8 +44,10 @@ import com.kreativekoala.paywallkit.models.PaywallTheme
 import com.kreativekoala.paywallkit.view.PaywallView
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import java.util.Calendar
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -64,6 +68,13 @@ class MainActivity : AppCompatActivity() {
     @Inject
     lateinit var radioReminderManager: RadioReminderManager
 
+    @Inject
+    lateinit var briefingManager: BriefingManager
+
+    // True only while the system permission prompt was launched from the
+    // morning-briefing opt-in dialog (so a denial is attributed correctly).
+    private var briefingPermissionPending = false
+
     // Permission launcher for notification permission (Android 13+)
     private val notificationPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
@@ -73,7 +84,10 @@ class MainActivity : AppCompatActivity() {
             lifecycleScope.launch {
                 notificationService.restoreScheduledNotificationIfNeeded()
             }
+        } else if (briefingPermissionPending) {
+            logBriefingEvent(BriefingManager.EVENT_PERMISSION_DENIED)
         }
+        briefingPermissionPending = false
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -94,6 +108,15 @@ class MainActivity : AppCompatActivity() {
             lifecycleScope.launch {
                 preferencesManager.incrementAppOpenCount()
             }
+        }
+
+        // Morning briefing: ask for the daily reminder once, right after the
+        // first successful play (not at cold start), and record notification opens.
+        observeFirstPlayForBriefingOptIn()
+        if (savedInstanceState == null &&
+            intent?.getStringExtra("notification_type") == BriefingManager.NOTIFICATION_TYPE
+        ) {
+            logBriefingEvent(BriefingManager.EVENT_OPENED)
         }
 
         // Pull predicted radio-topic plays and arm local-notification alarms
@@ -129,6 +152,72 @@ class MainActivity : AppCompatActivity() {
         audioManager.release()
     }
 
+    private fun logBriefingEvent(event: String, hour: Int? = null) {
+        lifecycleScope.launch { briefingManager.logEvent(event, hour = hour) }
+    }
+
+    /**
+     * Waits for the first successful playback, then (once per install) offers
+     * the daily reminder. Skipped when notifications are already allowed
+     * (existing users keep their current reminder; Android 12 and below).
+     */
+    private fun observeFirstPlayForBriefingOptIn() {
+        lifecycleScope.launch {
+            if (preferencesManager.briefingOptInShown.first()) return@launch
+            if (notificationService.hasNotificationPermission()) return@launch
+            audioManager.isPlaying.first { it }
+            if (preferencesManager.briefingOptInShown.first()) return@launch
+            showBriefingOptInDialog()
+        }
+    }
+
+    private fun showBriefingOptInDialog() {
+        if (isFinishing || isDestroyed) return
+        lifecycleScope.launch { preferencesManager.setBriefingOptInShown() }
+        logBriefingEvent(BriefingManager.EVENT_OPTIN_SHOWN)
+
+        val hours = BriefingManager.OPT_IN_HOURS
+        val timeFormat = android.text.format.DateFormat.getTimeFormat(this)
+        val labels = hours.map { h ->
+            val cal = Calendar.getInstance().apply {
+                set(Calendar.HOUR_OF_DAY, h)
+                set(Calendar.MINUTE, 0)
+            }
+            timeFormat.format(cal.time)
+        }.toTypedArray()
+        var selected = BriefingManager.DEFAULT_OPT_IN_INDEX
+
+        val decline = {
+            lifecycleScope.launch {
+                // Explicit "no": keep the default-on daily alarm from arming later
+                // if the permission is granted through another path.
+                preferencesManager.setNotificationsEnabled(false)
+            }
+            logBriefingEvent(BriefingManager.EVENT_OPTIN_DECLINED)
+        }
+
+        AlertDialog.Builder(this)
+            .setTitle(R.string.briefing_optin_title)
+            .setSingleChoiceItems(labels, selected) { _, which -> selected = which }
+            .setPositiveButton(R.string.briefing_optin_accept) { _, _ ->
+                val hour = hours[selected]
+                logBriefingEvent(BriefingManager.EVENT_OPTIN_ACCEPTED, hour)
+                lifecycleScope.launch {
+                    preferencesManager.setBriefingTime(hour, 0)
+                    preferencesManager.setNotificationsEnabled(true)
+                    if (notificationService.hasNotificationPermission()) {
+                        notificationService.restoreScheduledNotificationIfNeeded()
+                    } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                        briefingPermissionPending = true
+                        notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                    }
+                }
+            }
+            .setNegativeButton(R.string.briefing_optin_decline) { _, _ -> decline() }
+            .setOnCancelListener { decline() }
+            .show()
+    }
+
     private fun requestNotificationPermissionIfNeeded() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             when {
@@ -142,8 +231,15 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
                 else -> {
-                    // Request permission
-                    notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                    // Not asked at cold start any more: the morning-briefing
+                    // opt-in asks after the first play. Users who already have
+                    // bookmarked topics still get the launch prompt because
+                    // radio-topic reminders need the permission.
+                    lifecycleScope.launch {
+                        if (preferencesManager.bookmarkedTopics.first().isNotEmpty()) {
+                            notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                        }
+                    }
                 }
             }
         } else {

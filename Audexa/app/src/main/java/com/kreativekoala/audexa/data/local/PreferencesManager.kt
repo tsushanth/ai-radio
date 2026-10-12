@@ -73,6 +73,14 @@ class PreferencesManager @Inject constructor(
         // are "<YYYY-MM-DD>:<topicId>"; trimmed daily by RadioReminderManager
         // by virtue of yesterday's keys never matching today's lookups.
         val RADIO_REMINDERS_FIRED = stringSetPreferencesKey("radio_reminders_fired")
+
+        // Morning briefing opt-in (see BriefingManager). OPT_IN_SHOWN makes the
+        // post-first-play prompt a one-time ask; LAST_BRIEFING_DATE is the
+        // local-date cap (max one briefing notification per day); INSTALL_ID is
+        // a random anonymous id used only for funnel events.
+        val BRIEFING_OPT_IN_SHOWN = booleanPreferencesKey("briefing_opt_in_shown")
+        val LAST_BRIEFING_DATE = stringPreferencesKey("last_briefing_date")
+        val BRIEFING_INSTALL_ID = stringPreferencesKey("briefing_install_id")
     }
 
     /**
@@ -260,6 +268,35 @@ class PreferencesManager @Inject constructor(
      */
     val radioRemindersFiredToday: Flow<Set<String>> = dataStore.data.map {
         it[Keys.RADIO_REMINDERS_FIRED] ?: emptySet()
+    }
+
+    // ── Morning briefing opt-in / cap / anonymous install id ──────────────────
+
+    val briefingOptInShown: Flow<Boolean> = dataStore.data.map {
+        it[Keys.BRIEFING_OPT_IN_SHOWN] ?: false
+    }
+
+    suspend fun setBriefingOptInShown() {
+        dataStore.edit { prefs -> prefs[Keys.BRIEFING_OPT_IN_SHOWN] = true }
+    }
+
+    suspend fun getLastBriefingDate(): String? =
+        dataStore.data.map { it[Keys.LAST_BRIEFING_DATE] }.first()
+
+    suspend fun setLastBriefingDate(date: String) {
+        dataStore.edit { prefs -> prefs[Keys.LAST_BRIEFING_DATE] = date }
+    }
+
+    /** Random per-install id (not tied to the account); created on first use. */
+    suspend fun getOrCreateBriefingInstallId(): String {
+        var id = ""
+        dataStore.edit { prefs ->
+            val existing = prefs[Keys.BRIEFING_INSTALL_ID]
+            id = existing ?: java.util.UUID.randomUUID().toString().also {
+                prefs[Keys.BRIEFING_INSTALL_ID] = it
+            }
+        }
+        return id
     }
 
     suspend fun markRadioReminderScheduled(key: String) {

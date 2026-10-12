@@ -110,6 +110,40 @@ class QueueManager:
         """Count MP3 files in the ready directory."""
         return len(list(self.ready_dir.glob("*.mp3")))
 
+    def prune_expired(self, max_age_sec: float, now: Optional[float] = None) -> int:
+        """Delete segments (and sidecars) older than max_age_sec. Returns files removed.
+
+        Nothing else removes played segments, so without this the ready dir grows
+        until the volume is full and generation silently stops (2026-10-12).
+        Age comes from the file mtime, not the filename or sidecar.
+        """
+        now = time.time() if now is None else now
+        removed = 0
+        for mp3 in list(self.ready_dir.glob("*.mp3")):
+            try:
+                if now - mp3.stat().st_mtime <= max_age_sec:
+                    continue
+                self.remove_played_segment(str(mp3))
+                removed += 1
+            except FileNotFoundError:
+                continue
+        # Orphan sidecars (mp3 already gone)
+        for js in list(self.ready_dir.glob("*.json")):
+            if not js.with_suffix(".mp3").exists():
+                js.unlink(missing_ok=True)
+        return removed
+
+    def newest_segment_age_sec(self, now: Optional[float] = None) -> Optional[float]:
+        """Seconds since the newest segment was written, or None if there are none."""
+        now = time.time() if now is None else now
+        mtimes = []
+        for mp3 in self.ready_dir.glob("*.mp3"):
+            try:
+                mtimes.append(mp3.stat().st_mtime)
+            except FileNotFoundError:
+                continue
+        return None if not mtimes else max(0.0, now - max(mtimes))
+
     def is_buffer_full(self, max_segments: int = 6) -> bool:
         return self.count_ready_segments() >= max_segments
 

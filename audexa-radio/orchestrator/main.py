@@ -307,7 +307,7 @@ async def reconcile_liquidsoap_queues():
 
                     if lang_segments:
                         pushed = 0
-                        for seg in lang_segments[:5]:
+                        for seg in lang_segments[-5:]:  # newest, never the oldest
                             if push_to_liquidsoap(seg["filepath"], queue_name=queue_name):
                                 pushed += 1
                         if pushed:
@@ -383,7 +383,10 @@ async def content_generation_loop():
                 await generate_and_queue_listener_request(request)
                 continue
 
-            # Priority 2: Keep buffer filled, rotating through languages
+            # Priority 2: Keep buffer filled, rotating through languages.
+            # Expire old segments first: nothing else deletes them, and the
+            # buffer check below counts files on disk.
+            queue.prune_expired(READY_MAX_AGE_SEC)
             ready = queue.count_ready_segments()
             if ready < config.max_buffer_segments * len(active_languages):
                 lang = active_languages[lang_index % len(active_languages)]
@@ -397,6 +400,13 @@ async def content_generation_loop():
             # Send email + dedupe so a stuck failure mode tells us, not just logs
             report_error(e, source="content_generation_loop")
             await asyncio.sleep(10)
+
+
+# Segments older than this are deleted (disk hygiene + never air stale news).
+READY_MAX_AGE_SEC = float(os.getenv("READY_MAX_AGE_HOURS", "12")) * 3600
+# /api/scheduler-health also fails if no new segment was written for this long.
+NO_NEW_SEGMENT_FAIL_SEC = int(os.getenv("NO_NEW_SEGMENT_FAIL_SEC", "14400"))
+DISK_FULL_FAIL_PCT = int(os.getenv("DISK_FULL_FAIL_PCT", "92"))
 
 
 # --- FastAPI App ---
@@ -518,8 +528,20 @@ async def scheduler_health():
     from fastapi import Response
     secs = seconds_since_last_generation()
     stale = secs > SCHEDULER_STALE_THRESHOLD_SEC
+    # The tick metric above cannot see "ticking but producing nothing" (the
+    # volume filled and writes failed on 2026-10-12 while this read healthy),
+    # so also check real output and disk.
+    import shutil
+    newest_age = queue.newest_segment_age_sec()
+    no_output = newest_age is not None and newest_age > NO_NEW_SEGMENT_FAIL_SEC
+    du = shutil.disk_usage(config.queue_ready_dir)
+    disk_pct = int(du.used * 100 / du.total)
+    disk_full = disk_pct >= DISK_FULL_FAIL_PCT
+    stale = stale or no_output or disk_full
     body = {
         "scheduler_ok": not stale,
+        "newest_segment_age_sec": None if newest_age is None else int(newest_age),
+        "disk_used_pct": disk_pct,
         "seconds_since_last_generation": None if secs == float("inf") else int(secs),
         "stale_threshold_sec": SCHEDULER_STALE_THRESHOLD_SEC,
         "ready_segments": queue.count_ready_segments(),

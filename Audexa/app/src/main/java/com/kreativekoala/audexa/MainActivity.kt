@@ -221,9 +221,10 @@ fun AudexaApp(
         }
     }
 
-    // Splash screen timer - show for at least 1.8 seconds
+    // Splash screen timer - minimum display time (was 1800ms; trimmed so it is not
+    // dead time in front of first audio)
     LaunchedEffect(Unit) {
-        delay(1800)
+        delay(600)
         showSplash = false
     }
 

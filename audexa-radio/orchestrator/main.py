@@ -31,6 +31,7 @@ from email_alerter import (
     report_error,
     seconds_since_last_generation,
 )
+import listener_sampler
 from queue_manager import QueueManager
 from retell_handler import router as retell_router
 from retell_handler import set_queue_manager
@@ -455,6 +456,13 @@ async def lifespan(app: FastAPI):
         podcast_injector.run_loop(), name="topic_podcast_injector"
     )
 
+    listener_task = asyncio.create_task(
+        listener_sampler.run_loop(
+            path=_listener_history_path()
+        ),
+        name="listener_sampler",
+    )
+
     # Attach a done callback that promotes silent task failures into alerts.
     # This is belt-and-suspenders next to the exception handler above —
     # asyncio's behavior around task exceptions has changed across versions.
@@ -468,6 +476,7 @@ async def lifespan(app: FastAPI):
     gen_task.add_done_callback(_task_done)
     reconcile_task.add_done_callback(_task_done)
     podcast_inject_task.add_done_callback(_task_done)
+    listener_task.add_done_callback(_task_done)
 
     logger.info(
         f"Audexa Radio started (region={config.radio_region}, "
@@ -479,6 +488,7 @@ async def lifespan(app: FastAPI):
     gen_task.cancel()
     reconcile_task.cancel()
     podcast_inject_task.cancel()
+    listener_task.cancel()
     await fetcher.close()
     await tts.close()
     logger.info("Orchestrator shut down")
@@ -687,6 +697,17 @@ async def status(lang: str = "en"):
         "language": lang,
         "supported_languages": RADIO_LANGUAGES,
     }
+
+
+def _listener_history_path() -> str:
+    return os.getenv("LISTENER_HISTORY_PATH") or os.path.join(os.getenv("LOGS_DIR", "/app/logs"), "listener_history.jsonl")
+
+
+@app.get("/api/listener-history")
+async def listener_history(hours: float = 24):
+    """Aggregate listener counts (5-min buckets, peak, current). No IPs or user agents are stored."""
+    path = _listener_history_path()
+    return await asyncio.to_thread(listener_sampler.history, hours, None, path)
 
 
 @app.get("/api/upcoming-plays")

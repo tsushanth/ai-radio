@@ -42,6 +42,7 @@ import com.kreativekoala.paywallkit.models.PaywallTheme
 import com.kreativekoala.paywallkit.view.PaywallView
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -83,8 +84,14 @@ class MainActivity : AppCompatActivity() {
         // Initialize the audio manager to connect to the playback service
         audioManager.initialize()
 
-        // Request notification permission on Android 13+ and restore scheduled notifications
-        requestNotificationPermissionIfNeeded()
+        // Do NOT prompt for notifications on cold start: the system dialog would sit
+        // between the user and first audio. Ask once audio is actually playing.
+        // Where permission is already granted (or not needed) restore the schedule now.
+        restoreNotificationsIfPermitted()
+        lifecycleScope.launch {
+            audioManager.isPlaying.first { it }
+            requestNotificationPermissionIfNeeded()
+        }
 
         // Extract promo code from deep link intent
         PromoCodeManager.handleIntent(intent)
@@ -127,6 +134,19 @@ class MainActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         audioManager.release()
+    }
+
+    private fun restoreNotificationsIfPermitted() {
+        val granted = Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU ||
+            ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.POST_NOTIFICATIONS
+            ) == PackageManager.PERMISSION_GRANTED
+        if (granted) {
+            lifecycleScope.launch {
+                notificationService.restoreScheduledNotificationIfNeeded()
+            }
+        }
     }
 
     private fun requestNotificationPermissionIfNeeded() {
@@ -201,9 +221,10 @@ fun AudexaApp(
         }
     }
 
-    // Splash screen timer - show for at least 1.8 seconds
+    // Splash screen timer - minimum display time (was 1800ms; trimmed so it is not
+    // dead time in front of first audio)
     LaunchedEffect(Unit) {
-        delay(1800)
+        delay(600)
         showSplash = false
     }
 

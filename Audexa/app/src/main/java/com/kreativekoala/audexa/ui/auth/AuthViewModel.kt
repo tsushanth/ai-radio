@@ -4,6 +4,7 @@ import android.content.Intent
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+import com.kreativekoala.audexa.data.local.PreferencesManager
 import com.kreativekoala.audexa.data.repository.AuthRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -20,7 +21,8 @@ data class AuthUiState(
 
 @HiltViewModel
 class AuthViewModel @Inject constructor(
-    private val authRepository: AuthRepository
+    private val authRepository: AuthRepository,
+    private val preferencesManager: PreferencesManager
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(AuthUiState())
@@ -80,6 +82,10 @@ class AuthViewModel @Inject constructor(
 
             authRepository.continueAsGuest()
                 .onSuccess {
+                    // First-play: skip the 4-page onboarding (it only collects optional
+                    // Gmail link + topics for the Daily Brief). Those are reachable later
+                    // from Home / Profile, and defaults (English, no topics) already work.
+                    preferencesManager.setOnboardingCompleted(true)
                     _uiState.value = _uiState.value.copy(
                         isLoading = false,
                         isSignedIn = true

@@ -245,4 +245,16 @@
     <!-- Daily Brief Playback -->
     <string name="daily_brief_title_format">Daily Brief - %s</string>
     <string name="daily_brief_description">Your personalized morning briefing</string>
+
+    <!-- Morning briefing: one local notification per day, opt-in after first play -->
+    <string name="briefing_notification_title">Today on Audexa</string>
+    <string name="briefing_notification_body_fallback">Audexa Radio is playing now. Tap to listen.</string>
+    <plurals name="briefing_notification_body_topics">
+        <item quantity="one">%1$d new topic podcast: %2$s. Tap to listen.</item>
+        <item quantity="other">%1$d new topic podcasts: %2$s. Tap to listen.</item>
+    </plurals>
+    <string name="briefing_names_with_more">%1$s and %2$d more</string>
+    <string name="briefing_optin_title">Remind you when new topic podcasts are ready?</string>
+    <string name="briefing_optin_accept">Remind me</string>
+    <string name="briefing_optin_decline">Not now</string>
 </resources>

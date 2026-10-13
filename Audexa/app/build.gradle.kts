@@ -12,11 +12,22 @@ android {
     compileSdk = 36
 
     signingConfigs {
-        create("release") {
-            storeFile = file("/Users/sushanthtiruvaipati/Documents/GitHub/AndroidAppKey")
-            storePassword = "REMOVED-CREDENTIAL"
-            keyAlias = "androidappkey"
-            keyPassword = "REMOVED-CREDENTIAL"
+        // Credentials come from ~/.gradle/gradle.properties (never from the repo).
+        val storeFile = providers.gradleProperty("ANDROID_UPLOAD_STORE_FILE")
+        val storePassword = providers.gradleProperty("ANDROID_UPLOAD_STORE_PASSWORD")
+        val keyAlias = providers.gradleProperty("ANDROID_UPLOAD_KEY_ALIAS")
+        val keyPassword = providers.gradleProperty("ANDROID_UPLOAD_KEY_PASSWORD")
+        val signingProps = listOf(storeFile, storePassword, keyAlias, keyPassword)
+        if (signingProps.any { it.isPresent } && !signingProps.all { it.isPresent }) {
+            logger.warn("Release signing disabled: set all of ANDROID_UPLOAD_STORE_FILE, ANDROID_UPLOAD_STORE_PASSWORD, ANDROID_UPLOAD_KEY_ALIAS, ANDROID_UPLOAD_KEY_PASSWORD")
+        }
+        if (signingProps.all { it.isPresent }) {
+            create("release") {
+                this.storeFile = file(storeFile.get())
+                this.storePassword = storePassword.get()
+                this.keyAlias = keyAlias.get()
+                this.keyPassword = keyPassword.get()
+            }
         }
     }
 
@@ -55,7 +66,7 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            signingConfig = signingConfigs.getByName("release")
+            signingConfigs.findByName("release")?.let { signingConfig = it }
         }
     }
     lint {

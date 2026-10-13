@@ -18,6 +18,7 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Mic
 import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -184,12 +185,36 @@ fun LiveRadioScreen(
                         )
                     }
 
-                    IconButton(onClick = onDismiss) {
-                        Icon(
-                            imageVector = Icons.Default.Close,
-                            contentDescription = "Close",
-                            tint = Color.White
-                        )
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        IconButton(onClick = {
+                            val url = com.kreativekoala.audexa.util.LiveShare.buildShareUrl(
+                                com.kreativekoala.audexa.util.LiveShare.languageFromStreamUrl(viewModel.streamUrl)
+                            )
+                            // Only name a topic when the radio really reported one (not for music or while unknown)
+                            val topic = nowPlaying?.takeIf { it.source != "music" }?.topicName
+                            val send = Intent(Intent.ACTION_SEND).apply {
+                                type = "text/plain"
+                                putExtra(Intent.EXTRA_SUBJECT, viewModel.stationName)
+                                putExtra(
+                                    Intent.EXTRA_TEXT,
+                                    com.kreativekoala.audexa.util.LiveShare.buildShareText(viewModel.stationName, topic, url)
+                                )
+                            }
+                            context.startActivity(Intent.createChooser(send, "Share ${viewModel.stationName}"))
+                        }) {
+                            Icon(
+                                imageVector = Icons.Default.Share,
+                                contentDescription = "Share what's playing",
+                                tint = Color.White
+                            )
+                        }
+                        IconButton(onClick = onDismiss) {
+                            Icon(
+                                imageVector = Icons.Default.Close,
+                                contentDescription = "Close",
+                                tint = Color.White
+                            )
+                        }
                     }
                 }
 

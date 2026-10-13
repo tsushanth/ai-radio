@@ -2,6 +2,7 @@ package com.kreativekoala.audexa
 
 import android.app.Activity
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
@@ -24,6 +25,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.kreativekoala.audexa.billing.BillingManager
 import com.kreativekoala.audexa.data.local.PreferencesManager
+import com.kreativekoala.audexa.data.model.SupportedLanguage
 import com.kreativekoala.audexa.data.model.Topic
 import com.kreativekoala.audexa.service.AudioManager
 import com.kreativekoala.audexa.service.NotificationService
@@ -34,6 +36,7 @@ import com.kreativekoala.audexa.ui.navigation.AudexaNavGraph
 import com.kreativekoala.audexa.ui.navigation.Screen
 import com.kreativekoala.audexa.ui.theme.AppTheme
 import com.kreativekoala.audexa.ui.theme.AudexaTheme
+import com.kreativekoala.audexa.util.LiveShare
 import com.kreativekoala.audexa.ui.topic.TopicDetailScreen
 import com.kreativekoala.paywallkit.manager.PromoCodeManager
 import com.kreativekoala.paywallkit.models.PaywallFeature
@@ -64,6 +67,9 @@ class MainActivity : AppCompatActivity() {
 
     @Inject
     lateinit var radioReminderManager: RadioReminderManager
+
+    // Language of a tapped https://audexa.app/live link, until the app can act on it (it has to be past login/onboarding).
+    private var pendingLiveLang by mutableStateOf<String?>(null)
 
     // Permission launcher for notification permission (Android 13+)
     private val notificationPermissionLauncher = registerForActivityResult(
@@ -96,6 +102,11 @@ class MainActivity : AppCompatActivity() {
         // Extract promo code from deep link intent
         PromoCodeManager.handleIntent(intent)
 
+        // Shared live link: only on a fresh start, so rotation does not replay it
+        if (savedInstanceState == null) {
+            pendingLiveLang = LiveShare.parseLiveLink(intent?.dataString)
+        }
+
         // Increment app open count once per session (only on fresh create, not config changes)
         if (savedInstanceState == null) {
             lifecycleScope.launch {
@@ -116,9 +127,24 @@ class MainActivity : AppCompatActivity() {
                 .collectAsState(initial = AppTheme.SYSTEM)
 
             AudexaTheme(appTheme = appTheme) {
-                AudexaApp(audioManager = audioManager, billingManager = billingManager, preferencesManager = preferencesManager, appTheme = appTheme)
+                AudexaApp(
+                    audioManager = audioManager,
+                    billingManager = billingManager,
+                    preferencesManager = preferencesManager,
+                    appTheme = appTheme,
+                    pendingLiveLang = pendingLiveLang,
+                    onLiveLinkHandled = { pendingLiveLang = null }
+                )
             }
         }
+    }
+
+    // singleTop: a live link tapped while the app is already open arrives here instead of a second Activity
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+        PromoCodeManager.handleIntent(intent)
+        pendingLiveLang = LiveShare.parseLiveLink(intent.dataString)
     }
 
     override fun onResume() {
@@ -182,6 +208,8 @@ fun AudexaApp(
     billingManager: BillingManager,
     preferencesManager: PreferencesManager,
     appTheme: AppTheme = AppTheme.SYSTEM,
+    pendingLiveLang: String? = null,
+    onLiveLinkHandled: () -> Unit = {},
     mainViewModel: MainViewModel = hiltViewModel()
 ) {
     val navController = rememberNavController()
@@ -244,6 +272,8 @@ fun AudexaApp(
                 isBuffering = isBuffering,
                 selectedTopic = selectedTopic,
                 onSelectedTopicChange = { selectedTopic = it },
+                pendingLiveLang = pendingLiveLang,
+                onLiveLinkHandled = onLiveLinkHandled,
                 mainViewModel = mainViewModel
             )
         }
@@ -335,8 +365,24 @@ private fun MainContent(
     isBuffering: Boolean,
     selectedTopic: Topic?,
     onSelectedTopicChange: (Topic?) -> Unit,
+    pendingLiveLang: String?,
+    onLiveLinkHandled: () -> Unit,
     mainViewModel: MainViewModel
 ) {
+    // A shared live link opens the live radio (which starts the stream) once the user is on Home.
+    // Not logged in / still onboarding: the link waits and is applied when Home is reached.
+    val backStackEntry by navController.currentBackStackEntryAsState()
+    val route = backStackEntry?.destination?.route
+    LaunchedEffect(pendingLiveLang, route) {
+        if (pendingLiveLang == null || route == null) return@LaunchedEffect
+        if (route.startsWith("live_radio")) {
+            onLiveLinkHandled() // already listening to the radio
+        } else if (route == Screen.Home.route) {
+            val language = SupportedLanguage.fromCode(pendingLiveLang)
+            onLiveLinkHandled()
+            navController.navigate(Screen.LiveRadio.createRoute(language.radioStreamURL, language.radioStationName))
+        }
+    }
 
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background,

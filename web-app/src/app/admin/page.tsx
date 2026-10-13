@@ -148,6 +148,17 @@ function SignIn() {
     setMsg(error ? 'Sign-in failed.' : '');
     setBusy(false);
   }
+  async function google() {
+    setBusy(true);
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: { redirectTo: `${window.location.origin}/admin` },
+    });
+    if (error) {
+      setMsg('Could not start Google sign-in.');
+      setBusy(false);
+    }
+  }
   async function magic() {
     setBusy(true);
     const { error } = await supabase.auth.signInWithOtp({
@@ -159,6 +170,9 @@ function SignIn() {
   }
   return (
     <Card title="Admin sign-in">
+      <button type="button" disabled={busy} onClick={() => void google()}>
+        Continue with Google
+      </button>
       <form
         className="adm-form"
         onSubmit={(e) => {

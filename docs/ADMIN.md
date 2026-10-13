@@ -35,10 +35,10 @@ Radio side optional vars: `LISTENER_HISTORY_PATH`, `ICECAST_STATUS_URL`, `LISTEN
 2. Web second. Set the secret, then deploy:
 
 ```
-flyctl secrets set -a <web-app-name> ADMIN_EMAILS="you@example.com,other@example.com"
+flyctl secrets set -a audexa-web ADMIN_EMAILS="you@example.com,other@example.com"
 ```
 
-(Use the app name from `web-app/fly.toml`. Setting a secret restarts the machine. For other hosts, set it as a
+(App name per `web-app/fly.toml`. Setting a secret restarts the machine. For other hosts, set it as a
 server-side env var.) Until the radio is deployed the page still works; the listener panel says history is unavailable.
 
 ## Status thresholds

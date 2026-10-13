@@ -45,7 +45,8 @@ sealed class Screen(val route: String) {
     data object LiveRadio : Screen("live_radio/{streamUrl}/{stationName}") {
         fun createRoute(streamUrl: String, stationName: String): String {
             val encodedUrl = java.net.URLEncoder.encode(streamUrl, "UTF-8")
-            val encodedName = java.net.URLEncoder.encode(stationName, "UTF-8")
+            // Uri.encode, not URLEncoder: the nav argument is decoded with Uri.decode, which leaves "+" as a literal plus.
+            val encodedName = android.net.Uri.encode(stationName)
             return "live_radio/$encodedUrl/$encodedName"
         }
     }

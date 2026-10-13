@@ -163,7 +163,8 @@ dependencies {
 
     // Ktor client for Supabase (supabase-kt 3.0 uses Ktor 3.x)
     implementation(platform("io.ktor:ktor-bom:3.0.2"))
-    implementation("io.ktor:ktor-client-android")
+    // OkHttp engine: the Android engine has no WebSocket support, so Supabase Realtime (live reactions/chat) never connected.
+    implementation("io.ktor:ktor-client-okhttp")
     implementation("io.ktor:ktor-client-core")
     implementation("io.ktor:ktor-client-content-negotiation")
     implementation("io.ktor:ktor-serialization-kotlinx-json")

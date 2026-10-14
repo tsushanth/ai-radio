@@ -35,8 +35,8 @@ class LanguageSettingsViewModel @Inject constructor(
 
     fun setLanguage(language: SupportedLanguage) {
         viewModelScope.launch {
-            preferencesManager.setPreferredLanguage(language.code)
             briefingManager.logEvent(BriefingManager.EVENT_LANGUAGE_PICKED, lang = language.code)
+            if (language.podcastAvailable) preferencesManager.setPreferredLanguage(language.code)
         }
     }
 }

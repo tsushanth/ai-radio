@@ -532,9 +532,14 @@ class TopicDetailViewModel @Inject constructor(
                 }
                 .onFailure { e ->
                     Log.e(TAG, "Failed to generate episode: ${e.message}")
+                    val msg = e.message.orEmpty()
                     _uiState.value = _uiState.value.copy(
                         isGenerating = false,
-                        error = e.message
+                        error = when {
+                            msg.contains("429") -> appContext.getString(com.kreativekoala.audexa.R.string.error_daily_limit)
+                            msg.contains("400") && language != "en" -> appContext.getString(com.kreativekoala.audexa.R.string.error_language_unavailable)
+                            else -> e.message
+                        }
                     )
                 }
         }
@@ -576,6 +581,10 @@ class TopicDetailViewModel @Inject constructor(
     }
 
     fun setLanguage(language: SupportedLanguage) {
+        if (!language.podcastAvailable) {
+            viewModelScope.launch { briefingManager.logEvent(BriefingManager.EVENT_LANGUAGE_PICKED, lang = language.code) }
+            return // coming soon: the pick is recorded, the selection stays
+        }
         stopAdPlayback()
         viewModelScope.launch {
             preferencesManager.setPreferredLanguage(language.code)

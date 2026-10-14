@@ -1,5 +1,6 @@
 package com.kreativekoala.audexa.ui.onboarding.pages
 
+import androidx.compose.ui.draw.alpha
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -26,6 +27,7 @@ fun LanguageSelectionPage(
     onLanguageSelected: (SupportedLanguage) -> Unit,
     onContinue: () -> Unit
 ) {
+    val context = androidx.compose.ui.platform.LocalContext.current
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -52,7 +54,7 @@ fun LanguageSelectionPage(
         Spacer(modifier = Modifier.height(8.dp))
 
         Text(
-            text = "Radio and podcasts are in English for now. Your pick helps us decide what to add.",
+            text = "Podcasts come in six languages. Radio is English only. Your pick helps us decide what to add.",
             style = MaterialTheme.typography.bodyLarge,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             textAlign = TextAlign.Center
@@ -72,7 +74,13 @@ fun LanguageSelectionPage(
                     modifier = Modifier
                         .fillMaxWidth()
                         .clip(RoundedCornerShape(12.dp))
-                        .clickable { onLanguageSelected(language) }
+                        .clickable {
+                            onLanguageSelected(language)
+                            if (!language.podcastAvailable) {
+                                android.widget.Toast.makeText(context, com.kreativekoala.audexa.R.string.language_coming_soon_toast, android.widget.Toast.LENGTH_SHORT).show()
+                            }
+                        }
+                        .alpha(if (language.podcastAvailable) 1f else 0.55f)
                         .then(
                             if (isSelected) Modifier.border(2.dp, AccentOrange, RoundedCornerShape(12.dp))
                             else Modifier
@@ -100,7 +108,7 @@ fun LanguageSelectionPage(
                                 color = if (isSelected) AccentOrange else MaterialTheme.colorScheme.onSurface
                             )
                             Text(
-                                text = language.displayName,
+                                text = if (language.podcastAvailable) language.displayName else "${language.displayName} · coming soon",
                                 style = MaterialTheme.typography.bodySmall,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )

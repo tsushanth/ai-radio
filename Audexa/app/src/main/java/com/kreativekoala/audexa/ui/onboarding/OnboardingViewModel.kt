@@ -1,5 +1,6 @@
 package com.kreativekoala.audexa.ui.onboarding
 
+import com.kreativekoala.audexa.service.BriefingManager
 import android.content.Intent
 import android.util.Log
 import androidx.lifecycle.ViewModel
@@ -39,7 +40,8 @@ data class OnboardingUiState(
 class OnboardingViewModel @Inject constructor(
     private val preferencesManager: PreferencesManager,
     private val authRepository: AuthRepository,
-    private val topicRepository: TopicRepository
+    private val topicRepository: TopicRepository,
+    private val briefingManager: BriefingManager
 ) : ViewModel() {
 
     companion object {
@@ -120,6 +122,7 @@ class OnboardingViewModel @Inject constructor(
     // Language selection
     fun selectLanguage(language: SupportedLanguage) {
         _uiState.value = _uiState.value.copy(selectedLanguage = language)
+        viewModelScope.launch { briefingManager.logEvent(BriefingManager.EVENT_LANGUAGE_PICKED, lang = language.code) }
         loadTopics() // Reload with new language
     }
 

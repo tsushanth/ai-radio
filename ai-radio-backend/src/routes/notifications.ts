@@ -308,10 +308,11 @@ const BRIEFING_EVENTS = new Set([
   'briefing_shown',
   'briefing_skipped_quiet_hours',
   'briefing_opened',
+  'language_picked',
 ]);
 
 router.post('/event', (req, res) => {
-  const { event, install_id, hour, topic_count } = req.body || {};
+  const { event, install_id, hour, topic_count, lang } = req.body || {};
 
   if (typeof event !== 'string' || !BRIEFING_EVENTS.has(event)) {
     return res.status(400).json({ success: false, error: 'Unknown event' });
@@ -325,6 +326,8 @@ router.post('/event', (req, res) => {
     install_id,
     hour: Number.isInteger(hour) && hour >= 0 && hour <= 23 ? hour : undefined,
     topic_count: Number.isInteger(topic_count) && topic_count >= 0 && topic_count <= 999 ? topic_count : undefined,
+    // language_picked: which language the user chose (two letters only), to size demand for non-English content
+    lang: typeof lang === 'string' && /^[a-z]{2}$/.test(lang) ? lang : undefined,
   }));
 
   res.status(204).end();

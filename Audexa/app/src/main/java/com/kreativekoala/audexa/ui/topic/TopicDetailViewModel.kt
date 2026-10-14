@@ -13,6 +13,7 @@ import com.kreativekoala.audexa.data.local.PreferencesManager
 import com.kreativekoala.audexa.data.model.AdSegment
 import com.kreativekoala.audexa.data.model.SegmentTiming
 import com.kreativekoala.audexa.data.model.SupportedLanguage
+import com.kreativekoala.audexa.service.BriefingManager
 import com.kreativekoala.audexa.data.model.Topic
 import com.kreativekoala.audexa.data.model.TopicEpisode
 import com.kreativekoala.audexa.data.remote.AdClickRequest
@@ -58,6 +59,7 @@ class TopicDetailViewModel @Inject constructor(
     private val topicRepository: TopicRepository,
     private val preferencesManager: PreferencesManager,
     private val audioManager: AudioManager,
+    private val briefingManager: BriefingManager,
     @ApplicationContext private val appContext: Context
 ) : ViewModel() {
 
@@ -577,6 +579,7 @@ class TopicDetailViewModel @Inject constructor(
         stopAdPlayback()
         viewModelScope.launch {
             preferencesManager.setPreferredLanguage(language.code)
+            briefingManager.logEvent(BriefingManager.EVENT_LANGUAGE_PICKED, lang = language.code)
         }
         _uiState.value = _uiState.value.copy(
             selectedLanguage = language,

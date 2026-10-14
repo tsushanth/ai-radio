@@ -54,6 +54,7 @@ class BriefingManager @Inject constructor(
         const val EVENT_PERMISSION_DENIED = "briefing_permission_denied"
         const val EVENT_SHOWN = "briefing_shown"
         const val EVENT_SKIPPED_QUIET_HOURS = "briefing_skipped_quiet_hours"
+        const val EVENT_LANGUAGE_PICKED = "language_picked"
         const val EVENT_OPENED = "briefing_opened"
     }
 
@@ -135,7 +136,7 @@ class BriefingManager @Inject constructor(
      * Fire-and-forget anonymous event (backend logs one line; nothing stored).
      * Must never throw or block UI; callers may invoke from any coroutine.
      */
-    suspend fun logEvent(event: String, hour: Int? = null, topicCount: Int? = null) {
+    suspend fun logEvent(event: String, hour: Int? = null, topicCount: Int? = null, lang: String? = null) {
         withContext(Dispatchers.IO) {
             try {
                 val json = JSONObject().apply {
@@ -143,6 +144,7 @@ class BriefingManager @Inject constructor(
                     put("install_id", preferencesManager.getOrCreateBriefingInstallId())
                     if (hour != null) put("hour", hour)
                     if (topicCount != null) put("topic_count", topicCount)
+                    if (lang != null) put("lang", lang)
                 }
                 val request = Request.Builder()
                     .url("${BuildConfig.API_BASE_URL}/notifications/event")

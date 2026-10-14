@@ -1,0 +1,3 @@
+Start listening in one tap, with no onboarding first.
+New: share the live station, and an optional daily reminder when new topic podcasts are ready.
+Fixes live reactions and chat, and the station title.

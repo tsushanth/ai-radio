@@ -459,6 +459,7 @@ router.post('/:topicId/regenerate-audio', async (req: Request, res: Response) =>
   }
 });
 
+const inFlight = new Set<string>();
 const nonEnglishDailyCap = new DailyCap(Number(process.env.ON_DEMAND_DAILY_LIMIT) || 30);
 
 router.post('/:topicId/generate', async (req: Request, res: Response) => {
@@ -471,6 +472,7 @@ router.post('/:topicId/generate', async (req: Request, res: Response) => {
 
     console.log(`📡 Generate request for topic: ${topicId} (force: ${forceRegenerate}, lang: ${language})`);
 
+    let nonEnglishReady = false;
     // Non-English episodes are generated on demand, only for languages that have a Piper voice, and capped per day
     // (each one costs an LLM script plus TTS). An episode that already exists is served without counting against the cap.
     if (language !== 'en') {
@@ -479,6 +481,7 @@ router.post('/:topicId/generate', async (req: Request, res: Response) => {
       }
       const today = new Date().toISOString().split('T')[0];
       const have = await topicPodcastGenerator.getExistingEpisode(topicId, today, language);
+      nonEnglishReady = !!have && have.status === 'completed';
       if (!(have && (have.status === 'completed' || have.status === 'generating')) && !nonEnglishDailyCap.tryTake()) {
         return res.status(429).json({ success: false, error: 'daily_limit', message: 'Try again tomorrow.' });
       }
@@ -490,17 +493,26 @@ router.post('/:topicId/generate', async (req: Request, res: Response) => {
     // GET /topics/:id/episode for completion. Full TTS generation on
     // Kokoro/Fly takes 30-60 min for a multi-segment episode — blocking
     // the response would always time out the iOS app's URLSession.
-    if (forceRegenerate) {
+    // A first non-English load takes minutes (script + Piper), longer than a safe HTTP wait, so it uses the same async path:
+    // return the 'generating' placeholder now, the client polls GET /topics/:id/episode.
+    if (forceRegenerate || (language !== 'en' && !nonEnglishReady)) {
       const today = new Date().toISOString().split('T')[0];
       const existing = await topicPodcastGenerator.getExistingEpisode(topicId, today, language);
 
       // Fire-and-forget the actual regeneration. Errors are logged but the
-      // HTTP response has already been sent.
-      void topicPodcastGenerator
-        .getOrGenerateEpisode(topicId, userId, true, language)
-        .catch(err => {
-          console.error(`Background regen failed for ${topicId}:`, err);
-        });
+      // HTTP response has already been sent. One in-flight run per episode.
+      const flightKey = `${topicId}-${today}-${language}`;
+      if (!forceRegenerate && (existing?.status === 'generating' || inFlight.has(flightKey))) {
+        // already being generated: just report it
+      } else if (!inFlight.has(flightKey)) {
+        inFlight.add(flightKey);
+        void topicPodcastGenerator
+          .getOrGenerateEpisode(topicId, userId, forceRegenerate, language)
+          .catch(err => {
+            console.error(`Background generation failed for ${topicId}:`, err);
+          })
+          .finally(() => inFlight.delete(flightKey));
+      }
 
       // Return whatever exists right now, or a synthetic "generating"
       // placeholder if there's nothing yet. Either way the client will

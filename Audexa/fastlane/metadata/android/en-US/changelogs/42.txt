@@ -1,0 +1,2 @@
+The language picker now says clearly that radio and podcasts are in English for now.
+Small fixes and improvements.

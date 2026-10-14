@@ -294,4 +294,40 @@ router.post('/trigger/:userId', async (req, res) => {
   }
 });
 
+/**
+ * POST /notifications/event
+ * Anonymous funnel events for the morning-briefing notification. Logged as
+ * one JSON line (grep "[BriefingEvent]" in `fly logs`); nothing is written
+ * to the database and no user identifier (email, user id) is accepted.
+ */
+const BRIEFING_EVENTS = new Set([
+  'briefing_optin_shown',
+  'briefing_optin_accepted',
+  'briefing_optin_declined',
+  'briefing_permission_denied',
+  'briefing_shown',
+  'briefing_skipped_quiet_hours',
+  'briefing_opened',
+]);
+
+router.post('/event', (req, res) => {
+  const { event, install_id, hour, topic_count } = req.body || {};
+
+  if (typeof event !== 'string' || !BRIEFING_EVENTS.has(event)) {
+    return res.status(400).json({ success: false, error: 'Unknown event' });
+  }
+  if (typeof install_id !== 'string' || !/^[0-9a-f-]{8,40}$/i.test(install_id)) {
+    return res.status(400).json({ success: false, error: 'Invalid install_id' });
+  }
+
+  console.log('[BriefingEvent]', JSON.stringify({
+    event,
+    install_id,
+    hour: Number.isInteger(hour) && hour >= 0 && hour <= 23 ? hour : undefined,
+    topic_count: Number.isInteger(topic_count) && topic_count >= 0 && topic_count <= 999 ? topic_count : undefined,
+  }));
+
+  res.status(204).end();
+});
+
 export default router;

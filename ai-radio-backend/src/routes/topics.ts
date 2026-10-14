@@ -7,6 +7,7 @@ import { Router, Request, Response } from 'express';
 import { createClient } from '@supabase/supabase-js';
 import { topicPodcastGenerator } from '../services/content/topic.generator';
 import { adService } from '../services/ads/ad.service';
+import { briefingService } from '../services/notifications/briefing.service';
 import { env } from '../config/environment';
 
 const router = Router();
@@ -256,6 +257,26 @@ router.post('/suggest/:requestId/fail', async (req: Request, res: Response) => {
 });
 
 // ─── Existing Topic Routes ─────────────────────────────────────────────────────
+
+/**
+ * GET /topics/briefing
+ * Compact, read-only summary of the newest completed topic podcasts
+ * (count + up to 3 topic names). Used by the Android morning-briefing
+ * notification to write honest copy. Must be registered before /:topicId.
+ */
+router.get('/briefing', async (req: Request, res: Response) => {
+  try {
+    const language = typeof req.query.lang === 'string' && /^[a-z]{2}$/.test(req.query.lang)
+      ? req.query.lang
+      : 'en';
+    const summary = await briefingService.getSummary(language);
+    res.set('Cache-Control', 'public, max-age=300');
+    res.json({ success: true, data: summary });
+  } catch (error) {
+    console.error('Error getting briefing summary:', error);
+    res.status(500).json({ success: false, error: 'Failed to get briefing summary' });
+  }
+});
 
 /**
  * GET /topics

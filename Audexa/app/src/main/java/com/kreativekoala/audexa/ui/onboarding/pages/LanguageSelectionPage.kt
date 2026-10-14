@@ -52,7 +52,7 @@ fun LanguageSelectionPage(
         Spacer(modifier = Modifier.height(8.dp))
 
         Text(
-            text = "We'll personalize your news and topics",
+            text = "Radio and podcasts are in English for now. Your pick helps us decide what to add.",
             style = MaterialTheme.typography.bodyLarge,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             textAlign = TextAlign.Center

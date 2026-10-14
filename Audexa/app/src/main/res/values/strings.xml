@@ -167,8 +167,8 @@
 
     <!-- Language Settings -->
     <string name="language">Language</string>
-    <string name="language_description">Choose your preferred language for podcast episodes.</string>
-    <string name="language_note">New episodes will be generated in your selected language. Previously generated episodes will remain in their original language.</string>
+    <string name="language_description">Choose your preferred language.</string>
+    <string name="language_note">Radio and podcasts are in English for now. We record which language you pick, without your name, to decide which to add first.</string>
     <string name="selected">Selected</string>
 
     <!-- Voice Settings -->

@@ -8,6 +8,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.kreativekoala.audexa.data.model.SupportedLanguage
 import com.kreativekoala.audexa.data.model.Topic
 import com.kreativekoala.audexa.ui.auth.AuthScreen
 import com.kreativekoala.audexa.ui.home.HomeScreen
@@ -44,7 +45,8 @@ sealed class Screen(val route: String) {
     data object LiveRadio : Screen("live_radio/{streamUrl}/{stationName}") {
         fun createRoute(streamUrl: String, stationName: String): String {
             val encodedUrl = java.net.URLEncoder.encode(streamUrl, "UTF-8")
-            val encodedName = java.net.URLEncoder.encode(stationName, "UTF-8")
+            // Uri.encode, not URLEncoder: the nav argument is decoded with Uri.decode, which leaves "+" as a literal plus.
+            val encodedName = android.net.Uri.encode(stationName)
             return "live_radio/$encodedUrl/$encodedName"
         }
     }
@@ -70,9 +72,14 @@ fun AudexaNavGraph(
         composable(Screen.Auth.route) {
             AuthScreen(
                 onAuthSuccess = {
-                    navController.navigate(Screen.Onboarding.route) {
+                    // First-play: Home underneath, live radio on top (auto-starts the stream).
+                    navController.navigate(Screen.Home.route) {
                         popUpTo(Screen.Auth.route) { inclusive = true }
                     }
+                    val station = SupportedLanguage.ENGLISH
+                    navController.navigate(
+                        Screen.LiveRadio.createRoute(station.radioStreamURL, station.radioStationName)
+                    )
                 }
             )
         }

@@ -50,7 +50,7 @@ class RadioReminderManager @Inject constructor(
     companion object {
         private const val TAG = "RadioReminderManager"
         private const val UPCOMING_PLAYS_URL =
-            "http://178.156.192.31:8081/api/upcoming-plays"
+            "https://radio.audexa.app/api/upcoming-plays"
         // Base for alarm PendingIntent request codes — we hash topic_id into the
         // 4 lowest bits' worth of slot below this. Keep clear of DailyNotification's
         // request code (2001).

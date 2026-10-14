@@ -35,8 +35,8 @@ android {
         applicationId = "com.kreativekoala.audexa"
         minSdk = 26
         targetSdk = 36
-        versionCode = 40
-        versionName = "12.7.2"
+        versionCode = 41
+        versionName = "12.8.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -45,7 +45,8 @@ android {
 
         // Build config fields
         buildConfigField("String", "SUPABASE_URL", "\"https://lxtuvvsrtpoqgikbpasm.supabase.co\"")
-        buildConfigField("String", "SUPABASE_ANON_KEY", "\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx4dHV2dnNydHBvcWdpa2JwYXNtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUzMDA5NDEsImV4cCI6MjA4MDg3Njk0MX0.-0L2P6Wutv8hlsmMBaurznr1HgWSOWukj7rZTmmkuI4\"")
+        // Publishable key; the legacy JWT anon key was disabled by Supabase on 2026-10-04.
+        buildConfigField("String", "SUPABASE_ANON_KEY", "\"sb_publishable_Na10AyQXfYGTgsFAnZYbBw_ixt_2Tof\"")
         buildConfigField("String", "API_BASE_URL", "\"https://ai-radio-backend.fly.dev/api\"")
         buildConfigField("String", "GOOGLE_WEB_CLIENT_ID", "\"517355381306-o9vf858ti99540b6s21l15gj5dk3d8e2.apps.googleusercontent.com\"")
         // OAuth client for Gmail/Calendar linking - use same project as sign-in (517355381306)
@@ -162,7 +163,8 @@ dependencies {
 
     // Ktor client for Supabase (supabase-kt 3.0 uses Ktor 3.x)
     implementation(platform("io.ktor:ktor-bom:3.0.2"))
-    implementation("io.ktor:ktor-client-android")
+    // OkHttp engine: the Android engine has no WebSocket support, so Supabase Realtime (live reactions/chat) never connected.
+    implementation("io.ktor:ktor-client-okhttp")
     implementation("io.ktor:ktor-client-core")
     implementation("io.ktor:ktor-client-content-negotiation")
     implementation("io.ktor:ktor-serialization-kotlinx-json")

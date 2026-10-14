@@ -49,8 +49,12 @@ enum class SupportedLanguage(
             return entries.find { it.code == code } ?: ENGLISH
         }
 
-        /** Languages that have radio streams available */
+        /**
+         * Languages that have radio streams available. Only English is live; the
+         * non-English streams (/stream-<code>) were removed server-side because
+         * nobody listened, so offering them would just yield a dead player.
+         */
         val radioAvailable: List<SupportedLanguage>
-            get() = listOf(ENGLISH, SPANISH, HINDI, PORTUGUESE, FRENCH, GERMAN, JAPANESE, KOREAN, CHINESE, ITALIAN, TAGALOG)
+            get() = listOf(ENGLISH)
     }
 }

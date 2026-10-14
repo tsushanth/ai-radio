@@ -84,8 +84,8 @@ class LiveRadioViewModel @Inject constructor(
         private const val TAG = "LiveRadioVM"
         private const val DEFAULT_STREAM_URL = "https://radio.audexa.app/stream"
         private const val DEFAULT_STATION_NAME = "Audexa Radio"
-        private const val STATUS_URL = "http://178.156.192.31:8081/api/status"
-        private const val REQUEST_TOPIC_URL = "http://178.156.192.31:8081/api/request-topic"
+        private const val STATUS_URL = "https://radio.audexa.app/api/status"
+        private const val REQUEST_TOPIC_URL = "https://radio.audexa.app/api/request-topic"
         private const val MAX_CHAT_MESSAGES = 50
     }
 

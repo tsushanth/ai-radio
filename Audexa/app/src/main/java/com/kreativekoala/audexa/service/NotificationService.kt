@@ -167,17 +167,19 @@ class NotificationService @Inject constructor(
     }
 
     /**
-     * Show the daily brief reminder notification
+     * Show the daily briefing notification with caller-supplied copy (built by
+     * BriefingManager). Uses a fixed notification id so a second post replaces
+     * rather than stacks. Returns true only if the notification was posted.
      */
-    fun showDailyReminderNotification() {
+    fun showDailyReminderNotification(title: String, body: String): Boolean {
         if (!hasNotificationPermission()) {
             Log.w(TAG, "Notification permission not granted")
-            return
+            return false
         }
 
         val intent = Intent(context, MainActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            putExtra("notification_type", "daily_brief_reminder")
+            putExtra("notification_type", BriefingManager.NOTIFICATION_TYPE)
         }
 
         val pendingIntent = PendingIntent.getActivity(
@@ -189,18 +191,21 @@ class NotificationService @Inject constructor(
 
         val notification = NotificationCompat.Builder(context, CHANNEL_ID_DAILY_BRIEF)
             .setSmallIcon(R.drawable.ic_launcher_foreground)
-            .setContentTitle(context.getString(R.string.notification_good_morning))
-            .setContentText(context.getString(R.string.notification_daily_brief_text))
-            .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setContentTitle(title)
+            .setContentText(body)
+            .setStyle(NotificationCompat.BigTextStyle().bigText(body))
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .setAutoCancel(true)
             .setContentIntent(pendingIntent)
             .build()
 
-        try {
+        return try {
             NotificationManagerCompat.from(context).notify(NOTIFICATION_ID_DAILY_REMINDER, notification)
             Log.d(TAG, "Daily reminder notification shown")
+            true
         } catch (e: SecurityException) {
             Log.e(TAG, "Failed to show notification: ${e.message}")
+            false
         }
     }
 

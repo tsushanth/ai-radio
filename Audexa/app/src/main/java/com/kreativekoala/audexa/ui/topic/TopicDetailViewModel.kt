@@ -228,7 +228,8 @@ class TopicDetailViewModel @Inject constructor(
             val current = state.currentEpisode
             if (current == null || current.status != "completed" || current.audioUrl == null) {
                 val fallback = state.episodeHistory.firstOrNull {
-                    it.status == "completed" && it.audioUrl != null
+                    it.status == "completed" && it.audioUrl != null &&
+                        isFreshEnoughFallback(it, state.selectedLanguage)
                 }
                 if (fallback != null) {
                     val ads = if (isSubscriber) emptyList() else state.ads
@@ -611,7 +612,8 @@ class TopicDetailViewModel @Inject constructor(
             val current = state.currentEpisode
             if (current == null || current.status != "completed" || current.audioUrl == null) {
                 val fallback = state.episodeHistory.firstOrNull {
-                    it.status == "completed" && it.audioUrl != null
+                    it.status == "completed" && it.audioUrl != null &&
+                        isFreshEnoughFallback(it, state.selectedLanguage)
                 }
                 if (fallback != null) {
                     val ads = if (isSubscriber) emptyList() else state.ads
@@ -628,6 +630,21 @@ class TopicDetailViewModel @Inject constructor(
             }
 
             _uiState.value = _uiState.value.copy(isLoading = false)
+        }
+    }
+
+    /**
+     * Falling back to history avoids a fresh generation when today's episode is missing. That is right for English (a daily
+     * batch makes one), but non-English history can hold months-old episodes from when other languages ran nightly, so only
+     * accept a recent one; otherwise the user gets the Generate button and a new episode is made on demand.
+     */
+    private fun isFreshEnoughFallback(episode: TopicEpisode, language: SupportedLanguage): Boolean {
+        if (language == SupportedLanguage.ENGLISH) return true
+        return try {
+            val date = java.time.LocalDate.parse(episode.date.take(10))
+            !date.isBefore(java.time.LocalDate.now(java.time.ZoneOffset.UTC).minusDays(2))
+        } catch (e: Exception) {
+            false
         }
     }
 

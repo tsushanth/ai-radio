@@ -7,6 +7,7 @@
 import type { TTSRequest, TTSResponse, AudioSegment } from '../../types/podcast';
 import type { PodcastScript, ScriptSegment } from '../../types/database';
 import { getPiperClient, PiperBusyError } from './piper.client';
+import { voiceForHost, trimLeadingAndFade } from './piper-languages';
 
 /**
  * Voice options (kept as OpenAI-style names for backwards compatibility)
@@ -169,12 +170,20 @@ export class OpenAITTSService {
     }
   }
 
-  /** Speak one segment through the shared Piper app. English only; the client itself waits while Calldesk calls are using Piper. */
+  /** Speak one segment through the shared Piper app. English uses the house voices; other languages use the catalog voices in piper-languages.ts. The client itself waits while Calldesk calls are using Piper. */
   private async synthesizeWithPiper(request: TTSRequest): Promise<TTSResponse> {
     const language = (request.language_code || 'en').toLowerCase();
-    if (language !== 'en') throw new Error(`Piper voices are English only (requested "${language}")`);
-    const voice = PIPER_VOICE_MAP[this.validateVoice(request.voice)];
-    const { wav, durationSeconds } = await getPiperClient().synthesize(request.text, voice, this.clampSpeed(request.speed || this.DEFAULT_SPEED));
+    const openaiVoice = this.validateVoice(request.voice);
+    let voice = PIPER_VOICE_MAP[openaiVoice];
+    if (language !== 'en') {
+      const lv = voiceForHost(language, openaiVoice);
+      if (!lv) throw new Error(`No Piper voice for language "${language}"`);
+      voice = lv;
+    }
+    const { wav, durationSeconds } = await getPiperClient().synthesize(
+      request.text, voice, this.clampSpeed(request.speed || this.DEFAULT_SPEED),
+      language !== 'en' ? { trimLeading: true } : undefined,
+    );
     return { audio_buffer: wav, duration_seconds: durationSeconds, format: 'wav' };
   }
 

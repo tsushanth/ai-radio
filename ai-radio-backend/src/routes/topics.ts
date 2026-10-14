@@ -3,6 +3,7 @@
  * API endpoints for topic-based podcasts
  */
 
+import { onDemandLanguages, DailyCap } from '../services/tts/piper-languages';
 import { Router, Request, Response } from 'express';
 import { createClient } from '@supabase/supabase-js';
 import { topicPodcastGenerator } from '../services/content/topic.generator';
@@ -458,6 +459,8 @@ router.post('/:topicId/regenerate-audio', async (req: Request, res: Response) =>
   }
 });
 
+const nonEnglishDailyCap = new DailyCap(Number(process.env.ON_DEMAND_DAILY_LIMIT) || 30);
+
 router.post('/:topicId/generate', async (req: Request, res: Response) => {
   try {
     const { topicId } = req.params;
@@ -467,6 +470,19 @@ router.post('/:topicId/generate', async (req: Request, res: Response) => {
     const language = (req.body.language as string) || 'en';
 
     console.log(`📡 Generate request for topic: ${topicId} (force: ${forceRegenerate}, lang: ${language})`);
+
+    // Non-English episodes are generated on demand, only for languages that have a Piper voice, and capped per day
+    // (each one costs an LLM script plus TTS). An episode that already exists is served without counting against the cap.
+    if (language !== 'en') {
+      if (!/^[a-z]{2}$/.test(language) || !onDemandLanguages().includes(language)) {
+        return res.status(400).json({ success: false, error: 'language_unavailable', message: 'This language is not available yet.' });
+      }
+      const today = new Date().toISOString().split('T')[0];
+      const have = await topicPodcastGenerator.getExistingEpisode(topicId, today, language);
+      if (!(have && (have.status === 'completed' || have.status === 'generating')) && !nonEnglishDailyCap.tryTake()) {
+        return res.status(429).json({ success: false, error: 'daily_limit', message: 'Try again tomorrow.' });
+      }
+    }
 
     // Async regen: if there's already an episode for today, kick off the
     // regeneration in the background and return immediately with the

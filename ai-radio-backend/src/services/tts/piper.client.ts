@@ -1,3 +1,4 @@
+import { trimLeadingAndFade } from './piper-languages';
 /**
  * Client for the shared Piper TTS app (piper-tts-sjc on Fly). Same politeness rules as the radio's orchestrator/piper_client.py:
  * Audexa is the LOW-priority tenant, because Calldesk phone calls use the same machines and the server has no priority lane.
@@ -105,11 +106,12 @@ export class PiperTtsClient {
   }
 
   /** Text to speech: one WAV for the whole text (long text is sent in chunks, in order). */
-  synthesize(text: string, voiceId: string, speed: number = 1.05): Promise<PiperResult> {
+  synthesize(text: string, voiceId: string, speed: number = 1.05, opts?: { trimLeading?: boolean }): Promise<PiperResult> {
     const run = async (): Promise<PiperResult> => {
       const parts: Buffer[] = [];
       for (const chunk of splitText(text)) parts.push(await this.synthPcm(chunk, voiceId, speed));
-      const pcm = Buffer.concat(parts);
+      let pcm: Buffer = Buffer.concat(parts);
+      if (opts?.trimLeading && pcm.length > 0) pcm = trimLeadingAndFade(pcm, PIPER_SAMPLE_RATE);
       if (pcm.length === 0) throw new PiperError('Piper returned no audio');
       return { wav: pcmToWav(pcm), durationSeconds: pcm.length / (PIPER_SAMPLE_RATE * 2) };
     };
@@ -178,6 +180,7 @@ export function getPiperClient(): PiperTtsClient {
       token,
       busyActive: Number(process.env.PIPER_BUSY_ACTIVE) || 2,
       maxWaitMs: (Number(process.env.PIPER_MAX_WAIT_SEC) || 120) * 1000,
+      fetchImpl: (...a: Parameters<typeof fetch>) => fetch(...a), // resolve global fetch per call, not once at construction
     });
   }
   return shared;

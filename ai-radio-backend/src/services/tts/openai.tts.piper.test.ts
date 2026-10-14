@@ -69,9 +69,25 @@ test('with TTS_BACKEND=piper, host voices map to the warm female and warm male P
   assert.equal(f.format, 'wav'); assert.equal(f.audio_buffer.subarray(0, 4).toString(), 'RIFF'); assert.ok(Math.abs(f.duration_seconds - 1) < 0.01); assert.ok(m.duration_seconds > 0);
 });
 
-test('with TTS_BACKEND=piper, a non-English segment is refused before anything is sent', async () => {
+test('with TTS_BACKEND=piper, a language with catalog voices uses them (female for nova, male for onyx) and trims the lead-in', async () => {
+  process.env.TTS_BACKEND = 'piper'; process.env.PIPER_AUTH_TOKEN = 'tok';
+  const voicesSeen: string[] = [];
+  globalThis.fetch = (async (url: string, init?: RequestInit) => {
+    if (String(url).endsWith('/health')) return new Response(JSON.stringify({ active: 0 }));
+    voicesSeen.push(JSON.parse(String(init!.body)).voice);
+    const b = Buffer.alloc(PIPER_SAMPLE_RATE * 2); // 1 s: 0.5 s near-silence, then loud
+    for (let i = 0; i < PIPER_SAMPLE_RATE; i++) b.writeInt16LE(i < PIPER_SAMPLE_RATE / 2 ? 2 : 9000, i * 2);
+    return new Response(b);
+  }) as typeof fetch;
+  const f = await openaiTTS.synthesize({ text: 'Hola.', voice: 'nova', speed: 1, language_code: 'es' } as any);
+  const m = await openaiTTS.synthesize({ text: 'Hola.', voice: 'onyx', speed: 1, language_code: 'es' } as any);
+  assert.deepEqual(voicesSeen, ['custom:es-pilot-f', 'custom:es-pilot-m']);
+  assert.ok(f.duration_seconds < 0.7 && m.duration_seconds < 0.7, `lead-in trimmed, got ${f.duration_seconds}`);
+});
+
+test('with TTS_BACKEND=piper, a language without a voice is refused before anything is sent', async () => {
   process.env.TTS_BACKEND = 'piper'; process.env.PIPER_AUTH_TOKEN = 'tok';
   let sent = 0; globalThis.fetch = (async () => { sent++; return new Response('x'); }) as typeof fetch;
-  await assert.rejects(openaiTTS.synthesize({ text: 'Hola.', voice: 'nova', speed: 1, language_code: 'es' } as any), /English only/);
+  await assert.rejects(openaiTTS.synthesize({ text: 'こんにちは。', voice: 'nova', speed: 1, language_code: 'ja' } as any), /No Piper voice for language "ja"/);
   assert.equal(sent, 0);
 });

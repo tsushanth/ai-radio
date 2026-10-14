@@ -167,8 +167,13 @@
 
     <!-- Language Settings -->
     <string name="language">Language</string>
+    <string name="language_coming_soon">Coming soon</string>
+    <string name="language_coming_soon_toast">Not available yet. We have noted your interest.</string>
+    <string name="generating_language">Preparing your episode in %1$s. The first one can take a few minutes.</string>
+    <string name="error_language_unavailable">That language is not available yet.</string>
+    <string name="error_daily_limit">Today\'s limit for new-language episodes has been reached. Try again tomorrow.</string>
     <string name="language_description">Choose your preferred language.</string>
-    <string name="language_note">Radio and podcasts are in English for now. We record which language you pick, without your name, to decide which to add first.</string>
+    <string name="language_note">Podcasts are available in English, Spanish, French, German, Portuguese and Italian. The first episode in a new language takes a few minutes to prepare. Radio is English only. For other languages, we record which one you pick, without your name, to decide what to add next.</string>
     <string name="selected">Selected</string>
 
     <!-- Voice Settings -->

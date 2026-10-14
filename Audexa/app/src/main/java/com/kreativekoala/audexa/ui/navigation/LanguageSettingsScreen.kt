@@ -1,5 +1,6 @@
 package com.kreativekoala.audexa.ui.navigation
 
+import androidx.compose.ui.draw.alpha
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -26,6 +27,7 @@ fun LanguageSettingsScreen(
     viewModel: LanguageSettingsViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    val context = androidx.compose.ui.platform.LocalContext.current
 
     Scaffold(
         topBar = {
@@ -74,7 +76,12 @@ fun LanguageSettingsScreen(
                 LanguageRow(
                     language = language,
                     isSelected = language == uiState.selectedLanguage,
-                    onClick = { viewModel.setLanguage(language) }
+                    onClick = {
+                        viewModel.setLanguage(language)
+                        if (!language.podcastAvailable) {
+                            android.widget.Toast.makeText(context, R.string.language_coming_soon_toast, android.widget.Toast.LENGTH_SHORT).show()
+                        }
+                    }
                 )
             }
 
@@ -99,7 +106,8 @@ private fun LanguageRow(
     Surface(
         onClick = onClick,
         shape = RoundedCornerShape(12.dp),
-        color = if (isSelected) AccentOrange.copy(alpha = 0.15f) else CardBackground
+        color = if (isSelected) AccentOrange.copy(alpha = 0.15f) else CardBackground,
+        modifier = Modifier.alpha(if (language.podcastAvailable) 1f else 0.55f)
     ) {
         Row(
             modifier = Modifier
@@ -122,7 +130,7 @@ private fun LanguageRow(
                     fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium
                 )
                 Text(
-                    text = language.nativeName,
+                    text = if (language.podcastAvailable) language.nativeName else "${language.nativeName} · ${stringResource(R.string.language_coming_soon)}",
                     style = MaterialTheme.typography.bodySmall,
                     color = SecondaryText
                 )

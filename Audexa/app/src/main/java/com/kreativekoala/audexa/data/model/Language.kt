@@ -18,6 +18,10 @@ enum class SupportedLanguage(
     ITALIAN("it", "Italian", "Italiano", "🇮🇹"),
     TAGALOG("tl", "Tagalog", "Tagalog", "🇵🇭");
 
+    /** Podcast episodes can be generated in this language (Piper voices exist). Radio is English only. */
+    val podcastAvailable: Boolean
+        get() = this in PODCAST_LANGUAGES
+
     val displayWithFlag: String
         get() = "$flagEmoji $displayName"
 
@@ -45,6 +49,8 @@ enum class SupportedLanguage(
         }
 
     companion object {
+        val PODCAST_LANGUAGES = setOf(ENGLISH, SPANISH, FRENCH, GERMAN, PORTUGUESE, ITALIAN)
+
         fun fromCode(code: String): SupportedLanguage {
             return entries.find { it.code == code } ?: ENGLISH
         }

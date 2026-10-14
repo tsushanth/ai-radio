@@ -121,8 +121,9 @@ class OnboardingViewModel @Inject constructor(
 
     // Language selection
     fun selectLanguage(language: SupportedLanguage) {
-        _uiState.value = _uiState.value.copy(selectedLanguage = language)
         viewModelScope.launch { briefingManager.logEvent(BriefingManager.EVENT_LANGUAGE_PICKED, lang = language.code) }
+        if (!language.podcastAvailable) return // coming soon: the pick is recorded, the selection stays
+        _uiState.value = _uiState.value.copy(selectedLanguage = language)
         loadTopics() // Reload with new language
     }
 

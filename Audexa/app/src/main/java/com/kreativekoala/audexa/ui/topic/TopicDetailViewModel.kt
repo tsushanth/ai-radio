@@ -228,7 +228,8 @@ class TopicDetailViewModel @Inject constructor(
             val current = state.currentEpisode
             if (current == null || current.status != "completed" || current.audioUrl == null) {
                 val fallback = state.episodeHistory.firstOrNull {
-                    it.status == "completed" && it.audioUrl != null
+                    it.status == "completed" && it.audioUrl != null &&
+                        isFreshEnoughFallback(it, state.selectedLanguage)
                 }
                 if (fallback != null) {
                     val ads = if (isSubscriber) emptyList() else state.ads
@@ -532,9 +533,14 @@ class TopicDetailViewModel @Inject constructor(
                 }
                 .onFailure { e ->
                     Log.e(TAG, "Failed to generate episode: ${e.message}")
+                    val msg = e.message.orEmpty()
                     _uiState.value = _uiState.value.copy(
                         isGenerating = false,
-                        error = e.message
+                        error = when {
+                            msg.contains("429") -> appContext.getString(com.kreativekoala.audexa.R.string.error_daily_limit)
+                            msg.contains("400") && language != "en" -> appContext.getString(com.kreativekoala.audexa.R.string.error_language_unavailable)
+                            else -> e.message
+                        }
                     )
                 }
         }
@@ -576,6 +582,10 @@ class TopicDetailViewModel @Inject constructor(
     }
 
     fun setLanguage(language: SupportedLanguage) {
+        if (!language.podcastAvailable) {
+            viewModelScope.launch { briefingManager.logEvent(BriefingManager.EVENT_LANGUAGE_PICKED, lang = language.code) }
+            return // coming soon: the pick is recorded, the selection stays
+        }
         stopAdPlayback()
         viewModelScope.launch {
             preferencesManager.setPreferredLanguage(language.code)
@@ -602,7 +612,8 @@ class TopicDetailViewModel @Inject constructor(
             val current = state.currentEpisode
             if (current == null || current.status != "completed" || current.audioUrl == null) {
                 val fallback = state.episodeHistory.firstOrNull {
-                    it.status == "completed" && it.audioUrl != null
+                    it.status == "completed" && it.audioUrl != null &&
+                        isFreshEnoughFallback(it, state.selectedLanguage)
                 }
                 if (fallback != null) {
                     val ads = if (isSubscriber) emptyList() else state.ads
@@ -619,6 +630,21 @@ class TopicDetailViewModel @Inject constructor(
             }
 
             _uiState.value = _uiState.value.copy(isLoading = false)
+        }
+    }
+
+    /**
+     * Falling back to history avoids a fresh generation when today's episode is missing. That is right for English (a daily
+     * batch makes one), but non-English history can hold months-old episodes from when other languages ran nightly, so only
+     * accept a recent one; otherwise the user gets the Generate button and a new episode is made on demand.
+     */
+    private fun isFreshEnoughFallback(episode: TopicEpisode, language: SupportedLanguage): Boolean {
+        if (language == SupportedLanguage.ENGLISH) return true
+        return try {
+            val date = java.time.LocalDate.parse(episode.date.take(10))
+            !date.isBefore(java.time.LocalDate.now(java.time.ZoneOffset.UTC).minusDays(2))
+        } catch (e: Exception) {
+            false
         }
     }
 

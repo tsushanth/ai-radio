@@ -196,6 +196,16 @@ fun TopicDetailScreen(
 
             Spacer(modifier = Modifier.height(24.dp))
 
+            if (uiState.isGenerating && uiState.selectedLanguage != SupportedLanguage.ENGLISH) {
+                Text(
+                    text = stringResource(R.string.generating_language, uiState.selectedLanguage.displayName),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    textAlign = androidx.compose.ui.text.style.TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp)
+                )
+            }
+
             // Generate/Regenerate Button
             if (uiState.currentEpisode == null && !uiState.isLoading && !uiState.isGenerating) {
                 Button(
@@ -318,7 +328,7 @@ private fun LanguageSelector(
         ) {
             SupportedLanguage.entries.forEach { language ->
                 DropdownMenuItem(
-                    text = { Text(language.displayWithFlag) },
+                    text = { Text(if (language.podcastAvailable) language.displayWithFlag else "${language.displayWithFlag} · ${stringResource(R.string.language_coming_soon)}") },
                     onClick = {
                         onLanguageSelected(language)
                         expanded = false

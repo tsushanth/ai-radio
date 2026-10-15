@@ -47,6 +47,8 @@ import com.kreativekoala.paywallkit.models.PaywallTheme
 import com.kreativekoala.paywallkit.view.PaywallView
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
+import androidx.lifecycle.repeatOnLifecycle
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
@@ -111,6 +113,11 @@ class MainActivity : AppCompatActivity() {
             audioManager.isPlaying.first { it }
             requestNotificationPermissionIfNeeded()
         }
+
+        // Ratings: record the first launch (never asks here). Moments that may lead to a review request:
+        // a finished episode, and 10 minutes of live radio while the app is on screen.
+        com.kreativekoala.ratingkit.RatingKit.trackAppOpen(this)
+        observeRatingMoments()
 
         // Extract promo code from deep link intent
         PromoCodeManager.handleIntent(intent)
@@ -182,6 +189,29 @@ class MainActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         audioManager.release()
+    }
+
+    private fun observeRatingMoments() {
+        lifecycleScope.launch {
+            repeatOnLifecycle(androidx.lifecycle.Lifecycle.State.STARTED) {
+                launch {
+                    audioManager.episodeCompleted.collect {
+                        com.kreativekoala.ratingkit.RatingKit.trackAction(this@MainActivity)
+                    }
+                }
+                launch {
+                    kotlinx.coroutines.flow.combine(audioManager.isPlaying, audioManager.currentEpisodeId) { playing, id ->
+                        playing && id?.startsWith("audexa-radio-") == true
+                    }.collectLatest { onRadio ->
+                        if (onRadio) {
+                            // Cancelled if playback stops, the stream changes, or the app leaves the screen.
+                            delay(10 * 60 * 1000L)
+                            com.kreativekoala.ratingkit.RatingKit.trackAction(this@MainActivity)
+                        }
+                    }
+                }
+            }
+        }
     }
 
     private fun restoreNotificationsIfPermitted() {

@@ -178,6 +178,7 @@ dependencies {
 
     // PaywallKit
     implementation(project(":paywallkit"))
+    implementation(project(":ratingkit"))
     implementation(project(":crosspromokit"))
 
     // Testing

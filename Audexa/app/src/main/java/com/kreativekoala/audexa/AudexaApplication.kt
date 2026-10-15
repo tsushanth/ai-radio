@@ -21,6 +21,8 @@ class AudexaApplication : Application() {
         PromoCodeManager.init(this)
         configureRevenueCat()
         createNotificationChannels()
+        // Ratings: asked rarely, only after a finished episode or 10 minutes of radio, never at launch (see RatingKit v2).
+        com.kreativekoala.ratingkit.RatingKit.init(this, appId = "audexa")
     }
 
     private fun configureRevenueCat() {

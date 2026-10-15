@@ -533,6 +533,7 @@ class TopicDetailViewModel @Inject constructor(
                 }
                 .onFailure { e ->
                     Log.e(TAG, "Failed to generate episode: ${e.message}")
+                    com.kreativekoala.ratingkit.RatingKit.reportError()
                     val msg = e.message.orEmpty()
                     _uiState.value = _uiState.value.copy(
                         isGenerating = false,

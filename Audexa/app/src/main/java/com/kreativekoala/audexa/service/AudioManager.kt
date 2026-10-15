@@ -16,7 +16,10 @@ import com.google.common.util.concurrent.MoreExecutors
 import com.kreativekoala.audexa.data.model.Episode
 import com.kreativekoala.audexa.data.model.TopicEpisode
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
@@ -38,6 +41,10 @@ class AudioManager @Inject constructor(
     private var pendingPlay: (() -> Unit)? = null
 
     // Playback state
+    // Emits when a podcast episode plays to its end (not live radio): one of the app's rating "moments".
+    private val _episodeCompleted = MutableSharedFlow<Unit>(extraBufferCapacity = 1)
+    val episodeCompleted: SharedFlow<Unit> = _episodeCompleted.asSharedFlow()
+
     private val _isPlaying = MutableStateFlow(false)
     val isPlaying: StateFlow<Boolean> = _isPlaying.asStateFlow()
 
@@ -78,6 +85,10 @@ class AudioManager @Inject constructor(
     var onPositionSave: ((episodeId: String, positionMs: Long) -> Unit)? = null
 
     private val playerListener = object : Player.Listener {
+        override fun onPlayerError(error: androidx.media3.common.PlaybackException) {
+            com.kreativekoala.ratingkit.RatingKit.reportError() // stay quiet for a while after a playback failure
+        }
+
         override fun onIsPlayingChanged(isPlaying: Boolean) {
             _isPlaying.value = isPlaying
         }
@@ -92,6 +103,7 @@ class AudioManager @Inject constructor(
                     }
                 }
                 Player.STATE_ENDED -> {
+                    if (_currentEpisodeId.value?.startsWith("audexa-radio-") != true) _episodeCompleted.tryEmit(Unit)
                     _isPlaying.value = false
                     _currentPosition.value = 0
                     // Auto-play next from queue

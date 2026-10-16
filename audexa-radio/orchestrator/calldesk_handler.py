@@ -68,6 +68,9 @@ def topics_from_transcript(transcript) -> list[str]:
         text = text.strip()
         if not text or (len(text.split()) <= 6 and _FILLER.match(text)):
             continue
+        # The engine injects "[Call connected - begin the flow.]" and similar as user-role markers.
+        if text.startswith("[") and text.endswith("]"):
+            continue
         topic = extract_topic_from_user_messages([text])
         if topic and topic not in topics:
             topics.append(topic)

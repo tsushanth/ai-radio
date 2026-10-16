@@ -41,6 +41,15 @@ class TopicsTests(unittest.TestCase):
         self.assertEqual(calldesk_handler.topics_from_transcript(t), ["volcanoes"])
         self.assertEqual(calldesk_handler.topics_from_transcript(_t(("user", "yes"), ("user", "okay"))), [])
 
+    def test_engine_system_markers_are_not_topics(self):
+        t = _t(
+            ("user", "[Call connected \u2014 begin the flow.]"),
+            ("assistant", "Welcome to Audexa Radio!"),
+            ("user", "Tell me about the history of hot air balloons."),
+            ("user", "No. Thanks. That is all."),
+        )
+        self.assertEqual(calldesk_handler.topics_from_transcript(t), ["the history of hot air balloons"])
+
     def test_multiple_topics_capped(self):
         t = _t(*[("user", f"tell me about subject number {n}") for n in range(6)])
         self.assertEqual(len(calldesk_handler.topics_from_transcript(t)), calldesk_handler.MAX_TOPICS_PER_CALL)

@@ -35,6 +35,8 @@ import listener_sampler
 from queue_manager import QueueManager
 from retell_handler import router as retell_router
 from retell_handler import set_queue_manager
+from calldesk_handler import router as calldesk_router
+from calldesk_handler import set_queue_manager as set_calldesk_queue_manager
 from scheduler import TopicScheduler
 from script_generator import RadioScriptGenerator
 from segment_assembler import assemble_segment
@@ -433,6 +435,7 @@ async def lifespan(app: FastAPI):
     lang_schedulers = {lang: TopicScheduler() for lang in RADIO_LANGUAGES}
 
     set_queue_manager(queue)
+    set_calldesk_queue_manager(queue)
 
     # Wire the global asyncio exception handler BEFORE creating tasks so any
     # silent task death surfaces in logs + alerts (this is what would have
@@ -504,6 +507,7 @@ app.add_middleware(
 )
 
 app.include_router(retell_router)
+app.include_router(calldesk_router)
 
 
 @app.get("/api/health")

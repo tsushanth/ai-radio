@@ -141,6 +141,11 @@ def extract_topic_from_transcript(transcript: str) -> str | None:
         if line.startswith("User:"):
             user_messages.append(line[5:].strip())
 
+    return extract_topic_from_user_messages(user_messages)
+
+
+def extract_topic_from_user_messages(user_messages: list[str]) -> str | None:
+    """Pick the topic out of what the caller said (shared by the Retell and Calldesk handlers)."""
     if not user_messages:
         return None
 
@@ -160,6 +165,8 @@ def extract_topic_from_transcript(transcript: str) -> str | None:
             match = re.search(pattern, msg_lower)
             if match:
                 topic = match.group(1).strip().rstrip("?.!,")
+                # "tell me about X" reaches the loose "tell me" pattern with "about X"
+                topic = re.sub(r"^(?:about|on|regarding)\s+", "", topic)
                 if len(topic) > 3:
                     return topic
 

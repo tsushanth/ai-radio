@@ -10,6 +10,9 @@ import { topicsService } from '../supabase/topics.service';
 import { languagesForTopic } from './batch-languages';
 import { topicPodcastGenerator } from '../content/topic.generator';
 import type { TopicDefinition } from '../../types/topics';
+import { reportFailure } from '../../lib/failureReporter';
+import { summarizeBatch, runStatusFor, reportBatchHealth } from './batch-health';
+import { reapStuckRows } from './stuck-reaper';
 
 interface TopicResult {
   topicId: string;
@@ -58,6 +61,9 @@ export class TopicBatchScheduler {
     const results: TopicResult[] = [];
 
     console.log(`[BatchScheduler] Starting batch ${batchId}: ${topics.length} topics`);
+
+    // Clean up rows that an earlier crash/deploy left 'running' / 'generating' (never throws; capped per pass)
+    await reapStuckRows(this.supabase, reportFailure);
 
     // Save initial batch record
     await this.saveBatchRun({
@@ -108,9 +114,12 @@ export class TopicBatchScheduler {
     const finalFailed = results.filter(r => !r.success && !r.skipped).length;
     const skipped = results.filter(r => r.skipped).length;
 
+    // 'failed' only when more than half of the attempted topics failed (DB check allows running/completed/failed only)
+    const health = summarizeBatch(results);
+
     const batchResult: BatchResult = {
       batchId,
-      status: finalFailed === results.length ? 'failed' : 'completed',
+      status: runStatusFor(health),
       startedAt,
       completedAt,
       totalTopics: topics.length,
@@ -134,6 +143,9 @@ export class TopicBatchScheduler {
       results: JSON.stringify(results),
       triggerSource,
     });
+
+    // Failure signal: one aggregate alert above 20% failed, plus one per failure class (fire-and-forget)
+    reportBatchHealth(health, triggerSource, reportFailure);
 
     const durationMs = completedAt.getTime() - startedAt.getTime();
     console.log(

@@ -11,6 +11,26 @@ import type {
   TopicDefinition,
 } from '../../types/topics';
 
+/** Reddit asks for a descriptive, unique User-Agent. Use the configured REDDIT_USER_AGENT secret, else the old literal. */
+export function redditUserAgent(): string {
+  return process.env.REDDIT_USER_AGENT?.trim() || 'BriefCast/1.0 (by /u/BriefCastApp)';
+}
+
+/**
+ * Kill switch for the Google News fallback (third-party source). On by default; set GOOGLE_NEWS_FALLBACK=0 (or "false"/"off") to disable.
+ * Read on every call so it can be flipped with `fly secrets set` without a code change.
+ */
+export function googleNewsFallbackEnabled(): boolean {
+  const v = (process.env.GOOGLE_NEWS_FALLBACK ?? '').trim().toLowerCase();
+  return !['0', 'false', 'off', 'no'].includes(v);
+}
+
+/** Google News RSS search URL for a topic's own name, restricted to the last two days. Public, no key, not blocked on cloud IPs. */
+export function googleNewsSearchUrl(topicName: string): string {
+  const q = encodeURIComponent(`${topicName.trim()} when:2d`);
+  return `https://news.google.com/rss/search?q=${q}&hl=en-US&gl=US&ceid=US:en`;
+}
+
 const rssParser = new Parser({
   timeout: 10000,
   headers: {
@@ -104,7 +124,21 @@ export class ContentAggregatorService {
       }
     }
 
-    // If all configured sources failed or returned nothing, fall back to HackerNews keyword search
+    // Configured sources gave nothing (e.g. a single-subreddit topic while Reddit blocks us): search news for the topic name.
+    // This runs before the HackerNews keyword fallback, which only keeps titles containing the topic's words and is tech-only.
+    if (stories.length === 0 && googleNewsFallbackEnabled()) {
+      console.log(`  ⚠️ No stories from configured sources, trying Google News search for "${topic.name}"`);
+      try {
+        const newsStories = await this.fetchGoogleNews(topic.name);
+        stories.push(...newsStories);
+        if (newsStories.length > 0) successfulSources++;
+        console.log(`  ✅ Google News fallback: ${newsStories.length} stories`);
+      } catch (error) {
+        console.error(`  ❌ Google News fallback failed:`, error instanceof Error ? error.message : error);
+      }
+    }
+
+    // Still nothing: fall back to HackerNews keyword search
     if (stories.length === 0) {
       console.log(`  ⚠️ No stories from configured sources, falling back to HackerNews for "${topic.name}"`);
       try {
@@ -184,6 +218,26 @@ export class ContentAggregatorService {
   }
 
   /**
+   * Fallback: latest news items for a topic name from the Google News RSS search feed.
+   */
+  async fetchGoogleNews(topicName: string, maxItems = 12): Promise<AggregatedStory[]> {
+    if (!topicName.trim()) return [];
+    const res = await fetch(googleNewsSearchUrl(topicName), {
+      headers: { 'User-Agent': 'Mozilla/5.0 (compatible; BriefCast/1.0)' },
+      signal: AbortSignal.timeout(10000),
+    });
+    if (!res.ok) throw new Error(`Google News error: ${res.status}`);
+    const feed = await rssParser.parseString(await res.text());
+    return feed.items.slice(0, maxItems).filter(i => i.title).map(item => ({
+      title: item.title as string,
+      source: 'Google News (fallback)',
+      sourceType: 'rss' as const,
+      url: item.link,
+      publishedAt: item.pubDate ? new Date(item.pubDate) : undefined,
+    }));
+  }
+
+  /**
    * Fetch from HackerNews
    */
   private async fetchHackerNews(source: ContentSource): Promise<AggregatedStory[]> {
@@ -249,7 +303,7 @@ export class ContentAggregatorService {
       headers: {
         'Authorization': `Basic ${auth}`,
         'Content-Type': 'application/x-www-form-urlencoded',
-        'User-Agent': 'BriefCast/1.0 (by /u/BriefCastApp)',
+        'User-Agent': redditUserAgent(),
       },
       body: 'grant_type=client_credentials',
     });
@@ -284,12 +338,18 @@ export class ContentAggregatorService {
     // Use OAuth API endpoint
     const url = `${this.REDDIT_OAUTH_BASE}/r/${source.subreddit}/hot?limit=${maxItems * 2}`;
 
-    const res = await fetch(url, {
+    const doFetch = () => fetch(url, {
       headers: {
         'Authorization': `Bearer ${accessToken}`,
-        'User-Agent': 'BriefCast/1.0 (by /u/BriefCastApp)',
+        'User-Agent': redditUserAgent(),
       },
     });
+    let res = await doFetch();
+    // One retry for rate limits and transient server errors (not 403: that is a block, retrying will not help)
+    if (res.status === 429 || res.status >= 500) {
+      await new Promise(r => setTimeout(r, Number(process.env.REDDIT_RETRY_DELAY_MS ?? 1500)));
+      res = await doFetch();
+    }
 
     if (!res.ok) {
       throw new Error(`Reddit API error: ${res.status}`);

@@ -6,6 +6,7 @@
 
 import { Router, Request, Response } from 'express';
 import { env } from '../config/environment';
+import { reportFailure } from '../lib/failureReporter';
 import { topicBatchScheduler } from '../services/scheduler/topic-batch.scheduler';
 
 const router = Router();
@@ -46,6 +47,7 @@ router.post('/generate-topics', async (req: Request, res: Response) => {
     })
     .catch(error => {
       console.error(`[Batch] ${batchId} failed:`, error);
+      reportFailure('topic_batch_run_error', new Error('Topic batch run threw before finishing'), { source: String(triggerSource).slice(0, 40) });
     });
 
   res.status(202).json({

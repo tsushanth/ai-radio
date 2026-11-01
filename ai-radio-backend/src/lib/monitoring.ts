@@ -55,7 +55,8 @@ export interface SweepInput {
   nowMs: number;
   lastBatchStartedAt: string | null; // batch_generation_runs.started_at (max)
   lastCompletedGeneratedAt: string | null; // topic_episodes.generated_at (max, status completed)
-  activeTopics: number;
+  activeTopics: number; // topics the batch actually generates (skipped-by-design topics are NOT included)
+  skippedByDesign?: number; // topics the batch skips on purpose (e.g. non-English while Piper is English-only); context only
   topicsWithFreshEpisode: number; // distinct topic_id with a completed episode in the last 48 h
 }
 
@@ -95,8 +96,8 @@ export function evaluateInvariants(i: SweepInput): SweepIssue[] {
     if (stale / i.activeTopics >= STALE_TOPIC_SHARE) {
       out.push({
         flow: 'invariant_topics_without_fresh_episode',
-        message: `At least ${Math.round(STALE_TOPIC_SHARE * 100)}% of active topics have no completed episode in the last 48h`,
-        context: { stale: String(stale), active: String(i.activeTopics) },
+        message: `At least ${Math.round(STALE_TOPIC_SHARE * 100)}% of generated topics have no completed episode in the last 48h`,
+        context: { stale: String(stale), active: String(i.activeTopics), skipped_by_design: String(i.skippedByDesign ?? 0) },
       });
     }
   }

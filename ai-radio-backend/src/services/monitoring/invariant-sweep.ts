@@ -5,16 +5,19 @@
  */
 import { createClient, type SupabaseClient } from '@supabase/supabase-js';
 import { env } from '../../config/environment';
-import { getActiveTopics } from '../../config/topics';
+import { topicsService } from '../supabase/topics.service';
 import { failureReporterEnabled, reportFailure, reportUsage } from '../../lib/failureReporter';
 import { evaluateInvariants } from '../../lib/monitoring';
 import { loadSweepInput } from '../../lib/sweep-input';
 
 const THIRTY_MIN = 30 * 60 * 1000;
 
-export async function runInvariantSweep(db: SupabaseClient, activeTopicIds: string[]): Promise<void> {
+export async function runInvariantSweep(db: SupabaseClient): Promise<void> {
   try {
-    const input = await loadSweepInput(db, activeTopicIds);
+    // The same topic list and skip rule as the daily batch (see loadSweepInput), so a topic the batch skips on purpose is never "stale".
+    const topics = await topicsService.getTopics();
+    const input = await loadSweepInput(db, topics, process.env.TTS_BACKEND);
+    console.log(`[InvariantSweep] generated topics: ${input.activeTopics}, with fresh episode: ${input.topicsWithFreshEpisode}, skipped by design: ${input.skippedByDesign ?? 0}`);
     reportUsage({
       'api.topics_active': input.activeTopics,
       'api.topics_fresh_48h': input.topicsWithFreshEpisode,
@@ -28,7 +31,7 @@ export async function runInvariantSweep(db: SupabaseClient, activeTopicIds: stri
 export function startInvariantSweep(): void {
   if (!failureReporterEnabled() || !env.SUPABASE_URL || !env.SUPABASE_SERVICE_KEY) return;
   const db = createClient(env.SUPABASE_URL, env.SUPABASE_SERVICE_KEY);
-  const run = () => void runInvariantSweep(db, getActiveTopics().map(t => t.id));
+  const run = () => void runInvariantSweep(db);
   setTimeout(run, 3 * 60 * 1000).unref();
   setInterval(run, THIRTY_MIN).unref();
 }

@@ -24,6 +24,7 @@ test('sends nothing and never throws when the key is unset; posts the documented
     assert.equal(calls.length, 0);
 
     process.env.FAILURE_REPORTER_KEY = 'test-key';
+    process.env.FAILURE_REPORTER_FORCE = '1'; // node --test would otherwise keep the reporter off
     reportFailure('flow-x', new Error('stable message'), { count: '3' });
     await new Promise(r => setTimeout(r, 20));
     assert.equal(calls.length, 1);

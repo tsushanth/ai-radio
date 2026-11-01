@@ -1,7 +1,8 @@
 /**
  * Sends backend failures to the unified app-failure-reporter Worker (dedupes and emails the owner).
  * Fire-and-forget: never throws, never blocks. Silent unless FAILURE_REPORTER_KEY is set (Fly secret), and always silent when
- * FAILURE_REPORTER_DISABLED=1 or NODE_ENV is test/development.
+ * FAILURE_REPORTER_DISABLED=1, NODE_ENV is test/development, or a test runner is detected (node --test sets NODE_TEST_CONTEXT;
+ * FAILURE_REPORTER_FORCE=1 overrides that, for the reporter's own tests).
  * Never pass user content (transcripts, topic text, emails) as message or context: counts, reason codes and sources only.
  * Template: ~/Documents/GitHub/app-failure-reporter/node/failureReporter.ts.tmpl (env is read per call so tests can toggle it).
  */
@@ -13,7 +14,8 @@ type Kind = 'crash' | 'failure' | 'backend_error';
 export function failureReporterEnabled(env: NodeJS.ProcessEnv = process.env): boolean {
   if (!env.FAILURE_REPORTER_KEY) return false;
   if (env.FAILURE_REPORTER_DISABLED === '1') return false;
-  return env.NODE_ENV !== 'test' && env.NODE_ENV !== 'development';
+  if (env.NODE_ENV === 'test' || env.NODE_ENV === 'development') return false;
+  return !(env.NODE_TEST_CONTEXT && env.FAILURE_REPORTER_FORCE !== '1');
 }
 
 async function post(kind: Kind, flow: string, err: unknown, context: Record<string, string>, timeoutMs: number): Promise<void> {

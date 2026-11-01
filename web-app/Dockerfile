@@ -14,6 +14,10 @@ WORKDIR /app
 ARG NEXT_PUBLIC_API_URL=https://ai-radio-backend.fly.dev/api
 ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
 
+# Public failure-reporter ingest key (an identifier, not a secret); baked in at build time via fly.toml [build.args]
+ARG NEXT_PUBLIC_FAILURE_REPORTER_KEY
+ENV NEXT_PUBLIC_FAILURE_REPORTER_KEY=$NEXT_PUBLIC_FAILURE_REPORTER_KEY
+
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 

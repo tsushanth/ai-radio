@@ -4,6 +4,9 @@ primary_region = "iad"
 [build]
   dockerfile = "Dockerfile"
 
+  [build.args]
+    NEXT_PUBLIC_FAILURE_REPORTER_KEY = "0ddf06363a221d55732df23e7dab05af"
+
 [http_service]
   internal_port = 8080
   force_https = true

@@ -3,10 +3,16 @@ Retell Webhook Handler — receives call events from Retell AI,
 extracts and validates topic requests from transcripts, pushes to request queue.
 """
 
+import hashlib
+import hmac
+import json
 import logging
+import os
 import re
+import time
 
 from fastapi import APIRouter, Request
+from fastapi.responses import JSONResponse
 
 from queue_manager import QueueManager
 
@@ -21,6 +27,48 @@ _queue_manager: QueueManager | None = None
 def set_queue_manager(qm: QueueManager):
     global _queue_manager
     _queue_manager = qm
+
+
+# --- webhook authentication -------------------------------------------------------------------
+# Retell signs every webhook: header `X-Retell-Signature: v=<unix ms>,d=<hex>`, where d is
+# HMAC-SHA256(key = a Retell API key that carries the "webhook" badge, data = raw body + timestamp).
+# The timestamp must be within 5 minutes (replay). Docs: docs.retellai.com/features/secure-webhook.
+SIGNATURE_TOLERANCE_MS = 5 * 60 * 1000
+_SIG_RE = re.compile(r"^v=(\d{10,16}),d=([0-9a-fA-F]{64})$")
+
+# Phase 1 (observe only): counts of what the verifier saw, readable from logs / a debugger.
+auth_counters = {"verified": 0, "failed": 0}
+
+
+def verify_retell_signature(raw_body: bytes, api_key: str, header: str, now_ms: int | None = None) -> bool:
+    if not api_key or not header:
+        return False
+    m = _SIG_RE.match(header.strip())
+    if not m:
+        return False
+    ts = int(m.group(1))
+    now = int(time.time() * 1000) if now_ms is None else now_ms
+    if abs(now - ts) > SIGNATURE_TOLERANCE_MS:
+        return False
+    expected = hmac.new(api_key.encode(), raw_body + m.group(1).encode(), hashlib.sha256).hexdigest()
+    return hmac.compare_digest(expected, m.group(2).lower())
+
+
+def check_retell_auth(request: Request, raw_body: bytes) -> bool:
+    """Phase 1: verify and record, but never reject. Logs header NAMES only (no values, no body)."""
+    api_key = os.getenv("RETELL_API_KEY", "")
+    header = request.headers.get("x-retell-signature", "")
+    if verify_retell_signature(raw_body, api_key, header):
+        auth_counters["verified"] += 1
+        logger.info("Retell webhook signature verified (verified=%d failed=%d)", auth_counters["verified"], auth_counters["failed"])
+        return True
+    auth_counters["failed"] += 1
+    logger.warning(
+        "Retell webhook NOT verified, accepted anyway (phase 1): key_configured=%s signature_header=%s headers_present=%s verified=%d failed=%d",
+        bool(api_key), "present" if header else "absent", sorted(request.headers.keys()),
+        auth_counters["verified"], auth_counters["failed"],
+    )
+    return False
 
 
 # Topics that are clearly off-limits for a public radio service
@@ -74,12 +122,17 @@ def validate_topic_request(topic: str) -> tuple[bool, str]:
 async def retell_webhook(request: Request):
     """Handle Retell webhook events."""
     if _queue_manager is None:
-        return {"error": "Queue manager not initialized"}, 500
+        return JSONResponse({"error": "Queue manager not initialized"}, status_code=500)
+
+    raw = await request.body()
+    check_retell_auth(request, raw)
 
     try:
-        event = await request.json()
+        event = json.loads(raw)
+        if not isinstance(event, dict):
+            raise ValueError("not an object")
     except Exception:
-        return {"error": "Invalid JSON"}, 400
+        return JSONResponse({"error": "Invalid JSON"}, status_code=400)
 
     event_type = event.get("event", "")
     call_data = event.get("call", {})
@@ -115,7 +168,7 @@ async def retell_webhook(request: Request):
 async def get_request_queue():
     """Get current request queue status (for Retell agent to estimate wait)."""
     if _queue_manager is None:
-        return {"error": "Not initialized"}, 500
+        return JSONResponse({"error": "Not initialized"}, status_code=500)
 
     return {
         "queue_depth": _queue_manager.get_request_queue_depth(),

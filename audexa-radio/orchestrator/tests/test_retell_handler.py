@@ -39,8 +39,8 @@ class VerifyTests(unittest.TestCase):
         self.assertFalse(retell_handler.verify_retell_signature(body, KEY, _sign(body, ts_ms=old)))
 
 
-class WebhookPhase1Tests(unittest.TestCase):
-    """Phase 1 observes only: an unsigned or badly signed request is still accepted, but counted and logged."""
+class WebhookPhase2Tests(unittest.TestCase):
+    """Fail closed: nothing is queued unless Retell's signature verifies."""
 
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()
@@ -69,29 +69,35 @@ class WebhookPhase1Tests(unittest.TestCase):
         return {"event": "call_ended", "call": {"call_id": "c1", "from_number": "+15550001111",
                 "transcript": "Agent: hi\nUser: tell me about the history of jazz\nAgent: ok"}}
 
-    def test_signed_request_is_counted_verified(self):
+    def test_signed_request_is_queued(self):
         r = self._post(self._ended(), "valid")
         self.assertEqual(r.status_code, 200)
         self.assertEqual(retell_handler.auth_counters, {"verified": 1, "failed": 0})
         self.assertEqual(self.qm.get_request_queue_depth(), 1)
 
-    def test_unsigned_request_still_accepted_but_counted_and_logged_without_content(self):
+    def test_unsigned_request_is_401_and_nothing_queued_and_logs_have_no_content(self):
         with self.assertLogs("retell_handler", level="WARNING") as logs:
             r = self._post(self._ended())
-        self.assertEqual(r.status_code, 200)
-        self.assertEqual(retell_handler.auth_counters, {"verified": 0, "failed": 1})
+        self.assertEqual(r.status_code, 401)
+        self.assertEqual(self.qm.get_request_queue_depth(), 0)
         text = "\n".join(logs.output)
-        self.assertIn("signature_header=absent", text)
         self.assertNotIn("jazz", text)
         self.assertNotIn("5550001111", text)
 
-    def test_bad_signature_counted_failed(self):
-        self._post(self._ended(), "v=1700000000000,d=" + "0" * 64)
-        self.assertEqual(retell_handler.auth_counters["failed"], 1)
+    def test_bad_stale_or_wrong_key_signature_is_401(self):
+        self.assertEqual(self._post(self._ended(), "v=1700000000000,d=" + "0" * 64).status_code, 401)
+        body = json.dumps(self._ended()).encode()
+        stale = _sign(body, ts_ms=int(time.time() * 1000) - 6 * 60 * 1000)
+        r = self.client.post("/api/webhooks/retell", content=body, headers={"x-retell-signature": stale})
+        self.assertEqual(r.status_code, 401)
+        r = self.client.post("/api/webhooks/retell", content=body, headers={"x-retell-signature": _sign(body, "other")})
+        self.assertEqual(r.status_code, 401)
+        self.assertEqual(self.qm.get_request_queue_depth(), 0)
 
-    def test_invalid_json_is_400(self):
-        r = self.client.post("/api/webhooks/retell", content=b"not json", headers={"content-type": "application/json"})
-        self.assertEqual(r.status_code, 400)
+    def test_missing_key_is_503(self):
+        os.environ.pop("RETELL_API_KEY")
+        self.assertEqual(self._post(self._ended(), "valid").status_code, 503)
+        self.assertEqual(self.qm.get_request_queue_depth(), 0)
 
 
 if __name__ == "__main__":

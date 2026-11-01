@@ -7,6 +7,9 @@
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const { createLlmUsage } = require('./llmUsage') as typeof import('./llmUsage');
 import { AsyncLocalStorage } from 'node:async_hooks';
+import { reportLlmError } from './monitoring';
+
+const REPORTING = Symbol('failureReporting');
 
 export const llm = createLlmUsage({
   app: 'audexa',
@@ -16,6 +19,15 @@ export const llm = createLlmUsage({
 /** Wraps a client's messages.create / messages.stream. Idempotent. Call it on every `new Anthropic(...)`. */
 export function instrumentAnthropic<T>(client: T): T {
   llm.instrument(client);
+  // Provider-wide failures (key rejected, credit exhausted, quota, outage) raise one alert per class via the failure reporter.
+  const messages = (client as unknown as { messages?: Record<string | symbol, unknown> }).messages;
+  if (messages && typeof messages.create === 'function' && !messages[REPORTING]) {
+    const inner = messages.create as (...a: unknown[]) => Promise<unknown>;
+    messages.create = async (...args: unknown[]) => {
+      try { return await inner.apply(messages, args); } catch (err) { reportLlmError(err); throw err; }
+    };
+    messages[REPORTING] = true;
+  }
   return client;
 }
 

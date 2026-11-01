@@ -17,6 +17,10 @@ class AudexaApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
+        com.kreativekoala.audexa.monitoring.FailureReporter.init(
+            this, "audexa", FAILURE_REPORTER_KEY,
+            runCatching { packageManager.getPackageInfo(packageName, 0).versionName }.getOrNull() ?: "unknown"
+        )
         ExperimentManager.init(this)
         PromoCodeManager.init(this)
         configureRevenueCat()
@@ -58,6 +62,8 @@ class AudexaApplication : Application() {
     }
 
     companion object {
+        // Public ingest key from the app-failure-reporter Worker (APP_KEYS["audexa"]). Empty = reporter inert.
+        private const val FAILURE_REPORTER_KEY = "0ddf06363a221d55732df23e7dab05af"
         const val CHANNEL_ID_DAILY_BRIEF = "daily_brief_channel"
         // TODO: Replace with your Google public API key from RevenueCat dashboard
         // Go to RevenueCat > Audexa project > API Keys > Google public key (goog_xxx)

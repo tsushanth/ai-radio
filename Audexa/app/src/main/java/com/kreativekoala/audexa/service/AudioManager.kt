@@ -87,6 +87,11 @@ class AudioManager @Inject constructor(
     private val playerListener = object : Player.Listener {
         override fun onPlayerError(error: androidx.media3.common.PlaybackException) {
             com.kreativekoala.ratingkit.RatingKit.reportError() // stay quiet for a while after a playback failure
+            // Stable message per Media3 error code (e.g. ERROR_CODE_IO_BAD_HTTP_STATUS = a segment 404 / stream down); no urls, no titles.
+            com.kreativekoala.audexa.monitoring.FailureReporter.failure(
+                "Playback error", message = "Playback failed: ${error.errorCodeName}",
+                context = mapOf("code" to error.errorCodeName)
+            )
         }
 
         override fun onIsPlayingChanged(isPlaying: Boolean) {

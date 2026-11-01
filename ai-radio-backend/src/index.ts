@@ -9,6 +9,9 @@ import helmet from 'helmet';
 import { env } from './config/environment';
 import { flushLlmUsage } from './lib/llm';
 import { dailyBriefScheduler } from './services/scheduler/daily-brief.scheduler';
+import { reportCrash, reportFailure } from './lib/failureReporter';
+import { reportServerErrors } from './lib/monitoring';
+import { startInvariantSweep } from './services/monitoring/invariant-sweep';
 
 // Import middleware
 import { errorHandler, notFoundHandler } from './middleware/errorHandler';
@@ -33,6 +36,7 @@ app.use(cors({
 }));
 
 // Body parsing middleware
+app.use(reportServerErrors);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -74,6 +78,9 @@ app.listen(PORT, HOST, () => {
   console.log(`📡 Environment: ${env.NODE_ENV}`);
   console.log(`📋 API available at: http://${HOST}:${PORT}/api`);
 
+  // Dead-man checks run even when the in-process scheduler is disabled (that is exactly when they matter)
+  startInvariantSweep();
+
   // Start the daily brief scheduler
   if (env.ENABLE_SCHEDULER) {
     dailyBriefScheduler.start();
@@ -92,11 +99,12 @@ for (const signal of ['SIGTERM', 'SIGINT'] as const) {
 // Handle uncaught exceptions
 process.on('uncaughtException', (error) => {
   console.error('Uncaught Exception:', error);
-  process.exit(1);
+  void reportCrash('uncaughtException', error).finally(() => process.exit(1));
 });
 
 process.on('unhandledRejection', (reason, promise) => {
   console.error('Unhandled Rejection at:', promise, 'reason:', reason);
+  reportFailure('unhandled_rejection', new Error('Unhandled promise rejection'));
 });
 
 export default app;

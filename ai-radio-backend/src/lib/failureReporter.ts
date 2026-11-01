@@ -37,6 +37,30 @@ async function post(kind: Kind, flow: string, err: unknown, context: Record<stri
   } catch { /* reporting must never cause a failure of its own */ }
 }
 
+/** A handled server error (5xx). Route pattern only: never log concrete urls or query strings, they can carry tokens or ids. */
+export function reportBackendError(req: { method: string; path?: string }, err: unknown, statusCode: number): void {
+  if (statusCode < 500) return;
+  void post('backend_error', `${req.method} ${req.path ?? ''}`, err, { status: String(statusCode) }, 5000);
+}
+
+/** Process is about to die: await this before process.exit so the email actually goes out. */
+export function reportCrash(flow: string, err: unknown): Promise<void> {
+  return post('crash', flow, err, {}, 2500);
+}
+
+/** Daily counters for the reporter dashboard (idempotent per app/day/metric). Fire-and-forget. */
+export function reportUsage(metrics: Record<string, number>): void {
+  if (!failureReporterEnabled()) return;
+  const day = new Date().toISOString().slice(0, 10);
+  const url = (process.env.FAILURE_REPORTER_URL || DEFAULT_ENDPOINT).replace(/\/report$/, '/usage');
+  void fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'X-Report-Key': process.env.FAILURE_REPORTER_KEY as string },
+    body: JSON.stringify(Object.entries(metrics).map(([metric, value]) => ({ metric, value, day }))),
+    signal: AbortSignal.timeout(5000),
+  }).catch(() => {});
+}
+
 /** A background job or flow failed (worker, queue, cron). */
 export function reportFailure(flow: string, err: unknown, context: Record<string, string> = {}): void {
   void post('failure', flow, err, context, 5000);

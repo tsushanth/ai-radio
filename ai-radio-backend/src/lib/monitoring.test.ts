@@ -29,7 +29,7 @@ test('invariants are quiet on a healthy day', () => {
 test('flags a batch trigger that did not fire, no completed episode, and stale topics', () => {
   const dead = evaluateInvariants({ ...ok, lastBatchStartedAt: '2026-10-28T05:00:00Z', lastCompletedGeneratedAt: null, topicsWithFreshEpisode: 30 });
   assert.deepEqual(dead.map(i => i.flow), ['invariant_batch_not_run', 'invariant_no_completed_episode', 'invariant_topics_without_fresh_episode']);
-  assert.deepEqual(dead[2].context, { stale: '20', active: '50' });
+  assert.deepEqual(dead[2].context, { stale: '20', active: '50', skipped_by_design: '0' });
   assert.deepEqual(evaluateInvariants({ ...ok, lastBatchStartedAt: null }).map(i => i.flow), ['invariant_batch_not_run']);
   assert.deepEqual(evaluateInvariants({ ...ok, topicsWithFreshEpisode: 41 }).map(i => i.flow), []); // 18% stale < 20%
 });
@@ -40,11 +40,12 @@ test('loadSweepInput reads latest batch/episode and only counts active topics as
     topic_episodes: [{ generated_at: '2026-10-30T06:10:00Z', topic_id: 'a' }, { topic_id: 'a' }, { topic_id: 'retired' }],
   };
   const db: any = { from: (t: string) => { const q: any = { select: () => q, eq: () => q, gte: () => q, order: () => q, limit: () => Promise.resolve({ data: rows[t], error: null }) }; return q; } };
-  const input = await loadSweepInput(db, ['a', 'b'], NOW);
+  const input = await loadSweepInput(db, [{ id: 'a' }, { id: 'b' }, { id: 'c', languages: ['es'] }], 'piper', NOW);
   assert.equal(input.activeTopics, 2);
+  assert.equal(input.skippedByDesign, 1);
   assert.equal(input.topicsWithFreshEpisode, 1);
   assert.equal(input.lastBatchStartedAt, '2026-10-30T05:00:10Z');
-  await assert.rejects(loadSweepInput({ from: () => { const q: any = { select: () => q, eq: () => q, gte: () => q, order: () => q, limit: () => Promise.resolve({ data: null, error: { message: 'x' } }) }; return q; } } as any, ['a']));
+  await assert.rejects(loadSweepInput({ from: () => { const q: any = { select: () => q, eq: () => q, gte: () => q, order: () => q, limit: () => Promise.resolve({ data: null, error: { message: 'x' } }) }; return q; } } as any, [{ id: 'a' }], undefined));
 });
 
 test('5xx middleware reports once per response by route pattern, not by url; 4xx is ignored', async () => {

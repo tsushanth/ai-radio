@@ -7,6 +7,15 @@ const RSS = `<?xml version="1.0"?><rss version="2.0"><channel><title>t</title>
 <item><title>Soil tips</title><link>https://example.com/b</link><pubDate>Thu, 29 Oct 2026 09:00:00 GMT</pubDate></item>
 </channel></rss>`;
 
+/** Run fn with GOOGLE_NEWS_FALLBACK set to value (undefined = unset), restoring afterwards. */
+async function withFlag<T>(value: string | undefined, fn: () => Promise<T>): Promise<T> {
+  const prev = process.env.GOOGLE_NEWS_FALLBACK;
+  if (value === undefined) delete process.env.GOOGLE_NEWS_FALLBACK; else process.env.GOOGLE_NEWS_FALLBACK = value;
+  try { return await fn(); } finally {
+    if (prev === undefined) delete process.env.GOOGLE_NEWS_FALLBACK; else process.env.GOOGLE_NEWS_FALLBACK = prev;
+  }
+}
+
 type Call = { url: string; headers: Record<string, string> };
 
 /** Replace global fetch with a router; returns the call log and a restore function. */
@@ -38,7 +47,7 @@ test('redditUserAgent prefers REDDIT_USER_AGENT and falls back to the old litera
   if (prev !== undefined) process.env.REDDIT_USER_AGENT = prev;
 });
 
-test('single-source reddit topic: when Reddit is blocked (403) Google News fills in, HackerNews is not needed', async () => {
+test('with GOOGLE_NEWS_FALLBACK=1, single-source reddit topic: when Reddit is blocked (403) Google News fills in, HackerNews is not needed', () => withFlag('1', async () => {
   process.env.REDDIT_CLIENT_ID = 'id'; process.env.REDDIT_CLIENT_SECRET = 'secret';
   const { calls, restore } = stubFetch(url => {
     if (url.includes('/api/v1/access_token')) return new Response(JSON.stringify({ access_token: 'tok', expires_in: 3600 }), { status: 200 });
@@ -53,9 +62,9 @@ test('single-source reddit topic: when Reddit is blocked (403) Google News fills
     assert.ok(!calls.some(c => c.url.includes('hacker-news')), 'HackerNews not called once Google News produced stories');
     assert.equal(calls.filter(c => c.url.includes('oauth.reddit.com')).length, 1, '403 is not retried');
   } finally { restore(); }
-});
+}));
 
-test('Google News is not called when a configured source returns stories', async () => {
+test('Google News is not called when a configured source returns stories, even when enabled', () => withFlag('1', async () => {
   const { calls, restore } = stubFetch(url => {
     if (url.includes('/api/v1/access_token')) return new Response(JSON.stringify({ access_token: 'tok', expires_in: 3600 }), { status: 200 });
     if (url.includes('oauth.reddit.com')) return new Response(JSON.stringify({ data: { children: [
@@ -69,7 +78,7 @@ test('Google News is not called when a configured source returns stories', async
     assert.ok(!calls.some(c => c.url.includes('news.google.com')));
     assert.equal(calls.find(c => c.url.includes('oauth.reddit.com'))!.headers['User-Agent'], redditUserAgent());
   } finally { restore(); }
-});
+}));
 
 test('Reddit 429 is retried once, then succeeds', async () => {
   process.env.REDDIT_RETRY_DELAY_MS = '1';
@@ -92,7 +101,7 @@ test('Reddit 429 is retried once, then succeeds', async () => {
   } finally { restore(); }
 });
 
-test('when Reddit and Google News both fail, the HackerNews fallback still runs', async () => {
+test('when enabled and Reddit and Google News both fail, the HackerNews fallback still runs', () => withFlag('1', async () => {
   const { calls, restore } = stubFetch(url => {
     if (url.includes('/api/v1/access_token')) return new Response('no', { status: 401 });
     if (url.includes('oauth.reddit.com')) return new Response('blocked', { status: 403 });
@@ -107,24 +116,29 @@ test('when Reddit and Google News both fail, the HackerNews fallback still runs'
     assert.equal(content.stories[0].sourceType, 'hackernews');
     assert.ok(calls.some(c => c.url.includes('news.google.com')));
   } finally { restore(); }
+}));
+
+test('Google News fallback is OFF by default and for non-enabling values; HackerNews still runs', async () => {
+  for (const v of [undefined, '', '0', 'false', 'off', 'maybe']) {
+    await withFlag(v, async () => {
+      assert.equal(googleNewsFallbackEnabled(), false, `flag=${JSON.stringify(v)}`);
+      const { calls, restore } = stubFetch(url => {
+        if (url.includes('/api/v1/access_token')) return new Response('no', { status: 401 });
+        if (url.includes('oauth.reddit.com')) return new Response('blocked', { status: 403 });
+        if (url.endsWith('/topstories.json')) return new Response(JSON.stringify([]), { status: 200 });
+        throw new Error(`unexpected fetch ${url}`);
+      });
+      try {
+        await contentAggregator.aggregateTopicContent(redditTopic);
+        assert.equal(calls.some(c => c.url.includes('news.google.com')), false, `flag=${JSON.stringify(v)}`);
+        assert.ok(calls.some(c => c.url.endsWith('/topstories.json')), 'HackerNews fallback ran');
+      } finally { restore(); }
+    });
+  }
 });
 
-test('GOOGLE_NEWS_FALLBACK=0 disables the Google News fallback; HackerNews still runs', async () => {
-  const prev = process.env.GOOGLE_NEWS_FALLBACK;
-  process.env.GOOGLE_NEWS_FALLBACK = '0';
-  assert.equal(googleNewsFallbackEnabled(), false);
-  const { calls, restore } = stubFetch(url => {
-    if (url.includes('/api/v1/access_token')) return new Response('no', { status: 401 });
-    if (url.includes('oauth.reddit.com')) return new Response('blocked', { status: 403 });
-    if (url.endsWith('/topstories.json')) return new Response(JSON.stringify([]), { status: 200 });
-    throw new Error(`unexpected fetch ${url}`);
-  });
-  try {
-    await contentAggregator.aggregateTopicContent(redditTopic);
-    assert.equal(calls.some(c => c.url.includes('news.google.com')), false);
-  } finally {
-    restore();
-    if (prev === undefined) delete process.env.GOOGLE_NEWS_FALLBACK; else process.env.GOOGLE_NEWS_FALLBACK = prev;
+test('GOOGLE_NEWS_FALLBACK enables on 1/true/on/yes (case and whitespace tolerant)', async () => {
+  for (const v of ['1', 'true', 'TRUE', ' on ', 'yes']) {
+    await withFlag(v, async () => assert.equal(googleNewsFallbackEnabled(), true, v));
   }
-  assert.equal(googleNewsFallbackEnabled(), true, 'on by default');
 });

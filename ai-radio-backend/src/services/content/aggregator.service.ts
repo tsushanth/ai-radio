@@ -17,12 +17,12 @@ export function redditUserAgent(): string {
 }
 
 /**
- * Kill switch for the Google News fallback (third-party source). On by default; set GOOGLE_NEWS_FALLBACK=0 (or "false"/"off") to disable.
+ * Opt-in switch for the Google News fallback (third-party source). OFF by default; set GOOGLE_NEWS_FALLBACK=1 (or "true"/"on"/"yes") to enable.
  * Read on every call so it can be flipped with `fly secrets set` without a code change.
  */
 export function googleNewsFallbackEnabled(): boolean {
   const v = (process.env.GOOGLE_NEWS_FALLBACK ?? '').trim().toLowerCase();
-  return !['0', 'false', 'off', 'no'].includes(v);
+  return ['1', 'true', 'on', 'yes'].includes(v);
 }
 
 /** Google News RSS search URL for a topic's own name, restricted to the last two days. Public, no key, not blocked on cloud IPs. */

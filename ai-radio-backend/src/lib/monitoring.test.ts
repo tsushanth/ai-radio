@@ -56,6 +56,7 @@ test('5xx middleware reports once per response by route pattern, not by url; 4xx
   try {
     process.env.NODE_ENV = 'production';
     process.env.FAILURE_REPORTER_KEY = 'k';
+    process.env.FAILURE_REPORTER_FORCE = '1'; // node --test would otherwise keep the reporter off
     const run = (status: number) => {
       const res: any = new EventEmitter();
       res.statusCode = status;

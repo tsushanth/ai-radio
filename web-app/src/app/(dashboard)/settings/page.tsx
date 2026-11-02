@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button';
 import { User, Mail, Bell, Trash2, Link2, Check, ExternalLink, Info, Smartphone, Clock, Calendar } from 'lucide-react';
 import { disconnectAccount } from '@/lib/api/episodes';
 import { deleteRemoteAccount, isSharedIdentity } from '@/lib/account';
+import { HiddenTopics } from '@/components/settings/HiddenTopics';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://ai-radio-backend.fly.dev/api';
 
@@ -449,6 +450,9 @@ export default function SettingsPage() {
           </div>
         </CardContent>
       </Card>
+
+      {/* Hidden topics */}
+      <HiddenTopics />
 
       {/* About & Apps */}
       <Card className="mb-6">

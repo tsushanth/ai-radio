@@ -11,6 +11,7 @@ import { LiveStationCard } from '@/components/home/LiveStationCard';
 import { ScriptViewer } from '@/components/episodes/ScriptViewer';
 import { LiveReactions } from '@/components/live/LiveReactions';
 import { LiveChat } from '@/components/live/LiveChat';
+import { SuggestTopic } from '@/components/home/SuggestTopic';
 import { generateEpisode, getJobStatus } from '@/lib/api/episodes';
 import { useActiveStations } from '@/hooks/useActiveStations';
 import { RADIO_STATUS_URL } from '@/lib/radio';
@@ -477,6 +478,11 @@ export default function HomePage() {
               </section>
             </>
           )}
+
+          {/* Suggest a topic */}
+          <section className="px-4">
+            <SuggestTopic />
+          </section>
         </div>
       )}
 

@@ -1,8 +1,11 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
-import { Play, Pause, SkipBack, SkipForward, Volume2 } from 'lucide-react';
-import { cn } from '@/lib/utils/cn';
+import { useState, useRef, useEffect, useCallback } from 'react';
+import { Play, Pause, SkipBack, SkipForward, Moon } from 'lucide-react';
+import { useOptionalPlayback } from '@/components/player/PlaybackProvider';
+import { useSleepTimer } from '@/hooks/useSleepTimer';
+import { SLEEP_OPTIONS_MIN, formatRemaining } from '@/lib/sleep-timer';
+import { bindMediaSession } from '@/lib/media-session';
 
 interface AudioPlayerProps {
   src: string;
@@ -23,6 +26,23 @@ export function AudioPlayer({ src, title, autoPlay = false }: AudioPlayerProps) 
   const [duration, setDuration] = useState(0);
   const [playbackRate, setPlaybackRate] = useState(1);
   const [hasAutoPlayed, setHasAutoPlayed] = useState(false);
+  const [hasStarted, setHasStarted] = useState(false);
+  const [sleepMin, setSleepMin] = useState(0);
+  const playback = useOptionalPlayback();
+
+  // Sleep timer: pause when it runs out
+  const sleep = useSleepTimer(
+    useCallback(() => {
+      audioRef.current?.pause();
+      setSleepMin(0);
+    }, [])
+  );
+
+  // Leaving the page must stop this episode (the <audio> is removed with the page, but be explicit)
+  useEffect(() => {
+    const audio = audioRef.current;
+    return () => audio?.pause();
+  }, []);
 
   useEffect(() => {
     const audio = audioRef.current;
@@ -42,28 +62,54 @@ export function AudioPlayer({ src, title, autoPlay = false }: AudioPlayerProps) 
       }
     };
     const handleEnded = () => setIsPlaying(false);
+    // Keep the button in step with the element (media keys, sleep timer, autoplay being blocked)
+    const handlePlay = () => { setIsPlaying(true); setHasStarted(true); };
+    const handlePause = () => setIsPlaying(false);
 
     audio.addEventListener('timeupdate', handleTimeUpdate);
+    audio.addEventListener('play', handlePlay);
+    audio.addEventListener('pause', handlePause);
     audio.addEventListener('loadedmetadata', handleLoadedMetadata);
     audio.addEventListener('ended', handleEnded);
 
     return () => {
       audio.removeEventListener('timeupdate', handleTimeUpdate);
+      audio.removeEventListener('play', handlePlay);
+      audio.removeEventListener('pause', handlePause);
       audio.removeEventListener('loadedmetadata', handleLoadedMetadata);
       audio.removeEventListener('ended', handleEnded);
     };
   }, [autoPlay, hasAutoPlayed]);
 
+  // Browser media keys / OS now-playing widget, from the first play until this player goes away
+  useEffect(() => {
+    if (!hasStarted) return;
+    const audio = audioRef.current;
+    return bindMediaSession(
+      typeof navigator === 'undefined' ? undefined : (navigator as unknown as Parameters<typeof bindMediaSession>[0]),
+      { title },
+      {
+        play: () => { audio?.play().catch(() => {}); },
+        pause: () => audio?.pause(),
+        seekBackward: () => { if (audio) audio.currentTime = Math.max(0, audio.currentTime - 15); },
+        seekForward: () => { if (audio) audio.currentTime = Math.min(audio.duration || Infinity, audio.currentTime + 15); },
+      },
+      typeof MediaMetadata === 'undefined' ? undefined : (MediaMetadata as unknown as new (init: Record<string, unknown>) => unknown),
+      isPlaying
+    );
+  }, [hasStarted, title, isPlaying]);
+
   const togglePlay = () => {
     const audio = audioRef.current;
     if (!audio) return;
 
-    if (isPlaying) {
-      audio.pause();
+    if (audio.paused) {
+      // Do not play on top of the live station / daily brief
+      playback?.stop();
+      audio.play().catch(() => setIsPlaying(false));
     } else {
-      audio.play();
+      audio.pause();
     }
-    setIsPlaying(!isPlaying);
   };
 
   const skip = (seconds: number) => {
@@ -142,15 +188,44 @@ export function AudioPlayer({ src, title, autoPlay = false }: AudioPlayerProps) 
         </button>
       </div>
 
-      {/* Speed Control */}
-      <div className="flex justify-center mt-4">
+      {/* Speed Control + Sleep timer */}
+      <div className="flex items-center justify-center gap-3 mt-4">
         <button
           onClick={changeSpeed}
           className="px-3 py-1 text-sm font-medium text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
         >
           {playbackRate}x
         </button>
+        <label className="flex items-center gap-1.5 text-sm text-gray-600">
+          <Moon className="w-4 h-4" aria-hidden="true" />
+          <span className="sr-only">Sleep timer</span>
+          <select
+            value={sleepMin}
+            aria-label="Sleep timer"
+            onChange={(e) => {
+              const minutes = Number(e.target.value);
+              if (minutes === 0) {
+                sleep.cancel();
+                setSleepMin(0);
+              } else {
+                sleep.start(minutes);
+                setSleepMin(minutes);
+              }
+            }}
+            className="h-8 rounded-md border border-gray-300 px-1 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
+          >
+            <option value={0}>Sleep: off</option>
+            {SLEEP_OPTIONS_MIN.map((m) => (
+              <option key={m} value={m}>{m} min</option>
+            ))}
+          </select>
+        </label>
       </div>
+      {sleep.active && (
+        <p className="text-center text-xs text-gray-500 mt-2" role="status">
+          Pausing in {formatRemaining(sleep.remainingMs)}
+        </p>
+      )}
     </div>
   );
 }

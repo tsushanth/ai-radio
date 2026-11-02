@@ -4,6 +4,8 @@ import { useEffect, useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { useAuth } from '@/components/auth/AuthProvider';
 import { Sidebar } from '@/components/layout/Sidebar';
+import { PlaybackProvider } from '@/components/player/PlaybackProvider';
+import { PlaybackMiniBar, PlaybackBarSpacer } from '@/components/player/PlaybackMiniBar';
 import { Loader2, Menu, Radio } from 'lucide-react';
 
 export default function DashboardLayout({
@@ -42,6 +44,7 @@ export default function DashboardLayout({
   }
 
   return (
+    <PlaybackProvider>
     <div className="flex h-screen bg-gray-50">
       {/* Desktop sidebar — always present on md+ */}
       <div className="hidden md:flex">
@@ -82,7 +85,10 @@ export default function DashboardLayout({
           </div>
         </div>
         <div className="flex-1 overflow-auto">{children}</div>
+        <PlaybackBarSpacer />
       </main>
+      <PlaybackMiniBar />
     </div>
+    </PlaybackProvider>
   );
 }

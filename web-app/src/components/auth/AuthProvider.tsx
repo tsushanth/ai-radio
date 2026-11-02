@@ -3,6 +3,7 @@
 import { createContext, useContext, useState, useEffect, useCallback, useRef, ReactNode } from 'react';
 import { User, LinkedAccount, UserPreferences } from '@/types';
 import { getLinkedAccounts } from '@/lib/api/episodes';
+import { clearAppStorage } from '@/lib/account';
 
 interface AuthContextType {
   user: User | null;
@@ -12,6 +13,8 @@ interface AuthContextType {
   isLinked: boolean;
   signIn: (email: string, name?: string) => void;
   signOut: () => void;
+  /** Wipes everything this app stored in the browser (user, linked accounts, preferences, cached brief) and resets in-memory state. */
+  clearLocalData: () => void;
   refreshLinkedAccounts: () => Promise<void>;
   linkAccount: (provider: string, email: string, service?: 'gmail' | 'calendar') => void;
   updatePreferences: (updates: Partial<UserPreferences>) => void;
@@ -156,6 +159,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     localStorage.removeItem(LINKED_ACCOUNTS_KEY);
   }, []);
 
+  const clearLocalData = useCallback(() => {
+    clearAppStorage(localStorage);
+    setUser(null);
+    setLinkedAccounts([]);
+    setPreferences(DEFAULT_PREFERENCES);
+  }, []);
+
   const updatePreferences = useCallback((updates: Partial<UserPreferences>) => {
     setPreferences((prev) => {
       const newPrefs = { ...prev, ...updates };
@@ -264,6 +274,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         isLinked,
         signIn,
         signOut,
+        clearLocalData,
         refreshLinkedAccounts,
         linkAccount,
         updatePreferences,

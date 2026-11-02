@@ -1,13 +1,14 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '@/components/auth/AuthProvider';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { User, Mail, Bell, Trash2, Link2, Check, ExternalLink, Info, Smartphone, Clock, Calendar } from 'lucide-react';
 import { disconnectAccount } from '@/lib/api/episodes';
+import { deleteRemoteAccount, isSharedIdentity } from '@/lib/account';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://ai-radio-backend.fly.dev/api';
 
@@ -59,11 +60,14 @@ const TIME_OPTIONS = generateTimeOptions();
 
 export default function SettingsPage() {
   const searchParams = useSearchParams();
+  const router = useRouter();
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
   const {
     user,
     linkedAccounts,
     preferences,
-    signOut,
+    clearLocalData,
     linkAccount,
     refreshLinkedAccounts,
     updatePreferences
@@ -100,9 +104,27 @@ export default function SettingsPage() {
     }
   };
 
-  const handleDeleteAccount = () => {
-    if (confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
-      signOut();
+  const isGuest = isSharedIdentity(user?.email);
+
+  const handleDeleteAccount = async () => {
+    if (isDeleting) return;
+    const message = isGuest
+      ? 'You are using the shared guest profile. This clears the preferences, bookmarks and cached brief stored in this browser and signs you out. Nothing is deleted on our servers. Continue?'
+      : 'Are you sure you want to delete your account? This permanently deletes your linked accounts, daily briefs and profile from our servers and clears this browser. This action cannot be undone.';
+    if (!confirm(message)) return;
+
+    setIsDeleting(true);
+    setDeleteError(null);
+    try {
+      // Server first: if it fails we keep the local session so the user can retry. Guests never send a delete.
+      await deleteRemoteAccount(user?.email);
+      clearLocalData();
+      router.replace('/auth');
+    } catch (err) {
+      setDeleteError(
+        `${err instanceof Error && err.message ? err.message : 'Unknown error'}. Your account was not deleted. Please try again.`
+      );
+      setIsDeleting(false);
     }
   };
 
@@ -489,13 +511,24 @@ export default function SettingsPage() {
           <CardDescription>Irreversible actions</CardDescription>
         </CardHeader>
         <CardContent>
+          {isGuest && (
+            <p className="text-sm text-gray-500 mb-3">
+              You are signed in as a guest. This clears the data saved in this browser; there is no server-side account to delete.
+            </p>
+          )}
           <Button
             variant="destructive"
             onClick={handleDeleteAccount}
+            disabled={isDeleting}
             className="bg-red-500 hover:bg-red-600"
           >
-            Delete Account
+            {isDeleting ? 'Deleting...' : isGuest ? 'Clear Local Data' : 'Delete Account'}
           </Button>
+          {deleteError && (
+            <p role="alert" className="mt-3 text-sm text-red-600">
+              {deleteError}
+            </p>
+          )}
         </CardContent>
       </Card>
     </div>

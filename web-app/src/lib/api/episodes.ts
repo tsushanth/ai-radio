@@ -171,6 +171,8 @@ export const LIVE_STATIONS: LiveStation[] = [
   { id: 'ko', name: 'Audexa Korean', description: 'Korean \u2022 \uB274\uC2A4\uC640 \uD1A0\uD06C', icon: '\u{1F1F0}\u{1F1F7}', color: '#8B5CF6', streamUrl: 'https://radio.audexa.app/stream-ko', language: 'ko' },
   { id: 'zh', name: 'Audexa Chinese', description: 'Chinese \u2022 \u65B0\u95FB\u4E0E\u8BA8\u8BBA', icon: '\u{1F1E8}\u{1F1F3}', color: '#DC2626', streamUrl: 'https://radio.audexa.app/stream-zh', language: 'zh' },
   { id: 'it', name: 'Audexa Italiano', description: 'Italian \u2022 Notizie e Consigli', icon: '\u{1F1EE}\u{1F1F9}', color: '#059669', streamUrl: 'https://radio.audexa.app/stream-it', language: 'it' },
+  // Tagalog: Android treats it as a station; the server does not report it on air yet, so pickActiveStations hides it until it does
+  { id: 'tl', name: 'Audexa Tagalog', description: 'Tagalog \u2022 Balita at Usapan', icon: '\u{1F1F5}\u{1F1ED}', color: '#0EA5E9', streamUrl: 'https://radio.audexa.app/stream-tl', language: 'tl' },
 ];
 
 // Deep Dive removed from web. Feature is iOS-only (on-device synthesis on

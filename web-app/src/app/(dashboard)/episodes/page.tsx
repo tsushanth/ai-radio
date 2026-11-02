@@ -12,6 +12,8 @@ import { ScriptViewer } from '@/components/episodes/ScriptViewer';
 import { LiveReactions } from '@/components/live/LiveReactions';
 import { LiveChat } from '@/components/live/LiveChat';
 import { SuggestTopic } from '@/components/home/SuggestTopic';
+import { ShareButton } from '@/components/live/ShareButton';
+import { topicFromStatus } from '@/lib/share';
 import { generateEpisode, getJobStatus } from '@/lib/api/episodes';
 import { pollJob } from '@/lib/job-poll';
 import { groupTopicsByCategory } from '@/lib/discover';
@@ -59,6 +61,7 @@ export default function HomePage() {
 
   // Live Stations state
   const [nowPlaying, setNowPlaying] = useState<NowPlayingInfo | null>(null);
+  const [reportedTopic, setReportedTopic] = useState<string | null>(null); // only what the radio really reported, for the share text
   const [showChat, setShowChat] = useState(false);
   const [showQueue, setShowQueue] = useState(false);
   const [queueSegments, setQueueSegments] = useState<Array<{ segmentType: string; topicName: string }>>([]);
@@ -111,6 +114,7 @@ export default function HomePage() {
         const res = await fetch(RADIO_STATUS_URL);
         if (res.ok) {
           const data = await res.json();
+          setReportedTopic(topicFromStatus(data));
           if (data.now_playing) {
             setNowPlaying({
               title: data.now_playing.title || data.now_playing.topic,
@@ -621,6 +625,14 @@ export default function HomePage() {
                       <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 10h16M4 14h16M4 18h16" />
                     </svg>
                   </button>
+
+                  {/* Share what's playing */}
+                  <ShareButton
+                    stationName={playingStation.name}
+                    language={playingStation.language}
+                    topic={reportedTopic}
+                    className="p-2 rounded-full transition-colors hover:bg-white/20"
+                  />
 
                   {/* Chat Toggle */}
                   <button

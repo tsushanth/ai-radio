@@ -7,6 +7,7 @@ import { playbackUrl } from '@/lib/api/stations';
 import { RADIO_STATUS_URL } from '@/lib/radio';
 import { androidIntentUrl, playStoreUrl, topicFromStatus } from '@/lib/share';
 import type { Utm } from '@/lib/share';
+import { ShareButton } from '@/components/live/ShareButton';
 
 type Status = 'idle' | 'loading' | 'playing' | 'error';
 const POLL_MS = 15_000;
@@ -105,6 +106,13 @@ export function LivePlayer({ lang, utm, initialTopic }: { lang: string; utm: Utm
           >
             Get it on Google Play
           </a>
+          <ShareButton
+            stationName="Audexa Radio"
+            language={lang}
+            topic={topic}
+            label
+            className="flex w-full items-center justify-center rounded-xl border border-white/20 px-4 py-3 font-semibold hover:bg-white/10"
+          />
         </div>
       </div>
       {/* eslint-disable-next-line jsx-a11y/media-has-caption -- live radio, nothing to caption */}

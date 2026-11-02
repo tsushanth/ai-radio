@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback, useEffect, useRef } from 'react';
+import { useState, useCallback, useEffect, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/components/auth/AuthProvider';
 import { useTopics } from '@/hooks/useTopics';
@@ -16,7 +16,9 @@ import { useActiveStations } from '@/hooks/useActiveStations';
 import { RADIO_STATUS_URL } from '@/lib/radio';
 import { LiveStationBanner } from '@/components/home/LiveStationBanner';
 import { playbackUrl } from '@/lib/api/stations';
-import type { LiveStation } from '@/lib/api/episodes';
+import { LIVE_STATIONS, type LiveStation } from '@/lib/api/episodes';
+import { usePlayback } from '@/components/player/PlaybackProvider';
+import type { Track } from '@/lib/playback-controller';
 import { DailyBriefStatus, Topic, Episode } from '@/types';
 import { Loader2, Search, Radio, Bookmark, X, Play, Pause, Phone } from 'lucide-react';
 
@@ -43,17 +45,32 @@ export default function HomePage() {
   const [generationProgress, setGenerationProgress] = useState(0);
   const [dailyBriefEpisode, setDailyBriefEpisode] = useState<Episode | null>(null);
   const [showScriptViewer, setShowScriptViewer] = useState(false);
-  const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  // Playback lives in the dashboard layout (PlaybackProvider) so it survives leaving this page
+  const playback = usePlayback();
+  const playingStation: LiveStation | null = useMemo(
+    () => (playback.track?.kind === 'station' ? LIVE_STATIONS.find((s) => s.id === playback.track?.id) ?? null : null),
+    [playback.track?.kind, playback.track?.id]
+  );
+  const isStationPlaying = playingStation !== null && playback.playing;
 
   // Live Stations state
-  const [playingStation, setPlayingStation] = useState<LiveStation | null>(null);
-  const [isStationPlaying, setIsStationPlaying] = useState(false);
-  const stationAudioRef = useRef<HTMLAudioElement | null>(null);
   const [nowPlaying, setNowPlaying] = useState<NowPlayingInfo | null>(null);
   const [showChat, setShowChat] = useState(false);
   const [showQueue, setShowQueue] = useState(false);
   const [queueSegments, setQueueSegments] = useState<Array<{ segmentType: string; topicName: string }>>([]);
   const [pendingRequests, setPendingRequests] = useState<Array<{ topic: string; requestedAt: string }>>([]);
+
+  // The brief is "playing" while the shared player is playing it; when it pauses or ends the header goes back to "ready to play"
+  const isBriefTrack = playback.track?.kind === 'brief';
+  const briefStatus: DailyBriefStatus =
+    dailyBriefStatus === 'completed' && isBriefTrack && playback.playing ? 'playing' : dailyBriefStatus;
+
+  // Keep the OS now-playing line in step with what the station says is on air
+  const { updateTrack } = playback;
+  useEffect(() => {
+    if (playingStation && nowPlaying) updateTrack({ subtitle: nowPlaying.title || nowPlaying.topic });
+  }, [playingStation, nowPlaying, updateTrack]);
 
   // Update status based on linked accounts
   useEffect(() => {
@@ -190,22 +207,20 @@ export default function HomePage() {
   // Play/Pause daily brief
   const handlePlay = useCallback(() => {
     if (!dailyBriefEpisode?.audioUrl) return;
-
-    if (!audioRef.current) {
-      audioRef.current = new Audio(dailyBriefEpisode.audioUrl);
-      audioRef.current.onended = () => setDailyBriefStatus('completed');
-    }
-
-    audioRef.current.play();
-    setDailyBriefStatus('playing');
-  }, [dailyBriefEpisode?.audioUrl]);
+    playback.play({
+      kind: 'brief',
+      id: dailyBriefEpisode.id,
+      title: 'Your Daily Brief',
+      subtitle: 'Audexa',
+      url: dailyBriefEpisode.audioUrl,
+      live: false,
+      icon: '\u{1F3A7}',
+    });
+  }, [dailyBriefEpisode, playback]);
 
   const handlePause = useCallback(() => {
-    if (audioRef.current) {
-      audioRef.current.pause();
-    }
-    setDailyBriefStatus('completed');
-  }, []);
+    playback.pause();
+  }, [playback]);
 
   const handleConnectAccount = useCallback(() => {
     router.push('/settings');
@@ -216,52 +231,29 @@ export default function HomePage() {
   }, [router]);
 
   const handleStationTap = useCallback((station: LiveStation) => {
-    // If clicking the same station that's playing, toggle play/pause
-    if (playingStation?.id === station.id && stationAudioRef.current) {
-      if (isStationPlaying) {
-        stationAudioRef.current.pause();
-        setIsStationPlaying(false);
-      } else {
-        stationAudioRef.current.play();
-        setIsStationPlaying(true);
-      }
+    // Tapping the station that is already loaded toggles play/pause
+    if (playingStation?.id === station.id) {
+      playback.toggle();
       return;
     }
-
-    // Stop any existing playback
-    if (stationAudioRef.current) {
-      stationAudioRef.current.pause();
-      stationAudioRef.current = null;
-    }
-
-    // Create new audio element pointing to the Icecast stream
-    const audio = new Audio(playbackUrl(station.language));
-    audio.onplay = () => setIsStationPlaying(true);
-    audio.onpause = () => setIsStationPlaying(false);
-    audio.onerror = () => {
-      console.error('Failed to play station stream:', station.name);
-      setIsStationPlaying(false);
+    const track: Track = {
+      kind: 'station',
+      id: station.id,
+      title: station.name,
+      subtitle: station.description,
+      url: playbackUrl(station.language),
+      live: true,
+      icon: station.icon,
     };
-
-    stationAudioRef.current = audio;
-    setPlayingStation(station);
+    playback.play(track);
     setShowChat(false);
-    audio.play().catch(err => {
-      console.error('Failed to play station:', err);
-      setPlayingStation(null);
-    });
-  }, [playingStation, isStationPlaying]);
+  }, [playingStation, playback]);
 
   const handleStopStation = useCallback(() => {
-    if (stationAudioRef.current) {
-      stationAudioRef.current.pause();
-      stationAudioRef.current = null;
-    }
-    setPlayingStation(null);
-    setIsStationPlaying(false);
+    playback.stop();
     setNowPlaying(null);
     setShowChat(false);
-  }, []);
+  }, [playback]);
 
   if (topicsLoading) {
     return (
@@ -276,7 +268,7 @@ export default function HomePage() {
       {/* Daily Brief Header */}
       <div className="p-4">
         <GradientHeader
-          status={dailyBriefStatus}
+          status={briefStatus}
           progress={generationProgress}
           userName={user?.name}
           hasScript={!!dailyBriefEpisode?.script}

@@ -3,7 +3,7 @@
 
 export const SITE = 'https://audexa.app';
 export const PLAY_PACKAGE = 'com.kreativekoala.audexa'; // applicationId in Audexa/app/build.gradle.kts
-const KNOWN_LANGUAGES = ['en', 'es', 'hi', 'pt', 'fr', 'de', 'ja', 'ko', 'zh', 'it'] as const;
+const KNOWN_LANGUAGES = ['en', 'es', 'hi', 'pt', 'fr', 'de', 'ja', 'ko', 'zh', 'it', 'tl'] as const;
 
 export type Utm = { utm_source: string; utm_medium: string; utm_campaign: string; utm_content?: string };
 
@@ -62,4 +62,60 @@ export function playStoreUrl(utm: Utm): string {
 export function androidIntentUrl(lang: string, utm: Utm): string {
   const query = new URLSearchParams({ lang, ...utm }).toString();
   return `intent://audexa.app/live?${query}#Intent;scheme=https;package=${PLAY_PACKAGE};S.browser_fallback_url=${encodeURIComponent(playStoreUrl(utm))};end`;
+}
+
+// --- Sharing from the web (the sender side; same honesty rules as Android's util/LiveShare.kt) ---------------------------------
+// The text names a topic only when the radio really reported one, never mentions listener counts, and says the station is
+// AI-generated. The link opens the live stream (whatever is on air when it is tapped), so the text says "tune in live".
+
+/** The link that goes into a share from the web. utm_source=audexa_web lets us tell web shares from Android's audexa_android. */
+export function buildShareUrl(language: string): string {
+  const lang = parseLang(language);
+  return `${SITE}/live?lang=${lang}&utm_source=audexa_web&utm_medium=share&utm_campaign=live_share&utm_content=${lang}`;
+}
+
+/** Topic as shown to people: radio queue names look like "[en] US Politics". Null when there is nothing real to show. */
+export function cleanTopic(raw: unknown): string | null {
+  if (typeof raw !== 'string') return null;
+  const t = raw.replace(/^\[\w+\]\s*/, '').trim();
+  return t.length > 0 && t.length <= 120 ? t : null;
+}
+
+/** Share text without the link (the link is passed separately, or appended when copying). */
+export function buildShareText(stationName: string, topic: unknown): string {
+  const t = cleanTopic(topic);
+  return t
+    ? `${stationName} is on air right now with: ${t}. It is an AI-generated news and talk station. Tune in live:`
+    : `I'm listening to ${stationName}, an AI-generated news and talk station. Tune in live:`;
+}
+
+export type ShareOutcome = 'shared' | 'copied' | 'cancelled' | 'failed';
+
+interface ShareNavigator {
+  share?: (data: { title?: string; text?: string; url?: string }) => Promise<void>;
+  clipboard?: { writeText: (text: string) => Promise<void> };
+}
+
+/**
+ * Opens the system share sheet (navigator.share) where there is one, otherwise copies "text link" to the clipboard.
+ * 'cancelled' = the user closed the sheet (not an error). A share that throws for any other reason also falls back to copying.
+ */
+export async function shareOrCopy(nav: ShareNavigator | undefined | null, payload: { title: string; text: string; url: string }): Promise<ShareOutcome> {
+  if (nav && typeof nav.share === 'function') {
+    try {
+      await nav.share(payload);
+      return 'shared';
+    } catch (err) {
+      if ((err as { name?: string } | null)?.name === 'AbortError') return 'cancelled';
+    }
+  }
+  if (nav?.clipboard && typeof nav.clipboard.writeText === 'function') {
+    try {
+      await nav.clipboard.writeText(`${payload.text} ${payload.url}`);
+      return 'copied';
+    } catch {
+      // clipboard blocked (permissions / insecure context)
+    }
+  }
+  return 'failed';
 }

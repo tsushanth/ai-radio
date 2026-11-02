@@ -14,7 +14,7 @@ export function pickActiveStations<T extends { language: string }>(all: readonly
 // cross-origin stream (ERR_BLOCKED_BY_ORB: a range request answered with 200, as a live stream always does) and the radio's CORS
 // headers do not reach the browser through Cloudflare, so neither plain nor crossorigin playback works from another origin.
 const STREAM_ORIGIN = 'https://radio.audexa.app';
-const KNOWN_LANGUAGES = ['en', 'es', 'hi', 'pt', 'fr', 'de', 'ja', 'ko', 'zh', 'it'] as const;
+const KNOWN_LANGUAGES = ['en', 'es', 'hi', 'pt', 'fr', 'de', 'ja', 'ko', 'zh', 'it', 'tl'] as const;
 
 /** Where the browser plays a station from. */
 export function playbackUrl(language: string): string {

@@ -22,6 +22,11 @@ export async function getTopics(language: string = 'en'): Promise<{ topics: Topi
   };
 }
 
+/** Raw GET /voices answer; see lib/voices.ts for which of these the TTS path accepts. */
+export async function getVoices(): Promise<unknown> {
+  return apiClient('/voices');
+}
+
 export async function getEpisodes(userId: string): Promise<{ episodes: Episode[] }> {
   return apiClient(`/podcast/episodes/${userId}`);
 }

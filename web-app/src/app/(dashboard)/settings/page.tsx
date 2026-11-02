@@ -10,17 +10,10 @@ import { User, Mail, Bell, Trash2, Link2, Check, ExternalLink, Info, Smartphone,
 import { disconnectAccount } from '@/lib/api/episodes';
 import { deleteRemoteAccount, isSharedIdentity } from '@/lib/account';
 import { HiddenTopics } from '@/components/settings/HiddenTopics';
+import { useVoices } from '@/hooks/useVoices';
+import { voiceLabel } from '@/lib/voices';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://ai-radio-backend.fly.dev/api';
-
-const VOICE_OPTIONS = [
-  { id: 'alloy', name: 'Alloy' },
-  { id: 'echo', name: 'Echo' },
-  { id: 'fable', name: 'Fable' },
-  { id: 'onyx', name: 'Onyx' },
-  { id: 'nova', name: 'Nova' },
-  { id: 'shimmer', name: 'Shimmer' },
-];
 
 const LANGUAGES = [
   { code: 'en', name: 'English' },
@@ -64,6 +57,7 @@ export default function SettingsPage() {
   const router = useRouter();
   const [isDeleting, setIsDeleting] = useState(false);
   const [deleteError, setDeleteError] = useState<string | null>(null);
+  const voiceOptions = useVoices();
   const {
     user,
     linkedAccounts,
@@ -311,9 +305,9 @@ export default function SettingsPage() {
               onChange={(e) => updatePreferences({ voiceHost1: e.target.value })}
               className="w-full h-10 rounded-md border border-gray-300 px-3 focus:outline-none focus:ring-2 focus:ring-orange-500"
             >
-              {VOICE_OPTIONS.map((voice) => (
+              {voiceOptions.map((voice) => (
                 <option key={voice.id} value={voice.id}>
-                  {voice.name}
+                  {voiceLabel(voice)}
                 </option>
               ))}
             </select>
@@ -325,9 +319,9 @@ export default function SettingsPage() {
               onChange={(e) => updatePreferences({ voiceHost2: e.target.value })}
               className="w-full h-10 rounded-md border border-gray-300 px-3 focus:outline-none focus:ring-2 focus:ring-orange-500"
             >
-              {VOICE_OPTIONS.map((voice) => (
+              {voiceOptions.map((voice) => (
                 <option key={voice.id} value={voice.id}>
-                  {voice.name}
+                  {voiceLabel(voice)}
                 </option>
               ))}
             </select>

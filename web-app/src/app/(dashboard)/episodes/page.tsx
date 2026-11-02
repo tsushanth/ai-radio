@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback, useEffect, useMemo } from 'react';
+import { useState, useCallback, useEffect, useRef, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/components/auth/AuthProvider';
 import { useTopics } from '@/hooks/useTopics';
@@ -13,6 +13,8 @@ import { LiveReactions } from '@/components/live/LiveReactions';
 import { LiveChat } from '@/components/live/LiveChat';
 import { SuggestTopic } from '@/components/home/SuggestTopic';
 import { generateEpisode, getJobStatus } from '@/lib/api/episodes';
+import { pollJob } from '@/lib/job-poll';
+import { groupTopicsByCategory } from '@/lib/discover';
 import { useActiveStations } from '@/hooks/useActiveStations';
 import { RADIO_STATUS_URL } from '@/lib/radio';
 import { LiveStationBanner } from '@/components/home/LiveStationBanner';
@@ -156,15 +158,24 @@ export default function HomePage() {
       )
     : visibleTopics;
 
-  // Group topics by category
-  const topicsByCategory = categories.reduce((acc, category) => {
-    acc[category] = filteredTopics.filter((t) => t.category === category);
-    return acc;
-  }, {} as Record<string, Topic[]>);
+  // Group topics by category: one row each on Discover
+  const topicGroups = useMemo(() => groupTopicsByCategory(filteredTopics, categories), [filteredTopics, categories]);
 
-  // Generate daily brief
+  // Generate daily brief. `abortRef` is how Cancel (and leaving the page) stops the polling loop.
+  const abortRef = useRef<{ aborted: boolean } | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (abortRef.current) abortRef.current.aborted = true;
+    };
+  }, []);
+
   const handleGenerate = useCallback(async () => {
     if (!user?.email) return;
+
+    if (abortRef.current) abortRef.current.aborted = true; // a regenerate replaces any run still in flight
+    const run = { aborted: false };
+    abortRef.current = run;
 
     setDailyBriefStatus('generating');
     setGenerationProgress(0);
@@ -179,31 +190,32 @@ export default function HomePage() {
         includeTopics: preferences.includeTopicUpdates,
         topics: preferences.bookmarkedTopicIds,
       });
+      if (run.aborted) return;
 
-      const pollInterval = setInterval(async () => {
-        try {
-          const status = await getJobStatus(jobId);
-          setGenerationProgress(status.progress || 0);
+      const episode = await pollJob<Episode>(() => getJobStatus(jobId), {
+        signal: run,
+        onProgress: (p) => setGenerationProgress(p),
+      });
+      if (!episode || run.aborted) return;
 
-          if (status.status === 'completed' && status.episode) {
-            clearInterval(pollInterval);
-            setDailyBriefEpisode(status.episode);
-            setDailyBriefStatus('completed');
-            localStorage.setItem('audexa-daily-brief', JSON.stringify(status.episode));
-          } else if (status.status === 'failed') {
-            clearInterval(pollInterval);
-            setDailyBriefStatus('error');
-          }
-        } catch {
-          clearInterval(pollInterval);
-          setDailyBriefStatus('error');
-        }
-      }, 2000);
+      // The job result has no createdAt; stamp it so today's cached brief is recognised after a reload
+      const finished: Episode = { ...episode, createdAt: episode.createdAt || new Date().toISOString() };
+      setDailyBriefEpisode(finished);
+      setDailyBriefStatus('completed');
+      localStorage.setItem('audexa-daily-brief', JSON.stringify(finished));
     } catch (err) {
+      if (run.aborted) return;
       console.error('Failed to generate:', err);
       setDailyBriefStatus('error');
     }
   }, [user?.email, preferences]);
+
+  // Cancel: stop waiting and go back to the start state (the server job is not cancelled; there is no such route)
+  const handleCancel = useCallback(() => {
+    if (abortRef.current) abortRef.current.aborted = true;
+    setGenerationProgress(0);
+    setDailyBriefStatus(isLinked ? 'ready' : 'not_linked');
+  }, [isLinked]);
 
   // Play/Pause daily brief
   const handlePlay = useCallback(() => {
@@ -278,6 +290,7 @@ export default function HomePage() {
           onPause={handlePause}
           onConnectAccount={handleConnectAccount}
           onViewScript={() => setShowScriptViewer(true)}
+          onCancel={handleCancel}
         />
       </div>
 
@@ -460,22 +473,24 @@ export default function HomePage() {
             </div>
           ) : (
             <>
-              {/* All Topics Grid */}
-              <section className="px-4">
-                <h2 className="text-lg font-bold mb-4">All Topics ({visibleTopics.length})</h2>
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-                  {visibleTopics.map((topic) => (
-                    <TopicCard
-                      key={topic.id}
-                      topic={topic}
-                      isBookmarked={preferences.bookmarkedTopicIds.includes(topic.id)}
-                      onTap={() => handleTopicTap(topic)}
-                      onBookmarkToggle={() => toggleBookmark(topic.id)}
-                      onHide={() => hideTopic(topic.id)}
-                    />
-                  ))}
+              {/* One row per category (Android's Discover layout) */}
+              {topicGroups.length === 0 ? (
+                <div className="text-center py-12">
+                  <p className="text-gray-500">No topics to show</p>
                 </div>
-              </section>
+              ) : (
+                topicGroups.map((group) => (
+                  <CategoryRow
+                    key={group.title}
+                    title={group.title}
+                    topics={group.topics}
+                    bookmarkedIds={preferences.bookmarkedTopicIds}
+                    onTopicTap={handleTopicTap}
+                    onBookmarkToggle={toggleBookmark}
+                    onHideTopic={hideTopic}
+                  />
+                ))
+              )}
             </>
           )}
 

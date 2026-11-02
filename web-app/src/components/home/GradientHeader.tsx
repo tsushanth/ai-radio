@@ -13,6 +13,8 @@ interface GradientHeaderProps {
   onPause: () => void;
   onConnectAccount: () => void;
   onViewScript?: () => void;
+  /** Stops waiting for a brief that is generating (the server keeps going; there is no server-side cancel). */
+  onCancel?: () => void;
 }
 
 function getGreeting(): string {
@@ -48,6 +50,7 @@ export function GradientHeader({
   onPause,
   onConnectAccount,
   onViewScript,
+  onCancel,
 }: GradientHeaderProps) {
   return (
     <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-amber-800 via-orange-700 to-orange-500 p-6 text-white">
@@ -111,33 +114,47 @@ export function GradientHeader({
                 style={{ width: `${progress}%` }}
               />
             </div>
-            <p className="text-right text-sm text-white/70 mt-1">{progress}%</p>
+            <div className="flex items-center justify-between mt-1">
+              {onCancel ? (
+                <button
+                  type="button"
+                  onClick={onCancel}
+                  className="text-sm text-white/80 hover:text-white underline underline-offset-2"
+                >
+                  Cancel
+                </button>
+              ) : <span />}
+              <p className="text-sm text-white/70">{progress}%</p>
+            </div>
           </div>
         )}
 
         {status === 'completed' && (
           <div className="space-y-2">
-            <button
-              onClick={onPlay}
-              className="flex items-center gap-3 w-full bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-xl p-4 transition-colors"
-            >
-              <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center">
-                <Play className="w-6 h-6 text-orange-600 ml-1" />
-              </div>
-              <div className="text-left flex-1">
-                <p className="font-semibold">Your Daily Brief is ready</p>
-                <p className="text-sm text-white/70">Tap to play</p>
-              </div>
+            <div className="flex items-center gap-2 w-full bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-xl p-4 transition-colors">
               <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onGenerate();
-                }}
-                className="p-2 hover:bg-white/20 rounded-lg transition-colors"
+                type="button"
+                onClick={onPlay}
+                className="flex items-center gap-3 flex-1 min-w-0 text-left"
+              >
+                <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center flex-shrink-0">
+                  <Play className="w-6 h-6 text-orange-600 ml-1" />
+                </div>
+                <div className="text-left flex-1">
+                  <p className="font-semibold">Your Daily Brief is ready</p>
+                  <p className="text-sm text-white/70">Tap to play</p>
+                </div>
+              </button>
+              <button
+                type="button"
+                onClick={onGenerate}
+                title="Regenerate today's brief"
+                aria-label="Regenerate today's brief"
+                className="p-2 hover:bg-white/20 rounded-lg transition-colors flex-shrink-0"
               >
                 <RefreshCw className="w-5 h-5" />
               </button>
-            </button>
+            </div>
             {hasScript && onViewScript && (
               <button
                 onClick={onViewScript}

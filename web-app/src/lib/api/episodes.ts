@@ -1,5 +1,7 @@
-import { apiClient } from './client';
-import { Episode, GenerationJob, Topic, LinkedAccount } from '@/types';
+import { apiClient } from './client.ts';
+import { unwrapTopicEpisode } from '../topic-generation.ts';
+import { apiLang, topicsForLanguage } from '../topic-language.ts';
+import type { Episode, GenerationJob, Topic, LinkedAccount } from '../../types/index.ts';
 
 interface TopicsResponse {
   success: boolean;
@@ -9,12 +11,14 @@ interface TopicsResponse {
   };
 }
 
-export async function getTopics(): Promise<{ topics: Topic[]; categories: string[] }> {
-  const response = await apiClient<TopicsResponse>('/topics');
-  // Extract topics and category names from the response
+/** Topics for a language. The backend localizes names and drops other locales' topics when given `lang`; we apply the same rules again. */
+export async function getTopics(language: string = 'en'): Promise<{ topics: Topic[]; categories: string[] }> {
+  const lang = apiLang(language);
+  const response = await apiClient<TopicsResponse>('/topics', { params: { lang } });
   return {
-    topics: response.data.topics,
-    categories: response.data.categories.map(c => c.name),
+    topics: topicsForLanguage(response.data.topics, lang),
+    // Category counts come from the server already filtered by language
+    categories: response.data.categories.map((c) => c.name),
   };
 }
 
@@ -75,23 +79,36 @@ interface TopicEpisodeResponse {
   data: Episode;
 }
 
-export async function getTopicEpisode(topicId: string): Promise<Episode | null> {
+export async function getTopicEpisode(topicId: string, language: string = 'en'): Promise<Episode | null> {
   try {
-    const response = await apiClient<TopicEpisodeResponse>(`/topics/${topicId}/episode`);
-    return response.data;
+    const response = await apiClient<TopicEpisodeResponse>(`/topics/${topicId}/episode`, { params: { lang: apiLang(language) } });
+    return unwrapTopicEpisode<Episode>(response.data);
   } catch {
     // No episode exists yet
     return null;
   }
 }
 
-export async function generateTopicEpisode(topicId: string): Promise<Episode> {
-  // Topic generation is synchronous - it returns the episode directly
+/** Same as getTopicEpisode but lets errors through, for polling (a network blip must not look like "no episode"). */
+export async function fetchTopicEpisode(topicId: string, language: string = 'en'): Promise<Episode | null> {
+  const response = await apiClient<TopicEpisodeResponse>(`/topics/${topicId}/episode`, { params: { lang: apiLang(language) } });
+  return unwrapTopicEpisode<Episode>(response.data);
+}
+
+/**
+ * Asks the backend to generate today's episode in `language`. Generation runs in the background, so the episode returned here is
+ * usually a `generating` placeholder: poll fetchTopicEpisode (see waitForEpisode) until it is completed.
+ * `force` regenerates even if one exists. Non-English forced regeneration would bypass the backend's daily cap for on-demand
+ * languages, so callers only force English.
+ */
+export async function generateTopicEpisode(topicId: string, language: string = 'en', force: boolean = false): Promise<Episode> {
   const response = await apiClient<TopicEpisodeResponse>(`/topics/${topicId}/generate`, {
     method: 'POST',
-    body: JSON.stringify({ forceRegenerate: true }),
+    body: JSON.stringify({ forceRegenerate: force, language: apiLang(language) }),
   });
-  return response.data;
+  const episode = unwrapTopicEpisode<Episode>(response.data);
+  if (!episode) throw new Error('Unexpected response from the server');
+  return episode;
 }
 
 // Get recent episodes for a topic
@@ -104,8 +121,10 @@ interface TopicEpisodesResponse {
   };
 }
 
-export async function getTopicEpisodes(topicId: string, limit: number = 7): Promise<Episode[]> {
-  const response = await apiClient<TopicEpisodesResponse>(`/topics/${topicId}/episodes?limit=${limit}`);
+export async function getTopicEpisodes(topicId: string, limit: number = 7, language: string = 'en'): Promise<Episode[]> {
+  const response = await apiClient<TopicEpisodesResponse>(`/topics/${topicId}/episodes`, {
+    params: { limit: String(limit), lang: apiLang(language) },
+  });
   return response.data.episodes;
 }
 

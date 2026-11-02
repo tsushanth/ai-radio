@@ -1,13 +1,15 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { useTopics } from '@/hooks/useTopics';
 import { useAuth } from '@/components/auth/AuthProvider';
 import { Button } from '@/components/ui/button';
 import { AudioPlayer } from '@/components/episodes/AudioPlayer';
 import { Topic, Episode } from '@/types';
-import { getTopicEpisode, generateTopicEpisode, getTopicEpisodes } from '@/lib/api/episodes';
+import { fetchTopicEpisode, generateTopicEpisode, getTopicEpisodes } from '@/lib/api/episodes';
+import { PODCAST_LANGUAGES, isPodcastLanguage, localizeTopic, podcastLanguageFor } from '@/lib/topic-language';
+import { GenerationTimeout, topicErrorMessage, waitForEpisode } from '@/lib/topic-generation';
 import {
   ArrowLeft,
   Bookmark,
@@ -63,6 +65,16 @@ export default function TopicDetailPage() {
   const [error, setError] = useState<string | null>(null);
   const [showPrevious, setShowPrevious] = useState(false);
   const [shouldAutoPlay, setShouldAutoPlay] = useState(false);
+  // Episode language: starts from the user's language when episodes can be generated in it (en, es, fr, de, pt, it), else English
+  const [episodeLang, setEpisodeLang] = useState<string>(() => podcastLanguageFor(preferences.language));
+  const aliveRef = useRef(true);
+
+  useEffect(() => {
+    aliveRef.current = true;
+    return () => {
+      aliveRef.current = false;
+    };
+  }, []);
 
   const topicId = params.id as string;
   const isBookmarked = preferences.bookmarkedTopicIds.includes(topicId);
@@ -71,18 +83,37 @@ export default function TopicDetailPage() {
   useEffect(() => {
     const foundTopic = topics.find((t) => t.id === topicId);
     if (foundTopic) {
-      setTopic(foundTopic);
+      setTopic(localizeTopic(foundTopic, episodeLang));
     }
-  }, [topics, topicId]);
+  }, [topics, topicId, episodeLang]);
 
-  // Fetch existing episode and previous episodes for this topic
+  // Waits for a background generation to finish, then shows the episode. Returns quietly if the page was left.
+  const waitAndShow = useCallback(async (lang: string, play: boolean, staleUpdatedAt?: string) => {
+    const done = await waitForEpisode(() => fetchTopicEpisode(topicId, lang), {
+      signal: { get aborted() { return !aliveRef.current; } },
+      staleUpdatedAt,
+    });
+    if (done && aliveRef.current) {
+      setCurrentEpisode(done);
+      setShouldAutoPlay(play);
+    }
+    return done;
+  }, [topicId]);
+
+  // Fetch existing episode and previous episodes for this topic, in the chosen language
   useEffect(() => {
+    let cancelled = false;
     async function fetchEpisodes() {
       try {
         setIsLoading(true);
+        setCurrentEpisode(null);
+        setPreviousEpisodes([]);
+        setError(null);
+        setShouldAutoPlay(false);
 
         // Fetch all episodes for the topic
-        const episodes = await getTopicEpisodes(topicId, 10);
+        const episodes = await getTopicEpisodes(topicId, 10, episodeLang);
+        if (cancelled) return;
 
         if (episodes && episodes.length > 0) {
           // First episode is the current/latest one
@@ -97,45 +128,47 @@ export default function TopicDetailPage() {
         // No episode exists yet, that's ok
         console.log('No existing episode for topic:', err);
       } finally {
-        setIsLoading(false);
+        if (!cancelled) setIsLoading(false);
       }
     }
 
     if (topicId) {
       fetchEpisodes();
     }
-  }, [topicId]);
+    return () => {
+      cancelled = true;
+    };
+  }, [topicId, episodeLang]);
 
-  // Generate episode - synchronous, returns episode directly
+  // Generate episode. The backend answers right away and builds the audio in the background, so we poll until it is ready.
   const handleGenerate = useCallback(async () => {
+    const lang = episodeLang;
     setIsGenerating(true);
     setError(null);
     setShouldAutoPlay(false);
 
     try {
-      // Move current episode to previous episodes before generating
-      if (currentEpisode) {
-        setPreviousEpisodes(prev => [currentEpisode, ...prev]);
+      // Only English is force-regenerated (as before); other languages are generated once a day and served from the backend's cache
+      const force = lang === 'en';
+      const placeholder = await generateTopicEpisode(topicId, lang, force);
+      // A forced run returns the OLD completed episode while the new one builds, so only trust a completed answer when not forcing
+      if (!force && placeholder.status === 'completed' && placeholder.audioUrl) {
+        if (currentEpisode && currentEpisode.id !== placeholder.id) setPreviousEpisodes((prev) => [currentEpisode, ...prev]);
+        setCurrentEpisode(placeholder);
+        setShouldAutoPlay(true); // Auto-play newly generated episodes
+      } else {
+        const before = currentEpisode;
+        const done = await waitAndShow(lang, true, before?.updatedAt);
+        // A regeneration replaces today's episode under the same id; only an episode from another day moves to "previous"
+        if (done && before && before.id !== done.id && aliveRef.current) setPreviousEpisodes((prev) => [before, ...prev]);
       }
-
-      // Topic generation is synchronous - waits for completion
-      const generatedEpisode = await generateTopicEpisode(topicId);
-
-      // Set the new episode as current
-      setCurrentEpisode(generatedEpisode);
-      setShouldAutoPlay(true); // Auto-play newly generated episodes
     } catch (err) {
       console.error('Generation error:', err);
-      setError(err instanceof Error ? err.message : 'Failed to generate episode');
-
-      // Revert: move the episode back from previous if generation failed
-      if (currentEpisode) {
-        setPreviousEpisodes(prev => prev.filter(ep => ep.id !== currentEpisode.id));
-      }
+      if (aliveRef.current) setError(err instanceof GenerationTimeout ? err.message : topicErrorMessage(err));
     } finally {
-      setIsGenerating(false);
+      if (aliveRef.current) setIsGenerating(false);
     }
-  }, [topicId, currentEpisode]);
+  }, [topicId, episodeLang, currentEpisode, waitAndShow]);
 
   if (!topic) {
     return (
@@ -191,6 +224,22 @@ export default function TopicDetailPage() {
       <div className="relative -mt-16 px-6 pb-8">
         {/* Generate New Episode Card */}
         <div className="bg-white rounded-2xl shadow-lg p-6 mb-4">
+          <div className="flex items-center gap-2 mb-4">
+            <label htmlFor="episode-language" className="text-sm text-gray-600">Episode language</label>
+            <select
+              id="episode-language"
+              value={episodeLang}
+              disabled={isGenerating}
+              onChange={(e) => isPodcastLanguage(e.target.value) && setEpisodeLang(e.target.value)}
+              className="h-9 rounded-md border border-gray-300 px-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
+            >
+              {PODCAST_LANGUAGES.map((l) => (
+                <option key={l.code} value={l.code}>
+                  {l.flag} {l.name}
+                </option>
+              ))}
+            </select>
+          </div>
           <div className="flex items-center justify-between">
             <div>
               <h2 className="text-lg font-semibold flex items-center gap-2">
@@ -226,7 +275,9 @@ export default function TopicDetailPage() {
                 <Loader2 className="w-5 h-5 animate-spin text-orange-500" />
                 <div>
                   <p className="text-sm font-medium text-orange-800">Generating your episode...</p>
-                  <p className="text-xs text-orange-600">This may take a minute or two</p>
+                  <p className="text-xs text-orange-600">
+                    {episodeLang === 'en' ? 'This may take a few minutes' : 'The first episode in this language can take several minutes'}
+                  </p>
                 </div>
               </div>
             </div>

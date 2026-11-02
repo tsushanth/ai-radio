@@ -22,6 +22,10 @@ export interface Topic {
   category: string;
   targetDurationMinutes?: number;
   isActive?: boolean;
+  /** `['all']` = for everyone; a specific code (e.g. `['ja']`) = curated for that locale only. */
+  languages?: string[];
+  localizedNames?: Record<string, string>;
+  localizedDescriptions?: Record<string, string>;
 }
 
 export interface ScriptSegment {
@@ -44,6 +48,7 @@ export interface Episode {
   durationSeconds?: number;
   status: 'pending' | 'generating' | 'completed' | 'failed';
   createdAt: string;
+  updatedAt?: string;
   topicId?: string;
   topic?: Topic;
   script?: Script;

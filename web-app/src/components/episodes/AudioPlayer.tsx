@@ -6,11 +6,14 @@ import { useOptionalPlayback } from '@/components/player/PlaybackProvider';
 import { useSleepTimer } from '@/hooks/useSleepTimer';
 import { SLEEP_OPTIONS_MIN, formatRemaining } from '@/lib/sleep-timer';
 import { bindMediaSession } from '@/lib/media-session';
+import { listenStart, listenStop, type ListenContext } from '@/lib/analytics';
 
 interface AudioPlayerProps {
   src: string;
   title: string;
   autoPlay?: boolean;
+  /** What this audio is, for anonymous listening stats. */
+  listen?: ListenContext;
 }
 
 function formatTime(seconds: number): string {
@@ -19,7 +22,7 @@ function formatTime(seconds: number): string {
   return `${mins}:${secs.toString().padStart(2, '0')}`;
 }
 
-export function AudioPlayer({ src, title, autoPlay = false }: AudioPlayerProps) {
+export function AudioPlayer({ src, title, autoPlay = false, listen }: AudioPlayerProps) {
   const audioRef = useRef<HTMLAudioElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
@@ -29,6 +32,8 @@ export function AudioPlayer({ src, title, autoPlay = false }: AudioPlayerProps) 
   const [hasStarted, setHasStarted] = useState(false);
   const [sleepMin, setSleepMin] = useState(0);
   const playback = useOptionalPlayback();
+  const listenRef = useRef(listen);
+  useEffect(() => { listenRef.current = listen; }, [listen]);
 
   // Sleep timer: pause when it runs out
   const sleep = useSleepTimer(
@@ -41,7 +46,10 @@ export function AudioPlayer({ src, title, autoPlay = false }: AudioPlayerProps) 
   // Leaving the page must stop this episode (the <audio> is removed with the page, but be explicit)
   useEffect(() => {
     const audio = audioRef.current;
-    return () => audio?.pause();
+    return () => {
+      audio?.pause();
+      if (listenRef.current) listenStop();
+    };
   }, []);
 
   useEffect(() => {
@@ -61,10 +69,10 @@ export function AudioPlayer({ src, title, autoPlay = false }: AudioPlayerProps) 
         });
       }
     };
-    const handleEnded = () => setIsPlaying(false);
+    const handleEnded = () => { setIsPlaying(false); if (listenRef.current) listenStop(); };
     // Keep the button in step with the element (media keys, sleep timer, autoplay being blocked)
-    const handlePlay = () => { setIsPlaying(true); setHasStarted(true); };
-    const handlePause = () => setIsPlaying(false);
+    const handlePlay = () => { setIsPlaying(true); setHasStarted(true); if (listenRef.current) listenStart(listenRef.current); };
+    const handlePause = () => { setIsPlaying(false); if (listenRef.current) listenStop(); };
 
     audio.addEventListener('timeupdate', handleTimeUpdate);
     audio.addEventListener('play', handlePlay);

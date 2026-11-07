@@ -10,6 +10,7 @@ import { Topic, Episode } from '@/types';
 import { fetchTopicEpisode, generateTopicEpisode, getTopicEpisodes } from '@/lib/api/episodes';
 import { PODCAST_LANGUAGES, isPodcastLanguage, localizeTopic, podcastLanguageFor } from '@/lib/topic-language';
 import { GenerationTimeout, topicErrorMessage, waitForEpisode } from '@/lib/topic-generation';
+import { cleanTopicId, track } from '@/lib/analytics';
 import {
   ArrowLeft,
   Bookmark,
@@ -77,7 +78,13 @@ export default function TopicDetailPage() {
   }, []);
 
   const topicId = params.id as string;
+  const analyticsTopicId = cleanTopicId(topicId);
   const isBookmarked = preferences.bookmarkedTopicIds.includes(topicId);
+
+  // Anonymous usage stats: which topics get opened
+  useEffect(() => {
+    if (analyticsTopicId) track('topic_open', { topic_id: analyticsTopicId });
+  }, [analyticsTopicId]);
 
   // Find topic from loaded topics
   useEffect(() => {
@@ -146,6 +153,7 @@ export default function TopicDetailPage() {
     setIsGenerating(true);
     setError(null);
     setShouldAutoPlay(false);
+    if (analyticsTopicId) track('topic_generate_requested', { topic_id: analyticsTopicId, language: lang });
 
     try {
       // Only English is force-regenerated (as before); other languages are generated once a day and served from the backend's cache
@@ -162,13 +170,17 @@ export default function TopicDetailPage() {
         // A regeneration replaces today's episode under the same id; only an episode from another day moves to "previous"
         if (done && before && before.id !== done.id && aliveRef.current) setPreviousEpisodes((prev) => [before, ...prev]);
       }
+      if (analyticsTopicId) track('topic_generate_succeeded', { topic_id: analyticsTopicId, language: lang });
     } catch (err) {
       console.error('Generation error:', err);
+      const code = err instanceof GenerationTimeout ? 'generate_timeout' : 'generate_failed';
+      if (analyticsTopicId) track('topic_generate_failed', { topic_id: analyticsTopicId, language: lang, code });
+      if (aliveRef.current) track('error_shown', { code });
       if (aliveRef.current) setError(err instanceof GenerationTimeout ? err.message : topicErrorMessage(err));
     } finally {
       if (aliveRef.current) setIsGenerating(false);
     }
-  }, [topicId, episodeLang, currentEpisode, waitAndShow]);
+  }, [topicId, analyticsTopicId, episodeLang, currentEpisode, waitAndShow]);
 
   if (!topic) {
     return (
@@ -230,7 +242,11 @@ export default function TopicDetailPage() {
               id="episode-language"
               value={episodeLang}
               disabled={isGenerating}
-              onChange={(e) => isPodcastLanguage(e.target.value) && setEpisodeLang(e.target.value)}
+              onChange={(e) => {
+                if (!isPodcastLanguage(e.target.value)) return;
+                track('language_change', { language: e.target.value, from: episodeLang });
+                setEpisodeLang(e.target.value);
+              }}
               className="h-9 rounded-md border border-gray-300 px-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
             >
               {PODCAST_LANGUAGES.map((l) => (
@@ -310,6 +326,7 @@ export default function TopicDetailPage() {
               src={currentEpisode.audioUrl}
               title={currentEpisode.title}
               autoPlay={shouldAutoPlay}
+              listen={{ source: 'topic', language: episodeLang, topicId: analyticsTopicId }}
             />
           </div>
         ) : !isGenerating && (
@@ -360,7 +377,7 @@ export default function TopicDetailPage() {
                       </div>
                     </div>
                     {ep.audioUrl && (
-                      <AudioPlayer src={ep.audioUrl} title={ep.title} />
+                      <AudioPlayer src={ep.audioUrl} title={ep.title} listen={{ source: 'topic', language: episodeLang, topicId: analyticsTopicId }} />
                     )}
                   </div>
                 ))}

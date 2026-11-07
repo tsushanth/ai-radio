@@ -6,6 +6,7 @@ import { Episode } from '@/types';
 import { getEpisode, deleteEpisode } from '@/lib/api/episodes';
 import { AudioPlayer } from '@/components/episodes/AudioPlayer';
 import { Button } from '@/components/ui/button';
+import { useAuth } from '@/components/auth/AuthProvider';
 import { ArrowLeft, Trash2, Loader2, Calendar, Clock } from 'lucide-react';
 
 function formatDate(dateString: string): string {
@@ -28,6 +29,7 @@ function formatDuration(seconds?: number): string {
 export default function EpisodeDetailPage() {
   const params = useParams();
   const router = useRouter();
+  const { preferences } = useAuth();
   const [episode, setEpisode] = useState<Episode | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -128,7 +130,7 @@ export default function EpisodeDetailPage() {
 
       {/* Audio Player */}
       {episode.audioUrl ? (
-        <AudioPlayer src={episode.audioUrl} title={episode.title} />
+        <AudioPlayer src={episode.audioUrl} title={episode.title} listen={{ source: 'brief', language: preferences.language }} />
       ) : (
         <div className="bg-gray-100 rounded-xl p-8 text-center">
           <p className="text-gray-500">Audio not available</p>

@@ -217,6 +217,28 @@ fun ProfileScreen(
                     }
                 )
                 HorizontalDivider(color = MaterialTheme.colorScheme.surfaceVariant)
+                // Anonymous usage statistics opt-out (see analytics/Analytics.kt, docs/DATA-COLLECTION.md)
+                var shareStats by remember { mutableStateOf(com.kreativekoala.audexa.analytics.Analytics.isEnabled()) }
+                SettingsRow(
+                    icon = Icons.Default.Info,
+                    title = stringResource(R.string.analytics_title),
+                    subtitle = stringResource(R.string.analytics_subtitle),
+                    showChevron = false,
+                    onClick = {
+                        shareStats = !shareStats
+                        com.kreativekoala.audexa.analytics.Analytics.setEnabled(shareStats)
+                    },
+                    trailing = {
+                        Switch(
+                            checked = shareStats,
+                            onCheckedChange = {
+                                shareStats = it
+                                com.kreativekoala.audexa.analytics.Analytics.setEnabled(it)
+                            }
+                        )
+                    }
+                )
+                HorizontalDivider(color = MaterialTheme.colorScheme.surfaceVariant)
                 SettingsRow(
                     icon = Icons.Default.Security,
                     title = stringResource(R.string.privacy_policy),
@@ -405,6 +427,7 @@ private fun SettingsRow(
     title: String,
     subtitle: String? = null,
     showChevron: Boolean = true,
+    trailing: (@Composable () -> Unit)? = null,
     onClick: () -> Unit
 ) {
     Surface(
@@ -439,6 +462,11 @@ private fun SettingsRow(
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
+            }
+
+            if (trailing != null) {
+                Spacer(modifier = Modifier.width(12.dp))
+                trailing()
             }
 
             if (showChevron) {

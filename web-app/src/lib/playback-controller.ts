@@ -17,6 +17,8 @@ export interface Track {
   live: boolean;
   /** Emoji/letter shown on the mini bar. */
   icon?: string;
+  /** Language code of the audio, for anonymous listening stats. */
+  language?: string;
 }
 
 export interface PlaybackState {

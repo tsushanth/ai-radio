@@ -13,6 +13,7 @@ import { reportCrash, reportFailure } from './lib/failureReporter';
 import { reportServerErrors } from './lib/monitoring';
 import { topicSuggestScheduler } from './services/scheduler/topic-suggest.scheduler';
 import { startInvariantSweep } from './services/monitoring/invariant-sweep';
+import { startAnalyticsRetention } from './routes/events';
 
 // Import middleware
 import { errorHandler, notFoundHandler } from './middleware/errorHandler';
@@ -81,6 +82,9 @@ app.listen(PORT, HOST, () => {
 
   // Dead-man checks run even when the in-process scheduler is disabled (that is exactly when they matter)
   startInvariantSweep();
+
+  // Deletes analytics rows older than 180 days, daily (does nothing unless ANALYTICS_ENABLED is on)
+  startAnalyticsRetention();
 
   // Turns pending 'Suggest a topic' requests into topics (does nothing unless TOPIC_SUGGEST_PROCESSING=on)
   topicSuggestScheduler.start();

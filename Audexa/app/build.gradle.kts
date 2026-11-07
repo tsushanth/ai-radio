@@ -35,8 +35,8 @@ android {
         applicationId = "com.kreativekoala.audexa"
         minSdk = 26
         targetSdk = 36
-        versionCode = 44
-        versionName = "12.9.1"
+        versionCode = 45
+        versionName = "12.9.2"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {

@@ -1,7 +1,7 @@
 // "Suggest a topic": POST /api/topics/suggest { topicName, language, description? } (ai-radio-backend/src/routes/topics.ts).
-// Same body Android sends (SuggestTopicRequest). No user id or email is sent. The backend stores the request and notifies the
-// worker that curates new topics, so each submit costs the owner some work: the limits below keep one browser from flooding it.
-// They are client-side courtesy limits, not security (the backend only has its general API rate limiter).
+// Same body Android sends (SuggestTopicRequest). No user id or email is sent. The backend stores the request and, when its
+// topic-suggest job is switched on, reviews it and adds the topics that pass. The limits below keep one browser from flooding it.
+// They are client-side courtesy limits; the backend also caps suggestions per IP per day.
 import { apiClient } from './api/client.ts';
 
 /** A two-letter lowercase language code, English otherwise. */

@@ -8,6 +8,7 @@ import { RADIO_STATUS_URL } from '@/lib/radio';
 import { androidIntentUrl, playStoreUrl, topicFromStatus } from '@/lib/share';
 import type { Utm } from '@/lib/share';
 import { ShareButton } from '@/components/live/ShareButton';
+import { listenStart, listenStop, track as trackEvent } from '@/lib/analytics';
 
 type Status = 'idle' | 'loading' | 'playing' | 'error';
 const POLL_MS = 15_000;
@@ -21,6 +22,14 @@ export function LivePlayer({ lang, utm, initialTopic }: { lang: string; utm: Utm
   useEffect(() => {
     setIsAndroid(/Android/i.test(navigator.userAgent));
   }, []);
+
+  // Anonymous listening stats (lib/analytics.ts): counted only while the stream is really playing
+  useEffect(() => {
+    if (status === 'playing') listenStart({ source: 'radio', language: lang });
+    else listenStop();
+    if (status === 'error') trackEvent('error_shown', { code: 'live_stream_error' });
+  }, [status, lang]);
+  useEffect(() => () => listenStop(), []);
 
   // Keep "on air" fresh. The radio often does not report a topic; then the generic line stays.
   useEffect(() => {

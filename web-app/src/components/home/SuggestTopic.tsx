@@ -7,6 +7,7 @@ import { useAuth } from '@/components/auth/AuthProvider';
 import {
   MAX_DESCRIPTION, MAX_TOPIC_NAME, SUGGEST_HISTORY_KEY, recentSuggestions, submitSuggestion, suggestionBlockedReason, validateSuggestion,
 } from '@/lib/topic-suggest';
+import { cleanLang, track } from '@/lib/analytics';
 
 function readHistory(): unknown {
   try {
@@ -40,6 +41,7 @@ export function SuggestTopic() {
     try {
       await submitSuggestion(checked.body);
       localStorage.setItem(SUGGEST_HISTORY_KEY, JSON.stringify([...recentSuggestions(readHistory(), now), now]));
+      track('topic_suggest_submitted', { language: cleanLang(checked.body.language) }); // never the text
       setSent(true);
       setTopicName('');
       setDescription('');

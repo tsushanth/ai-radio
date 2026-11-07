@@ -3,6 +3,7 @@ import { Inter } from 'next/font/google';
 import './globals.css';
 import { AuthProvider } from '@/components/auth/AuthProvider';
 import WebFailureReporter from '@/components/WebFailureReporter';
+import AnalyticsInit from '@/components/AnalyticsInit';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -24,6 +25,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <WebFailureReporter />
+        <AnalyticsInit />
         <AuthProvider>{children}</AuthProvider>
       </body>
     </html>

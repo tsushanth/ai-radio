@@ -1,12 +1,15 @@
 """
 Content Fetcher — ported from ai-radio-backend/src/services/content/aggregator.service.ts
-Fetches news from RSS, Reddit (OAuth), and HackerNews.
+Fetches news from RSS, Reddit (public Atom feed; OAuth is opt-in), and HackerNews.
 """
 
 import asyncio
+import html
 import logging
+import os
 import re
 import time
+import xml.etree.ElementTree as ET
 from base64 import b64encode
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
@@ -46,6 +49,7 @@ class TopicContent:
 class ContentFetcher:
     HN_API_BASE = "https://hacker-news.firebaseio.com/v0"
     REDDIT_OAUTH_BASE = "https://oauth.reddit.com"
+    REDDIT_WEB_BASE = "https://www.reddit.com"
     USER_AGENT = "AudexaRadio/1.0"
 
     def __init__(self, reddit_client_id: str = "", reddit_client_secret: str = ""):
@@ -54,6 +58,14 @@ class ContentFetcher:
         self._reddit_token: Optional[str] = None
         self._reddit_token_expiry: float = 0
         self._session: Optional[aiohttp.ClientSession] = None
+        # Reddit public-feed state: results are cached, requests go through one gate that honours Reddit's
+        # x-ratelimit-* headers, and a 403 block pauses requests for a while.
+        self._reddit_cache: dict[str, tuple[float, list[AggregatedStory]]] = {}
+        self._reddit_next_allowed = 0.0
+        self._reddit_blocked_until = 0.0
+        self._reddit_gate = asyncio.Lock()
+        self._now = time.time
+        self._sleep = asyncio.sleep
 
     async def _get_session(self) -> aiohttp.ClientSession:
         if self._session is None or self._session.closed:
@@ -204,10 +216,157 @@ class ContentFetcher:
         logger.info("Reddit OAuth token obtained")
         return self._reddit_token
 
+    def _reddit_oauth_enabled(self) -> bool:
+        flag = os.getenv("REDDIT_USE_OAUTH", "").strip().lower() in ("1", "true", "on", "yes")
+        return flag and bool(self.reddit_client_id and self.reddit_client_secret)
+
     async def _fetch_reddit(self, source: ContentSource) -> list[AggregatedStory]:
+        """Public Atom feed by default; OAuth API first only when REDDIT_USE_OAUTH is set (feed is the fallback).
+
+        oauth.reddit.com answers 403 "blocked by network security" to datacenter addresses even with a valid
+        app-only token, so OAuth is off by default.
+        """
         if not source.subreddit:
             raise ValueError("Reddit source requires subreddit")
+        if self._reddit_oauth_enabled():
+            try:
+                return await self._fetch_reddit_oauth(source)
+            except Exception as e:
+                logger.warning(f"Reddit OAuth failed for r/{source.subreddit} ({e}), using the public feed")
+        return await self._fetch_reddit_rss(source)
 
+    @staticmethod
+    def _env_num(name: str, default: float) -> float:
+        try:
+            v = float(os.environ[name])
+            return v if v >= 0 else default
+        except (KeyError, ValueError):
+            return default
+
+    async def _fetch_reddit_rss(self, source: ContentSource) -> list[AggregatedStory]:
+        sub = (source.subreddit or "").strip()
+        if not re.fullmatch(r"[A-Za-z0-9_]{1,40}(\+[A-Za-z0-9_]{1,40}){0,9}", sub):
+            raise ValueError(f"Invalid subreddit {source.subreddit!r}")
+        max_items = source.max_items or 10
+        key = sub.lower()
+        ttl = self._env_num("REDDIT_RSS_CACHE_TTL_SEC", 1800)
+        stale_max = self._env_num("REDDIT_RSS_STALE_SEC", 86400)
+        max_wait = self._env_num("REDDIT_RSS_MAX_WAIT_SEC", 60)
+        block_backoff = self._env_num("REDDIT_RSS_BLOCK_BACKOFF_SEC", 900)
+
+        def from_cache(entry: tuple[float, list[AggregatedStory]]) -> list[AggregatedStory]:
+            return [AggregatedStory(**{**s.__dict__, "source": source.name}) for s in entry[1][:max_items]]
+
+        def stale_or_raise(err: Exception) -> list[AggregatedStory]:
+            entry = self._reddit_cache.get(key)
+            if entry and self._now() - entry[0] < stale_max:
+                logger.warning(f"Reddit r/{sub}: {err}; serving cached copy from {int((self._now() - entry[0]) / 60)} min ago")
+                return from_cache(entry)
+            raise err
+
+        entry = self._reddit_cache.get(key)
+        if entry and self._now() - entry[0] < ttl:
+            return from_cache(entry)
+
+        async with self._reddit_gate:  # one request at a time so callers cannot burst past the rate window
+            entry = self._reddit_cache.get(key)
+            if entry and self._now() - entry[0] < ttl:
+                return from_cache(entry)
+
+            for attempt in range(2):
+                if self._now() < self._reddit_blocked_until:
+                    return stale_or_raise(ValueError("Reddit is blocking this server (backing off)"))
+                wait = self._reddit_next_allowed - self._now()
+                if wait > max_wait:
+                    return stale_or_raise(ValueError(f"Reddit rate window closed for {int(wait)}s"))
+                if wait > 0:
+                    await self._sleep(wait)
+
+                session = await self._get_session()
+                url = f"{self.REDDIT_WEB_BASE}/r/{sub}/top/.rss?t=day&limit=25"
+                try:
+                    async with session.get(url, headers={"User-Agent": os.getenv("REDDIT_USER_AGENT", "").strip() or self.USER_AGENT}) as resp:
+                        status = resp.status
+                        reset = self._header_num(resp.headers.get("x-ratelimit-reset"))
+                        remaining = self._header_num(resp.headers.get("x-ratelimit-remaining"))
+                        retry_after = self._header_num(resp.headers.get("retry-after"))
+                        text = await resp.text() if status == 200 else ""
+                except (aiohttp.ClientError, asyncio.TimeoutError) as e:
+                    return stale_or_raise(ValueError(f"Reddit feed request failed: {e}"))
+
+                if status == 429:
+                    secs = retry_after or reset or 60
+                    self._reddit_next_allowed = max(self._reddit_next_allowed, self._now() + secs + 0.5)
+                elif remaining is not None and remaining < 1 and reset:
+                    self._reddit_next_allowed = max(self._reddit_next_allowed, self._now() + reset + 0.5)
+
+                if status == 403:
+                    self._reddit_blocked_until = self._now() + block_backoff
+                    return stale_or_raise(ValueError("Reddit feed error: 403 (blocked by network security)"))
+                if status == 429:
+                    if attempt == 0:
+                        continue
+                    return stale_or_raise(ValueError("Reddit feed error: 429"))
+                if status != 200:
+                    return stale_or_raise(ValueError(f"Reddit feed error: {status}"))
+
+                try:
+                    stories = self._parse_reddit_atom(text, source.name, 25)
+                except ET.ParseError as e:
+                    return stale_or_raise(ValueError(f"Reddit feed was not valid Atom: {e}"))
+                self._reddit_cache[key] = (self._now(), stories)
+                return from_cache(self._reddit_cache[key])
+            return stale_or_raise(ValueError("Reddit feed error: 429"))
+
+    @staticmethod
+    def _header_num(v: Optional[str]) -> Optional[float]:
+        try:
+            return float(v) if v is not None else None
+        except ValueError:
+            return None
+
+    @staticmethod
+    def _parse_reddit_atom(xml_text: str, source_name: str, max_items: int) -> list[AggregatedStory]:
+        """Link posts point at the submitted URL, text posts at the thread; the feed has no score or comment count."""
+        ns = {"a": "http://www.w3.org/2005/Atom"}
+        root = ET.fromstring(xml_text)
+        stories: list[AggregatedStory] = []
+        for entry in root.findall("a:entry", ns):
+            title = (entry.findtext("a:title", default="", namespaces=ns) or "").strip()
+            if not title:
+                continue
+            link_el = entry.find("a:link", ns)
+            thread_url = link_el.get("href") if link_el is not None else None
+            body = entry.findtext("a:content", default="", namespaces=ns) or ""
+            m = re.search(r'<a href="([^"]+)">\[link\]</a>', body)
+            submitted = html.unescape(m.group(1)) if m else None
+            external = bool(submitted) and not re.match(r"https?://(www\.|old\.)?reddit\.com/", submitted, re.I)
+            md = re.search(r'<div class="md">([\s\S]*?)</div>\s*<!-- SC_ON -->', body)
+            summary = None
+            if md:
+                summary = re.sub(r"\s+", " ", html.unescape(re.sub(r"<[^>]+>", " ", md.group(1)))).strip()[:300] or None
+            published = None
+            updated = entry.findtext("a:updated", default="", namespaces=ns)
+            if updated:
+                try:
+                    published = datetime.fromisoformat(updated)
+                except ValueError:
+                    published = None
+            author = entry.findtext("a:author/a:name", default=None, namespaces=ns)
+            stories.append(AggregatedStory(
+                title=title,
+                source=source_name,
+                source_type="reddit",
+                summary=summary,
+                url=submitted if external else thread_url,
+                published_at=published,
+                author=author[3:] if author and author.startswith("/u/") else author,
+            ))
+            if len(stories) >= max_items:
+                break
+        return stories
+
+    async def _fetch_reddit_oauth(self, source: ContentSource) -> list[AggregatedStory]:
         max_items = source.max_items or 10
         token = await self._get_reddit_token()
         session = await self._get_session()

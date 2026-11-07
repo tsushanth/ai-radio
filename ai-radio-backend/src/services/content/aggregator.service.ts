@@ -4,6 +4,7 @@
  */
 
 import Parser from 'rss-parser';
+import { fetchRedditRss } from './reddit.rss';
 import type {
   ContentSource,
   AggregatedStory,
@@ -14,6 +15,15 @@ import type {
 /** Reddit asks for a descriptive, unique User-Agent. Use the configured REDDIT_USER_AGENT secret, else the old literal. */
 export function redditUserAgent(): string {
   return process.env.REDDIT_USER_AGENT?.trim() || 'BriefCast/1.0 (by /u/BriefCastApp)';
+}
+
+/**
+ * Opt-in switch for the Reddit OAuth API (needs REDDIT_CLIENT_ID/SECRET). OFF by default: oauth.reddit.com answers 403
+ * "blocked by network security" to datacenter addresses even with a valid token, so the public Atom feed is the default path.
+ */
+export function redditOAuthEnabled(): boolean {
+  const v = (process.env.REDDIT_USE_OAUTH ?? '').trim().toLowerCase();
+  return ['1', 'true', 'on', 'yes'].includes(v) && !!process.env.REDDIT_CLIENT_ID && !!process.env.REDDIT_CLIENT_SECRET;
 }
 
 /**
@@ -323,9 +333,27 @@ export class ContentAggregatorService {
   }
 
   /**
-   * Fetch from Reddit using OAuth API
+   * Fetch from Reddit: public Atom feed by default; OAuth API first only when REDDIT_USE_OAUTH is set
+   * (falling back to the feed if OAuth is refused).
    */
   private async fetchReddit(source: ContentSource): Promise<AggregatedStory[]> {
+    if (!source.subreddit) {
+      throw new Error('Reddit source requires subreddit');
+    }
+    if (redditOAuthEnabled()) {
+      try {
+        return await this.fetchRedditOAuth(source);
+      } catch (error) {
+        console.warn(`  ⚠️ Reddit OAuth failed for r/${source.subreddit} (${error instanceof Error ? error.message : error}), using the public feed`);
+      }
+    }
+    return fetchRedditRss(source, redditUserAgent());
+  }
+
+  /**
+   * Fetch from Reddit using OAuth API
+   */
+  private async fetchRedditOAuth(source: ContentSource): Promise<AggregatedStory[]> {
     if (!source.subreddit) {
       throw new Error('Reddit source requires subreddit');
     }

@@ -13,7 +13,7 @@ Topic-based podcasts are daily episodes generated from aggregated content source
 Fetches and aggregates content from various sources:
 
 - **RSS Feeds**: Parses any RSS/Atom feed
-- **Reddit**: Fetches top posts from subreddits via Reddit API
+- **Reddit**: Fetches top posts from subreddits via the public Atom feed (OAuth API opt-in with REDDIT_USE_OAUTH=1)
 - **HackerNews**: Fetches top stories with optional keyword filtering
 
 ### TopicPodcastGenerator (`topic.generator.ts`)

@@ -12,6 +12,7 @@ import { ScriptViewer } from '@/components/episodes/ScriptViewer';
 import { LiveReactions } from '@/components/live/LiveReactions';
 import { LiveChat } from '@/components/live/LiveChat';
 import { SuggestTopic } from '@/components/home/SuggestTopic';
+import { AskTheHosts } from '@/components/home/AskTheHosts';
 import { ShareButton } from '@/components/live/ShareButton';
 import { topicFromStatus } from '@/lib/share';
 import { generateEpisode, getJobStatus } from '@/lib/api/episodes';
@@ -499,6 +500,11 @@ export default function HomePage() {
               )}
             </>
           )}
+
+          {/* Ask the hosts (renders nothing until the backend has it switched on) */}
+          <section className="px-4">
+            <AskTheHosts />
+          </section>
 
           {/* Suggest a topic */}
           <section className="px-4">

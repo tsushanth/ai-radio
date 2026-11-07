@@ -22,6 +22,7 @@ import notificationsRoutes from './notifications';
 import batchRoutes from './batch';
 import adsRoutes from './ads';
 import configRoutes from './config';
+import askRoutes from './ask';
 import eventsRoutes from './events';
 
 const router = express.Router();
@@ -45,6 +46,7 @@ router.use('/context', contextRoutes);
 router.use('/notifications', notificationsRoutes);
 router.use('/batch', batchRoutes);
 router.use('/ads', adsRoutes);
+router.use('/ask', askRoutes); // 404 ask_disabled unless ASK_HOSTS_ENABLED is on
 router.use('/events', eventsRoutes);
 
 // API root

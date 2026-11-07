@@ -888,6 +888,20 @@ curl -X GET "http://localhost:3000/api/podcast/episodes/user@example.com?limit=1
 
 ---
 
+## Ask the hosts (off unless ASK_HOSTS_ENABLED=on)
+
+Every route answers `404 {"error":"ask_disabled"}` while the flag is off. Needs migration `012_create_ask_episodes_table.sql`.
+
+- `GET /api/ask/config` -> `{ enabled, languages, maxChars }` (clients hide the feature when this is 404)
+- `POST /api/ask` body `{ text, language?, installId? }` -> `202 { id, status, pollAfterMs }`. `text` is 8 to 200 characters. Errors: `400` (`too_short`, `too_long`, `unsafe_text`, `advice`, `language_unavailable`), `429` (`ip_limit`, `install_limit`, `daily_limit`, `busy`), `503` (`paused`).
+- `GET /api/ask/:id` -> `{ id, status, progress, language, title, description, audioUrl, durationSeconds, sources[], reason, message }`.
+  `status` is one of `queued`, `reviewing`, `searching`, `writing`, `recording`, `completed`, `rejected`, `no_coverage`, `failed`. `durationSeconds` is a whole number. `sources` are the headlines the episode was built from.
+  `no_coverage` means fewer than three relevant recent headlines were found, so no episode was made.
+
+Env: `ASK_HOSTS_ENABLED`, `ASK_INSTALL_DAILY_LIMIT` (3), `ASK_IP_DAILY_LIMIT` (5), `ASK_DAILY_CAP` (15 requests per UTC day), `ASK_DAILY_TOKEN_CAP` (400000 model tokens per UTC day), `ASK_MAX_CONCURRENT` (1), `ASK_MAX_QUEUE` (3), `ASK_NEWS_WINDOW_DAYS` (3), `ASK_TARGET_WORDS` (330), `ASK_REVIEW_MODEL`, `ASK_SCRIPT_MODEL`.
+
+---
+
 ## Support
 
 For issues and questions:

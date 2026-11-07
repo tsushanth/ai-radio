@@ -159,14 +159,11 @@ const INJECTION = [
   /\bjson\b.*\b(decision|accept)\b/i,
 ];
 
-/** Returns a short reason code when the text must not reach the model, else null. */
-export function prefilterReason(name: string, description: string | null): string | null {
-  const n = (name ?? '').trim();
-  const d = (description ?? '').trim();
-  if (n.length < 3) return 'name_too_short';
-  if (n.length > MAX_NAME) return 'name_too_long';
-  if (d.length > MAX_DESCRIPTION) return 'description_too_long';
-  const text = `${n}\n${d}`;
+/**
+ * Deterministic checks shared by every free-text intake ("Suggest a topic", "Ask the hosts"): control / zero-width characters,
+ * markup, e-mail, URL, long number sequences (phone, card, id numbers) and prompt-injection phrases. Null when the text is clean.
+ */
+export function unsafeTextReason(text: string): string | null {
   // control characters, zero-width / bidi tricks
   if (/[\u0000-\u0008\u000B-\u001F\u007F​-‏‪-‮⁠-⁤﻿]/.test(text)) return 'control_characters';
   if (/[<>{}`\\]/.test(text)) return 'markup_characters';
@@ -175,6 +172,16 @@ export function prefilterReason(name: string, description: string | null): strin
   if (/(\+?\d[\d\s().-]{7,}\d)/.test(text)) return 'contains_number_sequence'; // phone numbers, card numbers, IDs
   for (const re of INJECTION) if (re.test(text)) return 'prompt_injection';
   return null;
+}
+
+/** Returns a short reason code when the text must not reach the model, else null. */
+export function prefilterReason(name: string, description: string | null): string | null {
+  const n = (name ?? '').trim();
+  const d = (description ?? '').trim();
+  if (n.length < 3) return 'name_too_short';
+  if (n.length > MAX_NAME) return 'name_too_long';
+  if (d.length > MAX_DESCRIPTION) return 'description_too_long';
+  return unsafeTextReason(`${n}\n${d}`);
 }
 
 // ─── Model contract ───────────────────────────────────────────────────────────

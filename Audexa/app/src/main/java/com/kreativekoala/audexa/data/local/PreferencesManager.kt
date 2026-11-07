@@ -334,8 +334,19 @@ class PreferencesManager @Inject constructor(
     }
 
     suspend fun setPreferredLanguage(language: String) {
+        val previous = preferredLanguage.first()
         dataStore.edit { prefs ->
             prefs[Keys.PREFERRED_LANGUAGE] = language
+        }
+        com.kreativekoala.audexa.analytics.Analytics.preferredLanguage = language
+        if (previous != language) {
+            com.kreativekoala.audexa.analytics.Analytics.track(
+                "language_change",
+                mapOf(
+                    "language" to com.kreativekoala.audexa.analytics.AnalyticsEngine.cleanLang(language),
+                    "from" to com.kreativekoala.audexa.analytics.AnalyticsEngine.cleanLang(previous)
+                )
+            )
         }
     }
 

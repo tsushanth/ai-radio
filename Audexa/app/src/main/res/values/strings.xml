@@ -60,6 +60,8 @@
     <string name="version">Version</string>
     <string name="terms_of_service">Terms of Service</string>
     <string name="privacy_policy">Privacy Policy</string>
+    <string name="analytics_title">Share anonymous usage statistics</string>
+    <string name="analytics_subtitle">Which topics and languages are used and for how long. A random id on this device, no name, email or IP address. Turning this off deletes the id.</string>
     <string name="premium">Premium</string>
     <string name="go_ad_free">Go Ad-Free</string>
     <string name="ad_free">Ad-Free</string>

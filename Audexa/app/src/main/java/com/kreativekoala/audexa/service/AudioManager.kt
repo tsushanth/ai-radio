@@ -13,6 +13,9 @@ import androidx.media3.session.MediaController
 import androidx.media3.session.SessionToken
 import com.google.common.util.concurrent.ListenableFuture
 import com.google.common.util.concurrent.MoreExecutors
+import com.kreativekoala.audexa.analytics.Analytics
+import com.kreativekoala.audexa.analytics.AnalyticsEngine
+import com.kreativekoala.audexa.analytics.ListenContext
 import com.kreativekoala.audexa.data.model.Episode
 import com.kreativekoala.audexa.data.model.TopicEpisode
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -81,6 +84,9 @@ class AudioManager @Inject constructor(
     private var sleepTimerRunnable: Runnable? = null
     private var sleepTimerEndTime: Long = 0L
 
+    // What is playing, for anonymous listening stats (see analytics/Analytics.kt). Counted only while audio really plays.
+    private var listenContext: ListenContext? = null
+
     // Position save callback (set by ViewModel)
     var onPositionSave: ((episodeId: String, positionMs: Long) -> Unit)? = null
 
@@ -92,10 +98,12 @@ class AudioManager @Inject constructor(
                 "Playback error", message = "Playback failed: ${error.errorCodeName}",
                 context = mapOf("code" to error.errorCodeName)
             )
+            Analytics.track("error_shown", mapOf("code" to AnalyticsEngine.cleanCode(error.errorCodeName)))
         }
 
         override fun onIsPlayingChanged(isPlaying: Boolean) {
             _isPlaying.value = isPlaying
+            if (isPlaying) listenContext?.let { Analytics.listenStart(it) } else Analytics.listenStop()
         }
 
         override fun onPlaybackStateChanged(playbackState: Int) {
@@ -146,7 +154,8 @@ class AudioManager @Inject constructor(
             id = episode.id,
             title = episode.title,
             description = episode.description,
-            audioUrl = audioUrl
+            audioUrl = audioUrl,
+            source = "brief"
         )
     }
 
@@ -157,13 +166,30 @@ class AudioManager @Inject constructor(
             id = topicEpisode.id,
             title = topicEpisode.title,
             description = topicEpisode.description,
-            audioUrl = audioUrl
+            audioUrl = audioUrl,
+            source = "topic",
+            topicId = topicEpisode.topicId,
+            language = topicEpisode.language
         )
     }
 
-    fun play(id: String, title: String, description: String, audioUrl: String) {
+    /** [source] is radio | topic | brief for anonymous listening stats; when omitted it is guessed from the id (radio) or brief. */
+    fun play(
+        id: String, title: String, description: String, audioUrl: String,
+        source: String? = null, topicId: String? = null, language: String? = null
+    ) {
         // Save position of previous episode before switching
         saveCurrentPosition()
+
+        Analytics.listenStop()
+        val src = source ?: if (id.startsWith("audexa-radio-")) "radio" else "brief"
+        listenContext = ListenContext(
+            source = src,
+            language = AnalyticsEngine.cleanLang(
+                language ?: if (src == "radio") com.kreativekoala.audexa.util.LiveShare.languageFromStreamUrl(audioUrl) else Analytics.preferredLanguage
+            ),
+            topicId = if (src == "topic") topicId else null
+        )
 
         Log.d(TAG, "Playing: $title ($audioUrl)")
 
@@ -282,7 +308,10 @@ class AudioManager @Inject constructor(
         val next = current.removeAt(0)
         _queue.value = current
         Log.d(TAG, "Playing next from queue: ${next.title}")
-        play(id = next.id, title = next.title, description = "", audioUrl = next.audioUrl)
+        play(
+            id = next.id, title = next.title, description = "", audioUrl = next.audioUrl,
+            source = "topic", topicId = next.topicId.ifEmpty { null }, language = listenContext?.language
+        )
     }
 
     // MARK: - Sleep Timer
@@ -331,6 +360,8 @@ class AudioManager @Inject constructor(
 
     fun stop() {
         saveCurrentPosition()
+        Analytics.listenStop()
+        listenContext = null
         mediaController?.stop()
         _currentEpisodeId.value = null
         _currentEpisodeTitle.value = null

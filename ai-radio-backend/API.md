@@ -890,7 +890,7 @@ curl -X GET "http://localhost:3000/api/podcast/episodes/user@example.com?limit=1
 
 ## Ask the hosts (off unless ASK_HOSTS_ENABLED=on)
 
-Every route answers `404 {"error":"ask_disabled"}` while the flag is off. Needs migration `011_create_ask_episodes_table.sql`.
+Every route answers `404 {"error":"ask_disabled"}` while the flag is off. Needs migration `012_create_ask_episodes_table.sql`.
 
 - `GET /api/ask/config` -> `{ enabled, languages, maxChars }` (clients hide the feature when this is 404)
 - `POST /api/ask` body `{ text, language?, installId? }` -> `202 { id, status, pollAfterMs }`. `text` is 8 to 200 characters. Errors: `400` (`too_short`, `too_long`, `unsafe_text`, `advice`, `language_unavailable`), `429` (`ip_limit`, `install_limit`, `daily_limit`, `busy`), `503` (`paused`).

@@ -1,0 +1,1 @@
+Fixes the clock overlapping content and controls hidden behind the navigation bar on some phones, and a clearer message when you suggest a topic.

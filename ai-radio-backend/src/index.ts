@@ -11,6 +11,7 @@ import { flushLlmUsage } from './lib/llm';
 import { dailyBriefScheduler } from './services/scheduler/daily-brief.scheduler';
 import { reportCrash, reportFailure } from './lib/failureReporter';
 import { reportServerErrors } from './lib/monitoring';
+import { topicSuggestScheduler } from './services/scheduler/topic-suggest.scheduler';
 import { startInvariantSweep } from './services/monitoring/invariant-sweep';
 
 // Import middleware
@@ -80,6 +81,9 @@ app.listen(PORT, HOST, () => {
 
   // Dead-man checks run even when the in-process scheduler is disabled (that is exactly when they matter)
   startInvariantSweep();
+
+  // Turns pending 'Suggest a topic' requests into topics (does nothing unless TOPIC_SUGGEST_PROCESSING=on)
+  topicSuggestScheduler.start();
 
   // Start the daily brief scheduler
   if (env.ENABLE_SCHEDULER) {

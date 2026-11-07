@@ -95,7 +95,7 @@ fun TopicSelectionPage(
                         isSuggesting = false
                         showSuggestSheet = false
                         suggestName = ""
-                        Toast.makeText(context, "Topic suggested! We'll add it soon.", Toast.LENGTH_LONG).show()
+                        Toast.makeText(context, "Thanks, we review suggestions and add the good ones.", Toast.LENGTH_LONG).show()
                     },
                     modifier = Modifier.fillMaxWidth(),
                     enabled = suggestName.isNotBlank() && !isSuggesting,

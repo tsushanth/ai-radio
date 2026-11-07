@@ -118,6 +118,7 @@ test('every Anthropic client is instrumented and every messages.create is labell
     'services/content/qa.generator.ts': ['qa'],
     'services/ai/script.generator.ts': ['script'],
     'services/content/customsource.service.ts': ['custom_source'],
+    'services/scheduler/topic-suggest.scheduler.ts': ['topic_suggest'],
   };
   const walk = (d: string): string[] => fs.readdirSync(d, { withFileTypes: true }).flatMap((e) =>
     e.isDirectory() ? walk(path.join(d, e.name)) : e.name.endsWith('.ts') && !e.name.endsWith('.test.ts') ? [path.join(d, e.name)] : []);

@@ -5,11 +5,13 @@
 
 import { onDemandLanguages, DailyCap } from '../services/tts/piper-languages';
 import { Router, Request, Response } from 'express';
+import rateLimit from 'express-rate-limit';
 import { createClient } from '@supabase/supabase-js';
 import { topicPodcastGenerator } from '../services/content/topic.generator';
 import { adService } from '../services/ads/ad.service';
 import { briefingService } from '../services/notifications/briefing.service';
 import { env } from '../config/environment';
+import { requireOperatorSecret } from '../lib/shared-secret';
 
 const router = Router();
 
@@ -19,12 +21,39 @@ const supabase = env.SUPABASE_URL && env.SUPABASE_SERVICE_KEY
   : null;
 
 // ─── Topic Suggestion Routes ───────────────────────────────────────────────────
+//
+// POST /topics/suggest stores a request; the topic-suggest scheduler (services/scheduler/topic-suggest.scheduler.ts, behind
+// TOPIC_SUGGEST_PROCESSING=on) turns pending requests into topics. The pending / complete / fail endpoints below are operator-only
+// (Authorization: Bearer BATCH_SECRET) and exist for manual review and override.
+
+/** Honest copy for every client: a suggestion is reviewed, it is not promised. */
+export const SUGGEST_THANKS = 'Thanks, we review suggestions and add the good ones.';
+
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+const SUGGEST_NAME_MAX = 80;
+const SUGGEST_DESC_MAX = 300;
+
+const intFromEnv = (v: string | undefined, dflt: number) => {
+  const n = Number(v);
+  return v !== undefined && v.trim() !== '' && Number.isFinite(n) && n >= 0 ? Math.floor(n) : dflt;
+};
+
+/** Per-IP cap: suggestions per rolling 24 h (in memory, per machine). Default 5, the same number the web form shows. */
+const suggestIpLimiter = rateLimit({
+  windowMs: 24 * 60 * 60 * 1000,
+  limit: () => intFromEnv(process.env.TOPIC_SUGGEST_IP_DAILY_LIMIT, 5),
+  standardHeaders: true,
+  legacyHeaders: false,
+  handler: (_req, res) => {
+    res.status(429).json({ success: false, error: 'You have sent enough suggestions today. Please try again tomorrow.' });
+  },
+});
 
 /**
- * GET /topics/suggest/pending
- * Returns all pending suggestion requests (for the worker to poll)
+ * GET /topics/suggest/pending   (operator only)
+ * Returns pending suggestion requests, oldest first.
  */
-router.get('/suggest/pending', async (_req: Request, res: Response) => {
+router.get('/suggest/pending', requireOperatorSecret(), async (_req: Request, res: Response) => {
   try {
     if (!supabase) {
       res.status(503).json({ success: false, error: 'Supabase not configured' });
@@ -35,7 +64,8 @@ router.get('/suggest/pending', async (_req: Request, res: Response) => {
       .from('topic_requests')
       .select('*')
       .eq('status', 'pending')
-      .order('created_at', { ascending: true });
+      .order('created_at', { ascending: true })
+      .limit(200);
 
     if (error) {
       console.error('Error fetching pending topic requests:', error);
@@ -59,29 +89,66 @@ router.get('/suggest/pending', async (_req: Request, res: Response) => {
 /**
  * POST /topics/suggest
  * Submit a topic suggestion
- * Body: { topicName: string, language?: string, description?: string }
+ * Body: { topicName: string, language?: string, description?: string, userId?: string }
+ * Caps: per IP per day (TOPIC_SUGGEST_IP_DAILY_LIMIT, default 5), per userId per day (TOPIC_SUGGEST_USER_DAILY_LIMIT, default 5),
+ * and a ceiling on the pending backlog (TOPIC_SUGGEST_MAX_PENDING, default 500).
  */
-router.post('/suggest', async (req: Request, res: Response) => {
+router.post('/suggest', suggestIpLimiter, async (req: Request, res: Response) => {
   try {
     if (!supabase) {
       res.status(503).json({ success: false, error: 'Supabase not configured' });
       return;
     }
 
-    const { topicName, language, description } = req.body;
+    const { topicName, language, description } = req.body ?? {};
 
     if (!topicName || typeof topicName !== 'string' || topicName.trim().length === 0) {
       res.status(400).json({ success: false, error: 'topicName is required' });
+      return;
+    }
+    const name = topicName.replace(/\s+/g, ' ').trim();
+    if (name.length < 3 || name.length > SUGGEST_NAME_MAX) {
+      res.status(400).json({ success: false, error: `topicName must be 3 to ${SUGGEST_NAME_MAX} characters` });
+      return;
+    }
+    if (description !== undefined && description !== null && (typeof description !== 'string' || description.trim().length > SUGGEST_DESC_MAX)) {
+      res.status(400).json({ success: false, error: `description must be ${SUGGEST_DESC_MAX} characters or fewer` });
+      return;
+    }
+    const lang = typeof language === 'string' && /^[a-z]{2}/i.test(language) ? language.slice(0, 2).toLowerCase() : 'en';
+    const userId = typeof req.body.userId === 'string' && req.body.userId.length > 0 && req.body.userId.length <= 128 ? req.body.userId : null;
+
+    // Per-user cap (durable, from the table). Only meaningful for clients that send a userId.
+    if (userId) {
+      const since = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
+      const { count } = await supabase
+        .from('topic_requests')
+        .select('id', { count: 'exact', head: true })
+        .eq('user_id', userId)
+        .gte('created_at', since);
+      if ((count ?? 0) >= intFromEnv(process.env.TOPIC_SUGGEST_USER_DAILY_LIMIT, 5)) {
+        res.status(429).json({ success: false, error: 'You have sent enough suggestions today. Please try again tomorrow.' });
+        return;
+      }
+    }
+
+    // Backlog ceiling: if nothing is being processed, do not let the table grow without bound.
+    const { count: pendingCount } = await supabase
+      .from('topic_requests')
+      .select('id', { count: 'exact', head: true })
+      .eq('status', 'pending');
+    if ((pendingCount ?? 0) >= intFromEnv(process.env.TOPIC_SUGGEST_MAX_PENDING, 500)) {
+      res.status(429).json({ success: false, error: 'We have a lot of suggestions waiting right now. Please try again later.' });
       return;
     }
 
     const { data, error } = await supabase
       .from('topic_requests')
       .insert({
-        topic_name: topicName.trim(),
-        language: language || 'en',
-        description: description || null,
-        user_id: req.body.userId || null,
+        topic_name: name,
+        language: lang,
+        description: typeof description === 'string' && description.trim() ? description.trim() : null,
+        user_id: userId,
       })
       .select('id, status, created_at')
       .single();
@@ -92,26 +159,9 @@ router.post('/suggest', async (req: Request, res: Response) => {
       return;
     }
 
-    // Fire webhook to worker VM (fire-and-forget)
-    const webhookUrl = process.env.WORKER_WEBHOOK_URL;
-    const webhookSecret = process.env.WORKER_WEBHOOK_SECRET;
-    if (webhookUrl && webhookSecret) {
-      fetch(`${webhookUrl}/webhook/topic-suggest`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-webhook-secret': webhookSecret,
-        },
-        body: JSON.stringify({ requestId: data.id }),
-      }).catch((err: unknown) => {
-        console.error('Failed to fire topic-suggest webhook:', err);
-      });
-    } else {
-      console.warn('WORKER_WEBHOOK_URL or WORKER_WEBHOOK_SECRET not set; skipping webhook');
-    }
-
     res.status(201).json({
       success: true,
+      message: SUGGEST_THANKS,
       data: {
         requestId: data.id,
         status: data.status,
@@ -129,7 +179,8 @@ router.post('/suggest', async (req: Request, res: Response) => {
 
 /**
  * GET /topics/suggest/:requestId
- * Get the status of a topic suggestion request
+ * Public status of one suggestion. Returns only the status, the resulting topic id and the creation time
+ * (never the submitter's id, the free text or internal error notes).
  */
 router.get('/suggest/:requestId', async (req: Request, res: Response) => {
   try {
@@ -139,10 +190,14 @@ router.get('/suggest/:requestId', async (req: Request, res: Response) => {
     }
 
     const { requestId } = req.params;
+    if (!UUID_RE.test(requestId)) {
+      res.status(404).json({ success: false, error: 'Request not found' });
+      return;
+    }
 
     const { data, error } = await supabase
       .from('topic_requests')
-      .select('*')
+      .select('id, status, result_topic_id, created_at')
       .eq('id', requestId)
       .single();
 
@@ -165,11 +220,11 @@ router.get('/suggest/:requestId', async (req: Request, res: Response) => {
 });
 
 /**
- * POST /topics/suggest/:requestId/complete
- * Worker marks a suggestion as completed with the new topic ID
+ * POST /topics/suggest/:requestId/complete   (operator only)
+ * Marks a suggestion as completed with an existing topic ID.
  * Body: { topicId: string }
  */
-router.post('/suggest/:requestId/complete', async (req: Request, res: Response) => {
+router.post('/suggest/:requestId/complete', requireOperatorSecret(), async (req: Request, res: Response) => {
   try {
     if (!supabase) {
       res.status(503).json({ success: false, error: 'Supabase not configured' });
@@ -177,8 +232,12 @@ router.post('/suggest/:requestId/complete', async (req: Request, res: Response) 
     }
 
     const { requestId } = req.params;
-    const { topicId } = req.body;
+    const { topicId } = req.body ?? {};
 
+    if (!UUID_RE.test(requestId)) {
+      res.status(404).json({ success: false, error: 'Request not found or update failed' });
+      return;
+    }
     if (!topicId || typeof topicId !== 'string') {
       res.status(400).json({ success: false, error: 'topicId is required' });
       return;
@@ -189,6 +248,7 @@ router.post('/suggest/:requestId/complete', async (req: Request, res: Response) 
       .update({
         status: 'completed',
         result_topic_id: topicId,
+        error: null,
       })
       .eq('id', requestId)
       .select('*')
@@ -214,11 +274,11 @@ router.post('/suggest/:requestId/complete', async (req: Request, res: Response) 
 });
 
 /**
- * POST /topics/suggest/:requestId/fail
- * Worker marks a suggestion as failed with an error message
+ * POST /topics/suggest/:requestId/fail   (operator only)
+ * Marks a suggestion as failed with an error message.
  * Body: { error: string }
  */
-router.post('/suggest/:requestId/fail', async (req: Request, res: Response) => {
+router.post('/suggest/:requestId/fail', requireOperatorSecret(), async (req: Request, res: Response) => {
   try {
     if (!supabase) {
       res.status(503).json({ success: false, error: 'Supabase not configured' });
@@ -226,7 +286,12 @@ router.post('/suggest/:requestId/fail', async (req: Request, res: Response) => {
     }
 
     const { requestId } = req.params;
-    const { error: errorMessage } = req.body;
+    const errorMessage = typeof req.body?.error === 'string' ? req.body.error.slice(0, 500) : null;
+
+    if (!UUID_RE.test(requestId)) {
+      res.status(404).json({ success: false, error: 'Request not found or update failed' });
+      return;
+    }
 
     const { data, error } = await supabase
       .from('topic_requests')

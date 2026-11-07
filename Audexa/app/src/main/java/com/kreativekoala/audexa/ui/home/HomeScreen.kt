@@ -66,7 +66,7 @@ fun HomeScreen(
         when (suggestTopicResult) {
             is SuggestTopicResult.Success -> {
                 showSuggestTopicSheet = false
-                Toast.makeText(context, "Topic suggested! We'll add it soon.", Toast.LENGTH_LONG).show()
+                Toast.makeText(context, "Thanks, we review suggestions and add the good ones.", Toast.LENGTH_LONG).show()
                 viewModel.resetSuggestTopicResult()
             }
             is SuggestTopicResult.Error -> {

@@ -193,6 +193,13 @@ fun LiveRadioScreen(
 
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         IconButton(onClick = {
+                            com.kreativekoala.audexa.analytics.Analytics.track(
+                                "share_tap",
+                                mapOf(
+                                    "source" to "radio",
+                                    "language" to com.kreativekoala.audexa.util.LiveShare.languageFromStreamUrl(viewModel.streamUrl)
+                                )
+                            )
                             val url = com.kreativekoala.audexa.util.LiveShare.buildShareUrl(
                                 com.kreativekoala.audexa.util.LiveShare.languageFromStreamUrl(viewModel.streamUrl)
                             )

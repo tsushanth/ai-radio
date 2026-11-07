@@ -10,10 +10,19 @@ import com.revenuecat.purchases.Purchases
 import com.revenuecat.purchases.PurchasesConfiguration
 import com.kreativekoala.paywallkit.manager.ExperimentManager
 import com.kreativekoala.paywallkit.manager.PromoCodeManager
+import com.kreativekoala.audexa.analytics.Analytics
+import com.kreativekoala.audexa.data.local.PreferencesManager
 import dagger.hilt.android.HiltAndroidApp
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @HiltAndroidApp
 class AudexaApplication : Application() {
+
+    @Inject lateinit var preferencesManager: PreferencesManager
 
     override fun onCreate() {
         super.onCreate()
@@ -21,6 +30,13 @@ class AudexaApplication : Application() {
             this, "audexa", FAILURE_REPORTER_KEY,
             runCatching { packageManager.getPackageInfo(packageName, 0).versionName }.getOrNull() ?: "unknown"
         )
+        // Anonymous product analytics (first party; the user can switch it off in Profile). See docs/DATA-COLLECTION.md.
+        val versionName = runCatching { packageManager.getPackageInfo(packageName, 0).versionName }.getOrNull() ?: "unknown"
+        Analytics.init(this, BuildConfig.API_BASE_URL, versionName)
+        Analytics.trackAppOpen()
+        CoroutineScope(Dispatchers.IO).launch {
+            runCatching { Analytics.preferredLanguage = preferencesManager.preferredLanguage.first() }
+        }
         ExperimentManager.init(this)
         PromoCodeManager.init(this)
         configureRevenueCat()

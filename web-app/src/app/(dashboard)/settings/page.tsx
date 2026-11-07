@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useSyncExternalStore } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '@/components/auth/AuthProvider';
@@ -12,6 +12,7 @@ import { deleteRemoteAccount, isSharedIdentity } from '@/lib/account';
 import { HiddenTopics } from '@/components/settings/HiddenTopics';
 import { useVoices } from '@/hooks/useVoices';
 import { voiceLabel } from '@/lib/voices';
+import { analyticsBlockedByBrowser, cleanLang, isAnalyticsEnabled, setAnalyticsEnabled, track } from '@/lib/analytics';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://ai-radio-backend.fly.dev/api';
 
@@ -56,6 +57,11 @@ export default function SettingsPage() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const [isDeleting, setIsDeleting] = useState(false);
+  // Read from localStorage / the browser only on the client (false while rendering on the server)
+  const storedUsageStats = useSyncExternalStore(() => () => {}, isAnalyticsEnabled, () => false);
+  const usageStatsLocked = useSyncExternalStore(() => () => {}, analyticsBlockedByBrowser, () => false);
+  const [usageStatsChoice, setUsageStatsChoice] = useState<boolean | null>(null);
+  const usageStats = usageStatsChoice ?? storedUsageStats;
   const [deleteError, setDeleteError] = useState<string | null>(null);
   const voiceOptions = useVoices();
   const {
@@ -330,7 +336,10 @@ export default function SettingsPage() {
             <label className="block text-sm font-medium mb-2">Language</label>
             <select
               value={preferences.language}
-              onChange={(e) => updatePreferences({ language: e.target.value })}
+              onChange={(e) => {
+                track('language_change', { language: cleanLang(e.target.value), from: cleanLang(preferences.language) });
+                updatePreferences({ language: e.target.value });
+              }}
               className="w-full h-10 rounded-md border border-gray-300 px-3 focus:outline-none focus:ring-2 focus:ring-orange-500"
             >
               {LANGUAGES.map((lang) => (
@@ -340,6 +349,39 @@ export default function SettingsPage() {
               ))}
             </select>
           </div>
+        </CardContent>
+      </Card>
+
+      {/* Privacy */}
+      <Card className="mb-6">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Info className="w-5 h-5" />
+            Privacy
+          </CardTitle>
+          <CardDescription>Anonymous usage statistics help us see what works</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <label className="flex items-center justify-between cursor-pointer">
+            <div>
+              <span className="text-sm font-medium">Share anonymous usage statistics</span>
+              <p className="text-xs text-gray-500">
+                {usageStatsLocked
+                  ? 'Off, because your browser sends a Do Not Track or Global Privacy Control signal.'
+                  : 'Which topics and languages are used and for how long. A random id stored in this browser, no name, email or IP address. Turning this off deletes that id.'}
+              </p>
+            </div>
+            <input
+              type="checkbox"
+              checked={usageStats && !usageStatsLocked}
+              disabled={usageStatsLocked}
+              onChange={(e) => {
+                setAnalyticsEnabled(e.target.checked);
+                setUsageStatsChoice(e.target.checked);
+              }}
+              className="w-4 h-4 rounded border-gray-300 text-orange-500 focus:ring-orange-500"
+            />
+          </label>
         </CardContent>
       </Card>
 

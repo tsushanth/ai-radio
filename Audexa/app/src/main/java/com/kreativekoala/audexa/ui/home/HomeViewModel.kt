@@ -590,8 +590,14 @@ class HomeViewModel @Inject constructor(
                     description = description?.takeIf { it.isNotBlank() }
                 )
             ).onSuccess {
+                // Anonymous stats: that a suggestion was sent, never its text
+                com.kreativekoala.audexa.analytics.Analytics.track(
+                    "topic_suggest_submitted",
+                    mapOf("language" to com.kreativekoala.audexa.analytics.AnalyticsEngine.cleanLang(language))
+                )
                 _suggestTopicResult.value = SuggestTopicResult.Success
             }.onFailure { e ->
+                com.kreativekoala.audexa.analytics.Analytics.track("error_shown", mapOf("code" to "suggest_failed"))
                 _suggestTopicResult.value = SuggestTopicResult.Error(e.message ?: "Failed to suggest topic")
             }
         }

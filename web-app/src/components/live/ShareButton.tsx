@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Check, Share2 } from 'lucide-react';
 import { buildShareText, buildShareUrl, shareOrCopy } from '@/lib/share';
+import { cleanLang, track } from '@/lib/analytics';
 
 /** "Share what's playing": system share sheet, or copy the link where there is none. */
 export function ShareButton({
@@ -26,6 +27,7 @@ export function ShareButton({
   useEffect(() => () => { if (timer.current) window.clearTimeout(timer.current); }, []);
 
   async function onClick() {
+    track('share_tap', { source: 'radio', language: cleanLang(language) });
     const outcome = await shareOrCopy(typeof navigator === 'undefined' ? undefined : navigator, {
       title: stationName,
       text: buildShareText(stationName, topic),

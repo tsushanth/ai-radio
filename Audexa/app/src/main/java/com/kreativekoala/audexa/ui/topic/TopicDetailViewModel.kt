@@ -184,6 +184,9 @@ class TopicDetailViewModel @Inject constructor(
     }
 
     fun loadTopic(topic: Topic) {
+        com.kreativekoala.audexa.analytics.AnalyticsEngine.cleanTopicId(topic.id)?.let {
+            com.kreativekoala.audexa.analytics.Analytics.track("topic_open", mapOf("topic_id" to it))
+        }
         _uiState.value = _uiState.value.copy(
             topic = topic,
             currentTime = 0,
@@ -514,11 +517,13 @@ class TopicDetailViewModel @Inject constructor(
 
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isGenerating = true, error = null)
+            trackGenerate("topic_generate_requested", topic.id, language)
 
             topicRepository.generateTopicEpisode(topic.id, language, forceRegenerate = false)
                 .onSuccess { response ->
                     val episode = response.data?.episode
                     val ads = response.data?.ads ?: emptyList()
+                    trackGenerate("topic_generate_succeeded", topic.id, language)
                     if (episode != null) {
                         _uiState.value = _uiState.value.copy(
                             currentEpisode = episode,
@@ -535,6 +540,7 @@ class TopicDetailViewModel @Inject constructor(
                     Log.e(TAG, "Failed to generate episode: ${e.message}")
                     com.kreativekoala.ratingkit.RatingKit.reportError()
                     val msg = e.message.orEmpty()
+                    trackGenerate("topic_generate_failed", topic.id, language, if (msg.contains("429")) "daily_limit" else "generate_failed")
                     _uiState.value = _uiState.value.copy(
                         isGenerating = false,
                         error = when {
@@ -547,6 +553,16 @@ class TopicDetailViewModel @Inject constructor(
         }
     }
 
+    /** Anonymous stats: topic id and language only (a code, never an error message). */
+    private fun trackGenerate(event: String, topicId: String, language: String, code: String? = null) {
+        val props = HashMap<String, Any>()
+        props["topic_id"] = com.kreativekoala.audexa.analytics.AnalyticsEngine.cleanTopicId(topicId) ?: return
+        props["language"] = com.kreativekoala.audexa.analytics.AnalyticsEngine.cleanLang(language)
+        if (code != null) props["code"] = code
+        com.kreativekoala.audexa.analytics.Analytics.track(event, props)
+        if (code != null) com.kreativekoala.audexa.analytics.Analytics.track("error_shown", mapOf("code" to code))
+    }
+
     fun regenerateEpisode() {
         val topic = _uiState.value.topic ?: return
         val language = _uiState.value.selectedLanguage.code
@@ -555,11 +571,13 @@ class TopicDetailViewModel @Inject constructor(
 
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isGenerating = true, error = null)
+            trackGenerate("topic_generate_requested", topic.id, language)
 
             topicRepository.generateTopicEpisode(topic.id, language, forceRegenerate = true)
                 .onSuccess { response ->
                     val episode = response.data?.episode
                     val ads = response.data?.ads ?: emptyList()
+                    trackGenerate("topic_generate_succeeded", topic.id, language)
                     if (episode != null) {
                         _uiState.value = _uiState.value.copy(
                             currentEpisode = episode,
@@ -574,6 +592,7 @@ class TopicDetailViewModel @Inject constructor(
                 }
                 .onFailure { e ->
                     Log.e(TAG, "Failed to regenerate episode: ${e.message}")
+                    trackGenerate("topic_generate_failed", topic.id, language, if (e.message.orEmpty().contains("429")) "daily_limit" else "generate_failed")
                     _uiState.value = _uiState.value.copy(
                         isGenerating = false,
                         error = e.message

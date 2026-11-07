@@ -3,6 +3,7 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, useSyncExternalStore, type ReactNode } from 'react';
 import { IDLE, PlaybackController, type AudioLike, type PlaybackState, type Track } from '@/lib/playback-controller';
 import { bindMediaSession } from '@/lib/media-session';
+import { listenStart, listenStop, track as trackEvent } from '@/lib/analytics';
 
 interface PlaybackApi extends PlaybackState {
   play: (track: Track) => void;
@@ -27,6 +28,19 @@ export function PlaybackProvider({ children }: { children: ReactNode }) {
 
   // OS media keys / now-playing widget
   const { track, playing } = state;
+
+  // Anonymous listening stats (see lib/analytics.ts): time counts only while audio is really playing
+  const trackKind = track?.kind;
+  const trackLanguage = track?.language;
+  useEffect(() => {
+    if (playing && trackKind) listenStart({ source: trackKind === 'station' ? 'radio' : 'brief', language: trackLanguage ?? 'en' });
+    else listenStop();
+  }, [playing, trackKind, trackLanguage, track?.id]);
+  useEffect(() => () => listenStop(), []);
+  useEffect(() => {
+    if (state.error) trackEvent('error_shown', { code: 'playback_error' });
+  }, [state.error]);
+
   useEffect(() => {
     if (!track) return;
     return bindMediaSession(

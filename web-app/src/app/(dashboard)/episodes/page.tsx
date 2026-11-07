@@ -232,8 +232,9 @@ export default function HomePage() {
       url: dailyBriefEpisode.audioUrl,
       live: false,
       icon: '\u{1F3A7}',
+      language: preferences.language,
     });
-  }, [dailyBriefEpisode, playback]);
+  }, [dailyBriefEpisode, playback, preferences.language]);
 
   const handlePause = useCallback(() => {
     playback.pause();
@@ -261,6 +262,7 @@ export default function HomePage() {
       url: playbackUrl(station.language),
       live: true,
       icon: station.icon,
+      language: station.language,
     };
     playback.play(track);
     setShowChat(false);

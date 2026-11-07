@@ -239,7 +239,8 @@ export class TopicPodcastGenerator {
     episode.status = 'completed';
     episode.audioUrl = audioUrl;
     episode.audioPath = audioPath;
-    episode.durationSeconds = totalDuration;
+    // Whole seconds: clients (Android) parse this as an integer, and the DB column is an integer.
+    episode.durationSeconds = Math.round(totalDuration);
     episode.segmentTimings = segmentTimings;
     episode.generatedAt = new Date();
     episode.updatedAt = new Date();
@@ -528,11 +529,11 @@ Create an engaging ${topic.targetDurationMinutes}-minute podcast covering the mo
 
     // Update only the audio-related fields; keep stories/script/title intact.
     episode.audioUrl = audioUrl;
-    episode.durationSeconds = totalDuration;
+    episode.durationSeconds = Math.round(totalDuration);
     episode.updatedAt = new Date();
     await this.saveEpisode(episode);
 
-    return { durationSeconds: totalDuration, audioPath: episode.audioPath };
+    return { durationSeconds: episode.durationSeconds, audioPath: episode.audioPath };
   }
 
   /**

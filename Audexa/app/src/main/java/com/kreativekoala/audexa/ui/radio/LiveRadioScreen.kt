@@ -151,6 +151,12 @@ fun LiveRadioScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
+                // Keep controls clear of a side navigation bar / display cutout in landscape
+                .windowInsetsPadding(
+                    WindowInsets.systemBars
+                        .union(WindowInsets.displayCutout)
+                        .only(WindowInsetsSides.Horizontal)
+                )
         ) {
             // Scrollable content
             val scrollState = rememberScrollState()

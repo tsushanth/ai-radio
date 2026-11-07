@@ -63,7 +63,13 @@ fun GradientHeader(
                     )
                 )
             )
-            .statusBarsPadding()
+            // Keep the profile button and text clear of the status bar and, in landscape,
+            // the side navigation bar / display cutout. The gradient itself stays full-bleed.
+            .windowInsetsPadding(
+                WindowInsets.systemBars
+                    .union(WindowInsets.displayCutout)
+                    .only(WindowInsetsSides.Top + WindowInsetsSides.Horizontal)
+            )
             .padding(horizontal = 16.dp, vertical = 24.dp)
     ) {
         // Profile icon in top right

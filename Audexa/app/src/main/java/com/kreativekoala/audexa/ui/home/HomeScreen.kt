@@ -1,5 +1,7 @@
 package com.kreativekoala.audexa.ui.home
 
+import android.app.Activity
+import android.os.Build
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -17,12 +19,19 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawWithContent
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.luminance
+import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.view.WindowCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.kreativekoala.audexa.R
 import com.kreativekoala.audexa.data.model.DiscoverCategory
@@ -91,19 +100,49 @@ fun HomeScreen(
         )
     }
 
+    // The gradient header is drawn behind the status bar. Once it has scrolled away, a scrim in the
+    // background colour keeps scrolling content from running under the clock and status icons.
+    val scrollState = rememberScrollState()
+    val backgroundColor = MaterialTheme.colorScheme.background
+    val statusBars = WindowInsets.statusBars
+    val statusBarTopPx = statusBars.getTop(LocalDensity.current)
+    var headerHeightPx by remember { mutableIntStateOf(Int.MAX_VALUE) }
+    val headerBehindStatusBar by remember(statusBarTopPx) {
+        derivedStateOf { scrollState.value < headerHeightPx - statusBarTopPx }
+    }
+
+    // From Android 15 the status bar is transparent, so the icons sit on the dark gradient while it is
+    // at the top and on the screen background afterwards. Before that the bar has an opaque theme colour.
+    val view = LocalView.current
+    val isLightTheme = backgroundColor.luminance() > 0.5f
+    if (!view.isInEditMode && Build.VERSION.SDK_INT >= 35) {
+        DisposableEffect(headerBehindStatusBar, isLightTheme) {
+            val controller = WindowCompat.getInsetsController((view.context as Activity).window, view)
+            controller.isAppearanceLightStatusBars = isLightTheme && !headerBehindStatusBar
+            onDispose { controller.isAppearanceLightStatusBars = isLightTheme }
+        }
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
+            .background(backgroundColor)
+            .drawWithContent {
+                drawContent()
+                if (!headerBehindStatusBar) {
+                    drawRect(backgroundColor, size = Size(size.width, statusBars.getTop(this).toFloat()))
+                }
+            }
     ) {
         // Scrollable content
         Column(
             modifier = Modifier
                 .weight(1f)
-                .verticalScroll(rememberScrollState())
+                .verticalScroll(scrollState)
         ) {
             // Gradient Header
             GradientHeader(
+                modifier = Modifier.onSizeChanged { headerHeightPx = it.height },
                 greeting = getGreeting(),
                 userName = userName,
                 subtitle = stringResource(R.string.daily_brief_subtitle, viewModel.dailyBriefDate),
@@ -118,54 +157,63 @@ fun HomeScreen(
                 onCancelTapped = { viewModel.cancelGeneration() }
             )
 
-            Spacer(modifier = Modifier.height(16.dp))
+            // Everything below the header stays clear of a side navigation bar / display cutout in landscape
+            Column(
+                modifier = Modifier.windowInsetsPadding(
+                    WindowInsets.systemBars
+                        .union(WindowInsets.displayCutout)
+                        .only(WindowInsetsSides.Horizontal)
+                )
+            ) {
+                Spacer(modifier = Modifier.height(16.dp))
 
-            // Audexa Radio live banners (multilingual)
-            RadioStationBanners(
-                radioLanguages = radioLanguages,
-                onStationClick = { streamUrl, stationName ->
-                    onNavigateToLiveRadio(streamUrl, stationName)
+                // Audexa Radio live banners (multilingual)
+                RadioStationBanners(
+                    radioLanguages = radioLanguages,
+                    onStationClick = { streamUrl, stationName ->
+                        onNavigateToLiveRadio(streamUrl, stationName)
+                    }
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                // Tab Selector
+                TabSelector(
+                    selectedIndex = selectedTab,
+                    tabs = listOf(stringResource(R.string.tab_for_you), stringResource(R.string.tab_discover)),
+                    onTabSelected = { viewModel.selectTab(it) }
+                )
+
+                Spacer(modifier = Modifier.height(24.dp))
+
+                // Tab Content
+                if (selectedTab == 0) {
+                    ForYouTabContent(
+                        keepListening = keepListening,
+                        bookmarkedTopics = bookmarkedTopics,
+                        visibleTopics = visibleTopics,
+                        bookmarkedIds = bookmarkedIds,
+                        playingTopicId = playingTopicId,
+                        preferredLanguage = preferredLanguage,
+                        onTopicClick = onTopicClick,
+                        onBookmarkToggle = { viewModel.toggleBookmark(it) },
+                        onHideTopic = { viewModel.hideTopic(it) },
+                        onEpisodeClick = { viewModel.playEpisode(it) }
+                    )
+                } else {
+                    DiscoverTabContent(
+                        searchText = searchText,
+                        onSearchTextChange = { searchText = it },
+                        discoverCategories = discoverCategories,
+                        visibleTopics = visibleTopics,
+                        bookmarkedIds = bookmarkedIds,
+                        playingTopicId = playingTopicId,
+                        onTopicClick = onTopicClick,
+                        onBookmarkToggle = { viewModel.toggleBookmark(it) },
+                        onHideTopic = { viewModel.hideTopic(it) },
+                        onSuggestTopic = { showSuggestTopicSheet = true }
+                    )
                 }
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // Tab Selector
-            TabSelector(
-                selectedIndex = selectedTab,
-                tabs = listOf(stringResource(R.string.tab_for_you), stringResource(R.string.tab_discover)),
-                onTabSelected = { viewModel.selectTab(it) }
-            )
-
-            Spacer(modifier = Modifier.height(24.dp))
-
-            // Tab Content
-            if (selectedTab == 0) {
-                ForYouTabContent(
-                    keepListening = keepListening,
-                    bookmarkedTopics = bookmarkedTopics,
-                    visibleTopics = visibleTopics,
-                    bookmarkedIds = bookmarkedIds,
-                    playingTopicId = playingTopicId,
-                    preferredLanguage = preferredLanguage,
-                    onTopicClick = onTopicClick,
-                    onBookmarkToggle = { viewModel.toggleBookmark(it) },
-                    onHideTopic = { viewModel.hideTopic(it) },
-                    onEpisodeClick = { viewModel.playEpisode(it) }
-                )
-            } else {
-                DiscoverTabContent(
-                    searchText = searchText,
-                    onSearchTextChange = { searchText = it },
-                    discoverCategories = discoverCategories,
-                    visibleTopics = visibleTopics,
-                    bookmarkedIds = bookmarkedIds,
-                    playingTopicId = playingTopicId,
-                    onTopicClick = onTopicClick,
-                    onBookmarkToggle = { viewModel.toggleBookmark(it) },
-                    onHideTopic = { viewModel.hideTopic(it) },
-                    onSuggestTopic = { showSuggestTopicSheet = true }
-                )
             }
 
             // Bottom padding for mini player

@@ -102,9 +102,21 @@ class AskPendingStore @Inject constructor(@ApplicationContext context: Context) 
         prefs.edit().remove(KEY_ID).remove(KEY_STARTED).remove(KEY_LANG).apply()
     }
 
+    /**
+     * A random id used only for "Ask the hosts" (the server's per-install daily limit). It is separate from the analytics install id,
+     * so a question is never stored next to the id that usage statistics use, and the Profile analytics switch does not affect it.
+     * Created on first use; kept when a pending request is cleared.
+     */
+    @Synchronized fun askInstallId(): String {
+        prefs.getString(KEY_INSTALL, null)?.takeIf { INSTALL_ID.matches(it) }?.let { return it }
+        return java.util.UUID.randomUUID().toString().also { prefs.edit().putString(KEY_INSTALL, it).apply() }
+    }
+
     private companion object {
         const val KEY_ID = "pending_id"
         const val KEY_STARTED = "pending_started_ms"
         const val KEY_LANG = "pending_language"
+        const val KEY_INSTALL = "ask_install_id"
+        val INSTALL_ID = Regex("^[A-Za-z0-9_-]{8,64}$") // what POST /api/ask accepts
     }
 }

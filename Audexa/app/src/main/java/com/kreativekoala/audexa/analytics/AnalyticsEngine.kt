@@ -64,7 +64,6 @@ class AnalyticsEngine(
         const val KEY_QUEUE = "queue"
         const val KEY_FIRST_PLAY = "first_play_sent"
 
-        private val INSTALL_ID = Regex("^[0-9a-fA-F-]{36}$")
         private val TOPIC_ID = Regex("^[A-Za-z0-9_-]{1,64}$")
         private val LANG = Regex("^[a-z]{2,3}(?![a-z])")
         private val LOCALE = Regex("^[a-z]{2,3}(-[A-Za-z0-9]{2,8})?$")
@@ -208,18 +207,9 @@ class AnalyticsEngine(
         }
     }
 
-    /**
-     * The install id if analytics is on and one already exists; never creates one. "Ask the hosts" sends it so the server can count
-     * requests per install; with analytics switched off (which deletes the id) nothing is sent.
-     */
-    @Synchronized fun existingInstallId(): String? {
-        if (!isEnabled()) return null
-        return store.get(KEY_ID)?.takeIf { INSTALL_ID.matches(it) }
-    }
-
     private fun installId(): String {
         val existing = store.get(KEY_ID)
-        if (existing != null && INSTALL_ID.matches(existing)) return existing
+        if (existing != null && Regex("^[0-9a-fA-F-]{36}$").matches(existing)) return existing
         return newId().also { store.put(KEY_ID, it) }
     }
 

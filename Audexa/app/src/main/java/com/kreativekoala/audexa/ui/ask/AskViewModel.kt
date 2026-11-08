@@ -133,7 +133,7 @@ class AskViewModel @Inject constructor(
         viewModelScope.launch {
             // Not cancellable: if the user leaves while the request is on its way, its id must still be saved so the next visit resumes it.
             val outcome = withContext(NonCancellable) {
-                repo.submit(text, language, Analytics.installIdForAsk()).also {
+                repo.submit(text, language, pendingStore.askInstallId()).also {
                     if (it is SubmitOutcome.Accepted) pendingStore.put(PendingAsk(it.id, System.currentTimeMillis(), language))
                 }
             }

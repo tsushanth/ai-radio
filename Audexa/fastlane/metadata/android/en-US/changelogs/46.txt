@@ -1,0 +1,1 @@
+New: Ask the hosts. Type an event or question, pick a language (English, German, Spanish, French, Italian or Portuguese) and get a short two-host episode grounded in recent news headlines, with a link to share. Also adds optional anonymous usage statistics that help us improve Audexa; you can turn them off any time in Profile.

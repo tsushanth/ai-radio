@@ -892,9 +892,9 @@ curl -X GET "http://localhost:3000/api/podcast/episodes/user@example.com?limit=1
 
 Every route answers `404 {"error":"ask_disabled"}` while the flag is off. Needs migration `012_create_ask_episodes_table.sql`.
 
-- `GET /api/ask/config` -> `{ enabled, languages, maxChars }` (clients hide the feature when this is 404)
-- `POST /api/ask` body `{ text, language?, installId? }` -> `202 { id, status, pollAfterMs }`. `text` is 8 to 200 characters. Errors: `400` (`too_short`, `too_long`, `unsafe_text`, `advice`, `language_unavailable`), `429` (`ip_limit`, `install_limit`, `daily_limit`, `busy`), `503` (`paused`).
-- `GET /api/ask/:id` -> `{ id, status, progress, language, title, description, audioUrl, durationSeconds, sources[], reason, message }`.
+- `GET /api/ask/config` -> `{ enabled, languages, maxChars, minChars }` (clients hide the feature when this is 404)
+- `POST /api/ask` body `{ text, language?, installId? }` -> `202 { id, status, pollAfterMs }`. `text` is 8 to 200 characters. Errors: `400` (`too_short`, `too_long`, `unsafe_text`, `advice`, `language_unavailable`), `429` (`ip_limit`, `install_limit`, `daily_limit`, `busy`, `too_many_requests`), `503` (`paused`). Every error carries a plain-language `message`. Only requests that pass input validation count against the per-IP daily cap; separately, an IP may send at most 60 POSTs an hour, valid or not (`too_many_requests`).
+- `GET /api/ask/:id` (own cap of 600 per 15 minutes per IP, answered as `429 rate_limited`; not counted by the shared `/api` limiter) -> `{ id, status, progress, language, title, description, audioUrl, durationSeconds, sources[], reason, message }`.
   `status` is one of `queued`, `reviewing`, `searching`, `writing`, `recording`, `completed`, `rejected`, `no_coverage`, `failed`. `durationSeconds` is a whole number. `sources` are the headlines the episode was built from.
   `no_coverage` means fewer than three relevant recent headlines were found, so no episode was made.
 

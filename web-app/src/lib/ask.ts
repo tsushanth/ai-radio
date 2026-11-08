@@ -2,7 +2,8 @@
 // The backend answers 404 ask_disabled until the feature is switched on, so the card hides itself when /ask/config is not there.
 // The text is checked here only for length (courtesy); the backend does the real moderation and may still say no.
 import { apiClient } from './api/client.ts';
-import { pollJob, type JobStatus, type PollOptions } from './job-poll.ts';
+import { isErrorCode } from './api/error-text.ts';
+import { PollRetryLater, pollJob, type JobStatus, type PollOptions } from './job-poll.ts';
 import { SITE } from './share.ts';
 
 export const ASK_MIN_CHARS = 8;
@@ -41,9 +42,10 @@ export function getInstallId(storage: KeyValueStore | undefined | null): string 
 
 export type AskValidated = { ok: true; text: string } | { ok: false; error: string };
 
-export function validateAskText(raw: string): AskValidated {
+/** `minChars` is the server's minimum from /ask/config; ASK_MIN_CHARS is the fallback for a server that does not send it. */
+export function validateAskText(raw: string, minChars: number = ASK_MIN_CHARS): AskValidated {
   const text = (raw ?? '').replace(/\s+/g, ' ').trim();
-  if (text.length < ASK_MIN_CHARS) return { ok: false, error: `Please describe the event or question in at least ${ASK_MIN_CHARS} characters.` };
+  if (text.length < minChars) return { ok: false, error: `Please describe the event or question in at least ${minChars} characters.` };
   if (text.length > ASK_MAX_CHARS) return { ok: false, error: `Please keep it to ${ASK_MAX_CHARS} characters or fewer.` };
   return { ok: true, text };
 }
@@ -80,28 +82,76 @@ export interface AskEpisodeView {
   createdAt: string;
 }
 
-export interface AskConfigView { languages: string[]; maxChars: number }
+export interface AskConfigView { languages: string[]; maxChars: number; minChars: number }
 
 /** The server's settings, or null when the feature is off (404) or the server cannot be reached: the card then stays hidden. */
 export async function fetchAskConfig(): Promise<AskConfigView | null> {
   try {
-    const res = await apiClient<{ success: boolean; data?: { enabled?: boolean; languages?: string[]; maxChars?: number } }>('/ask/config');
+    const res = await apiClient<{ success: boolean; data?: { enabled?: boolean; languages?: string[]; maxChars?: number; minChars?: number } }>('/ask/config');
     if (!res?.data?.enabled || !Array.isArray(res.data.languages)) return null;
-    return { languages: res.data.languages.filter((l) => /^[a-z]{2}$/.test(l)), maxChars: res.data.maxChars ?? ASK_MAX_CHARS };
+    return {
+      languages: res.data.languages.filter((l) => /^[a-z]{2}$/.test(l)),
+      maxChars: res.data.maxChars ?? ASK_MAX_CHARS,
+      minChars: typeof res.data.minChars === 'number' && res.data.minChars > 0 ? res.data.minChars : ASK_MIN_CHARS,
+    };
   } catch {
     return null;
   }
 }
 
+const GENERIC_ERROR = 'Something went wrong. Please try again.';
+const BUSY_ERROR = 'Lots of people are using this right now. Please wait a moment and try again.';
+const OFFLINE_ERROR = 'Could not reach the server. Please check your connection and try again.';
+
+/** An Error whose `message` is safe to show, plus what the poller needs to know about it. */
+export class AskError extends Error {
+  status?: number;
+  retryAfterMs?: number;
+}
+
+/**
+ * The sentence to show for a failed Ask call. The server's own `message` when it sent one (Ask routes answer
+ * `{ error: '<code>', message: '<sentence>' }`); otherwise a plain sentence, never a bare code such as "advice" or "busy".
+ */
+export function askErrorText(err: unknown): string {
+  const e = err as { status?: number; body?: { message?: unknown }; message?: unknown } | null;
+  const fromBody = e?.body?.message;
+  if (typeof fromBody === 'string' && fromBody.trim()) return fromBody;
+  if (e?.status === 404) return 'Episode not found.';
+  if (e?.status === 429) return BUSY_ERROR;
+  if (e?.status === undefined && err instanceof TypeError) return OFFLINE_ERROR;
+  // Messages we wrote ourselves ("Could not start the episode") are fine; codes and "API error: 500" are not.
+  if (e?.status === undefined && typeof e?.message === 'string' && e.message && !isErrorCode(e.message)) return e.message;
+  return GENERIC_ERROR;
+}
+
+function toAskError(err: unknown): AskError {
+  const e = err as { status?: number; retryAfterMs?: number } | null;
+  const out = new AskError(askErrorText(err));
+  out.status = e?.status;
+  out.retryAfterMs = e?.retryAfterMs;
+  return out;
+}
+
 /** Starts a request. Throws an Error carrying the server's plain-language message. */
 export async function submitAsk(body: { text: string; language: string; installId?: string }): Promise<{ id: string }> {
-  const res = await apiClient<{ success: boolean; data?: { id?: string } }>('/ask', { method: 'POST', body: JSON.stringify(body) });
+  let res;
+  try {
+    res = await apiClient<{ success: boolean; data?: { id?: string } }>('/ask', { method: 'POST', body: JSON.stringify(body) });
+  } catch (err) {
+    throw toAskError(err);
+  }
   if (!res?.data?.id) throw new Error('Could not start the episode');
   return { id: res.data.id };
 }
 
 export async function fetchAsk(id: string): Promise<AskEpisodeView> {
-  const res = await apiClient<{ success: boolean; data?: AskEpisodeView }>(`/ask/${encodeURIComponent(id)}`);
+  let res;
+  try {
+    res = await apiClient<{ success: boolean; data?: AskEpisodeView }>(`/ask/${encodeURIComponent(id)}`);
+  } catch (err) {
+    throw toAskError(err);
+  }
   if (!res?.data) throw new Error('Episode not found');
   return res.data;
 }
@@ -116,8 +166,25 @@ export function toJobStatus(v: AskEpisodeView): JobStatus<AskEpisodeView> {
   return { status: v.status, progress: v.progress };
 }
 
+/** Wait before status call number `calls + 1`: 3 s, then 0.5 s longer each time, up to 8 s. About 65 calls in 8 minutes instead of 160. */
+export const askPollDelayMs = (calls: number): number => Math.min(8000, 3000 + Math.max(0, calls - 1) * 500);
+
+const RATE_LIMIT_WAIT_MS = { min: 5_000, max: 60_000, fallback: 15_000 };
+
 export function waitForAsk(id: string, opts: PollOptions<AskEpisodeView> = {}, get: (id: string) => Promise<AskEpisodeView> = fetchAsk) {
-  return pollJob<AskEpisodeView>(async () => toJobStatus(await get(id)), { intervalMs: 3000, timeoutMs: 8 * 60_000, ...opts });
+  return pollJob<AskEpisodeView>(async () => {
+    try {
+      return toJobStatus(await get(id));
+    } catch (err) {
+      // 429 from a status call: wait as long as the server says (within reason) and carry on, instead of failing the episode.
+      const e = err as { status?: number; retryAfterMs?: number } | null;
+      if (e?.status === 429) {
+        const wait = e.retryAfterMs ?? RATE_LIMIT_WAIT_MS.fallback;
+        throw new PollRetryLater(Math.min(RATE_LIMIT_WAIT_MS.max, Math.max(RATE_LIMIT_WAIT_MS.min, wait)));
+      }
+      throw err;
+    }
+  }, { intervalMs: 3000, nextIntervalMs: askPollDelayMs, timeoutMs: 8 * 60_000, ...opts });
 }
 
 export function stageLabel(status: string): string {

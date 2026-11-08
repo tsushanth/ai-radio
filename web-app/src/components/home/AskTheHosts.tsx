@@ -53,7 +53,7 @@ export function AskTheHosts() {
     if (busy) return;
     setError(null);
     setResult(null);
-    const checked = validateAskText(text);
+    const checked = validateAskText(text, config?.minChars);
     if (!checked.ok) return setError(checked.error);
     const now = Date.now();
     const blocked = askBlockedReason(readHistory(), now);

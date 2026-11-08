@@ -10,6 +10,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.kreativekoala.audexa.data.model.SupportedLanguage
 import com.kreativekoala.audexa.data.model.Topic
+import com.kreativekoala.audexa.ui.ask.AskScreen
 import com.kreativekoala.audexa.ui.auth.AuthScreen
 import com.kreativekoala.audexa.ui.home.HomeScreen
 import com.kreativekoala.audexa.ui.home.HomeViewModel
@@ -26,6 +27,7 @@ sealed class Screen(val route: String) {
     data object Auth : Screen("auth")
     data object Home : Screen("home")
     data object Profile : Screen("profile")
+    data object Ask : Screen("ask")
     data object RadioLanguages : Screen("radio_languages")
     data object TopicDetail : Screen("topic/{topicJson}") {
         fun createRoute(topic: Topic): String {
@@ -108,6 +110,9 @@ fun AudexaNavGraph(
                 onNavigateToLiveRadio = { streamUrl, stationName ->
                     navController.navigate(Screen.LiveRadio.createRoute(streamUrl, stationName))
                 },
+                onNavigateToAsk = {
+                    navController.navigate(Screen.Ask.route)
+                },
                 viewModel = homeViewModel  // Pass the shared ViewModel
             )
         }
@@ -121,6 +126,14 @@ fun AudexaNavGraph(
         ) {
             LiveRadioScreen(
                 onDismiss = {
+                    navController.popBackStack()
+                }
+            )
+        }
+
+        composable(Screen.Ask.route) {
+            AskScreen(
+                onNavigateBack = {
                     navController.popBackStack()
                 }
             )

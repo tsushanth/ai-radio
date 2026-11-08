@@ -100,6 +100,9 @@ object Analytics {
     fun listenStart(ctx: ListenContext) { try { engine?.listenStart(ctx) } catch (_: Throwable) {} }
     fun listenStop() { try { engine?.listenStop() } catch (_: Throwable) {} }
 
+    /** The install id for "Ask the hosts", or null when analytics is off or no id exists yet (the id is created by the first upload). */
+    fun installIdForAsk(): String? = try { engine?.existingInstallId() } catch (_: Throwable) { null }
+
     fun isEnabled(): Boolean = try { engine?.isEnabled() ?: false } catch (_: Throwable) { false }
 
     /** The Profile switch. Off: stops collecting and deletes the install id, the queue and the first-play flag. */

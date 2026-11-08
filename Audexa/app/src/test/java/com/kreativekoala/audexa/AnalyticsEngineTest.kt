@@ -272,4 +272,19 @@ class AnalyticsEngineTest {
         assertEquals(40, AnalyticsEngine.cleanCode("x".repeat(100)).length)
         assertEquals("unknown", AnalyticsEngine.cleanCode(""))
     }
+    @Test fun askInstallIdIsOnlyEverReadNeverCreatedAndHonoursOptOut() {
+        val r = Rig()
+        assertNull(r.engine.existingInstallId()) // nothing uploaded yet: no id, and asking does not make one
+        assertNull(r.store.get(AnalyticsEngine.KEY_ID))
+        r.engine.track("app_open", mapOf("locale" to "en-US"))
+        r.t += 5000
+        r.engine.flush()
+        val id = r.sent[0]["install_id"]!!.jsonPrimitive.content
+        assertEquals(id, r.engine.existingInstallId())
+        assertTrue(Regex("^[A-Za-z0-9_-]{8,64}$").matches(id)) // what POST /api/ask accepts
+        r.engine.setEnabled(false)
+        assertNull(r.engine.existingInstallId())
+        r.engine.setEnabled(true)
+        assertNull(r.engine.existingInstallId()) // opting out deleted it; turning back on does not resurrect it
+    }
 }

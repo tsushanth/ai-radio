@@ -13,6 +13,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Mic
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.outlined.Lightbulb
 import androidx.compose.material3.*
@@ -37,6 +38,7 @@ import com.kreativekoala.audexa.R
 import com.kreativekoala.audexa.data.model.DiscoverCategory
 import com.kreativekoala.audexa.data.model.SupportedLanguage
 import com.kreativekoala.audexa.data.model.Topic
+import com.kreativekoala.audexa.ui.ask.AskEntryViewModel
 import com.kreativekoala.audexa.ui.components.*
 import com.kreativekoala.audexa.ui.theme.*
 import java.util.*
@@ -47,8 +49,12 @@ fun HomeScreen(
     onNavigateToLinkedAccounts: () -> Unit,
     onTopicClick: (Topic) -> Unit,
     onNavigateToLiveRadio: (streamUrl: String, stationName: String) -> Unit = { _, _ -> },
-    viewModel: HomeViewModel = hiltViewModel()
+    onNavigateToAsk: () -> Unit = {},
+    viewModel: HomeViewModel = hiltViewModel(),
+    askEntryViewModel: AskEntryViewModel = hiltViewModel()
 ) {
+    // "Ask the hosts" is offered only while the server reports it is on (hidden on 404, errors, offline)
+    val askAvailable by askEntryViewModel.available.collectAsState()
     val selectedTab by viewModel.selectedTab.collectAsState()
     val userName by viewModel.userName.collectAsState()
     val dailyBriefState by viewModel.dailyBriefState.collectAsState()
@@ -211,7 +217,9 @@ fun HomeScreen(
                         onTopicClick = onTopicClick,
                         onBookmarkToggle = { viewModel.toggleBookmark(it) },
                         onHideTopic = { viewModel.hideTopic(it) },
-                        onSuggestTopic = { showSuggestTopicSheet = true }
+                        onSuggestTopic = { showSuggestTopicSheet = true },
+                        askAvailable = askAvailable,
+                        onAsk = onNavigateToAsk
                     )
                 }
             }
@@ -453,7 +461,9 @@ private fun DiscoverTabContent(
     onTopicClick: (Topic) -> Unit,
     onBookmarkToggle: (String) -> Unit,
     onHideTopic: (String) -> Unit,
-    onSuggestTopic: () -> Unit = {}
+    onSuggestTopic: () -> Unit = {},
+    askAvailable: Boolean = false,
+    onAsk: () -> Unit = {}
 ) {
     // Filter categories and topics based on search
     val filteredCategories = remember(searchText, discoverCategories) {
@@ -496,6 +506,13 @@ private fun DiscoverTabContent(
             onSearchTextChange = onSearchTextChange,
             modifier = Modifier.padding(horizontal = Spacing.screenPadding.dp)
         )
+
+        if (askAvailable && searchText.isEmpty()) {
+            AskEntryCard(
+                onClick = onAsk,
+                modifier = Modifier.padding(horizontal = Spacing.screenPadding.dp)
+            )
+        }
 
         // Show "No results" if search returns empty
         if (searchText.isNotEmpty() && filteredCategories.isEmpty() && filteredTopics.isEmpty()) {
@@ -585,6 +602,43 @@ private fun DiscoverTabContent(
                     text = "Suggest a Topic",
                     style = MaterialTheme.typography.bodyLarge,
                     fontWeight = FontWeight.Medium
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun AskEntryCard(onClick: () -> Unit, modifier: Modifier = Modifier) {
+    Surface(
+        onClick = onClick,
+        modifier = modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(12.dp),
+        color = MaterialTheme.colorScheme.surface,
+        border = androidx.compose.foundation.BorderStroke(1.dp, AccentOrange.copy(alpha = 0.5f))
+    ) {
+        Row(
+            modifier = Modifier.padding(horizontal = 16.dp, vertical = 14.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            Icon(
+                imageVector = Icons.Default.Mic,
+                contentDescription = null,
+                tint = AccentOrange,
+                modifier = Modifier.size(24.dp)
+            )
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = stringResource(R.string.ask_entry_title),
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.SemiBold,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+                Text(
+                    text = stringResource(R.string.ask_entry_subtitle),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
         }

@@ -264,4 +264,47 @@
     <string name="briefing_optin_title">Remind you when new topic podcasts are ready?</string>
     <string name="briefing_optin_accept">Remind me</string>
     <string name="briefing_optin_decline">Not now</string>
+
+    <!-- Ask the hosts (English only for now) -->
+    <string name="ask_entry_title">Ask the hosts</string>
+    <string name="ask_entry_subtitle">Tonight\'s game, a launch, a news story: two AI hosts discuss it</string>
+    <string name="ask_title">Ask the hosts</string>
+    <string name="ask_intro">Describe an event or news story. The hosts only talk about what recent headlines report, and tell you if there is not enough coverage. Episodes are AI-generated and take a minute or two.</string>
+    <string name="ask_field_label">What should they talk about?</string>
+    <string name="ask_field_placeholder">e.g. Who won the Warriors game tonight?</string>
+    <string name="ask_counter">%1$d/%2$d</string>
+    <string name="ask_language_label">Language</string>
+    <string name="ask_submit">Ask</string>
+    <string name="ask_sending">Sending your request...</string>
+    <string name="ask_stage_queued">Waiting for a free studio...</string>
+    <string name="ask_stage_reviewing">Checking your request...</string>
+    <string name="ask_stage_searching">Reading the latest headlines...</string>
+    <string name="ask_stage_writing">The hosts are preparing...</string>
+    <string name="ask_stage_recording">Recording the episode...</string>
+    <string name="ask_stage_working">Working...</string>
+    <string name="ask_progress_description">Progress: %1$d percent</string>
+    <string name="ask_leave_hint">You can leave this screen. Coming back picks up the same episode.</string>
+    <string name="ask_ai_note">AI-generated discussion between two AI hosts, based on recent news headlines.</string>
+    <string name="ask_length">Length %1$s</string>
+    <string name="ask_play">Play episode</string>
+    <string name="ask_pause">Pause</string>
+    <string name="ask_share">Share</string>
+    <string name="ask_share_chooser">Share this episode</string>
+    <string name="ask_share_failed">Could not open the share sheet</string>
+    <string name="ask_sources_title">Headlines this episode is based on</string>
+    <string name="ask_sources_note">The hosts only discuss what these headlines report. Check the sources for the full stories.</string>
+    <string name="ask_ask_another">Ask another</string>
+    <string name="ask_edit_question">Edit question</string>
+    <string name="ask_check_again">Check again</string>
+    <string name="ask_unavailable">Ask the hosts is not available right now.</string>
+    <string name="ask_loading">Checking availability...</string>
+    <string name="ask_err_input">Please check your question and try again.</string>
+    <string name="ask_err_limited">Ask the hosts is busy or has reached its limit. Please try again later.</string>
+    <string name="ask_err_not_found">We could not find this request any more. Please ask again.</string>
+    <string name="ask_err_offline">No connection. Check your internet and try again.</string>
+    <string name="ask_err_timeout">This is taking longer than expected. The episode may still be on its way.</string>
+    <string name="ask_err_server">Something went wrong. Please try again.</string>
+    <string name="ask_err_refused">The hosts cannot make an episode about that.</string>
+    <string name="ask_err_no_coverage">We could not find enough recent news coverage about this, so we did not make an episode.</string>
+    <string name="ask_err_failed">The episode could not be made. Please try again.</string>
 </resources>

@@ -44,6 +44,14 @@ installation id, push token, the text of suggestions or any other text the user 
 text. The server rejects any event name or property that is not on the allowlist (`ai-radio-backend/src/lib/analytics.ts`), so a
 future code change cannot start collecting more without a visible change to that file and to this document.
 
+## "Ask the hosts" uses a separate id
+
+When someone asks the hosts a question, the Android app sends the request text, the language and a separate random id that is used
+only for Ask (it is not the analytics install id, and the Profile analytics switch does not affect it). The server stores the text
+and that id in `ask_episodes` (see migration 012) so it can apply its per-install daily limit. The analytics install id is never sent
+with a question, so typed text is still never linked to it. The privacy policy and the Data safety answers need to mention the
+Ask id and the stored question text before the Android build that contains the Ask screen is released.
+
 ## Controls
 
 * Opt-out: Android Profile > About > "Share anonymous usage statistics"; web Settings > Privacy. The choice is stored on the device

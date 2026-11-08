@@ -2,7 +2,10 @@ package com.kreativekoala.audexa.data.remote
 
 import com.kreativekoala.audexa.data.model.*
 import kotlinx.serialization.SerialName
+import com.kreativekoala.audexa.ask.AskSubmitRequest
 import kotlinx.serialization.Serializable
+import okhttp3.ResponseBody
+import retrofit2.Response
 import retrofit2.http.*
 
 interface ApiService {
@@ -118,6 +121,17 @@ interface ApiService {
     // Topic suggestion
     @POST("topics/suggest")
     suspend fun suggestTopic(@Body request: SuggestTopicRequest): SuggestTopicResponse
+
+    // Ask the hosts. Raw bodies on purpose: the status code and the server's message decide what the user sees
+    // (see ask/AskLogic.kt), and a 404 means "feature off", not an error.
+    @GET("ask/config")
+    suspend fun getAskConfig(): Response<ResponseBody>
+
+    @POST("ask")
+    suspend fun submitAsk(@Body request: AskSubmitRequest): Response<ResponseBody>
+
+    @GET("ask/{id}")
+    suspend fun getAsk(@Path("id") id: String): Response<ResponseBody>
 }
 
 // Request/Response models

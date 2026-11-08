@@ -168,11 +168,12 @@ test('script prompts: headlines are the only fact source, request and headlines 
 
 // ─── admission (caps and spend breaker) ───────────────────────────────────────
 
-function memStore(over: Partial<{ installCount: number; started: number; tokens: number }> = {}) {
+function memStore(over: Partial<{ installCount: number; started: number; tokens: number; insertFails: boolean }> = {}) {
   const rows = new Map<string, AskRow>();
   const updates: Array<{ id: string; patch: AskPatch }> = [];
   const store: AskStore = {
     async insert(r) {
+      if (over.insertFails) throw new Error('database unavailable');
       const row: AskRow = { id: ID, installId: r.installId, requestText: r.requestText, language: r.language, status: 'queued', reason: null, title: null, description: null, audioUrl: null, durationSeconds: null, sources: [], inputTokens: 0, outputTokens: 0, ttsSeconds: 0, createdAt: NOW.toISOString(), updatedAt: NOW.toISOString() };
       rows.set(row.id, row);
       return row;
@@ -427,6 +428,7 @@ test('flag ON: config lists languages; POST validates, then creates a row and sc
   await withServer({ enabled: true }, async (base, ctx) => {
     const cfg = (await (await fetch(`${base}/config`)).json()) as { data: { enabled: boolean; languages: string[]; maxChars: number } };
     assert.deepEqual([cfg.data.enabled, cfg.data.languages, cfg.data.maxChars], [true, LANGS, 200]);
+    assert.equal((cfg.data as { minChars?: number }).minChars, 8, 'config exposes the server minimum so clients need not hard-code it');
 
     const bad = await post(base, { text: 'visit https://evil.test now please', language: 'en' });
     assert.equal(bad.status, 400);
@@ -485,5 +487,71 @@ test('flag ON: GET returns the public view, 404 for unknown / malformed ids, and
     assert.deepEqual([j.data.status, j.data.reason], ['failed', 'interrupted']);
     assert.match(j.data.message, /interrupted/);
     assert.ok(!JSON.stringify(j).includes('private words'));
+  });
+});
+
+// ─── per-IP limits ────────────────────────────────────────────────────────────
+
+const GOOD = 'Who won the Warriors Lakers game tonight?';
+
+test('IP cap: refused input (too short, advice, unsafe text) does not spend the per-IP daily cap', async () => {
+  await withServer({ enabled: true, maxQueue: 20 }, async (base, ctx) => {
+    assert.equal(CONFIG.ipDailyLimit, 5);
+    const refusals = [{ text: 'short' }, { text: 'should I buy Tesla stock after earnings' }, { text: 'visit https://evil.test now please' }, { text: 'short' }, { text: 'should I buy Tesla stock after earnings' }];
+    for (const body of refusals) assert.equal((await post(base, body)).status, 400);
+    // Five accepted requests still fit: the refusals above cost nothing.
+    for (let i = 0; i < 5; i++) assert.equal((await post(base, { text: GOOD })).status, 202, `accepted request ${i + 1} of 5`);
+    assert.equal(ctx.calls.scheduled.length, 5);
+    // The sixth accepted request hits the cap, with the same body as before.
+    const sixth = await post(base, { text: GOOD });
+    assert.equal(sixth.status, 429);
+    const j = (await sixth.json()) as { success: boolean; error: string; message: string };
+    assert.deepEqual([j.success, j.error, j.message], [false, 'ip_limit', 'You have asked enough for today. Please try again tomorrow.']);
+    assert.equal(ctx.calls.scheduled.length, 5);
+  });
+});
+
+test('IP cap: a request that is accepted and then fails on the server still counts', async () => {
+  await withServer({ enabled: true, maxQueue: 20, storeOver: { insertFails: true } }, async (base) => {
+    for (let i = 0; i < 5; i++) assert.equal((await post(base, { text: GOOD })).status, 500);
+    const sixth = await post(base, { text: GOOD });
+    assert.equal(((await sixth.json()) as { error: string }).error, 'ip_limit');
+  });
+});
+
+test('IP abuse guard: spamming invalid input is still limited by a separate cap on raw POST volume', async () => {
+  await withServer({ enabled: true }, async (base, ctx) => {
+    let blockedAt = 0;
+    for (let i = 1; i <= 70 && !blockedAt; i++) {
+      const res = await post(base, { text: 'short' });
+      if (res.status === 429) {
+        blockedAt = i;
+        const j = (await res.json()) as { success: boolean; error: string; message: string };
+        assert.equal(j.success, false);
+        assert.equal(j.error, 'too_many_requests');
+        assert.ok(j.message.length > 10);
+      } else {
+        assert.equal(res.status, 400);
+      }
+    }
+    assert.equal(blockedAt, 61, 'the 61st POST within the hour is refused');
+    assert.equal(ctx.m.rows.size, 0);
+  });
+});
+
+test('status polling has its own generous per-IP cap (600 per 15 minutes) and answers an ask-shaped 429', async () => {
+  await withServer({ enabled: true }, async (base) => {
+    for (let i = 1; i <= 600; i++) {
+      const res = await fetch(`${base}/${ID}`);
+      assert.equal(res.status, 404, `poll ${i}`); // no such row; the point is that it is not limited yet
+    }
+    const over = await fetch(`${base}/${ID}`);
+    assert.equal(over.status, 429);
+    const j = (await over.json()) as { success: boolean; error: string; message: string };
+    assert.deepEqual([j.success, j.error], [false, 'rate_limited']);
+    assert.ok(j.message.length > 10);
+    assert.ok(over.headers.get('retry-after'), 'tells the client how long to wait');
+    // config and POST are not affected by poll volume
+    assert.equal((await fetch(`${base}/config`)).status, 200);
   });
 });

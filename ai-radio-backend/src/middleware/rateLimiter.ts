@@ -5,6 +5,7 @@
 
 import rateLimit from 'express-rate-limit';
 import { env } from '../config/environment';
+import { isAskStatusPoll } from '../services/ask/askPollPath';
 
 /**
  * General API Rate Limiter
@@ -27,6 +28,8 @@ export const apiLimiter = rateLimit({
   // public IP limit fast; with BATCH_SECRET bearer it's clearly first-party).
   skip: (req) => {
     if (req.path === '/health' || req.path === '/') return true;
+    // "Ask the hosts" status polls (every few seconds while an episode is made) have their own, higher cap in the ask router.
+    if (isAskStatusPoll(req.method, req.path)) return true;
     const auth = req.headers.authorization;
     if (auth && env.BATCH_SECRET && auth === `Bearer ${env.BATCH_SECRET}`) {
       return true;

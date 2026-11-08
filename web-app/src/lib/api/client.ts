@@ -1,3 +1,5 @@
+import { apiErrorText, retryAfterMs } from './error-text.ts';
+
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://ai-radio-backend.fly.dev/api';
 
 interface RequestOptions extends RequestInit {
@@ -26,13 +28,10 @@ export async function apiClient<T>(
 
   if (!response.ok) {
     const body = await response.json().catch(() => ({} as Record<string, unknown>));
-    const message = typeof body.error === 'string'
-      ? body.error
-      : typeof body.message === 'string'
-        ? body.message
-        : `API error: ${response.status}`;
-    const err = new Error(message) as Error & { status?: number; body?: Record<string, unknown> };
+    const message = apiErrorText(body, response.status);
+    const err = new Error(message) as Error & { status?: number; body?: Record<string, unknown>; retryAfterMs?: number };
     err.status = response.status;
+    err.retryAfterMs = retryAfterMs(response.headers.get('retry-after'));
     err.body = body as Record<string, unknown>;
     throw err;
   }

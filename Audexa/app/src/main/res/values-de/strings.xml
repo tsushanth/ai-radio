@@ -153,7 +153,7 @@
     <string name="unlink">Trennen</string>
     <string name="soon">Bald</string>
     <string name="your_privacy">Deine Privatsphaere</string>
-    <string name="privacy_note">Wir lesen nur E-Mail-Betreffzeilen und Absender, um Zusammenfassungen zu erstellen. Wir speichern niemals deine E-Mail-Inhalte und teilen deine Daten nicht mit Dritten.</string>
+    <string name="privacy_note">Um dein Briefing zu erstellen, liest unser Server deine aktuellen Gmail-Nachrichten und Kalendertermine. Absendername, Betreff und die ersten 100 Zeichen deiner wichtigsten E-Mails sowie Titel, Zeiten und Orte der Termine werden an Anthropic, unseren KI-Anbieter, gesendet, um das Skript zu schreiben. Wir speichern deinen E-Mail-Text nicht, aber die fertige Briefing-Audiodatei bleibt gespeichert, bis du dein Konto löschst. Trennen entfernt den auf unserem Server gespeicherten Google-Zugriff nicht; Konto löschen im Profil tut das.</string>
     <string name="microsoft_outlook_coming_soon">Die Microsoft Outlook-Verknuepfung wird in einem zukuenftigen Update verfuegbar sein.</string>
     <string name="gmail_linking_cancelled">Gmail-Verknuepfung wurde abgebrochen</string>
     <string name="calendar_linking_cancelled">Kalender-Verknuepfung wurde abgebrochen</string>

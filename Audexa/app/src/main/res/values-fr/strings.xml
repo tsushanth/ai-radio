@@ -153,7 +153,7 @@
     <string name="unlink">Delier</string>
     <string name="soon">Bientot</string>
     <string name="your_privacy">Votre confidentialite</string>
-    <string name="privacy_note">Nous ne lisons que les objets et expediteurs des e-mails pour creer des resumes. Nous ne stockons jamais le contenu de vos e-mails et ne partageons pas vos donnees avec des tiers.</string>
+    <string name="privacy_note">Pour créer votre briefing, notre serveur lit vos e-mails Gmail récents et les événements de votre agenda. Le nom de l\'expéditeur, l\'objet et les 100 premiers caractères de vos principaux e-mails, ainsi que les titres, heures et lieux des événements, sont envoyés à Anthropic, notre fournisseur d\'IA, pour rédiger le script. Nous ne conservons pas le texte de vos e-mails, mais l\'audio du briefing est conservé jusqu\'à la suppression de votre compte. Dissocier ne supprime pas l\'accès Google enregistré sur notre serveur ; Supprimer le compte, dans Profil, le fait.</string>
     <string name="microsoft_outlook_coming_soon">La liaison Microsoft Outlook sera disponible dans une future mise a jour.</string>
     <string name="gmail_linking_cancelled">La liaison Gmail a ete annulee</string>
     <string name="calendar_linking_cancelled">La liaison du calendrier a ete annulee</string>

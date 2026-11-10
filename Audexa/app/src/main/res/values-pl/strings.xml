@@ -153,7 +153,7 @@
     <string name="unlink">Odłącz</string>
     <string name="soon">Wkrótce</string>
     <string name="your_privacy">Twoja prywatność</string>
-    <string name="privacy_note">Odczytujemy tylko tematy e-maili i nadawców w celu tworzenia podsumowań. Nigdy nie przechowujemy treści e-maili ani nie udostępniamy danych osobom trzecim.</string>
+    <string name="privacy_note">Aby przygotować Twoje podsumowanie, nasz serwer odczytuje Twoje ostatnie wiadomości z Gmaila i wydarzenia z kalendarza. Nazwa nadawcy, temat i pierwsze 100 znaków najważniejszych e-maili oraz tytuły, godziny i miejsca wydarzeń są wysyłane do Anthropic, naszego dostawcy AI, aby napisać scenariusz. Nie przechowujemy treści Twoich e-maili, ale gotowe nagranie podsumowania jest przechowywane, dopóki nie usuniesz konta. Odłączenie nie usuwa dostępu do Google zapisanego na naszym serwerze; robi to opcja Usuń konto w Profilu.</string>
     <string name="microsoft_outlook_coming_soon">Łączenie z Microsoft Outlook będzie dostępne w przyszłej aktualizacji.</string>
     <string name="gmail_linking_cancelled">Łączenie z Gmail zostało anulowane</string>
     <string name="calendar_linking_cancelled">Łączenie z kalendarzem zostało anulowane</string>

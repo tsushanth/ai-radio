@@ -153,7 +153,7 @@
     <string name="unlink">Putuskan</string>
     <string name="soon">Segera</string>
     <string name="your_privacy">Privasi Anda</string>
-    <string name="privacy_note">Kami hanya membaca subjek email dan pengirim untuk membuat ringkasan. Kami tidak pernah menyimpan konten email Anda atau membagikan data Anda dengan pihak ketiga.</string>
+    <string name="privacy_note">Untuk membuat ringkasan Anda, server kami membaca email Gmail terbaru dan acara kalender Anda. Nama pengirim, subjek, dan 100 karakter pertama dari email teratas Anda, beserta judul, waktu, dan lokasi acara, dikirim ke Anthropic, penyedia AI kami, untuk menulis naskah. Kami tidak menyimpan teks email Anda, tetapi audio ringkasan yang sudah jadi disimpan sampai Anda menghapus akun. Memutuskan tautan tidak menghapus akses Google yang tersimpan di server kami; Hapus Akun di Profil akan menghapusnya.</string>
     <string name="microsoft_outlook_coming_soon">Penghubungan Microsoft Outlook akan tersedia dalam pembaruan mendatang.</string>
     <string name="gmail_linking_cancelled">Penghubungan Gmail dibatalkan</string>
     <string name="calendar_linking_cancelled">Penghubungan kalender dibatalkan</string>

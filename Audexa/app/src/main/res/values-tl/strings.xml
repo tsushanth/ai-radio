@@ -153,7 +153,7 @@
     <string name="unlink">I-unlink</string>
     <string name="soon">Sa Lalong Madaling Panahon</string>
     <string name="your_privacy">Ang Iyong Privacy</string>
-    <string name="privacy_note">Binabasa lang namin ang mga paksa ng email at mga nagpadala para gumawa ng mga buod. Hindi namin kailanman iniimbak ang nilalaman ng iyong email o ibinabahagi ang iyong data sa mga third party.</string>
+    <string name="privacy_note">Para gawin ang iyong briefing, binabasa ng aming server ang mga kamakailang Gmail message at event sa kalendaryo mo. Ang pangalan ng nagpadala, paksa at unang 100 character ng iyong mga pangunahing email, pati ang pamagat, oras at lugar ng mga event, ay ipinapadala sa Anthropic, ang aming AI provider, para isulat ang script. Hindi namin iniimbak ang teksto ng email mo, pero ang natapos na audio ng briefing ay itinatago hanggang burahin mo ang account mo. Hindi inaalis ng Unlink ang Google access na nakaimbak sa server namin; inaalis ito ng Delete Account sa Profile.</string>
     <string name="microsoft_outlook_coming_soon">Ang pag-link ng Microsoft Outlook ay magiging available sa hinaharap na update.</string>
     <string name="gmail_linking_cancelled">Nakansela ang pag-link ng Gmail</string>
     <string name="calendar_linking_cancelled">Nakansela ang pag-link ng calendar</string>

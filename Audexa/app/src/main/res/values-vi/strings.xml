@@ -153,7 +153,7 @@
     <string name="unlink">Hủy liên kết</string>
     <string name="soon">Sắp có</string>
     <string name="your_privacy">Quyền riêng tư của bạn</string>
-    <string name="privacy_note">Chúng tôi chỉ đọc tiêu đề email và người gửi để tạo bản tóm tắt. Chúng tôi không bao giờ lưu trữ nội dung email hoặc chia sẻ dữ liệu của bạn với bên thứ ba.</string>
+    <string name="privacy_note">Để tạo bản tin của bạn, máy chủ của chúng tôi đọc các email Gmail gần đây và sự kiện lịch của bạn. Tên người gửi, tiêu đề và 100 ký tự đầu của các email quan trọng nhất, cùng tiêu đề, thời gian và địa điểm của sự kiện, được gửi đến Anthropic, nhà cung cấp AI của chúng tôi, để viết kịch bản. Chúng tôi không lưu nội dung email của bạn, nhưng âm thanh bản tin hoàn chỉnh được giữ cho đến khi bạn xóa tài khoản. Hủy liên kết không xóa quyền truy cập Google được lưu trên máy chủ của chúng tôi; Xóa tài khoản trong Hồ sơ thì có.</string>
     <string name="microsoft_outlook_coming_soon">Liên kết Microsoft Outlook sẽ có trong bản cập nhật tương lai.</string>
     <string name="gmail_linking_cancelled">Liên kết Gmail đã bị hủy</string>
     <string name="calendar_linking_cancelled">Liên kết lịch đã bị hủy</string>

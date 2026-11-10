@@ -153,7 +153,7 @@
     <string name="unlink">\u53d6\u6d88\u5173\u8054</string>
     <string name="soon">\u5373\u5c06</string>
     <string name="your_privacy">\u4f60\u7684\u9690\u79c1</string>
-    <string name="privacy_note">\u6211\u4eec\u53ea\u8bfb\u53d6\u90ae\u4ef6\u4e3b\u9898\u548c\u53d1\u4ef6\u4eba\u6765\u521b\u5efa\u6458\u8981\u3002\u6211\u4eec\u4ece\u4e0d\u5b58\u50a8\u4f60\u7684\u90ae\u4ef6\u5185\u5bb9\u6216\u4e0e\u7b2c\u4e09\u65b9\u5171\u4eab\u4f60\u7684\u6570\u636e\u3002</string>
+    <string name="privacy_note">为了生成你的简报，我们的服务器会读取你最近的 Gmail 邮件和日历事件。重要邮件的发件人姓名、主题和前 100 个字符，以及事件的标题、时间和地点，会发送给我们的 AI 提供商 Anthropic 以撰写脚本。我们不会保存你的邮件文本，但生成的简报音频会保留到你删除账户为止。取消关联不会移除保存在我们服务器上的 Google 访问权限；在“我的”中选择“删除账户”才会移除。</string>
     <string name="microsoft_outlook_coming_soon">\u5fae\u8f6f Outlook \u5173\u8054\u5c06\u5728\u672a\u6765\u7684\u66f4\u65b0\u4e2d\u63d0\u4f9b\u3002</string>
     <string name="gmail_linking_cancelled">Gmail \u5173\u8054\u5df2\u53d6\u6d88</string>
     <string name="calendar_linking_cancelled">\u65e5\u5386\u5173\u8054\u5df2\u53d6\u6d88</string>

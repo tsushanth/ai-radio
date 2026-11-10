@@ -153,7 +153,7 @@
     <string name="unlink">Bağlantıyı Kaldır</string>
     <string name="soon">Yakında</string>
     <string name="your_privacy">Gizliliğiniz</string>
-    <string name="privacy_note">Özetler oluşturmak için yalnızca e-posta konularını ve gönderenlerini okuyoruz. E-posta içeriğinizi asla saklamaz veya verilerinizi üçüncü taraflarla paylaşmayız.</string>
+    <string name="privacy_note">Özetinizi oluşturmak için sunucumuz son Gmail iletilerinizi ve takvim etkinliklerinizi okur. En önemli e-postalarınızın gönderen adı, konusu ve ilk 100 karakteri ile etkinlik başlıkları, saatleri ve yerleri, senaryoyu yazmak için yapay zeka sağlayıcımız Anthropic\'e gönderilir. E-posta metninizi saklamayız, ancak hazır özet sesi hesabınızı silene kadar saklanır. Bağlantıyı kaldırmak, sunucumuzda saklanan Google erişimini silmez; Profil\'deki Hesabı Sil siler.</string>
     <string name="microsoft_outlook_coming_soon">Microsoft Outlook bağlantısı gelecek bir güncellemede kullanılabilir olacaktır.</string>
     <string name="gmail_linking_cancelled">Gmail bağlantısı iptal edildi</string>
     <string name="calendar_linking_cancelled">Takvim bağlantısı iptal edildi</string>

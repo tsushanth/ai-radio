@@ -155,7 +155,7 @@
     <string name="unlink">Unlink</string>
     <string name="soon">Soon</string>
     <string name="your_privacy">Your Privacy</string>
-    <string name="privacy_note">We only read email subjects and senders to create summaries. We never store your email content or share your data with third parties.</string>
+    <string name="privacy_note">To build your briefing, our server reads your recent Gmail messages and calendar events. The sender name, subject and first 100 characters of your top emails, plus event titles, times and places, are sent to Anthropic, our AI provider, to write the script. We do not keep your email text, but the finished briefing audio is kept until you delete your account. Unlink does not remove the Google access stored on our server; Delete Account in Profile does.</string>
     <string name="microsoft_outlook_coming_soon">Microsoft Outlook linking will be available in a future update.</string>
     <string name="gmail_linking_cancelled">Gmail linking was cancelled</string>
     <string name="calendar_linking_cancelled">Calendar linking was cancelled</string>

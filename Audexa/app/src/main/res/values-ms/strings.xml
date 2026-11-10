@@ -153,7 +153,7 @@
     <string name="unlink">Nyahpaut</string>
     <string name="soon">Tidak Lama Lagi</string>
     <string name="your_privacy">Privasi Anda</string>
-    <string name="privacy_note">Kami hanya membaca subjek e-mel dan penghantar untuk membuat ringkasan. Kami tidak pernah menyimpan kandungan e-mel anda atau berkongsi data anda dengan pihak ketiga.</string>
+    <string name="privacy_note">Untuk membuat ringkasan anda, pelayan kami membaca e-mel Gmail terkini dan acara kalendar anda. Nama penghantar, subjek dan 100 aksara pertama e-mel teratas anda, bersama tajuk, masa dan lokasi acara, dihantar kepada Anthropic, pembekal AI kami, untuk menulis skrip. Kami tidak menyimpan teks e-mel anda, tetapi audio ringkasan yang siap disimpan sehingga anda memadam akaun anda. Menyahpautkan tidak membuang akses Google yang disimpan pada pelayan kami; Padam Akaun di Profil berbuat demikian.</string>
     <string name="microsoft_outlook_coming_soon">Pautan Microsoft Outlook akan tersedia dalam kemas kini akan datang.</string>
     <string name="gmail_linking_cancelled">Pautan Gmail dibatalkan</string>
     <string name="calendar_linking_cancelled">Pautan kalendar dibatalkan</string>

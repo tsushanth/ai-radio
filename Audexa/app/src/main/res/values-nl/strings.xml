@@ -153,7 +153,7 @@
     <string name="unlink">Ontkoppelen</string>
     <string name="soon">Binnenkort</string>
     <string name="your_privacy">Jouw privacy</string>
-    <string name="privacy_note">We lezen alleen e-mailonderwerpen en afzenders om samenvattingen te maken. We slaan nooit je e-mailinhoud op en delen je gegevens niet met derden.</string>
+    <string name="privacy_note">Om je briefing te maken, leest onze server je recente Gmail-berichten en agenda-afspraken. De naam van de afzender, het onderwerp en de eerste 100 tekens van je belangrijkste e-mails, plus titels, tijden en plaatsen van afspraken, worden naar Anthropic, onze AI-leverancier, gestuurd om het script te schrijven. We bewaren je e-mailtekst niet, maar de audio van de briefing wordt bewaard tot je je account verwijdert. Ontkoppelen verwijdert de Google-toegang op onze server niet; Account verwijderen in Profiel wel.</string>
     <string name="microsoft_outlook_coming_soon">Microsoft Outlook-koppeling wordt beschikbaar in een toekomstige update.</string>
     <string name="gmail_linking_cancelled">Gmail-koppeling is geannuleerd</string>
     <string name="calendar_linking_cancelled">Agendakoppeling is geannuleerd</string>

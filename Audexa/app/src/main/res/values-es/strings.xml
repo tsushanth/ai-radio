@@ -153,7 +153,7 @@
     <string name="unlink">Desvincular</string>
     <string name="soon">Pronto</string>
     <string name="your_privacy">Tu privacidad</string>
-    <string name="privacy_note">Solo leemos asuntos y remitentes de correos para crear resumenes. Nunca almacenamos el contenido de tus correos ni compartimos tus datos con terceros.</string>
+    <string name="privacy_note">Para crear tu resumen, nuestro servidor lee tus correos recientes de Gmail y los eventos del calendario. El nombre del remitente, el asunto y los primeros 100 caracteres de tus correos principales, además de los títulos, horas y lugares de los eventos, se envían a Anthropic, nuestro proveedor de IA, para escribir el guion. No guardamos el texto de tus correos, pero el audio del resumen se conserva hasta que elimines tu cuenta. Desvincular no elimina el acceso a Google guardado en nuestro servidor; Eliminar cuenta, en Perfil, sí lo hace.</string>
     <string name="microsoft_outlook_coming_soon">La vinculacion con Microsoft Outlook estara disponible en una futura actualizacion.</string>
     <string name="gmail_linking_cancelled">Se cancelo la vinculacion con Gmail</string>
     <string name="calendar_linking_cancelled">Se cancelo la vinculacion del calendario</string>

@@ -153,7 +153,7 @@
     <string name="unlink">إلغاء الربط</string>
     <string name="soon">قريباً</string>
     <string name="your_privacy">خصوصيتك</string>
-    <string name="privacy_note">نقرأ فقط عناوين البريد الإلكتروني والمرسلين لإنشاء الملخصات. لا نخزن محتوى بريدك الإلكتروني أو نشارك بياناتك مع أطراف ثالثة.</string>
+    <string name="privacy_note">لإنشاء ملخصك، يقرأ خادمنا رسائل Gmail الأخيرة وأحداث التقويم لديك. يُرسَل اسم المرسل والموضوع وأول 100 حرف من أهم رسائلك، إضافةً إلى عناوين الأحداث وأوقاتها وأماكنها، إلى Anthropic، مزوّد الذكاء الاصطناعي لدينا، لكتابة النص. لا نحتفظ بنص رسائلك، لكن الملف الصوتي النهائي للملخص يُحفَظ حتى تحذف حسابك. إلغاء الربط لا يزيل وصول Google المخزَّن على خادمنا؛ أما حذف الحساب في الملف الشخصي فيزيله.</string>
     <string name="microsoft_outlook_coming_soon">سيكون ربط Microsoft Outlook متاحاً في تحديث مستقبلي.</string>
     <string name="gmail_linking_cancelled">تم إلغاء ربط Gmail</string>
     <string name="calendar_linking_cancelled">تم إلغاء ربط التقويم</string>

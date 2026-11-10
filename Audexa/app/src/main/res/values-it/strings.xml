@@ -153,7 +153,7 @@
     <string name="unlink">Scollega</string>
     <string name="soon">Presto</string>
     <string name="your_privacy">La tua privacy</string>
-    <string name="privacy_note">Leggiamo solo gli oggetti e i mittenti delle e-mail per creare riepiloghi. Non memorizziamo mai il contenuto delle tue e-mail ne condividiamo i tuoi dati con terze parti.</string>
+    <string name="privacy_note">Per creare il tuo briefing, il nostro server legge le tue e-mail Gmail recenti e gli eventi del calendario. Il nome del mittente, l\'oggetto e i primi 100 caratteri delle e-mail principali, insieme a titoli, orari e luoghi degli eventi, vengono inviati ad Anthropic, il nostro fornitore di IA, per scrivere il copione. Non conserviamo il testo delle tue e-mail, ma l\'audio del briefing viene conservato finché non elimini il tuo account. Scollega non rimuove l\'accesso a Google salvato sul nostro server; Elimina account, nel Profilo, lo fa.</string>
     <string name="microsoft_outlook_coming_soon">Il collegamento con Microsoft Outlook sara disponibile in un futuro aggiornamento.</string>
     <string name="gmail_linking_cancelled">Il collegamento con Gmail e stato annullato</string>
     <string name="calendar_linking_cancelled">Il collegamento del calendario e stato annullato</string>

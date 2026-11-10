@@ -20,8 +20,12 @@ interface ApiService {
         @Body preferences: UserPreferences
     ): User
     
+    /** Needs the signed-in user's session token ("Bearer <token>"); the server rejects anything else with 401/403. */
     @DELETE("user/{userId}")
-    suspend fun deleteUser(@Path("userId") userId: String): DeleteResponse
+    suspend fun deleteUser(
+        @Path("userId") userId: String,
+        @Header("Authorization") authorization: String
+    ): DeleteResponse
     
     // Episode endpoints
     @GET("podcast/episodes/{userId}")

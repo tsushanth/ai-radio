@@ -62,6 +62,19 @@ setInterval(() => {
   }
 }, 10 * 60 * 1000);
 
+/** Drops in-memory generation jobs (which hold the user's script and audio link) for one user; used by account deletion. */
+export function purgeJobsForUser(userId: string): number {
+  const target = userId.trim().toLowerCase();
+  let n = 0;
+  for (const [jobId, job] of jobStore.entries()) {
+    if (String(job.userId).trim().toLowerCase() === target) {
+      jobStore.delete(jobId);
+      n++;
+    }
+  }
+  return n;
+}
+
 function generateJobId(): string {
   return `job_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
 }

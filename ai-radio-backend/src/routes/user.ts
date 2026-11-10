@@ -6,8 +6,23 @@
 import express, { Request, Response, NextFunction } from 'express';
 import { z } from 'zod';
 import type { UserPreferences } from '../types/database';
+import { createClient } from '@supabase/supabase-js';
+import { requireSelf, supabaseTokenVerifier, type TokenVerifier } from '../lib/user-auth';
+import { deleteUserData, RETAINED_NOTES } from '../services/user/account-deletion';
+import { purgeJobsForUser } from './podcast';
 
 const router = express.Router();
+
+// Supabase client with the service key: used to verify the caller's session token and to delete their data.
+let cachedClient: any = null;
+function serviceClient(): any {
+  const url = process.env.SUPABASE_URL;
+  const key = process.env.SUPABASE_SERVICE_KEY;
+  if (!url || !key) return null;
+  if (!cachedClient) cachedClient = createClient(url, key, { auth: { persistSession: false, autoRefreshToken: false } });
+  return cachedClient;
+}
+const tokenVerifier = (): TokenVerifier => supabaseTokenVerifier(serviceClient());
 
 // ================================================
 // VALIDATION SCHEMAS
@@ -217,105 +232,57 @@ router.put('/:userId/preferences', async (req: Request, res: Response, next: Nex
 
 /**
  * DELETE /user/:userId
- * Delete user account and all associated data
+ * Delete the signed-in user's account and everything stored for it.
+ *
+ * Requires "Authorization: Bearer <Supabase access token>" for the same account as :userId (401 without a valid token,
+ * 403 for another user's token). See services/user/account-deletion.ts for exactly what is removed.
  */
-router.delete('/:userId', async (req: Request, res: Response, next: NextFunction) => {
+router.delete('/:userId', requireSelf(() => tokenVerifier()), async (req: Request, res: Response) => {
   try {
-    const userId = req.params.userId;
-
-    console.log(`🗑️ Deleting all data for user: ${userId}`);
-
-    // Import token manager and supabase for cleanup
+    const supabase = serviceClient();
+    if (!supabase) {
+      return res.status(503).json({ success: false, error: 'Database not configured' });
+    }
+    const authUser = res.locals.authUser as { id: string; email: string };
     const { tokenManager } = await import('../services/auth/token.manager');
-    const { createClient } = await import('@supabase/supabase-js');
 
-    const supabaseUrl = process.env.SUPABASE_URL;
-    const supabaseKey = process.env.SUPABASE_SERVICE_KEY;
+    const result = await deleteUserData(
+      {
+        db: supabase,
+        revokeProviderTokens: async (email) => {
+          // Revoke at Google/Microsoft first, then drop the stored tokens (revokeToken does both).
+          await tokenManager.revokeToken(email, 'google');
+          await tokenManager.revokeToken(email, 'microsoft');
+        },
+        purgeMemory: (email) => purgeJobsForUser(email),
+        deleteAuthUser: async (id) => {
+          const { error } = await supabase.auth.admin.deleteUser(id);
+          if (error) throw error;
+        },
+      },
+      { email: authUser.email, authUserId: authUser.id, pathEmail: req.params.userId }
+    );
 
-    if (supabaseUrl && supabaseKey) {
-      const supabase = createClient(supabaseUrl, supabaseKey);
+    // No email address in the log line: only counts.
+    console.log(`[AccountDeletion] ok=${result.ok} tables=${JSON.stringify(result.deleted)} files=${JSON.stringify(result.files)} failed=${result.failed.join(',')} warnings=${result.warnings.join(',')}`);
 
-      // 1. Delete linked accounts / OAuth tokens
-      console.log('   Deleting linked accounts...');
-      const { error: linkedAccountsError } = await supabase
-        .from('linked_accounts')
-        .delete()
-        .eq('user_email', userId);
-
-      if (linkedAccountsError) {
-        console.warn(`   Warning: Failed to delete linked accounts: ${linkedAccountsError.message}`);
-      } else {
-        console.log('   ✅ Linked accounts deleted');
-      }
-
-      // 2. Topic episodes are global (per topic per day), not user-specific
-      // No need to delete them for a specific user
-      console.log('   ℹ️ Topic episodes are global, skipping...');
-
-      // 3. Delete podcast episodes - need to find user by UUID first
-      console.log('   Deleting podcast episodes...');
-      // First, try to get the user's UUID from the users table by email
-      const { data: userData } = await supabase
-        .from('users')
-        .select('id')
-        .eq('email', userId)
-        .single();
-
-      if (userData?.id) {
-        const { error: podcastEpisodesError } = await supabase
-          .from('podcast_episodes')
-          .delete()
-          .eq('user_id', userData.id);
-
-        if (podcastEpisodesError) {
-          console.warn(`   Warning: Failed to delete podcast episodes: ${podcastEpisodesError.message}`);
-        } else {
-          console.log('   ✅ Podcast episodes deleted');
-        }
-      } else {
-        console.log('   ℹ️ No user UUID found, skipping podcast episodes deletion');
-      }
-
-      // 4. Delete user profile if exists
-      console.log('   Deleting user profile...');
-      const { error: userError } = await supabase
-        .from('users')
-        .delete()
-        .eq('id', userId);
-
-      // Also try with email as identifier
-      if (userError) {
-        await supabase.from('users').delete().eq('email', userId);
-      }
-      console.log('   ✅ User profile deleted');
+    if (!result.ok) {
+      return res.status(500).json({
+        success: false,
+        error: 'Some data could not be deleted. Please try again.',
+        failed: result.failed,
+      });
     }
-
-    // 5. Clear any in-memory tokens
-    console.log('   Clearing in-memory tokens...');
-    try {
-      await tokenManager.revokeToken(userId, 'google');
-    } catch (e) {
-      // Ignore - token may not exist
-    }
-    try {
-      await tokenManager.revokeToken(userId, 'microsoft');
-    } catch (e) {
-      // Ignore - token may not exist
-    }
-    console.log('   ✅ In-memory tokens cleared');
-
-    console.log(`✅ Successfully deleted all data for user: ${userId}`);
-
     res.json({
       success: true,
       message: 'User account and all associated data have been deleted',
+      deleted: result.deleted,
+      files: result.files,
+      retained: RETAINED_NOTES,
     });
   } catch (error) {
-    console.error('Failed to delete user:', error);
-    res.status(500).json({
-      error: 'Failed to delete user',
-      message: error instanceof Error ? error.message : 'Unknown error',
-    });
+    console.error('Failed to delete user:', error instanceof Error ? error.message : 'unknown error');
+    res.status(500).json({ success: false, error: 'Failed to delete user' });
   }
 });
 

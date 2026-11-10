@@ -19,8 +19,8 @@ class UserRepository @Inject constructor(
         apiService.updatePreferences(userId, preferences)
     }
 
-    suspend fun deleteUser(userId: String): Result<DeleteResponse> = runCatching {
-        apiService.deleteUser(userId)
+    suspend fun deleteUser(userId: String, accessToken: String): Result<DeleteResponse> = runCatching {
+        apiService.deleteUser(userId, "Bearer $accessToken")
     }
 
     suspend fun linkAccount(

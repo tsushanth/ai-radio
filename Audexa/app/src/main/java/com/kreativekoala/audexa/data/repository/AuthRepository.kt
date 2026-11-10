@@ -278,12 +278,19 @@ class AuthRepository @Inject constructor(
         preferencesManager.clearAll()
     }
 
+    /** The Supabase session token created when the user signed in with Google (refreshed first so it is not expired). */
+    private suspend fun sessionAccessToken(): String {
+        runCatching { supabaseClient.auth.refreshCurrentSession() }
+        return supabaseClient.auth.currentAccessTokenOrNull()
+            ?: throw Exception("Your sign-in has expired. Please sign out, sign in again and retry.")
+    }
+
     suspend fun deleteAccount(): Result<Unit> = runCatching {
         val userId = preferencesManager.userEmail.first() 
             ?: throw Exception("No user logged in")
         
-        // Delete from backend
-        apiService.deleteUser(userId)
+        // Delete from backend. The server only accepts the signed-in user's own session token.
+        apiService.deleteUser(userId, "Bearer ${sessionAccessToken()}")
         
         // Sign out
         signOut()

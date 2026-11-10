@@ -13,6 +13,8 @@ class FakeDb {
   authUsers = new Map<string, { id: string; email: string; confirmed: boolean }>();
   absentTables = new Set<string>();
   failTables = new Set<string>();
+  /** Columns that are uuid-typed in the live database: matching a non-uuid value there is an error, as in Postgres. */
+  uuidCols = new Set(['podcast_episodes.user_id', 'oauth_tokens.user_id']);
   calls: string[] = [];
 
   from(table: string) {
@@ -20,15 +22,21 @@ class FakeDb {
     let op: 'select' | 'delete' = 'select';
     let cols = '*';
     const filters: Array<(r: Row) => boolean> = [];
+    let invalid = false;
     const b: any = {
       select(c: string) { op = 'select'; cols = c; return b; },
       delete() { op = 'delete'; return b; },
-      in(col: string, vals: any[]) { filters.push((r) => vals.includes(r[col])); return b; },
+      in(col: string, vals: any[]) {
+        if (self.uuidCols.has(`${table}.${col}`) && vals.some((v) => !/^[0-9a-f-]{36}$/i.test(String(v)))) invalid = true;
+        filters.push((r) => vals.includes(r[col]));
+        return b;
+      },
       then(resolve: any, reject: any) { return Promise.resolve(run()).then(resolve, reject); },
     };
     const run = () => {
       self.calls.push(`${op}:${table}`);
       if (self.absentTables.has(table)) return { data: null, error: { code: '42P01', message: `relation "${table}" does not exist` } };
+      if (invalid) return { data: null, error: { code: '22P02', message: 'invalid input syntax for type uuid' } };
       if (self.failTables.has(table)) return { data: null, error: { code: 'XX000', message: 'boom' } };
       const rows = self.tables[table] ?? [];
       const hit = rows.filter((r) => filters.every((f) => f(r)));
@@ -67,6 +75,8 @@ class FakeDb {
   };
 }
 
+const UME = '11111111-1111-1111-1111-111111111111';
+const UOTHER = '22222222-2222-2222-2222-222222222222';
 const ME = 'me@example.com';
 const OTHER = 'other@example.com';
 
@@ -75,11 +85,11 @@ function seed(): FakeDb {
   db.authUsers.set('a1', { id: 'a1', email: ME, confirmed: true });
   db.authUsers.set('a2', { id: 'a2', email: OTHER, confirmed: true });
   db.tables = {
-    users: [{ id: 'u-me', email: ME }, { id: 'u-other', email: OTHER }],
+    users: [{ id: UME, email: ME }, { id: UOTHER, email: OTHER }],
     podcast_episodes: [
-      { id: 'p1', user_id: 'u-me', audio_url: 'https://x.supabase.co/storage/v1/object/sign/podcasts/me@example.com/1.mp3?token=abc' },
-      { id: 'p2', user_id: ME, audio_url: null },
-      { id: 'p3', user_id: 'u-other', audio_url: 'https://x.supabase.co/storage/v1/object/sign/podcasts/other@example.com/1.mp3?token=abc' },
+      { id: 'p1', user_id: UME, audio_url: 'https://x.supabase.co/storage/v1/object/sign/podcasts/me@example.com/1.mp3?token=abc' },
+      { id: 'p2', user_id: UME, audio_url: null },
+      { id: 'p3', user_id: UOTHER, audio_url: 'https://x.supabase.co/storage/v1/object/sign/podcasts/other@example.com/1.mp3?token=abc' },
     ],
     deep_dive_episodes: [{ id: 'd1', user_id: ME, audio_path: 'me@example.com/d1.mp3' }, { id: 'd2', user_id: OTHER, audio_path: 'other@example.com/d2.mp3' }],
     qa_sessions: [{ id: 's1', user_id: ME }, { id: 's2', user_id: OTHER }],
@@ -92,7 +102,7 @@ function seed(): FakeDb {
     user_settings: [{ user_id: ME, device_tokens: ['tok'] }, { user_id: OTHER }],
     ad_impressions: [{ id: 'a1', user_id: ME }, { id: 'a2', user_id: OTHER }],
     linked_accounts: [{ id: 'l1', user_email: ME, provider: 'google' }, { id: 'l2', user_email: OTHER, provider: 'google' }],
-    oauth_tokens: [{ id: 'o1', user_id: ME }, { id: 'o2', user_id: OTHER }],
+    oauth_tokens: [{ id: 'o1', user_id: UME }, { id: 'o2', user_id: UOTHER }],
     topic_episodes: [{ id: 'te1' }],
     analytics_events: [{ id: 1, install_id: 'abc' }],
   };
@@ -124,7 +134,7 @@ test('deletes every per-user row and file for the owner and nothing of anyone el
   const r = await deleteUserData(d, { email: ME, authUserId: 'a1', pathEmail: ME });
   assert.equal(r.ok, true, JSON.stringify(r));
   assert.deepEqual(r.failed, []);
-  const mine = (t: string, col = 'user_id') => (db.tables[t] ?? []).filter((x) => x[col] === ME || x[col] === 'u-me');
+  const mine = (t: string, col = 'user_id') => (db.tables[t] ?? []).filter((x) => x[col] === ME || x[col] === UME);
   for (const t of ['podcast_episodes', 'deep_dive_episodes', 'qa_sessions', 'custom_sources', 'topic_requests', 'playback_interactions', 'user_preferences', 'user_settings', 'ad_impressions', 'oauth_tokens']) {
     assert.equal(mine(t).length, 0, t);
   }

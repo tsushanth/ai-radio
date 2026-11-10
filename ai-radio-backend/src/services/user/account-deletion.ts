@@ -72,6 +72,7 @@ export function parseStorageUrl(url: unknown): { bucket: string; path: string } 
 }
 
 const PAGE = 1000;
+const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 export async function deleteUserData(
   deps: DeletionDeps,
@@ -151,10 +152,12 @@ export async function deleteUserData(
   // ---- 2. identify the account rows ------------------------------------------------------------------------------------------
   const userRows = await selectIn('users', 'id', 'email', emails);
   const userUuids = (userRows ?? []).map((r: any) => String(r.id)).filter(Boolean);
-  const idKeys = [...emails, ...userUuids];
+  // podcast_episodes.user_id and oauth_tokens.user_id are uuid columns in the live database (matching an email there is an error),
+  // so they are matched by the users.id uuid and the sign-in identity's uuid only.
+  const uuidKeys = [...new Set([...userUuids, who.authUserId].filter((v) => UUID.test(v ?? '')))];
 
   // ---- 3. briefing episodes: audio first, then the rows -----------------------------------------------------------------------
-  const episodes = await selectIn('podcast_episodes', 'id, audio_url', 'user_id', idKeys);
+  const episodes = await selectIn('podcast_episodes', 'id, audio_url', 'user_id', uuidKeys);
   for (const ep of episodes ?? []) {
     const loc = parseStorageUrl(ep.audio_url);
     if (loc) await removeFiles(loc.bucket, [loc.path]);
@@ -163,7 +166,7 @@ export async function deleteUserData(
     await removeFolder('podcasts', e); // briefing audio is stored as <email>/<timestamp>.mp3, with or without an episode row
     await removeFolder('deep-dive-podcasts', e); // deep dives: <email>/<episode>.mp3
   }
-  await deleteIn('podcast_episodes', 'user_id', idKeys);
+  await deleteIn('podcast_episodes', 'user_id', uuidKeys);
 
   // ---- 4. deep dives -----------------------------------------------------------------------------------------------------------
   const deepDives = await selectIn('deep_dive_episodes', 'id, audio_path', 'user_id', emails);
@@ -193,7 +196,7 @@ export async function deleteUserData(
   await deleteIn('user_settings', 'user_id', emails); // briefing schedule, timezone, push device tokens
   await deleteIn('ad_impressions', 'user_id', emails);
   await deleteIn('linked_accounts', 'user_email', emails); // stored Google / Microsoft tokens (also removed by the revoke above)
-  await deleteIn('oauth_tokens', 'user_id', emails);
+  await deleteIn('oauth_tokens', 'user_id', uuidKeys);
 
   // ---- 8. the account row itself, last of the database steps -------------------------------------------------------------------
   await deleteIn('users', 'email', emails);

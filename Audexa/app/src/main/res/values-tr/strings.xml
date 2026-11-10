@@ -74,6 +74,8 @@
     <string name="daily_brief_reminders">Günlük özet hatırlatıcıları</string>
     <string name="sign_out_confirm">Çıkış yapmak istediğinizden emin misiniz?</string>
     <string name="delete_account_confirm">Hesabınızı silmek istediğinizden emin misiniz? Bu işlem podcast\'ler, tercihler ve bağlı hesaplar dahil tüm verilerinizi kalıcı olarak silecektir. Bu işlem geri alınamaz.</string>
+    <string name="delete_account_signin_again">Oturumunuzun süresi doldu; bu yüzden hesabınız silinmedi ve hiçbir şey kaldırılmadı. Çıkış yapın, tekrar giriş yapın ve Hesabı Sil işlemini yeniden deneyin.</string>
+    <string name="delete_account_failed">Hesabınızı silme işlemini tamamlayamadık. Lütfen bağlantınızı kontrol edip tekrar deneyin.</string>
 
     <!-- Player -->
     <string name="playing">Çalıyor</string>

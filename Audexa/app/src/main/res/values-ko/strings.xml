@@ -74,6 +74,8 @@
     <string name="daily_brief_reminders">\uc77c\uc77c \ube0c\ub9ac\ud551 \uc54c\ub9bc</string>
     <string name="sign_out_confirm">\ub85c\uadf8\uc544\uc6c3 \ud558\uc2dc\uaca0\uc2b5\ub2c8\uae4c?</string>
     <string name="delete_account_confirm">\uacc4\uc815\uc744 \uc0ad\uc81c\ud558\uc2dc\uaca0\uc2b5\ub2c8\uae4c? \ud31f\uce90\uc2a4\ud2b8, \ud658\uacbd \uc124\uc815, \uc5f0\uacb0\ub41c \uacc4\uc815\uc744 \ud3ec\ud568\ud55c \ubaa8\ub4e0 \ub370\uc774\ud130\uac00 \uc601\uad6c\uc801\uc73c\ub85c \uc0ad\uc81c\ub429\ub2c8\ub2e4. \uc774 \uc791\uc5c5\uc740 \ucde8\uc18c\ud560 \uc218 \uc5c6\uc2b5\ub2c8\ub2e4.</string>
+    <string name="delete_account_signin_again">로그인이 만료되어 계정이 삭제되지 않았고 아무것도 제거되지 않았습니다. 로그아웃한 후 다시 로그인하고 계정 삭제를 다시 시도해 주세요.</string>
+    <string name="delete_account_failed">계정 삭제를 완료하지 못했습니다. 연결 상태를 확인하고 다시 시도해 주세요.</string>
 
     <!-- Player -->
     <string name="playing">\uc7ac\uc0dd \uc911</string>

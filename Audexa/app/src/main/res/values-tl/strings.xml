@@ -74,6 +74,8 @@
     <string name="daily_brief_reminders">Mga paalala ng araw-araw na buod</string>
     <string name="sign_out_confirm">Sigurado ka bang gusto mong mag-sign out?</string>
     <string name="delete_account_confirm">Sigurado ka bang gusto mong i-delete ang iyong account? Permanenteng ide-delete nito ang lahat ng iyong data kasama ang mga podcast, kagustuhan, at naka-link na account. Hindi na maibabalik ang aksyong ito.</string>
+    <string name="delete_account_signin_again">Nag-expire na ang iyong sign-in, kaya hindi na-delete ang iyong account at walang naalis. Mag-sign out, mag-sign in ulit, at subukan muli ang Delete Account.</string>
+    <string name="delete_account_failed">Hindi namin natapos ang pag-delete ng iyong account. Pakisuri ang iyong koneksyon at subukan ulit.</string>
 
     <!-- Player -->
     <string name="playing">Nagpe-play</string>

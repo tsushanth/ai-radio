@@ -19,6 +19,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import com.kreativekoala.audexa.data.repository.DeleteFailure
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -343,6 +344,43 @@ fun ProfileScreen(
                     Text(stringResource(R.string.cancel), color = MaterialTheme.colorScheme.onSurfaceVariant)
                 }
             },
+            containerColor = MaterialTheme.colorScheme.surface
+        )
+    }
+
+    // Delete Account did not finish: say why, and never look like it worked.
+    uiState.deleteFailure?.let { failure ->
+        val expired = failure == DeleteFailure.SESSION_EXPIRED
+        AlertDialog(
+            onDismissRequest = { viewModel.dismissDeleteFailure() },
+            title = { Text(stringResource(R.string.delete_account), color = MaterialTheme.colorScheme.onBackground) },
+            text = {
+                Text(
+                    stringResource(if (expired) R.string.delete_account_signin_again else R.string.delete_account_failed),
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            },
+            confirmButton = {
+                if (expired) {
+                    TextButton(onClick = {
+                        viewModel.dismissDeleteFailure()
+                        viewModel.signOut()
+                    }) {
+                        Text(stringResource(R.string.sign_out), color = Error)
+                    }
+                } else {
+                    TextButton(onClick = { viewModel.dismissDeleteFailure() }) {
+                        Text(stringResource(R.string.ok), color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    }
+                }
+            },
+            dismissButton = if (expired) {
+                {
+                    TextButton(onClick = { viewModel.dismissDeleteFailure() }) {
+                        Text(stringResource(R.string.cancel), color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    }
+                }
+            } else null,
             containerColor = MaterialTheme.colorScheme.surface
         )
     }

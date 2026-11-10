@@ -74,6 +74,8 @@
     <string name="daily_brief_reminders">Pengingat ringkasan harian</string>
     <string name="sign_out_confirm">Apakah Anda yakin ingin keluar?</string>
     <string name="delete_account_confirm">Apakah Anda yakin ingin menghapus akun Anda? Ini akan menghapus semua data Anda secara permanen termasuk podcast, preferensi, dan akun terhubung. Tindakan ini tidak dapat dibatalkan.</string>
+    <string name="delete_account_signin_again">Sesi masuk Anda telah berakhir, sehingga akun Anda tidak dihapus dan tidak ada yang dihapus. Keluar, masuk lagi, lalu coba Hapus Akun sekali lagi.</string>
+    <string name="delete_account_failed">Kami tidak dapat menyelesaikan penghapusan akun Anda. Periksa koneksi Anda dan coba lagi.</string>
 
     <!-- Player -->
     <string name="playing">Memutar</string>

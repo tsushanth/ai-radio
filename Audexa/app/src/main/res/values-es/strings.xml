@@ -74,6 +74,8 @@
     <string name="daily_brief_reminders">Recordatorios del resumen diario</string>
     <string name="sign_out_confirm">\u00bfEstas seguro de que quieres cerrar sesion?</string>
     <string name="delete_account_confirm">\u00bfEstas seguro de que quieres eliminar tu cuenta? Esto eliminara permanentemente todos tus datos, incluyendo podcasts, preferencias y cuentas vinculadas. Esta accion no se puede deshacer.</string>
+    <string name="delete_account_signin_again">Tu inicio de sesión ha caducado, así que tu cuenta no se eliminó y no se borró nada. Cierra sesión, vuelve a iniciar sesión e inténtalo de nuevo.</string>
+    <string name="delete_account_failed">No pudimos terminar de eliminar tu cuenta. Revisa tu conexión e inténtalo de nuevo.</string>
 
     <!-- Player -->
     <string name="playing">Reproduciendo</string>

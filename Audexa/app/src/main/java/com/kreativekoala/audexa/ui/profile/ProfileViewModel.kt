@@ -5,6 +5,8 @@ import androidx.lifecycle.viewModelScope
 import com.kreativekoala.audexa.data.local.PreferencesManager
 import com.kreativekoala.audexa.data.model.SupportedLanguage
 import com.kreativekoala.audexa.data.repository.AuthRepository
+import com.kreativekoala.audexa.data.repository.DeleteAccountErrors
+import com.kreativekoala.audexa.data.repository.DeleteFailure
 import com.kreativekoala.audexa.service.AudioManager
 import com.kreativekoala.audexa.ui.theme.AppTheme
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -23,7 +25,7 @@ data class ProfileUiState(
     val isSubscribed: Boolean = false,
     val isSignedOut: Boolean = false,
     val isDeleting: Boolean = false,
-    val error: String? = null
+    val deleteFailure: DeleteFailure? = null
 )
 
 @HiltViewModel
@@ -102,9 +104,14 @@ class ProfileViewModel @Inject constructor(
         }
     }
 
+    fun dismissDeleteFailure() {
+        _uiState.value = _uiState.value.copy(deleteFailure = null)
+    }
+
     fun deleteAccount() {
+        if (_uiState.value.isDeleting) return
         viewModelScope.launch {
-            _uiState.value = _uiState.value.copy(isDeleting = true)
+            _uiState.value = _uiState.value.copy(isDeleting = true, deleteFailure = null)
 
             // Stop any playing audio before deleting account
             audioManager.stop()
@@ -119,7 +126,7 @@ class ProfileViewModel @Inject constructor(
                 .onFailure { e ->
                     _uiState.value = _uiState.value.copy(
                         isDeleting = false,
-                        error = e.message
+                        deleteFailure = DeleteAccountErrors.classify(e)
                     )
                 }
         }

@@ -74,6 +74,8 @@
     <string name="daily_brief_reminders">\u6bcf\u65e5\u7b80\u62a5\u63d0\u9192</string>
     <string name="sign_out_confirm">\u786e\u5b9a\u8981\u9000\u51fa\u767b\u5f55\u5417\uff1f</string>
     <string name="delete_account_confirm">\u786e\u5b9a\u8981\u5220\u9664\u8d26\u6237\u5417\uff1f\u8fd9\u5c06\u6c38\u4e45\u5220\u9664\u4f60\u7684\u6240\u6709\u6570\u636e\uff0c\u5305\u62ec\u64ad\u5ba2\u3001\u504f\u597d\u8bbe\u7f6e\u548c\u5173\u8054\u8d26\u6237\u3002\u6b64\u64cd\u4f5c\u65e0\u6cd5\u64a4\u9500\u3002</string>
+    <string name="delete_account_signin_again">你的登录已过期，因此账户没有被删除，也没有任何内容被移除。请退出登录，重新登录后再次尝试删除账户。</string>
+    <string name="delete_account_failed">我们未能完成账户删除。请检查网络连接后重试。</string>
 
     <!-- Player -->
     <string name="playing">\u64ad\u653e\u4e2d</string>

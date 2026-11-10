@@ -74,6 +74,8 @@
     <string name="daily_brief_reminders">تذكيرات الملخص اليومي</string>
     <string name="sign_out_confirm">هل أنت متأكد أنك تريد تسجيل الخروج؟</string>
     <string name="delete_account_confirm">هل أنت متأكد أنك تريد حذف حسابك؟ سيؤدي ذلك إلى حذف جميع بياناتك نهائياً بما في ذلك البودكاست والتفضيلات والحسابات المرتبطة. لا يمكن التراجع عن هذا الإجراء.</string>
+    <string name="delete_account_signin_again">انتهت صلاحية تسجيل دخولك، لذلك لم يتم حذف حسابك ولم تتم إزالة أي شيء. سجّل الخروج ثم سجّل الدخول مجددًا وحاول حذف الحساب مرة أخرى.</string>
+    <string name="delete_account_failed">تعذّر إكمال حذف حسابك. يرجى التحقق من اتصالك والمحاولة مرة أخرى.</string>
 
     <!-- Player -->
     <string name="playing">قيد التشغيل</string>

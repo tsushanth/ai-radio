@@ -74,6 +74,8 @@
     <string name="daily_brief_reminders">Rappels du resume quotidien</string>
     <string name="sign_out_confirm">Etes-vous sur de vouloir vous deconnecter ?</string>
     <string name="delete_account_confirm">Etes-vous sur de vouloir supprimer votre compte ? Cela supprimera definitivement toutes vos donnees, y compris les podcasts, preferences et comptes lies. Cette action est irreversible.</string>
+    <string name="delete_account_signin_again">Votre connexion a expiré : votre compte n\'a pas été supprimé et rien n\'a été effacé. Déconnectez-vous, reconnectez-vous, puis réessayez de supprimer le compte.</string>
+    <string name="delete_account_failed">Nous n\'avons pas pu terminer la suppression de votre compte. Vérifiez votre connexion et réessayez.</string>
 
     <!-- Player -->
     <string name="playing">En lecture</string>

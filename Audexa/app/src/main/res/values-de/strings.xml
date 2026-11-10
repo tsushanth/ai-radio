@@ -74,6 +74,8 @@
     <string name="daily_brief_reminders">Tagesbriefing-Erinnerungen</string>
     <string name="sign_out_confirm">Bist du sicher, dass du dich abmelden moechtest?</string>
     <string name="delete_account_confirm">Bist du sicher, dass du dein Konto loeschen moechtest? Dies loescht dauerhaft alle deine Daten, einschliesslich Podcasts, Einstellungen und verknuepfter Konten. Diese Aktion kann nicht rueckgaengig gemacht werden.</string>
+    <string name="delete_account_signin_again">Deine Anmeldung ist abgelaufen, daher wurde dein Konto nicht gelöscht und nichts entfernt. Melde dich ab, melde dich erneut an und versuche dann noch einmal, das Konto zu löschen.</string>
+    <string name="delete_account_failed">Wir konnten das Löschen deines Kontos nicht abschließen. Prüfe deine Verbindung und versuche es erneut.</string>
 
     <!-- Player -->
     <string name="playing">Wiedergabe</string>

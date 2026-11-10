@@ -17,6 +17,7 @@ import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.auth.auth
 import io.github.jan.supabase.auth.providers.Google
 import io.github.jan.supabase.auth.providers.builtin.IDToken
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
@@ -280,19 +281,29 @@ class AuthRepository @Inject constructor(
 
     /** The Supabase session token created when the user signed in with Google (refreshed first so it is not expired). */
     private suspend fun sessionAccessToken(): String {
-        runCatching { supabaseClient.auth.refreshCurrentSession() }
-        return supabaseClient.auth.currentAccessTokenOrNull()
-            ?: throw Exception("Your sign-in has expired. Please sign out, sign in again and retry.")
+        try {
+            supabaseClient.auth.refreshCurrentSession()
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            // Offline or no session: fall through. A still-valid token is used; a missing or expired one is reported below.
+            Log.w(TAG, "Session refresh failed: ${e.message}")
+        }
+        return supabaseClient.auth.currentAccessTokenOrNull() ?: throw SessionExpiredException()
     }
 
+    /**
+     * Deletes the account on the server, then signs out locally. The local sign-out only happens after the server
+     * confirmed the deletion, so a failure (including an expired sign-in) never looks like success.
+     */
     suspend fun deleteAccount(): Result<Unit> = runCatching {
-        val userId = preferencesManager.userEmail.first() 
+        val userId = preferencesManager.userEmail.first()?.takeIf { it.isNotBlank() }
             ?: throw Exception("No user logged in")
-        
-        // Delete from backend. The server only accepts the signed-in user's own session token.
-        apiService.deleteUser(userId, "Bearer ${sessionAccessToken()}")
-        
-        // Sign out
+
+        // The server only accepts the signed-in user's own session token.
+        val response = apiService.deleteUser(userId, "Bearer ${sessionAccessToken()}")
+        if (!response.success) throw IllegalStateException("Server did not confirm the deletion")
+
         signOut()
     }
 

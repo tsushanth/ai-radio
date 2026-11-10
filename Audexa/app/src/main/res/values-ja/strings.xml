@@ -74,6 +74,8 @@
     <string name="daily_brief_reminders">\u30c7\u30a4\u30ea\u30fc\u30d6\u30ea\u30fc\u30d5\u306e\u30ea\u30de\u30a4\u30f3\u30c0\u30fc</string>
     <string name="sign_out_confirm">\u30b5\u30a4\u30f3\u30a2\u30a6\u30c8\u3057\u3066\u3082\u3088\u308d\u3057\u3044\u3067\u3059\u304b\uff1f</string>
     <string name="delete_account_confirm">\u30a2\u30ab\u30a6\u30f3\u30c8\u3092\u524a\u9664\u3057\u3066\u3082\u3088\u308d\u3057\u3044\u3067\u3059\u304b\uff1f\u30dd\u30c3\u30c9\u30ad\u30e3\u30b9\u30c8\u3001\u8a2d\u5b9a\u3001\u30ea\u30f3\u30af\u6e08\u307f\u30a2\u30ab\u30a6\u30f3\u30c8\u3092\u542b\u3080\u3059\u3079\u3066\u306e\u30c7\u30fc\u30bf\u304c\u5b8c\u5168\u306b\u524a\u9664\u3055\u308c\u307e\u3059\u3002\u3053\u306e\u64cd\u4f5c\u306f\u53d6\u308a\u6d88\u305b\u307e\u305b\u3093\u3002</string>
+    <string name="delete_account_signin_again">サインインの有効期限が切れたため、アカウントは削除されず、何も消去されていません。サインアウトして、もう一度サインインしてから、アカウントの削除をやり直してください。</string>
+    <string name="delete_account_failed">アカウントの削除を完了できませんでした。接続を確認して、もう一度お試しください。</string>
 
     <!-- Player -->
     <string name="playing">\u518d\u751f\u4e2d</string>

@@ -74,6 +74,8 @@
     <string name="daily_brief_reminders">Promemoria riepilogo quotidiano</string>
     <string name="sign_out_confirm">Sei sicuro di voler uscire?</string>
     <string name="delete_account_confirm">Sei sicuro di voler eliminare il tuo account? Questo eliminera permanentemente tutti i tuoi dati, inclusi podcast, preferenze e account collegati. Questa azione non puo essere annullata.</string>
+    <string name="delete_account_signin_again">Il tuo accesso è scaduto, quindi il tuo account non è stato eliminato e non è stato rimosso nulla. Esci, accedi di nuovo e riprova a eliminare l\'account.</string>
+    <string name="delete_account_failed">Non siamo riusciti a completare l\'eliminazione del tuo account. Controlla la connessione e riprova.</string>
 
     <!-- Player -->
     <string name="playing">In riproduzione</string>

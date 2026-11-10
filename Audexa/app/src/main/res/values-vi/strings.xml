@@ -74,6 +74,8 @@
     <string name="daily_brief_reminders">Nhắc nhở tóm tắt hàng ngày</string>
     <string name="sign_out_confirm">Bạn có chắc chắn muốn đăng xuất không?</string>
     <string name="delete_account_confirm">Bạn có chắc chắn muốn xóa tài khoản không? Thao tác này sẽ xóa vĩnh viễn tất cả dữ liệu của bạn bao gồm podcast, tùy chọn và tài khoản đã liên kết. Hành động này không thể hoàn tác.</string>
+    <string name="delete_account_signin_again">Phiên đăng nhập của bạn đã hết hạn nên tài khoản chưa bị xóa và không có gì bị gỡ bỏ. Hãy đăng xuất, đăng nhập lại rồi thử Xóa tài khoản một lần nữa.</string>
+    <string name="delete_account_failed">Chúng tôi chưa thể hoàn tất việc xóa tài khoản của bạn. Vui lòng kiểm tra kết nối và thử lại.</string>
 
     <!-- Player -->
     <string name="playing">Đang phát</string>

@@ -74,6 +74,8 @@
     <string name="daily_brief_reminders">Lembretes do resumo diario</string>
     <string name="sign_out_confirm">Tem certeza de que deseja sair?</string>
     <string name="delete_account_confirm">Tem certeza de que deseja excluir sua conta? Isso excluira permanentemente todos os seus dados, incluindo podcasts, preferencias e contas vinculadas. Esta acao nao pode ser desfeita.</string>
+    <string name="delete_account_signin_again">Seu login expirou, então sua conta não foi excluída e nada foi removido. Saia, entre novamente e tente excluir a conta de novo.</string>
+    <string name="delete_account_failed">Não foi possível concluir a exclusão da sua conta. Verifique sua conexão e tente novamente.</string>
 
     <!-- Player -->
     <string name="playing">Reproduzindo</string>

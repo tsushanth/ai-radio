@@ -74,6 +74,8 @@
     <string name="daily_brief_reminders">Peringatan ringkasan harian</string>
     <string name="sign_out_confirm">Adakah anda pasti mahu log keluar?</string>
     <string name="delete_account_confirm">Adakah anda pasti mahu memadam akaun anda? Ini akan memadam semua data anda secara kekal termasuk podcast, keutamaan dan akaun yang dipautkan. Tindakan ini tidak boleh dibuat asal.</string>
+    <string name="delete_account_signin_again">Log masuk anda telah tamat tempoh, jadi akaun anda tidak dipadam dan tiada apa-apa dibuang. Log keluar, log masuk semula, kemudian cuba Padam Akaun sekali lagi.</string>
+    <string name="delete_account_failed">Kami tidak dapat menyiapkan pemadaman akaun anda. Sila semak sambungan anda dan cuba lagi.</string>
 
     <!-- Player -->
     <string name="playing">Sedang Bermain</string>

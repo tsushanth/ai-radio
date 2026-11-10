@@ -74,6 +74,8 @@
     <string name="daily_brief_reminders">Przypomnienia o codziennym skrócie</string>
     <string name="sign_out_confirm">Czy na pewno chcesz się wylogować?</string>
     <string name="delete_account_confirm">Czy na pewno chcesz usunąć swoje konto? Spowoduje to trwałe usunięcie wszystkich danych, w tym podcastów, preferencji i połączonych kont. Tej czynności nie można cofnąć.</string>
+    <string name="delete_account_signin_again">Twoje logowanie wygasło, więc konto nie zostało usunięte i nic nie zostało skasowane. Wyloguj się, zaloguj ponownie i spróbuj usunąć konto jeszcze raz.</string>
+    <string name="delete_account_failed">Nie udało się dokończyć usuwania konta. Sprawdź połączenie i spróbuj ponownie.</string>
 
     <!-- Player -->
     <string name="playing">Odtwarzanie</string>

@@ -76,6 +76,8 @@
     <string name="daily_brief_reminders">Daily brief reminders</string>
     <string name="sign_out_confirm">Are you sure you want to sign out?</string>
     <string name="delete_account_confirm">Are you sure you want to delete your account? This will permanently delete all your data including podcasts, preferences, and linked accounts. This action cannot be undone.</string>
+    <string name="delete_account_signin_again">Your sign-in has expired, so your account was not deleted and nothing was removed. Sign out, sign in again, then try Delete Account again.</string>
+    <string name="delete_account_failed">We could not finish deleting your account. Please check your connection and try again.</string>
 
     <!-- Player -->
     <string name="playing">Playing</string>

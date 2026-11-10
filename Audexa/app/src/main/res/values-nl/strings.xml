@@ -74,6 +74,8 @@
     <string name="daily_brief_reminders">Herinneringen dagelijkse samenvatting</string>
     <string name="sign_out_confirm">Weet je zeker dat je wilt uitloggen?</string>
     <string name="delete_account_confirm">Weet je zeker dat je je account wilt verwijderen? Dit verwijdert permanent al je gegevens inclusief podcasts, voorkeuren en gekoppelde accounts. Deze actie kan niet ongedaan worden gemaakt.</string>
+    <string name="delete_account_signin_again">Je aanmelding is verlopen, dus je account is niet verwijderd en er is niets gewist. Meld je af, meld je opnieuw aan en probeer dan opnieuw je account te verwijderen.</string>
+    <string name="delete_account_failed">We konden het verwijderen van je account niet afronden. Controleer je verbinding en probeer het opnieuw.</string>
 
     <!-- Player -->
     <string name="playing">Speelt af</string>

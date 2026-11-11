@@ -6,23 +6,12 @@
 import express, { Request, Response, NextFunction } from 'express';
 import { z } from 'zod';
 import type { UserPreferences } from '../types/database';
-import { createClient } from '@supabase/supabase-js';
-import { requireSelf, supabaseTokenVerifier, type TokenVerifier } from '../lib/user-auth';
+import { requireSelf } from '../lib/user-auth';
+import { serviceClient, tokenVerifier } from '../lib/user-auth-runtime';
 import { deleteUserData, RETAINED_NOTES } from '../services/user/account-deletion';
 import { purgeJobsForUser } from './podcast';
 
 const router = express.Router();
-
-// Supabase client with the service key: used to verify the caller's session token and to delete their data.
-let cachedClient: any = null;
-function serviceClient(): any {
-  const url = process.env.SUPABASE_URL;
-  const key = process.env.SUPABASE_SERVICE_KEY;
-  if (!url || !key) return null;
-  if (!cachedClient) cachedClient = createClient(url, key, { auth: { persistSession: false, autoRefreshToken: false } });
-  return cachedClient;
-}
-const tokenVerifier = (): TokenVerifier => supabaseTokenVerifier(serviceClient());
 
 // ================================================
 // VALIDATION SCHEMAS

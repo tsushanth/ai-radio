@@ -12,6 +12,8 @@ import { adService } from '../services/ads/ad.service';
 import { briefingService } from '../services/notifications/briefing.service';
 import { env } from '../config/environment';
 import { requireOperatorSecret } from '../lib/shared-secret';
+import { optionalUser, ownerForNewRow } from '../lib/user-auth';
+import { tokenVerifier } from '../lib/user-auth-runtime';
 
 const router = Router();
 
@@ -116,7 +118,22 @@ router.post('/suggest', suggestIpLimiter, async (req: Request, res: Response) =>
       return;
     }
     const lang = typeof language === 'string' && /^[a-z]{2}/i.test(language) ? language.slice(0, 2).toLowerCase() : 'en';
-    const userId = typeof req.body.userId === 'string' && req.body.userId.length > 0 && req.body.userId.length <= 128 ? req.body.userId : null;
+    const bodyUserId = typeof req.body.userId === 'string' && req.body.userId.length > 0 && req.body.userId.length <= 128 ? req.body.userId : null;
+
+    // Owner of the request. Android 12.10.1 sends no userId and no token, so its rows have no owner and account deletion cannot find
+    // them. A client that sends the session token gets the row filed under the verified email (a body userId naming someone else is
+    // rejected), which is what lets "delete my account" remove the suggestion. Token-less requests stay allowed (legacy).
+    const caller = await optionalUser(() => tokenVerifier(), req.headers.authorization);
+    if (caller.kind === 'invalid') {
+      res.status(401).json({ success: false, error: 'Unauthorized' });
+      return;
+    }
+    const owner = ownerForNewRow(caller.kind === 'ok' ? caller.user : null, bodyUserId);
+    if (owner.conflict) {
+      res.status(403).json({ success: false, error: 'Forbidden' });
+      return;
+    }
+    const userId = owner.userId;
 
     // Per-user cap (durable, from the table). Only meaningful for clients that send a userId.
     if (userId) {

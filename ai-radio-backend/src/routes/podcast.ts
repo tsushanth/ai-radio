@@ -4,6 +4,7 @@
  */
 
 import express, { Request, Response, NextFunction } from 'express';
+import { randomUUID } from 'node:crypto';
 import { z } from 'zod';
 import { podcastGenerator } from '../services/podcast/podcast.generator';
 import type { UserPreferences } from '../types/database';
@@ -14,6 +15,8 @@ import {
   isContentError,
   createPodcastError,
 } from '../types/podcast-errors';
+import { requireUser, sameEmail, type VerifiedUser } from '../lib/user-auth';
+import { tokenVerifier } from '../lib/user-auth-runtime';
 
 const router = express.Router();
 
@@ -60,7 +63,7 @@ setInterval(() => {
       jobStore.delete(jobId);
     }
   }
-}, 10 * 60 * 1000);
+}, 10 * 60 * 1000).unref(); // unref: the sweep must not keep the process (or a test run) alive
 
 /** Drops in-memory generation jobs (which hold the user's script and audio link) for one user; used by account deletion. */
 export function purgeJobsForUser(userId: string): number {
@@ -75,9 +78,14 @@ export function purgeJobsForUser(userId: string): number {
   return n;
 }
 
+// 122 random bits: a job id is the only thing a token-less (legacy) client holds, so it must not be guessable.
 function generateJobId(): string {
-  return `job_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
+  return `job_${randomUUID()}`;
 }
+
+// Caller checks (lib/user-auth.ts). Shipped clients still call these without a token, so the first four have a legacy window.
+const authBodyUser = (key: string) =>
+  requireUser(() => tokenVerifier(), { key, target: (req) => (req.body as { user_id?: unknown } | undefined)?.user_id });
 
 // ================================================
 // VALIDATION SCHEMAS
@@ -128,7 +136,7 @@ const validatePrerequisitesSchema = z.object({
  * Start async podcast generation - returns job_id immediately
  * Client should poll /podcast/job/:jobId for status
  */
-router.post('/generate-async', async (req: Request, res: Response, next: NextFunction) => {
+router.post('/generate-async', authBodyUser('podcast.generate-async'), async (req: Request, res: Response, next: NextFunction) => {
   try {
     // Validate request body
     const validated = generatePodcastSchema.parse(req.body);
@@ -244,7 +252,7 @@ router.post('/generate-async', async (req: Request, res: Response, next: NextFun
  * GET /podcast/job/:jobId
  * Get job status and result
  */
-router.get('/job/:jobId', async (req: Request, res: Response, next: NextFunction) => {
+router.get('/job/:jobId', requireUser(() => tokenVerifier(), { key: 'podcast.job', target: null }), async (req: Request, res: Response, next: NextFunction) => {
   try {
     const jobId = req.params.jobId;
     const job = jobStore.get(jobId);
@@ -254,6 +262,12 @@ router.get('/job/:jobId', async (req: Request, res: Response, next: NextFunction
         error: 'Job not found',
         message: 'Job may have expired or does not exist',
       });
+    }
+
+    // A signed-in caller may only read their own job. (A legacy token-less caller is let through; see lib/user-auth.ts.)
+    const caller = res.locals.authUser as VerifiedUser | null;
+    if (caller && !sameEmail(caller.email, String(job.userId))) {
+      return res.status(403).json({ success: false, error: 'Forbidden' });
     }
 
     // Return job status
@@ -305,7 +319,7 @@ router.get('/job/:jobId', async (req: Request, res: Response, next: NextFunction
  * Runs prerequisites + data fetch + GPT script, skips TTS and upload.
  * Synchronous: typical latency ~5-15s, no polling needed.
  */
-router.post('/script', async (req: Request, res: Response, _next: NextFunction) => {
+router.post('/script', authBodyUser('podcast.script'), async (req: Request, res: Response, _next: NextFunction) => {
   try {
     const validated = generatePodcastSchema.parse(req.body);
 
@@ -656,7 +670,7 @@ router.get('/stats', async (req: Request, res: Response, next: NextFunction) => 
  * GET /podcast/episodes/:userId
  * Get episodes for user
  */
-router.get('/episodes/:userId', async (req: Request, res: Response, next: NextFunction) => {
+router.get('/episodes/:userId', requireUser(() => tokenVerifier(), { key: 'podcast.episodes', target: (req) => req.params.userId }), async (req: Request, res: Response, next: NextFunction) => {
   try {
     const userId = req.params.userId;
     const limit = parseInt(req.query.limit as string) || 10;

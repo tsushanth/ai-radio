@@ -197,6 +197,13 @@ test('a real failure reports it, keeps the sign-in identity so the caller can re
   assert.equal(db.authUsers.has('a1'), false);
 });
 
+test('topic suggestions: rows filed under the verified email are deleted; owner-less rows (Android 12.10.1 sends no id) cannot be matched', async () => {
+  const db = seed();
+  db.tables.topic_requests.push({ id: 't4', user_id: ME }); // what POST /topics/suggest stores for a token-sending client (the token's email)
+  await deleteUserData(deps(db), { email: ME, authUserId: 'a1', pathEmail: ME });
+  assert.deepEqual(db.tables.topic_requests.map((x) => x.id).sort(), ['t2', 't3']);
+});
+
 test('a provider revoke failure is a warning, not a failure', async () => {
   const db = seed();
   const r = await deleteUserData(deps(db, { revokeProviderTokens: async () => { throw new Error('x'); } }), { email: ME, authUserId: 'a1' });

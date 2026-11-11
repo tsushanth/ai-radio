@@ -6,9 +6,14 @@
 import express, { Request, Response, NextFunction } from 'express';
 import { z } from 'zod';
 import { tokenManager } from '../services/auth/token.manager';
+import { requireUser } from '../lib/user-auth';
+import { tokenVerifier } from '../lib/user-auth-runtime';
 
 const router = express.Router();
 
+// Caller checks (lib/user-auth.ts). Android 12.10.1 and iOS still POST without a token, so 'create' has a legacy window; reading and
+// deleting linked accounts is called without a token by no mobile client, so those are strict.
+const authUserParam = (key: string) => requireUser(() => tokenVerifier(), { key, target: (req) => req.params.userId });
 // ================================================
 // VALIDATION SCHEMAS
 // ================================================
@@ -36,7 +41,7 @@ const updatePermissionsSchema = z.object({
  * GET /linked-accounts/:userId
  * Get all linked accounts for user
  */
-router.get('/:userId', async (req: Request, res: Response, next: NextFunction) => {
+router.get('/:userId', authUserParam('linked-accounts.list'), async (req: Request, res: Response, next: NextFunction) => {
   try {
     const userId = req.params.userId;
 
@@ -72,7 +77,7 @@ router.get('/:userId', async (req: Request, res: Response, next: NextFunction) =
  * POST /linked-accounts/:userId
  * Create new linked account (store OAuth tokens)
  */
-router.post('/:userId', async (req: Request, res: Response, next: NextFunction) => {
+router.post('/:userId', authUserParam('linked-accounts.create'), async (req: Request, res: Response, next: NextFunction) => {
   try {
     const userId = req.params.userId;
     const validated = createLinkedAccountSchema.parse(req.body);
@@ -189,7 +194,7 @@ router.patch('/:userId/:accountId', async (req: Request, res: Response, next: Ne
  * DELETE /linked-accounts/:userId/:accountId
  * Delete linked account and revoke tokens
  */
-router.delete('/:userId/:accountId', async (req: Request, res: Response, next: NextFunction) => {
+router.delete('/:userId/:accountId', authUserParam('linked-accounts.delete'), async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { userId, accountId } = req.params;
 

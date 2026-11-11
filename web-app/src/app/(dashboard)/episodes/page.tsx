@@ -197,7 +197,7 @@ export default function HomePage() {
       });
       if (run.aborted) return;
 
-      const episode = await pollJob<Episode>(() => getJobStatus(jobId), {
+      const episode = await pollJob<Episode>(() => getJobStatus(jobId, user?.email), {
         signal: run,
         onProgress: (p) => setGenerationProgress(p),
       });

@@ -79,10 +79,12 @@ interface ApiService {
     ): TopicEpisodesResponse
     
     // Linked accounts
+    /** [authorization] is only set by the guest link flow; for a signed-in user AuthTokenInterceptor adds the header. */
     @POST("linked-accounts/{userId}")
     suspend fun linkAccount(
         @Path("userId") userId: String,
-        @Body request: LinkAccountRequest
+        @Body request: LinkAccountRequest,
+        @Header("Authorization") authorization: String? = null
     ): LinkAccountResponse
     
     @DELETE("linked-accounts/{userId}/{accountId}")

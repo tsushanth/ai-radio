@@ -26,7 +26,7 @@ export interface DeleteAccountResult {
  */
 export async function deleteRemoteAccount(email: string | null | undefined): Promise<DeleteAccountResult> {
   if (isSharedIdentity(email)) return { remoteDeleted: false };
-  await apiClient(`/user/${encodeURIComponent(email!.trim())}`, { method: 'DELETE' });
+  await apiClient(`/user/${encodeURIComponent(email!.trim())}`, { method: 'DELETE', asUser: email });
   return { remoteDeleted: true };
 }
 

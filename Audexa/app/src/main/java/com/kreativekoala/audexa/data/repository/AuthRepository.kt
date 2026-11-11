@@ -12,6 +12,8 @@ import com.kreativekoala.audexa.BuildConfig
 import com.kreativekoala.audexa.data.local.PreferencesManager
 import com.kreativekoala.audexa.data.model.User
 import com.kreativekoala.audexa.data.remote.ApiService
+import com.kreativekoala.audexa.data.remote.LinkedAccountOwner
+import com.kreativekoala.audexa.data.remote.SessionTokenRules
 import dagger.hilt.android.qualifiers.ApplicationContext
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.auth.auth
@@ -145,8 +147,15 @@ class AuthRepository @Inject constructor(
         // Get current calendar status (preserve if already linked)
         val calendarAlreadyEnabled = preferencesManager.calendarEnabled.first()
 
+        // The server checks the session token's email against the user id in the URL, so the linked account is filed under the
+        // signed-in account (which can differ from the Gmail being linked), not under the Gmail address. A guest has no session
+        // yet: try to sign in with the Google account just picked, so this call (and the Daily Brief after it) carries a token.
+        val signedInEmail = preferencesManager.userEmail.first()
+        val owner = LinkedAccountOwner.userIdFor(signedInEmail, email)
+
         apiService.linkAccount(
-            userId = email,
+            userId = owner,
+            authorization = guestLinkAuthorization(signedInEmail, owner, account),
             request = com.kreativekoala.audexa.data.remote.LinkAccountRequest(
                 provider = "google",
                 email = email,
@@ -217,8 +226,13 @@ class AuthRepository @Inject constructor(
         val emailAlreadyEnabled = preferencesManager.emailEnabled.first()
         val linkedEmail = preferencesManager.linkedEmail.first() ?: email
 
+        // Same rule as the Gmail link: the owner is the signed-in account; a guest falls back to the linked email.
+        val signedInEmail = preferencesManager.userEmail.first()
+        val owner = LinkedAccountOwner.userIdFor(signedInEmail, linkedEmail)
+
         apiService.linkAccount(
-            userId = linkedEmail,
+            userId = owner,
+            authorization = guestLinkAuthorization(signedInEmail, owner, account),
             request = com.kreativekoala.audexa.data.remote.LinkAccountRequest(
                 provider = "google",
                 email = linkedEmail,
@@ -277,6 +291,33 @@ class AuthRepository @Inject constructor(
             Log.e(TAG, "Error during sign out: ${e.message}")
         }
         preferencesManager.clearAll()
+    }
+
+    /**
+     * Authorization header for the link call of a guest (a signed-in user's calls get the token from AuthTokenInterceptor).
+     * A guest has no session yet and no saved email, so sign in to Supabase with the Google ID token the picker returned and
+     * send that session's token explicitly. Best effort, never throws: if Supabase refuses (for example it does not accept this
+     * sign-in client id) the call goes out without a token, as before, which the server still allows while its legacy window is open.
+     */
+    private suspend fun guestLinkAuthorization(signedInEmail: String?, owner: String, account: GoogleSignInAccount): String? {
+        if (!signedInEmail.isNullOrBlank()) return null
+        try {
+            val idToken = account.idToken
+            if (supabaseClient.auth.currentSessionOrNull() == null && idToken != null) {
+                supabaseClient.auth.signInWith(IDToken) {
+                    this.idToken = idToken
+                    this.provider = Google
+                }
+            }
+            val session = supabaseClient.auth.currentSessionOrNull() ?: return null
+            val sessionEmail = session.user?.email ?: SessionTokenRules.emailClaim(session.accessToken)
+            return SessionTokenRules.tokenIfFor(owner, sessionEmail, session.accessToken)?.let { "Bearer $it" }
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            Log.w(TAG, "Could not start a session for the linked account: ${e.message}")
+            return null
+        }
     }
 
     /** The Supabase session token created when the user signed in with Google (refreshed first so it is not expired). */

@@ -28,7 +28,7 @@ export async function getVoices(): Promise<unknown> {
 }
 
 export async function getEpisodes(userId: string): Promise<{ episodes: Episode[] }> {
-  return apiClient(`/podcast/episodes/${userId}`);
+  return apiClient(`/podcast/episodes/${userId}`, { asUser: userId });
 }
 
 export async function getEpisode(episodeId: string): Promise<Episode> {
@@ -53,6 +53,7 @@ export async function generateEpisode(
 
   return apiClient('/podcast/generate-async', {
     method: 'POST',
+    asUser: email,
     body: JSON.stringify({
       user_id: email,
       date: now.toISOString().split('T')[0],
@@ -70,8 +71,9 @@ export async function generateEpisode(
   });
 }
 
-export async function getJobStatus(jobId: string): Promise<GenerationJob> {
-  return apiClient(`/podcast/job/${jobId}`);
+/** `userEmail` is the user the job was started for: the server only lets a signed-in caller read their own job. */
+export async function getJobStatus(jobId: string, userEmail?: string | null): Promise<GenerationJob> {
+  return apiClient(`/podcast/job/${jobId}`, { asUser: userEmail });
 }
 
 export async function deleteEpisode(episodeId: string): Promise<void> {
@@ -135,7 +137,7 @@ export async function getTopicEpisodes(topicId: string, limit: number = 7, langu
 
 // Linked accounts
 export async function getLinkedAccounts(userId: string): Promise<{ linkedAccounts: LinkedAccount[] }> {
-  return apiClient(`/linked-accounts/${userId}`);
+  return apiClient(`/linked-accounts/${userId}`, { asUser: userId });
 }
 
 export async function getAuthStatus(userId: string): Promise<{ google: { connected: boolean }; microsoft: { connected: boolean } }> {

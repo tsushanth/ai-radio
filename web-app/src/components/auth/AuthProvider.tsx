@@ -4,6 +4,8 @@ import { createContext, useContext, useState, useEffect, useCallback, useRef, Re
 import { User, LinkedAccount, UserPreferences } from '@/types';
 import { getLinkedAccounts } from '@/lib/api/episodes';
 import { clearAppStorage } from '@/lib/account';
+import { setSessionProvider } from '@/lib/api/session-token';
+import { supabase } from '@/lib/supabase';
 
 interface AuthContextType {
   user: User | null;
@@ -22,6 +24,15 @@ interface AuthContextType {
   hideTopic: (topicId: string) => void;
   unhideTopic: (topicId: string) => void;
 }
+
+// The backend's per-user routes want the signed-in user's Supabase session token (see lib/api/session-token.ts). Registered when this
+// module loads, so it is in place before any child component makes its first call. getSession() refreshes the token when it is about
+// to expire. Nobody has a session until the app offers a sign-in, so for now every call goes out without a token, as before.
+setSessionProvider(async () => {
+  const { data } = await supabase.auth.getSession();
+  const s = data.session;
+  return s ? { email: s.user?.email, accessToken: s.access_token } : null;
+});
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 

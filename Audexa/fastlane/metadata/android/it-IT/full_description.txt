@@ -9,7 +9,7 @@ Podcast Generati dall'IA
 Scegli tra decine di argomenti tra cui Tecnologia, Finanza, Sport, Scienza, Intrattenimento e altro. Audexa genera ogni giorno episodi podcast freschi e di alta qualita con voci IA avanzate.
 
 Conversazioni con Due Conduttori
-Goditi discussioni naturali tra due conduttori IA. Scegli tra piu coppie di voci OpenAI ed ElevenLabs per trovare il suono perfetto.
+Goditi discussioni naturali tra due conduttori IA. Scegli tra piu coppie di voci per trovare il suono perfetto.
 
 Personalizzato Per Te
 Seleziona i tuoi interessi e Audexa cura contenuti specificamente per te. Aggiungi ai preferiti i tuoi argomenti, nascondi cio che non vuoi e scopri nuovi programmi nella scheda Scopri.
@@ -20,15 +20,12 @@ Ascolta podcast nella tua lingua preferita. Audexa supporta inglese, spagnolo, f
 Timer e Controlli di Riproduzione
 Imposta un timer di spegnimento, vai avanti o indietro, e goditi una riproduzione fluida con audio in background e controlli sulla schermata di blocco.
 
-Opzione Senza Pubblicita
-Passa alla versione premium per un ascolto ininterrotto senza pause pubblicitarie. Supporta lo sviluppo indipendente ottenendo la migliore esperienza di ascolto.
-
 COME FUNZIONA:
 1. Accedi con Google
 2. Scegli i tuoi argomenti di interesse
 3. Collega opzionalmente la tua email per riepiloghi personalizzati
 4. Ascolta episodi generati dall'IA su richiesta
 
-La tua privacy conta. Leggiamo solo gli oggetti e i mittenti delle email per creare riepiloghi. Non memorizziamo mai il contenuto delle tue email ne condividiamo i tuoi dati con terze parti.
+La tua privacy: Gmail e Calendario sono facoltativi. Se li colleghi, il nostro server legge i tuoi messaggi recenti e gli eventi di oggi per scrivere il tuo briefing. Brevi estratti (nome del mittente, oggetto, l'inizio dell'anteprima, titoli, orari e luoghi degli eventi) vengono elaborati dal servizio IA che usiamo per scrivere il copione. L'audio del briefing finito viene conservato finche non elimini il tuo account dal profilo nell'app. Dettagli: kreativekoala.llc/privacy
 
 Scarica Audexa oggi e scopri il futuro dell'audio personalizzato.

@@ -10,7 +10,21 @@ platform :android do
       aab: '/Users/sushanthtiruvaipati/Documents/GitHub/Audexa/Audexa/app/build/outputs/bundle/release/app-release.aab',
       json_key: '/Users/sushanthtiruvaipati/Documents/apple_dev/cloud_credentials/summaryai-483115-a27fc5121150.json',
       package_name: 'com.kreativekoala.audexa',
-      skip_upload_apk: true
+      skip_upload_apk: true,
+      # PROTECT THE LIVE LISTING. The Play listing (title, short/full description,
+      # graphics, screenshots) is edited through the Play API and the listing
+      # experiment harness, not from this repo. The files under
+      # fastlane/metadata/android/*/{title,short_description,full_description}.txt
+      # are a mirror of the live text and can lag behind it, so a metadata upload
+      # from here could silently put older (possibly now-incorrect) text live in
+      # every locale. Never remove these skips to "sync" a listing.
+      skip_upload_metadata: true,
+      skip_upload_images: true,
+      skip_upload_screenshots: true
+      # skip_upload_changelogs is intentionally NOT set: release notes come from
+      # fastlane/metadata/android/en-US/changelogs/<versionCode>.txt and are
+      # uploaded with the release. Supply uploads changelogs independently of
+      # skip_upload_metadata, so release notes keep working.
     )
   end
 

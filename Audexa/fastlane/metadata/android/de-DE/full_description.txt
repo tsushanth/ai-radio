@@ -9,7 +9,7 @@ KI-Generierte Podcasts
 Waehle aus Dutzenden von Themen wie Technologie, Finanzen, Sport, Wissenschaft, Unterhaltung und mehr. Audexa generiert taeglich frische, hochwertige Podcast-Episoden mit fortschrittlichen KI-Stimmen.
 
 Duo-Moderatoren-Gespraeche
-Geniesse natuerlich klingende Diskussionen zwischen zwei KI-Moderatoren. Waehle aus mehreren Stimmpaaren von OpenAI und ElevenLabs, um den perfekten Sound zu finden.
+Geniesse natuerlich klingende Diskussionen zwischen zwei KI-Moderatoren. Waehle aus mehreren Stimmpaaren, um den perfekten Sound zu finden.
 
 Personalisiert Fuer Dich
 Waehle deine Interessen und Audexa kuratiert Inhalte speziell fuer dich. Setze Lesezeichen fuer Lieblingsthemen, blende aus was du nicht moechtest und entdecke neue Sendungen im Entdecken-Tab.
@@ -20,15 +20,12 @@ Hoere Podcasts in deiner bevorzugten Sprache. Audexa unterstuetzt Englisch, Span
 Schlaf-Timer und Wiedergabesteuerung
 Stelle einen Schlaf-Timer ein, springe vor oder zurueck und geniesse nahtlose Wiedergabe mit Hintergrund-Audio und Sperrbildschirm-Steuerung.
 
-Werbefreie Option
-Upgrade fuer ununterbrochenes Hoeren ohne Audio-Werbepausen. Unterstuetze unabhaengige Entwicklung und erhalte das beste Hoererlebnis.
-
 SO FUNKTIONIERT ES:
 1. Melde dich mit Google an
 2. Waehle deine Interessengebiete
 3. Verknuepfe optional deine E-Mail fuer personalisierte Briefings
 4. Hoere KI-generierte Episoden auf Abruf
 
-Deine Privatsphaere ist uns wichtig. Wir lesen nur E-Mail-Betreffzeilen und Absender, um Briefing-Zusammenfassungen zu erstellen. Wir speichern niemals deine E-Mail-Inhalte und teilen deine Daten nicht mit Dritten.
+Deine Privatsphaere: Gmail und Kalender sind optional. Wenn du sie verknuepfst, liest unser Server deine letzten Nachrichten und die heutigen Termine, um dein Briefing zu schreiben. Kurze Auszuege (Absendername, Betreff, der Anfang der Vorschau, Termintitel, Zeiten und Orte) werden von dem KI-Dienst verarbeitet, den wir zum Schreiben des Skripts nutzen. Das fertige Briefing-Audio wird gespeichert, bis du dein Konto im Profil der App loeschst. Details: kreativekoala.llc/privacy
 
 Lade Audexa noch heute herunter und erlebe die Zukunft des personalisierten Audios.

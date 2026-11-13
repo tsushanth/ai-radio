@@ -237,4 +237,5 @@
     <!-- Daily Brief Playback -->
     <string name="daily_brief_title_format">\u30c7\u30a4\u30ea\u30fc\u30d6\u30ea\u30fc\u30d5 - %s</string>
     <string name="daily_brief_description">\u3042\u306a\u305f\u5c02\u7528\u306e\u671d\u306e\u30d6\u30ea\u30fc\u30d5\u30a3\u30f3\u30b0</string>
+    <string name="language_fallback_note">\u30dd\u30c3\u30c9\u30ad\u30e3\u30b9\u30c8\u306f\u307e\u3060%1$s\u306b\u5bfe\u5fdc\u3057\u3066\u3044\u306a\u3044\u305f\u3081\u3001%2$s\u3092\u9078\u629e\u3057\u307e\u3057\u305f\u3002</string>
 </resources>

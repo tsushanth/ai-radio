@@ -12,6 +12,7 @@ import androidx.media3.exoplayer.ExoPlayer
 import com.kreativekoala.audexa.data.local.PreferencesManager
 import com.kreativekoala.audexa.data.model.AdSegment
 import com.kreativekoala.audexa.data.model.SegmentTiming
+import com.kreativekoala.audexa.data.model.ContentLanguage
 import com.kreativekoala.audexa.data.model.SupportedLanguage
 import com.kreativekoala.audexa.service.BriefingManager
 import com.kreativekoala.audexa.data.model.Topic
@@ -53,7 +54,9 @@ data class TopicDetailUiState(
     val sleepTimerRemaining: Long? = null, // millis, null = off
     val queueSize: Int = 0,
     // Player error for the episode on screen (network trouble), shown with a Retry button
-    val playbackError: com.kreativekoala.audexa.service.PlaybackError? = null
+    val playbackError: com.kreativekoala.audexa.service.PlaybackError? = null,
+    // One-line, non-error explanation (for example that generation switched to a supported language)
+    val languageNotice: String? = null
 )
 
 @HiltViewModel
@@ -523,9 +526,26 @@ class TopicDetailViewModel @Inject constructor(
 
     // MARK: - Existing Functionality
 
+    /**
+     * The language to generate in. Never an unsupported one (the server would answer "not available yet"): fall back to the closest
+     * supported language, switch the screen to it and say so in one line.
+     */
+    private fun generationLanguage(): String {
+        val selected = _uiState.value.selectedLanguage
+        val r = ContentLanguage.resolve(selected.code)
+        if (!r.substituted) return r.language.code
+        _uiState.value = _uiState.value.copy(
+            selectedLanguage = r.language,
+            languageNotice = appContext.getString(
+                com.kreativekoala.audexa.R.string.language_fallback_note, selected.nativeName, r.language.nativeName
+            )
+        )
+        return r.language.code
+    }
+
     fun generateEpisode() {
         val topic = _uiState.value.topic ?: return
-        val language = _uiState.value.selectedLanguage.code
+        val language = generationLanguage()
 
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isGenerating = true, error = null)
@@ -577,7 +597,7 @@ class TopicDetailViewModel @Inject constructor(
 
     fun regenerateEpisode() {
         val topic = _uiState.value.topic ?: return
-        val language = _uiState.value.selectedLanguage.code
+        val language = generationLanguage()
 
         stopAdPlayback()
 
@@ -627,7 +647,8 @@ class TopicDetailViewModel @Inject constructor(
             selectedLanguage = language,
             ads = emptyList(),
             isLoading = true,
-            error = null
+            error = null,
+            languageNotice = null
         )
         adInsertionPoints = emptyList()
         nextAdIndex = 0

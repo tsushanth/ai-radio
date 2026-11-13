@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.kreativekoala.audexa.data.local.PreferencesManager
+import com.kreativekoala.audexa.data.model.ContentLanguage
 import com.kreativekoala.audexa.data.model.SupportedLanguage
 import com.kreativekoala.audexa.data.model.Topic
 import com.kreativekoala.audexa.data.remote.SuggestTopicRequest
@@ -31,6 +32,8 @@ data class OnboardingUiState(
     val topics: List<Topic> = emptyList(),
     val selectedTopicIds: Set<String> = emptySet(),
     val selectedLanguage: SupportedLanguage = SupportedLanguage.ENGLISH,
+    // Device language that podcasts do not exist in (display name), so the language page can say what we picked instead.
+    val unsupportedDeviceLanguage: String? = null,
     val isLoadingTopics: Boolean = false,
     val isCompleting: Boolean = false,
     val error: String? = null
@@ -62,13 +65,16 @@ class OnboardingViewModel @Inject constructor(
             val email = preferencesManager.linkedEmail.first()
 
             // Auto-detect device locale
+            // Only a language podcasts can be generated in may be pre-selected (and later saved): a Japanese, Korean, Hindi, Chinese
+            // or Tagalog device gets the closest supported language (English by default) plus a one-line explanation.
             val deviceLocale = java.util.Locale.getDefault().language
-            val detectedLanguage = SupportedLanguage.entries.find { it.code == deviceLocale } ?: SupportedLanguage.ENGLISH
+            val resolved = ContentLanguage.resolve(deviceLocale)
 
             _uiState.value = _uiState.value.copy(
                 googleLinked = hasLinked,
                 linkedEmail = email,
-                selectedLanguage = detectedLanguage
+                selectedLanguage = resolved.language,
+                unsupportedDeviceLanguage = if (resolved.substituted) languageDisplayName(resolved.requested) else null
             )
 
             // Load topics
@@ -123,7 +129,7 @@ class OnboardingViewModel @Inject constructor(
     fun selectLanguage(language: SupportedLanguage) {
         viewModelScope.launch { briefingManager.logEvent(BriefingManager.EVENT_LANGUAGE_PICKED, lang = language.code) }
         if (!language.podcastAvailable) return // coming soon: the pick is recorded, the selection stays
-        _uiState.value = _uiState.value.copy(selectedLanguage = language)
+        _uiState.value = _uiState.value.copy(selectedLanguage = language, unsupportedDeviceLanguage = null)
         loadTopics() // Reload with new language
     }
 
@@ -237,7 +243,7 @@ class OnboardingViewModel @Inject constructor(
             }
 
             // Save selected language
-            preferencesManager.setPreferredLanguage(uiState.value.selectedLanguage.code)
+            preferencesManager.setPreferredLanguage(ContentLanguage.resolve(uiState.value.selectedLanguage.code).language.code)
 
             // Mark onboarding complete
             preferencesManager.setOnboardingCompleted(true)
@@ -246,4 +252,10 @@ class OnboardingViewModel @Inject constructor(
             onComplete()
         }
     }
+}
+
+/** A language's name as the device shows it (for example "Japanese" on an English phone); the code itself if the device has no name for it. */
+fun languageDisplayName(code: String): String {
+    val name = java.util.Locale.forLanguageTag(code).getDisplayLanguage(java.util.Locale.getDefault())
+    return name.takeIf { it.isNotBlank() && !it.equals(code, ignoreCase = true) } ?: code
 }

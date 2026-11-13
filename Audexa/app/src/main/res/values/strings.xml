@@ -176,6 +176,7 @@
     <string name="language_coming_soon">Coming soon</string>
     <string name="language_coming_soon_toast">Not available yet. We have noted your interest.</string>
     <string name="generating_language">Preparing your episode in %1$s. The first one can take a few minutes.</string>
+    <string name="language_fallback_note">Podcasts aren\'t available in %1$s yet, so we picked %2$s for you.</string>
     <string name="error_language_unavailable">That language is not available yet.</string>
     <string name="error_daily_limit">Today\'s limit for new-language episodes has been reached. Try again tomorrow.</string>
     <string name="language_description">Choose your preferred language.</string>

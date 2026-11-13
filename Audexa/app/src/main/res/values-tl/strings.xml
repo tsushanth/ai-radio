@@ -237,4 +237,5 @@
     <!-- Daily Brief Playback -->
     <string name="daily_brief_title_format">Araw-araw na Buod - %s</string>
     <string name="daily_brief_description">Ang iyong personalized na umaga na buod</string>
+    <string name="language_fallback_note">Wala pang podcast sa %1$s, kaya %2$s ang pinili namin para sa iyo.</string>
 </resources>

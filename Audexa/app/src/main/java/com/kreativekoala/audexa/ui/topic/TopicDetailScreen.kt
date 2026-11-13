@@ -228,6 +228,16 @@ fun TopicDetailScreen(
                 }
             }
 
+            // One-line explanation that the language was switched to a supported one
+            if (uiState.languageNotice != null) {
+                Spacer(modifier = Modifier.height(16.dp))
+                Text(
+                    text = uiState.languageNotice!!,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = AccentOrange
+                )
+            }
+
             // Playback (network) error with Retry
             if (uiState.playbackError != null) {
                 Spacer(modifier = Modifier.height(16.dp))

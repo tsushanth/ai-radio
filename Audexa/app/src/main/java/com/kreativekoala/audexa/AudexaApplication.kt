@@ -35,6 +35,7 @@ class AudexaApplication : Application() {
         Analytics.init(this, BuildConfig.API_BASE_URL, versionName)
         Analytics.trackAppOpen()
         CoroutineScope(Dispatchers.IO).launch {
+            runCatching { preferencesManager.migrateUnsupportedLanguage() }
             runCatching { Analytics.preferredLanguage = preferencesManager.preferredLanguage.first() }
         }
         ExperimentManager.init(this)

@@ -115,6 +115,22 @@ class MainActivity : AppCompatActivity() {
             requestNotificationPermissionIfNeeded()
         }
 
+        // An older version could save a content language podcasts do not exist in (ja, ko, hi, zh, tl). It was replaced at launch;
+        // say so once, in one line.
+        lifecycleScope.launch {
+            runCatching {
+                preferencesManager.migrateUnsupportedLanguage()
+                preferencesManager.takeLanguageFallbackNotice()?.let { from ->
+                    val to = com.kreativekoala.audexa.data.model.ContentLanguage.resolve(from).language
+                    android.widget.Toast.makeText(
+                        this@MainActivity,
+                        getString(R.string.language_fallback_note, com.kreativekoala.audexa.ui.onboarding.languageDisplayName(from), to.nativeName),
+                        android.widget.Toast.LENGTH_LONG
+                    ).show()
+                }
+            }
+        }
+
         // Ratings: record the first launch (never asks here). Moments that may lead to a review request:
         // a finished episode, and 10 minutes of live radio while the app is on screen.
         com.kreativekoala.ratingkit.RatingKit.trackAppOpen(this)

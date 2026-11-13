@@ -37,6 +37,11 @@ class RedditFeedTests(unittest.IsolatedAsyncioTestCase):
     async def asyncSetUp(self):
         for k in ("REDDIT_USE_OAUTH", "REDDIT_RSS_MAX_WAIT_SEC", "REDDIT_RSS_CACHE_TTL_SEC", "REDDIT_USER_AGENT"):
             os.environ.pop(k, None)
+        # These tests cover the legacy reddit.com feed path: switch the archive off and the legacy feed on
+        os.environ["SOURCE_REDDIT_ARCHIVE_ENABLED"] = "0"
+        os.environ["SOURCE_REDDIT_RSS_ENABLED"] = "1"
+        self.addCleanup(os.environ.pop, "SOURCE_REDDIT_ARCHIVE_ENABLED", None)
+        self.addCleanup(os.environ.pop, "SOURCE_REDDIT_RSS_ENABLED", None)
 
     async def make(self, fake, **kw):
         server = TestServer(fake.app())

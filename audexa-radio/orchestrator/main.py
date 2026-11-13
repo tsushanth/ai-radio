@@ -241,12 +241,13 @@ async def generate_and_queue_scheduled_for_language(lang: str) -> bool:
         topic_with_regional_sources = topic
         if sources is not topic.sources:
             import dataclasses
-            topic_with_regional_sources = dataclasses.replace(topic, sources=sources)
+            topic_with_regional_sources = dataclasses.replace(topic, sources=sources, exa_query=None)  # Exa queries are US-English only
 
         content = await fetcher.fetch_topic_content(topic_with_regional_sources)
         if not content.stories:
             logger.warning(f"No stories for {topic.name} [{lang}], skipping")
             return False
+        logger.info(f"Content for {topic.name} [{lang}]: {len(content.stories)} stories via {content.tier}")
 
         h1, h2 = pick_voices(lang)
         tts_client = get_tts_for_language(lang)

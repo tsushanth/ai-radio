@@ -5,7 +5,7 @@ set -eu
 : "${ICECAST_ADMIN_PASSWORD:?set ICECAST_ADMIN_PASSWORD}"
 case "$ICECAST_SOURCE_PASSWORD$ICECAST_ADMIN_PASSWORD" in *[!A-Za-z0-9_-]*) echo "ICECAST passwords must match [A-Za-z0-9_-]+ (they are written into XML and liquidsoap source)" >&2; exit 1;; esac
 
-mkdir -p /data/queue/ready /data/queue/rendering /data/music /data/jingles /data/logs /var/log/icecast /var/log/supervisor
+mkdir -p /data/queue/ready /data/queue/rendering /data/music /data/jingles /data/logs /data/cache/sources /var/log/icecast /var/log/supervisor
 # Seed once; never overwrite what is already on the volume.
 [ -z "$(ls -A /data/music 2>/dev/null)" ] && cp -a /opt/audexa/seed/music/. /data/music/ 2>/dev/null || true
 [ -z "$(ls -A /data/jingles 2>/dev/null)" ] && cp -a /opt/audexa/seed/jingles/. /data/jingles/ 2>/dev/null || true

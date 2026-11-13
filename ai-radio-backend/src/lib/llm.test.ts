@@ -111,7 +111,6 @@ test('the daily brief scheduler wraps generation in the daily_brief label', () =
 test('every Anthropic client is instrumented and every messages.create is labelled (guards future call sites)', () => {
   const root = path.join(__dirname, '..');
   const expected: Record<string, string[]> = {
-    'services/content/topic.generator.ts': ['topic_script'],
     'services/content/livestation.generator.ts': ['live_station_news', 'live_station'],
     'services/content/interactions.service.ts': ['interaction'],
     'services/content/deepdive.generator.ts': ['deepdive_research', 'deepdive'],
@@ -119,8 +118,18 @@ test('every Anthropic client is instrumented and every messages.create is labell
     'services/ai/script.generator.ts': ['script'],
     'services/content/customsource.service.ts': ['custom_source'],
     'services/scheduler/topic-suggest.scheduler.ts': ['topic_suggest'],
+  };
+  // These now go through lib/llmText (provider switch: OpenRouter or Anthropic), which instruments its own Anthropic client and labels
+  // every call with the feature given here. The label must stay a literal so the usage tables keep their breakdown.
+  const throughLlmText: Record<string, string[]> = {
+    'services/content/topic.generator.ts': ['topic_script'],
     'services/ask/ask.runtime.ts': ['ask_review', 'ask_script'],
   };
+  for (const [rel, labels] of Object.entries(throughLlmText)) {
+    const src = fs.readFileSync(path.join(root, rel), 'utf8');
+    assert.ok(!/new Anthropic\(|\.messages\.(create|stream)\(/.test(src), `${rel}: must not call Anthropic directly`);
+    assert.deepEqual([...src.matchAll(/generateText\(\{\s*feature: '([a-z_]+)'/g)].map((m) => m[1]), labels, `${rel}: generateText labels`);
+  }
   const walk = (d: string): string[] => fs.readdirSync(d, { withFileTypes: true }).flatMap((e) =>
     e.isDirectory() ? walk(path.join(d, e.name)) : e.name.endsWith('.ts') && !e.name.endsWith('.test.ts') ? [path.join(d, e.name)] : []);
   const seen = new Set<string>();

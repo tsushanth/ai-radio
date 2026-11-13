@@ -11,6 +11,7 @@ import { isGeneratableTopic, languagesForTopic } from './batch-languages';
 import { topicPodcastGenerator } from '../content/topic.generator';
 import type { TopicDefinition } from '../../types/topics';
 import { reportFailure } from '../../lib/failureReporter';
+import { llmBudget, isBudgetExceeded } from '../../lib/llmBudget';
 import { summarizeBatch, runStatusFor, reportBatchHealth } from './batch-health';
 import { reapStuckRows } from './stuck-reaper';
 
@@ -62,6 +63,18 @@ export class TopicBatchScheduler {
 
     console.log(`[BatchScheduler] Starting batch ${batchId}: ${topics.length} topics`);
 
+    // Daily LLM budget already used up: the batch skips (recorded as a completed run with every topic skipped; as elsewhere, skipped topics count as successful, so the "batch did not run"
+    // invariant stays quiet; the cap itself has already sent its own alert). Nothing is generated until the next UTC day.
+    if (await llmBudget.isCapped()) {
+      console.warn(`[BatchScheduler] Batch ${batchId} skipped: the daily LLM budget is used up`);
+      const completedAt = new Date();
+      await this.saveBatchRun({
+        id: batchId, status: 'completed', startedAt, completedAt, totalTopics: topics.length, successful: topics.length, failed: 0,
+        skipped: topics.length, results: JSON.stringify([{ note: 'llm_daily_cap' }]), triggerSource,
+      });
+      return { batchId, status: 'completed', startedAt, completedAt, totalTopics: topics.length, successful: topics.length, failed: 0, skipped: topics.length, results: [], triggerSource };
+    }
+
     // Clean up rows that an earlier crash/deploy left 'running' / 'generating' (never throws; capped per pass)
     await reapStuckRows(this.supabase, reportFailure);
 
@@ -76,6 +89,12 @@ export class TopicBatchScheduler {
 
     // Process topics in batches of CONCURRENCY
     for (let i = 0; i < topics.length; i += this.CONCURRENCY) {
+      if (await llmBudget.isCapped()) {
+        // the cap was reached during this run: leave the rest for tomorrow instead of failing and retrying each one
+        for (const t of topics.slice(i)) results.push({ topicId: t.id, topicName: t.name, success: true, isNew: false, skipped: true });
+        console.warn(`[BatchScheduler] Daily LLM budget reached: ${topics.length - i} topics skipped`);
+        break;
+      }
       const batch = topics.slice(i, i + this.CONCURRENCY);
       console.log(
         `[BatchScheduler] Processing batch ${Math.floor(i / this.CONCURRENCY) + 1}: ${batch.map(t => t.id).join(', ')}`
@@ -197,6 +216,9 @@ export class TopicBatchScheduler {
         durationSeconds: result.episode.durationSeconds,
       };
     } catch (error) {
+      if (isBudgetExceeded(error)) {
+        return { topicId: topic.id, topicName: topic.name, success: true, isNew: false, skipped: true };
+      }
       console.error(`[BatchScheduler] Failed ${topic.name}:`, error);
       return {
         topicId: topic.id,

@@ -1,5 +1,5 @@
 export interface Usage { input_tokens?: number; output_tokens?: number; cache_creation_input_tokens?: number; cache_read_input_tokens?: number; cache_creation?: { ephemeral_5m_input_tokens?: number; ephemeral_1h_input_tokens?: number }; server_tool_use?: { web_search_requests?: number } }
-export interface LlmUsageOptions { app: string; url?: string; key?: string; flushMs?: number; maxPending?: number; enabled?: boolean; fetch?: typeof fetch; now?: () => number; log?: (msg: string) => void }
+export interface LlmUsageOptions { app: string; url?: string; key?: string; flushMs?: number; maxPending?: number; enabled?: boolean; fetch?: typeof fetch; now?: () => number; log?: (msg: string) => void; onRecord?: (r: { model: string; feature: string; ok: boolean; usd: number }) => void }
 export interface LlmUsage {
   record(r: { model: string; usage?: Usage; feature?: string; ok?: boolean }): void;
   instrument(client: unknown): () => void;

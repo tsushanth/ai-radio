@@ -15,6 +15,7 @@
  */
 import Parser from 'rss-parser';
 import { z } from 'zod';
+import { extractJson } from '../../lib/tolerantJson';
 import { unsafeTextReason, normalizeLanguage, newsFeedUrl, type ModelCall } from '../scheduler/topic-suggest';
 import type { PodcastScript, ScriptSegment } from '../../types/database';
 
@@ -172,6 +173,7 @@ export const REJECT_MESSAGES: Record<string, string> = {
   language_unavailable: 'That language is not available yet.',
   no_coverage: 'We could not find enough recent news coverage about this to discuss it accurately, so we did not make an episode. Try again later, or describe a bigger or more recent story.',
   interrupted: 'This episode was interrupted. Please try again.',
+  daily_limit: 'Ask the hosts has reached its limit for today. Please try again tomorrow.',
   studio_busy: 'The studio is busy right now. Please try again in a few minutes.',
   could_not_ground: 'We could not write an episode that stays within the reported facts, so we did not publish one. Please try again.',
   failed: 'Something went wrong while making this episode. Please try again.',
@@ -225,10 +227,9 @@ const REVIEW_REJECT_REASONS = new Set(['unsafe', 'illegal', 'pii', 'private_pers
 
 /** Parses and validates the review model's reply. Throws PermanentError on anything that is not exactly the contract. */
 export function parseReview(raw: string): ReviewDecision {
-  const m = raw.match(/\{[\s\S]*\}/);
-  if (!m) throw new PermanentError('model_output_no_json');
-  let obj: unknown;
-  try { obj = JSON.parse(m[0]); } catch { throw new PermanentError('model_output_bad_json'); }
+  const found = extractJson(raw); // tolerant: code fences, prose around the object, trailing commas
+  if (!found) throw new PermanentError('model_output_no_json');
+  const obj: unknown = found.value;
   const d = reviewSchema.safeParse(obj);
   if (!d.success) throw new PermanentError('model_output_bad_shape');
   if (d.data.decision === 'reject') {
@@ -377,10 +378,9 @@ export interface ParsedScript {
 }
 
 export function parseScript(raw: string, now: Date = new Date()): ParsedScript {
-  const m = raw.match(/\{[\s\S]*\}/);
-  if (!m) throw new PermanentError('script_no_json');
-  let obj: unknown;
-  try { obj = JSON.parse(m[0]); } catch { throw new PermanentError('script_bad_json'); }
+  const found = extractJson(raw); // tolerant: code fences, prose around the object, trailing commas
+  if (!found) throw new PermanentError('script_no_json');
+  const obj: unknown = found.value;
   const p = scriptSchema.safeParse(obj);
   if (!p.success) throw new PermanentError('script_bad_shape');
   const segments: ScriptSegment[] = p.data.segments.map((s, i, all) => ({
@@ -541,12 +541,23 @@ export async function runAskJob(deps: AskDeps, id: string): Promise<AskStatus> {
     const system = buildScriptSystemPrompt(row.language, config.targetWords);
     let parsed: ParsedScript | null = null;
     let bad: string[] = [];
-    for (let attempt = 0; attempt < 2; attempt++) {
+    // Up to three model calls: one retry if the reply is not usable JSON (cheaper models slip now and then), one if it states ungrounded numbers.
+    let parseRetried = false;
+    let groundRetried = false;
+    for (let calls = 0; calls < 3; calls++) {
       const call = await deps.writeScript(system, buildScriptUserPrompt(row.requestText, row.language, sources, bad));
       tokensIn += call.inputTokens; tokensOut += call.outputTokens;
-      const candidate = parseScript(call.text, deps.now());
+      let candidate: ParsedScript;
+      try {
+        candidate = parseScript(call.text, deps.now());
+      } catch (e) {
+        if (e instanceof PermanentError && !parseRetried) { parseRetried = true; continue; }
+        throw e;
+      }
       bad = ungroundedNumbers(candidate.script, sources);
       if (bad.length === 0) { parsed = candidate; break; }
+      if (groundRetried) break;
+      groundRetried = true;
     }
     if (!parsed) return await finish('failed', { reason: 'could_not_ground' });
 
@@ -569,6 +580,7 @@ export async function runAskJob(deps: AskDeps, id: string): Promise<AskStatus> {
     });
   } catch (e) {
     if (e instanceof PermanentError) return await finish('failed', { reason: 'failed' }).then((s) => { log(`[ask] ${id} permanent: ${e.message}`); return s; });
+    if ((e as { code?: string } | null)?.code === 'llm_daily_cap') return await finish('failed', { reason: 'daily_limit' }); // budget hit mid-job: no backoff pause needed
     const busy = e instanceof Error && e.name === 'PiperBusyError';
     // transient (model API / network / speech): pause new requests for a while so a provider outage cannot run up the bill
     deps.state.pausedUntil = deps.now().getTime() + config.backoffMs;

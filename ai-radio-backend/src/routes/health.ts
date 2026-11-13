@@ -7,6 +7,7 @@ import express, { Request, Response } from 'express';
 import { storageService } from '../services/storage/storage.service';
 import { openaiTTS } from '../services/tts/openai.tts';
 import { scriptGenerator } from '../services/ai/script.generator';
+import { readProvider, openRouterModels } from '../lib/llmText';
 
 const router = express.Router();
 
@@ -47,6 +48,13 @@ router.get('/detailed', async (req: Request, res: Response) => {
       database: {
         status: 'unknown',
         connected: false,
+      },
+      // Which provider writes the podcast / Ask scripts (LLM_PROVIDER); names only, never keys
+      llm: {
+        status: readProvider() === 'openrouter' && !(process.env.OPENROUTER_API_KEY ?? '').trim() ? 'not_configured' : 'configured',
+        provider: readProvider(),
+        openrouter_key_set: Boolean((process.env.OPENROUTER_API_KEY ?? '').trim()),
+        models: readProvider() === 'openrouter' ? openRouterModels() : ['claude-sonnet-4-6'],
       },
     },
     environment: {

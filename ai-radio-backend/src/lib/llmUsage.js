@@ -10,7 +10,7 @@
 //   llm.record({ model, usage: json.usage, feature: 'chat' });    // for raw fetch / axios callers
 //
 // Reporting never throws and never delays a request: rows are batched in memory and sent every 30 s.
-// Version: llm-usage 1
+// Version: llm-usage 1 (+ local additions: OpenRouter luna prices, onRecord observer; see ai-radio-backend/src/lib/llmBudget.ts)
 
 const { AsyncLocalStorage } = require('node:async_hooks');
 
@@ -29,6 +29,9 @@ const PRICES = {
   'claude-sonnet-4-6': P(3, 15, 3.75, 6, 0.3), 'claude-sonnet-4-5': P(3, 15, 3.75, 6, 0.3), 'claude-sonnet-4': P(3, 15, 3.75, 6, 0.3),
   'claude-haiku-5-5': P(0.1, 0.5, 0.125, 0.2, 0.01), // prompts over 100k tokens pay HAIKU_55_LONG
   'claude-haiku-4-5': P(1, 5, 1.25, 2, 0.1), 'claude-haiku-3-5': P(0.8, 4, 1, 1.6, 0.08),
+  // OpenRouter (checked against openrouter.ai/api/v1/models on 2026-11-12; prompts over 272k tokens pay more, which no script here reaches).
+  'openai/gpt-6-luna': P(0.1, 0.5, 0.125, 0.125, 0.01),
+  'openai/gpt-5.6-luna': P(0.2, 1.2, 0.25, 0.25, 0.02),
 };
 const HAIKU_55_LONG = P(0.5, 2.5, 0.625, 1, 0.05);
 const WEB_SEARCH_USD = 0.01; // $10 per 1,000 searches
@@ -77,6 +80,7 @@ function createLlmUsage(opts) {
   const now = opts.now || Date.now;
   const doFetch = opts.fetch || (typeof fetch === 'function' ? fetch : null);
   const log = opts.log || (() => {});
+  const onRecord = typeof opts.onRecord === 'function' ? opts.onRecord : null; // local (non-network) observer, e.g. the daily budget
   const maxKeys = opts.maxPending || 500;
   const flushMs = opts.flushMs === undefined ? 30000 : opts.flushMs;
   const enabled = opts.enabled !== false && !!key && !!doFetch;
@@ -101,6 +105,10 @@ function createLlmUsage(opts) {
 
   /** Record one finished call. `usage` is the API response's usage object. Safe to call from anywhere; never throws. */
   function record({ model, usage, feature, ok = true } = {}) {
+    if (onRecord) {
+      // runs even when reporting is disabled (no ingest key): the daily budget must not depend on the central Worker
+      try { onRecord({ model: normalizeModel(model), feature: featureName(feature), ok, usd: ok ? costOf(model, usage).usd : 0 }); } catch (e) { log('llm-usage onRecord failed: ' + (e && e.message)); }
+    }
     try { if (enabled) { add(model, featureName(feature), ok, usage); schedule(); } } catch (e) { log('llm-usage record failed: ' + (e && e.message)); }
   }
 

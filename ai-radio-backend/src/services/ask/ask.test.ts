@@ -346,6 +346,39 @@ test('a script that still invents numbers after the retry is not published (coul
   assert.equal(h.calls.script, 2, 'never more than one retry (bounded spend)');
 });
 
+test('a reply that is not usable JSON is retried once (cheaper models slip now and then); the retry completes', async () => {
+  const h = jobHarness({ scripts: ['Sure! Here is the script you asked for, enjoy.', goodScript()] });
+  await startedRow(h);
+  assert.equal(await runAskJob(h.deps, ID), 'completed');
+  assert.equal(h.calls.script, 2);
+});
+
+test('two unusable replies in a row fail the request permanently (never a third call)', async () => {
+  const h = jobHarness({ scripts: ['nope', 'still nope', goodScript()] });
+  await startedRow(h);
+  assert.equal(await runAskJob(h.deps, ID), 'failed');
+  assert.equal(h.calls.script, 2);
+  assert.equal(h.calls.tts, 0);
+});
+
+test('a script wrapped in a code fence with a trailing comma still parses (tolerant JSON)', () => {
+  const body = JSON.parse(goodScript());
+  const messy = '```json\n' + JSON.stringify(body).replace(/\}\]\}$/, '},]}') + '\n```\nHope that helps!';
+  const p = parseScript(messy, NOW);
+  assert.equal(p.script.total_segments, 10);
+  assert.deepEqual(parseReview('```json\n{"decision":"accept","reason":"","search_query":"Warriors Lakers",}\n```'), { decision: 'accept', searchQuery: 'Warriors Lakers' });
+});
+
+test('the daily LLM budget being hit mid-job ends the request as daily_limit without pausing other requests', async () => {
+  const cap = Object.assign(new Error('cap'), { code: 'llm_daily_cap' });
+  const h = jobHarness({ scriptThrows: cap });
+  await startedRow(h);
+  assert.equal(await runAskJob(h.deps, ID), 'failed');
+  assert.equal(h.m.rows.get(ID)!.reason, 'daily_limit');
+  assert.equal(h.state.pausedUntil, 0);
+  assert.match(toPublic(h.m.rows.get(ID)!).message!, /try again tomorrow/i);
+});
+
 test('provider / speech errors fail the request, pause new ones, and a busy studio gets its own message', async () => {
   const h = jobHarness({ scriptThrows: new Error('overloaded') });
   await startedRow(h);
@@ -388,7 +421,7 @@ test('toPublic: duration is always a whole number, sources only when finished, n
 
 // ─── HTTP ─────────────────────────────────────────────────────────────────────
 
-async function withServer(opts: { enabled: boolean; maxQueue?: number; storeOver?: Parameters<typeof memStore>[0] }, fn: (base: string, ctx: { calls: { runtime: number; scheduled: Array<() => Promise<unknown>> }; m: ReturnType<typeof memStore> }) => Promise<void>) {
+async function withServer(opts: { enabled: boolean; maxQueue?: number; budgetCapped?: boolean; storeOver?: Parameters<typeof memStore>[0] }, fn: (base: string, ctx: { calls: { runtime: number; scheduled: Array<() => Promise<unknown>> }; m: ReturnType<typeof memStore> }) => Promise<void>) {
   const m = memStore(opts.storeOver);
   const state = newAskState();
   const config = { ...CONFIG, enabled: opts.enabled, maxQueue: opts.maxQueue ?? 3 };
@@ -399,7 +432,7 @@ async function withServer(opts: { enabled: boolean; maxQueue?: number; storeOver
   app.use(express.json());
   app.use('/api/ask', createAskRouter({
     config: () => config,
-    runtime: () => { calls.runtime++; return { store: m.store, deps, gate, state, languages: () => LANGS }; },
+    runtime: () => { calls.runtime++; return { store: m.store, deps, gate, state, languages: () => LANGS, budgetCapped: opts.budgetCapped === undefined ? undefined : async () => opts.budgetCapped as boolean }; },
     schedule: (job) => { calls.scheduled.push(job); },
   }));
   const server = app.listen(0);
@@ -460,6 +493,21 @@ test('flag ON: a daily / install / spend cap answers 429 / 503 with a plain mess
       assert.equal(ctx.m.rows.size, 0);
     });
   }
+});
+
+test('flag ON: the persisted daily LLM budget being used up answers 429 daily_limit before anything is created or scheduled', async () => {
+  await withServer({ enabled: true, budgetCapped: true }, async (base, ctx) => {
+    const res = await post(base, { text: 'Who won the Warriors Lakers game tonight?' });
+    const j = (await res.json()) as { error: string; message: string };
+    assert.deepEqual([res.status, j.error], [429, 'daily_limit']);
+    assert.match(j.message, /try again tomorrow/i);
+    assert.equal(ctx.m.rows.size, 0);
+    assert.equal(ctx.calls.scheduled.length, 0);
+  });
+  await withServer({ enabled: true, budgetCapped: false }, async (base, ctx) => {
+    assert.equal((await post(base, { text: 'Who won the Warriors Lakers game tonight?' })).status, 202);
+    assert.equal(ctx.calls.scheduled.length, 1);
+  });
 });
 
 test('flag ON: when the studio queue is full the request is turned away (429 busy) before a row is written', async () => {

@@ -56,6 +56,12 @@ class BriefingManager @Inject constructor(
         const val EVENT_SKIPPED_QUIET_HOURS = "briefing_skipped_quiet_hours"
         const val EVENT_LANGUAGE_PICKED = "language_picked"
         const val EVENT_OPENED = "briefing_opened"
+
+        /**
+         * The /notifications/event endpoint keeps only two-letter "lang" values (/^[a-z]{2}$/), so "fil" would be dropped and
+         * Tagalog demand would go uncounted. Send the two-letter form for it until the backend accepts three letters.
+         */
+        fun eventLang(code: String): String = if (code == "fil") "tl" else code
     }
 
     private val client = OkHttpClient.Builder()
@@ -144,7 +150,7 @@ class BriefingManager @Inject constructor(
                     put("install_id", preferencesManager.getOrCreateBriefingInstallId())
                     if (hour != null) put("hour", hour)
                     if (topicCount != null) put("topic_count", topicCount)
-                    if (lang != null) put("lang", lang)
+                    if (lang != null) put("lang", eventLang(lang))
                 }
                 val request = Request.Builder()
                     .url("${BuildConfig.API_BASE_URL}/notifications/event")

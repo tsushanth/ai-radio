@@ -170,7 +170,7 @@
     <!-- Language Settings -->
     <string name="language">\u8a00\u8a9e</string>
     <string name="language_description">\u30dd\u30c3\u30c9\u30ad\u30e3\u30b9\u30c8\u30a8\u30d4\u30bd\u30fc\u30c9\u306e\u5e0c\u671b\u8a00\u8a9e\u3092\u9078\u629e\u3057\u3066\u304f\u3060\u3055\u3044\u3002</string>
-    <string name="language_note">\u65b0\u3057\u3044\u30a8\u30d4\u30bd\u30fc\u30c9\u306f\u9078\u629e\u3057\u305f\u8a00\u8a9e\u3067\u751f\u6210\u3055\u308c\u307e\u3059\u3002\u4ee5\u524d\u751f\u6210\u3055\u308c\u305f\u30a8\u30d4\u30bd\u30fc\u30c9\u306f\u5143\u306e\u8a00\u8a9e\u306e\u307e\u307e\u3067\u3059\u3002</string>
+    <string name="language_note">ポッドキャストは英語、スペイン語、フランス語、ドイツ語、ポルトガル語、イタリア語で利用できます。新しい言語の最初のエピソードは、準備に数分かかります。ラジオは英語のみです。その他の言語については、次に何を追加するか決めるため、お名前なしで選択された言語を記録します。</string>
     <string name="selected">\u9078\u629e\u6e08\u307f</string>
 
     <!-- Voice Settings -->
@@ -238,4 +238,10 @@
     <string name="daily_brief_title_format">\u30c7\u30a4\u30ea\u30fc\u30d6\u30ea\u30fc\u30d5 - %s</string>
     <string name="daily_brief_description">\u3042\u306a\u305f\u5c02\u7528\u306e\u671d\u306e\u30d6\u30ea\u30fc\u30d5\u30a3\u30f3\u30b0</string>
     <string name="language_fallback_note">\u30dd\u30c3\u30c9\u30ad\u30e3\u30b9\u30c8\u306f\u307e\u3060%1$s\u306b\u5bfe\u5fdc\u3057\u3066\u3044\u306a\u3044\u305f\u3081\u3001%2$s\u3092\u9078\u629e\u3057\u307e\u3057\u305f\u3002</string>
+
+    <!-- Language selection page -->
+    <string name="language_page_title">言語を選択</string>
+    <string name="language_page_subtitle">ポッドキャストは6つの言語で利用できます。ラジオは英語のみです。選んだ言語は、今後追加する言語の参考にします。</string>
+    <string name="language_coming_soon">近日対応</string>
+    <string name="language_coming_soon_toast">まだ利用できません。ご関心を記録しました。</string>
 </resources>

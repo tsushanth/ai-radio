@@ -170,7 +170,7 @@
     <!-- Language Settings -->
     <string name="language">Ngôn ngữ</string>
     <string name="language_description">Chọn ngôn ngữ ưa thích cho các tập podcast.</string>
-    <string name="language_note">Các tập mới sẽ được tạo bằng ngôn ngữ đã chọn. Các tập đã tạo trước đó sẽ giữ nguyên ngôn ngữ gốc.</string>
+    <string name="language_note">Podcast có sẵn bằng tiếng Anh, tiếng Tây Ban Nha, tiếng Pháp, tiếng Đức, tiếng Bồ Đào Nha và tiếng Ý. Tập đầu tiên bằng ngôn ngữ mới cần vài phút để chuẩn bị. Radio chỉ có tiếng Anh. Với các ngôn ngữ khác, chúng tôi ghi lại ngôn ngữ bạn chọn, không kèm tên của bạn, để quyết định bổ sung gì tiếp theo.</string>
     <string name="selected">Đã chọn</string>
 
     <!-- Voice Settings -->
@@ -237,4 +237,11 @@
     <!-- Daily Brief Playback -->
     <string name="daily_brief_title_format">Tóm tắt hàng ngày - %s</string>
     <string name="daily_brief_description">Bản tóm tắt buổi sáng được cá nhân hóa</string>
+
+    <!-- Language selection page -->
+    <string name="language_page_title">Chọn ngôn ngữ của bạn</string>
+    <string name="language_page_subtitle">Podcast có sáu ngôn ngữ. Radio chỉ có tiếng Anh. Lựa chọn của bạn giúp chúng tôi quyết định nên bổ sung gì tiếp theo.</string>
+    <string name="language_coming_soon">Sắp ra mắt</string>
+    <string name="language_coming_soon_toast">Chưa khả dụng. Chúng tôi đã ghi nhận sự quan tâm của bạn.</string>
+    <string name="language_fallback_note">Podcast chưa hỗ trợ %1$s nên chúng tôi đã chọn %2$s cho bạn.</string>
 </resources>

@@ -32,8 +32,21 @@ class ContentLanguageTest {
             val r = ContentLanguage.resolve(c)
             assertEquals("$c -> en", "en", r.language.code)
             assertTrue("$c must be reported as substituted", r.substituted)
-            assertEquals(c, r.requested)
+            assertEquals(SupportedLanguage.canonicalCode(c), r.requested)
         }
+    }
+
+    @Test fun oldTagalogTagIsTheSameAsFil() {
+        assertEquals("fil", SupportedLanguage.TAGALOG.code)
+        assertEquals("fil", ContentLanguage.normalize("tl"))
+        assertEquals("fil", ContentLanguage.normalize("TL-PH"))
+        assertEquals(SupportedLanguage.TAGALOG, SupportedLanguage.fromCode("tl"))
+        assertEquals(SupportedLanguage.TAGALOG, SupportedLanguage.fromCode("fil"))
+        // A stored "tl" is migrated to a supported language, and the one-line notice names Filipino/Tagalog ("fil").
+        val m = ContentLanguage.migrationFor("tl")!!
+        assertEquals("en", m.newCode)
+        assertEquals("fil", m.from)
+        assertEquals("https://radio.audexa.app/stream-tl", SupportedLanguage.TAGALOG.radioStreamURL)
     }
 
     @Test fun deviceLocaleFormsAreNormalised() {

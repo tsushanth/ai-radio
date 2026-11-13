@@ -170,7 +170,7 @@
     <!-- Language Settings -->
     <string name="language">\u092d\u093e\u0937\u093e</string>
     <string name="language_description">\u092a\u0949\u0921\u0915\u093e\u0938\u094d\u091f \u090f\u092a\u093f\u0938\u094b\u0921 \u0915\u0947 \u0932\u093f\u090f \u0905\u092a\u0928\u0940 \u092a\u0938\u0902\u0926\u0940\u0926\u093e \u092d\u093e\u0937\u093e \u091a\u0941\u0928\u0947\u0902\u0964</string>
-    <string name="language_note">\u0928\u090f \u090f\u092a\u093f\u0938\u094b\u0921 \u091a\u092f\u0928\u093f\u0924 \u092d\u093e\u0937\u093e \u092e\u0947\u0902 \u092c\u0928\u093e\u090f \u091c\u093e\u090f\u0902\u0917\u0947\u0964 \u092a\u0939\u0932\u0947 \u092c\u0928\u093e\u090f \u0917\u090f \u090f\u092a\u093f\u0938\u094b\u0921 \u0905\u092a\u0928\u0940 \u092e\u0942\u0932 \u092d\u093e\u0937\u093e \u092e\u0947\u0902 \u0930\u0939\u0947\u0902\u0917\u0947\u0964</string>
+    <string name="language_note">पॉडकास्ट अंग्रेज़ी, स्पेनिश, फ़्रेंच, जर्मन, पुर्तगाली और इतालवी में उपलब्ध हैं। नई भाषा का पहला एपिसोड तैयार होने में कुछ मिनट लगते हैं। रेडियो केवल अंग्रेज़ी में है। अन्य भाषाओं के लिए हम आपका नाम लिए बिना दर्ज करते हैं कि आपने कौन-सी भाषा चुनी, ताकि तय कर सकें कि आगे क्या जोड़ना है।</string>
     <string name="selected">\u091a\u092f\u0928\u093f\u0924</string>
 
     <!-- Voice Settings -->
@@ -238,4 +238,10 @@
     <string name="daily_brief_title_format">\u0926\u0948\u0928\u093f\u0915 \u0938\u093e\u0930\u093e\u0902\u0936 - %s</string>
     <string name="daily_brief_description">\u0906\u092a\u0915\u093e \u0935\u094d\u092f\u0915\u094d\u0924\u093f\u0917\u0924 \u0938\u0941\u092c\u0939 \u0915\u093e \u0938\u093e\u0930\u093e\u0902\u0936</string>
     <string name="language_fallback_note">\u092a\u0949\u0921\u0915\u093e\u0938\u094d\u091f \u0905\u092d\u0940 %1$s \u092e\u0947\u0902 \u0909\u092a\u0932\u092c\u094d\u0927 \u0928\u0939\u0940\u0902 \u0939\u0948\u0902, \u0907\u0938\u0932\u093f\u090f \u0939\u092e\u0928\u0947 %2$s \u091a\u0941\u0928\u093e \u0939\u0948\u0964</string>
+
+    <!-- Language selection page -->
+    <string name="language_page_title">अपनी भाषा चुनें</string>
+    <string name="language_page_subtitle">पॉडकास्ट छह भाषाओं में उपलब्ध हैं। रेडियो केवल अंग्रेज़ी में है। आपकी पसंद से हमें तय करने में मदद मिलती है कि आगे क्या जोड़ें।</string>
+    <string name="language_coming_soon">जल्द आ रहा है</string>
+    <string name="language_coming_soon_toast">अभी उपलब्ध नहीं है। हमने आपकी रुचि दर्ज कर ली है।</string>
 </resources>

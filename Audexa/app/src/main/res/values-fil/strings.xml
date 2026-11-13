@@ -170,7 +170,7 @@
     <!-- Language Settings -->
     <string name="language">Wika</string>
     <string name="language_description">Piliin ang iyong gustong wika para sa mga episode ng podcast.</string>
-    <string name="language_note">Ang mga bagong episode ay gagawin sa napiling wika. Ang mga dating ginawang episode ay mananatili sa kanilang orihinal na wika.</string>
+    <string name="language_note">Available ang mga podcast sa Ingles, Espanyol, Pranses, Aleman, Portuges at Italyano. Ilang minuto ang paghahanda ng unang episode sa bagong wika. Ingles lang ang radyo. Para sa iba pang wika, itinatala namin kung alin ang pinili mo, nang walang pangalan mo, para makapagpasya kung ano ang susunod na idadagdag.</string>
     <string name="selected">Napili</string>
 
     <!-- Voice Settings -->
@@ -238,4 +238,10 @@
     <string name="daily_brief_title_format">Araw-araw na Buod - %s</string>
     <string name="daily_brief_description">Ang iyong personalized na umaga na buod</string>
     <string name="language_fallback_note">Wala pang podcast sa %1$s, kaya %2$s ang pinili namin para sa iyo.</string>
+
+    <!-- Language selection page -->
+    <string name="language_page_title">Piliin ang Iyong Wika</string>
+    <string name="language_page_subtitle">Available ang mga podcast sa anim na wika. Ingles lang ang radyo. Nakakatulong ang pinili mo para makapagpasya kami kung ano ang idadagdag.</string>
+    <string name="language_coming_soon">Malapit na</string>
+    <string name="language_coming_soon_toast">Hindi pa available. Naitala na namin ang iyong interes.</string>
 </resources>

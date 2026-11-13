@@ -14,6 +14,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -46,7 +47,7 @@ fun LanguageSelectionPage(
         Spacer(modifier = Modifier.height(16.dp))
 
         Text(
-            text = "Choose Your Language",
+            text = stringResource(com.kreativekoala.audexa.R.string.language_page_title),
             style = MaterialTheme.typography.headlineMedium,
             fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.onBackground
@@ -55,7 +56,7 @@ fun LanguageSelectionPage(
         Spacer(modifier = Modifier.height(8.dp))
 
         Text(
-            text = "Podcasts come in six languages. Radio is English only. Your pick helps us decide what to add.",
+            text = stringResource(com.kreativekoala.audexa.R.string.language_page_subtitle),
             style = MaterialTheme.typography.bodyLarge,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             textAlign = TextAlign.Center
@@ -64,7 +65,7 @@ fun LanguageSelectionPage(
         if (unsupportedDeviceLanguage != null) {
             Spacer(modifier = Modifier.height(12.dp))
             Text(
-                text = androidx.compose.ui.res.stringResource(
+                text = stringResource(
                     com.kreativekoala.audexa.R.string.language_fallback_note,
                     unsupportedDeviceLanguage,
                     selectedLanguage.nativeName
@@ -86,6 +87,10 @@ fun LanguageSelectionPage(
         ) {
             items(SupportedLanguage.entries.toList()) { language ->
                 val isSelected = language == selectedLanguage
+                // The second line is the language name in the phone's language ("Spanish" stays English on an English phone).
+                val shownName = if (java.util.Locale.getDefault().language == "en") language.displayName
+                    else com.kreativekoala.audexa.ui.onboarding.languageDisplayName(language.code)
+                        .replaceFirstChar { it.titlecase(java.util.Locale.getDefault()) }
                 Surface(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -124,7 +129,7 @@ fun LanguageSelectionPage(
                                 color = if (isSelected) AccentOrange else MaterialTheme.colorScheme.onSurface
                             )
                             Text(
-                                text = if (language.podcastAvailable) language.displayName else "${language.displayName} · coming soon",
+                                text = if (language.podcastAvailable) shownName else "$shownName · ${stringResource(com.kreativekoala.audexa.R.string.language_coming_soon)}",
                                 style = MaterialTheme.typography.bodySmall,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
@@ -145,7 +150,7 @@ fun LanguageSelectionPage(
             colors = ButtonDefaults.buttonColors(containerColor = AccentOrange)
         ) {
             Text(
-                text = "Continue",
+                text = stringResource(com.kreativekoala.audexa.R.string.continue_button),
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.SemiBold
             )

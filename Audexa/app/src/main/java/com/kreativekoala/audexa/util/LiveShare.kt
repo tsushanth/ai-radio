@@ -1,5 +1,6 @@
 package com.kreativekoala.audexa.util
 
+import com.kreativekoala.audexa.data.model.SupportedLanguage
 import java.net.URI
 
 /**
@@ -16,18 +17,20 @@ object LiveShare {
     const val HOST = "audexa.app"
     const val PATH = "/live"
 
-    private val KNOWN_LANGUAGES = setOf("en", "es", "hi", "pt", "fr", "de", "ja", "ko", "zh", "it", "tl")
+    private val KNOWN_LANGUAGES = setOf("en", "es", "hi", "pt", "fr", "de", "ja", "ko", "zh", "it", "fil", "tl")
     private val LANGUAGE_PREFIX = Regex("^\\[\\w+\\]\\s*")
 
     /** "https://radio.audexa.app/stream-fr" -> "fr"; the plain "/stream" mount is English. */
     fun languageFromStreamUrl(streamUrl: String): String {
-        val code = Regex("/stream-([a-z]{2})(?:[/?#]|$)").find(streamUrl)?.groupValues?.get(1)
-        return if (code != null && code in KNOWN_LANGUAGES) code else "en"
+        val code = Regex("/stream-([a-z]{2,3})(?:[/?#]|$)").find(streamUrl)?.groupValues?.get(1)
+        return if (code != null && code in KNOWN_LANGUAGES) SupportedLanguage.canonicalCode(code) else "en"
     }
 
     /** The link that goes into the share text. UTM params let us measure the loop later (web logs / Play referrer). */
     fun buildShareUrl(language: String): String {
-        val lang = if (language in KNOWN_LANGUAGES) language else "en"
+        val known = if (language in KNOWN_LANGUAGES) language else "en"
+        // The audexa.app/live page only knows the old Tagalog tag "tl", so links keep using it.
+        val lang = if (known == "fil") "tl" else known
         return "https://$HOST$PATH?lang=$lang" +
             "&utm_source=audexa_android&utm_medium=share&utm_campaign=live_share&utm_content=$lang"
     }
@@ -58,6 +61,6 @@ object LiveShare {
             ?.split('&')
             ?.firstOrNull { it.startsWith("lang=") }
             ?.removePrefix("lang=")
-        return if (lang != null && lang in KNOWN_LANGUAGES) lang else "en"
+        return if (lang != null && lang in KNOWN_LANGUAGES) SupportedLanguage.canonicalCode(lang) else "en"
     }
 }

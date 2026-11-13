@@ -170,7 +170,7 @@
     <!-- Language Settings -->
     <string name="language">Lingua</string>
     <string name="language_description">Scegli la lingua preferita per gli episodi del podcast.</string>
-    <string name="language_note">I nuovi episodi saranno generati nella lingua selezionata. Gli episodi generati in precedenza rimarranno nella loro lingua originale.</string>
+    <string name="language_note">I podcast sono disponibili in inglese, spagnolo, francese, tedesco, portoghese e italiano. Il primo episodio in una nuova lingua richiede qualche minuto per essere preparato. La radio è solo in inglese. Per le altre lingue registriamo quale scegli, senza il tuo nome, per decidere cosa aggiungere dopo.</string>
     <string name="selected">Selezionato</string>
 
     <!-- Voice Settings -->
@@ -237,4 +237,11 @@
     <!-- Daily Brief Playback -->
     <string name="daily_brief_title_format">Riepilogo quotidiano - %s</string>
     <string name="daily_brief_description">Il tuo riepilogo mattutino personalizzato</string>
+
+    <!-- Language selection page -->
+    <string name="language_page_title">Scegli la tua lingua</string>
+    <string name="language_page_subtitle">I podcast sono disponibili in sei lingue. La radio è solo in inglese. La tua scelta ci aiuta a decidere cosa aggiungere.</string>
+    <string name="language_coming_soon">In arrivo</string>
+    <string name="language_coming_soon_toast">Non ancora disponibile. Abbiamo preso nota del tuo interesse.</string>
+    <string name="language_fallback_note">I podcast non sono ancora disponibili in %1$s, quindi abbiamo scelto %2$s per te.</string>
 </resources>

@@ -16,7 +16,8 @@ enum class SupportedLanguage(
     HINDI("hi", "Hindi", "हिन्दी", "🇮🇳"),
     KOREAN("ko", "Korean", "한국어", "🇰🇷"),
     ITALIAN("it", "Italian", "Italiano", "🇮🇹"),
-    TAGALOG("tl", "Tagalog", "Tagalog", "🇵🇭");
+    /** Filipino/Tagalog. The standard tag (Android, Play, ISO 639-2) is "fil"; older app versions stored the ISO 639-1 "tl". */
+    TAGALOG("fil", "Tagalog", "Tagalog", "🇵🇭");
 
     /** Podcast episodes can be generated in this language (Piper voices exist). Radio is English only. */
     val podcastAvailable: Boolean
@@ -45,14 +46,22 @@ enum class SupportedLanguage(
     val radioStreamURL: String
         get() = when (this) {
             ENGLISH -> "https://radio.audexa.app/stream"
+            // The server mount for Tagalog was always named stream-tl; only the app-side tag changed to fil.
+            TAGALOG -> "https://radio.audexa.app/stream-tl"
             else -> "https://radio.audexa.app/stream-$code"
         }
 
     companion object {
         val PODCAST_LANGUAGES = setOf(ENGLISH, SPANISH, FRENCH, GERMAN, PORTUGUESE, ITALIAN)
 
+        /** Old stored or linked codes that now have a different standard tag: Tagalog "tl" -> "fil". */
+        fun canonicalCode(code: String): String = LEGACY_CODES[code.lowercase()] ?: code
+
+        private val LEGACY_CODES = mapOf("tl" to "fil")
+
         fun fromCode(code: String): SupportedLanguage {
-            return entries.find { it.code == code } ?: ENGLISH
+            val c = canonicalCode(code)
+            return entries.find { it.code == c } ?: ENGLISH
         }
 
         /**

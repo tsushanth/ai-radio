@@ -170,7 +170,7 @@
     <!-- Language Settings -->
     <string name="language">اللغة</string>
     <string name="language_description">اختر لغتك المفضلة لحلقات البودكاست.</string>
-    <string name="language_note">سيتم إنشاء الحلقات الجديدة باللغة المحددة. ستبقى الحلقات المنشأة سابقاً بلغتها الأصلية.</string>
+    <string name="language_note">تتوفر البودكاست بالإنجليزية والإسبانية والفرنسية والألمانية والبرتغالية والإيطالية. تستغرق الحلقة الأولى بلغة جديدة بضع دقائق للتحضير. الراديو بالإنجليزية فقط. بالنسبة للغات الأخرى، نسجّل اللغة التي تختارها، دون اسمك، لنقرر ما نضيفه لاحقًا.</string>
     <string name="selected">محدد</string>
 
     <!-- Voice Settings -->
@@ -237,4 +237,11 @@
     <!-- Daily Brief Playback -->
     <string name="daily_brief_title_format">الملخص اليومي - %s</string>
     <string name="daily_brief_description">ملخصك الصباحي المخصص</string>
+
+    <!-- Language selection page -->
+    <string name="language_page_title">اختر لغتك</string>
+    <string name="language_page_subtitle">تتوفر البودكاست بست لغات. الراديو بالإنجليزية فقط. اختيارك يساعدنا في تحديد ما نضيفه.</string>
+    <string name="language_coming_soon">قريبًا</string>
+    <string name="language_coming_soon_toast">غير متاح بعد. لقد سجّلنا اهتمامك.</string>
+    <string name="language_fallback_note">البودكاست غير متاح بعد باللغة %1$s، لذلك اخترنا لك %2$s.</string>
 </resources>

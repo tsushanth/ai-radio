@@ -170,7 +170,7 @@
     <!-- Language Settings -->
     <string name="language">Dil</string>
     <string name="language_description">Podcast bölümleri için tercih ettiğiniz dili seçin.</string>
-    <string name="language_note">Yeni bölümler seçtiğiniz dilde oluşturulacaktır. Daha önce oluşturulan bölümler orijinal dillerinde kalacaktır.</string>
+    <string name="language_note">Podcast\'ler İngilizce, İspanyolca, Fransızca, Almanca, Portekizce ve İtalyanca dillerinde sunuluyor. Yeni bir dildeki ilk bölümün hazırlanması birkaç dakika sürer. Radyo yalnızca İngilizce. Diğer diller için, sonraki adımda neyi ekleyeceğimize karar vermek amacıyla adınız olmadan hangisini seçtiğinizi kaydediyoruz.</string>
     <string name="selected">Seçili</string>
 
     <!-- Voice Settings -->
@@ -237,4 +237,11 @@
     <!-- Daily Brief Playback -->
     <string name="daily_brief_title_format">Günlük Özet - %s</string>
     <string name="daily_brief_description">Kişiselleştirilmiş sabah özetiniz</string>
+
+    <!-- Language selection page -->
+    <string name="language_page_title">Dilinizi Seçin</string>
+    <string name="language_page_subtitle">Podcast\'ler altı dilde sunuluyor. Radyo yalnızca İngilizce. Seçiminiz, neyi ekleyeceğimize karar vermemize yardımcı olur.</string>
+    <string name="language_coming_soon">Yakında</string>
+    <string name="language_coming_soon_toast">Henüz kullanılamıyor. İlginizi not ettik.</string>
+    <string name="language_fallback_note">Podcast\'ler henüz şu dilde kullanılamıyor: %1$s. Sizin için şu dili seçtik: %2$s.</string>
 </resources>

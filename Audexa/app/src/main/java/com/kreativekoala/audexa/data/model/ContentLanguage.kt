@@ -31,10 +31,11 @@ object ContentLanguage {
      */
     data class Resolved(val language: SupportedLanguage, val requested: String, val substituted: Boolean)
 
-    /** "ja_JP" / "ja-JP" / "JA" -> "ja"; "fil-PH" -> "fil"; null or junk -> "". */
+    /** "ja_JP" / "ja-JP" / "JA" -> "ja"; "fil-PH" and the old "tl" -> "fil"; null or junk -> "". */
     fun normalize(raw: String?): String {
         val head = raw.orEmpty().trim().lowercase().split('-', '_').firstOrNull().orEmpty()
-        return if (head.length in 2..3 && head.all { it in 'a'..'z' }) head else ""
+        // Tagalog "tl" (saved by older versions) and "fil" are the same language; the standard tag is "fil".
+        return if (head.length in 2..3 && head.all { it in 'a'..'z' }) SupportedLanguage.canonicalCode(head) else ""
     }
 
     fun resolve(raw: String?): Resolved {

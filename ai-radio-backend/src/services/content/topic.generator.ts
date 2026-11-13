@@ -9,6 +9,7 @@ import { instrumentAnthropic, withFeature } from '../../lib/llm';
 import { env } from '../../config/environment';
 import { topicsService } from '../supabase/topics.service';
 import { contentAggregator } from './aggregator.service';
+import { SOURCE_HANDLING_RULES, formatStoryLine, hasGroundedExcerpts, stripExcerpts } from './source-guardrails';
 import { openaiTTS, type VoiceConfig } from '../tts/openai.tts';
 import { concatenateBuffers } from '../tts/audio.utils';
 import type {
@@ -173,7 +174,7 @@ export class TopicPodcastGenerator {
     // Step 1: Aggregate content
     console.log(`  [1/4] Fetching content...`);
     const content = await contentAggregator.aggregateTopicContent(topic);
-    episode.stories = content.stories;
+    episode.stories = stripExcerpts(content.stories);
 
     if (content.stories.length === 0) {
       // Provide more helpful error message based on source failures
@@ -261,7 +262,7 @@ export class TopicPodcastGenerator {
     content: TopicContent,
     language: string = 'en'
   ): Promise<PodcastScript> {
-    const systemPrompt = this.buildSystemPrompt(topic, language);
+    const systemPrompt = this.buildSystemPrompt(topic, language, hasGroundedExcerpts(content.stories));
     const userPrompt = this.buildUserPrompt(topic, content, language);
 
     const response = await withFeature('topic_script', () => this.anthropic.messages.create({
@@ -338,7 +339,7 @@ export class TopicPodcastGenerator {
   /**
    * Build system prompt for topic podcasts
    */
-  private buildSystemPrompt(topic: TopicDefinition, language: string = 'en'): string {
+  private buildSystemPrompt(topic: TopicDefinition, language: string = 'en', groundedInWebText: boolean = false): string {
     // Non-English scripts must NOT mix in raw English/Latin tokens — our
     // Kokoro TTS phonemizer (espeak-ng) can only render one phoneme set
     // per chunk, and mixed scripts emit "[en]" language-switch markers
@@ -395,7 +396,7 @@ FORMAT: Return ONLY a JSON array of segments:
   ...
 ]
 
-VALID TYPES: intro, news, outro (use "news" for all content segments)`;
+VALID TYPES: intro, news, outro (use "news" for all content segments)${groundedInWebText ? `\n\n${SOURCE_HANDLING_RULES}` : ''}`;
   }
 
   /**
@@ -404,7 +405,7 @@ VALID TYPES: intro, news, outro (use "news" for all content segments)`;
   private buildUserPrompt(topic: TopicDefinition, content: TopicContent, language: string = 'en'): string {
     const storySummaries = content.stories
       .slice(0, 10)
-      .map((s, i) => `${i + 1}. ${s.title}${s.summary ? ` - ${s.summary.substring(0, 150)}` : ''} (${s.source})`)
+      .map((s, i) => formatStoryLine(s, i))
       .join('\n');
 
     const languageInstruction = language !== 'en'

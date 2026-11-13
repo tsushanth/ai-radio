@@ -89,7 +89,7 @@ export class TopicPreviewService {
 
     try {
       // Fetch content from the topic's sources
-      const content = await contentAggregator.aggregateTopicContent(topic);
+      const content = await contentAggregator.aggregateTopicContent(topic, { preview: true });
 
       if (content.stories.length === 0) {
         return null;

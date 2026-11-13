@@ -3,6 +3,9 @@ import assert from 'node:assert/strict';
 import { contentAggregator, googleNewsFallbackEnabled, googleNewsSearchUrl, redditOAuthEnabled, redditUserAgent } from './aggregator.service.ts';
 import { resetRedditRssState } from './reddit.rss.ts';
 
+// These tests cover the reddit.com paths; the Arctic Shift archive (default on) has its own tests in aggregator.chain.test.ts.
+process.env.SOURCE_REDDIT_ARCHIVE_ENABLED = '0';
+
 const RSS = `<?xml version="1.0"?><rss version="2.0"><channel><title>t</title>
 <item><title>Spring planting guide</title><link>https://example.com/a</link><pubDate>Thu, 29 Oct 2026 10:00:00 GMT</pubDate></item>
 <item><title>Soil tips</title><link>https://example.com/b</link><pubDate>Thu, 29 Oct 2026 09:00:00 GMT</pubDate></item>

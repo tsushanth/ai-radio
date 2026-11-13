@@ -15,6 +15,7 @@ Fetches and aggregates content from various sources:
 - **RSS Feeds**: Parses any RSS/Atom feed
 - **Reddit**: Fetches top posts from subreddits via the public Atom feed (OAuth API opt-in with REDDIT_USE_OAUTH=1)
 - **HackerNews**: Fetches top stories with optional keyword filtering
+- **Reddit archive, Exa, last-good cache**: see `docs/podcast-sources-exa-fallback.md` (chain, flags, per-topic table; policy in `source-policy.ts`)
 
 ### TopicPodcastGenerator (`topic.generator.ts`)
 

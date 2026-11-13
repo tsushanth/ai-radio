@@ -4,8 +4,9 @@
  */
 
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
-import Anthropic from '@anthropic-ai/sdk';
-import { instrumentAnthropic, withFeature } from '../../lib/llm';
+import { generateText } from '../../lib/llmText';
+import { assertLlmBudget } from '../../lib/llmBudget';
+import { parseTopicScript, ScriptParseError } from './topic-script';
 import { env } from '../../config/environment';
 import { topicsService } from '../supabase/topics.service';
 import { contentAggregator } from './aggregator.service';
@@ -25,7 +26,6 @@ import type { SegmentTiming } from '../../types/ads';
 
 export class TopicPodcastGenerator {
   private supabase: SupabaseClient | null = null;
-  private anthropic: Anthropic;
   private readonly BUCKET = 'topic-podcasts'; // Public bucket for topic podcasts
   private readonly TABLE = 'topic_episodes';
 
@@ -34,7 +34,6 @@ export class TopicPodcastGenerator {
       this.supabase = createClient(env.SUPABASE_URL, env.SUPABASE_SERVICE_KEY);
       this.initializeBucket();
     }
-    this.anthropic = instrumentAnthropic(new Anthropic({ apiKey: env.ANTHROPIC_API_KEY }));
   }
 
   /**
@@ -111,6 +110,9 @@ export class TopicPodcastGenerator {
         // Fall through to regenerate below
       }
     }
+
+    // Daily LLM budget: refuse before a 'generating' placeholder is written (throws LlmBudgetExceeded; callers answer "try again tomorrow")
+    await assertLlmBudget();
 
     // Generate new episode
     // Localize the display name + description for the target language; falls
@@ -265,32 +267,34 @@ export class TopicPodcastGenerator {
     const systemPrompt = this.buildSystemPrompt(topic, language, hasGroundedExcerpts(content.stories));
     const userPrompt = this.buildUserPrompt(topic, content, language);
 
-    const response = await withFeature('topic_script', () => this.anthropic.messages.create({
-      model: 'claude-sonnet-4-6',
-      system: systemPrompt,
-      messages: [
-        { role: 'user', content: userPrompt },
-      ],
-      temperature: 0.7,
-      max_tokens: 3000,
-    }));
-
-    const responseText = (response.content[0]?.type === 'text' ? response.content[0].text : '') || '';
-
-    // Parse JSON from response
-    const jsonMatch = responseText.match(/\[[\s\S]*\]/);
-    if (!jsonMatch) {
-      throw new Error('Failed to parse script JSON');
+    // Provider (OpenRouter luna by default, Anthropic when LLM_PROVIDER=anthropic) is chosen in lib/llmText. A reply that does not parse into
+    // enough dialogue (cheaper models sometimes add prose, stop early or break the JSON) is retried ONCE, then the episode fails as before.
+    const minChars = Math.round(topic.targetDurationMinutes * 150);
+    let parsed: ReturnType<typeof parseTopicScript> | undefined;
+    for (let attempt = 1; attempt <= 2; attempt++) {
+      const res = await generateText({
+        feature: 'topic_script',
+        system: systemPrompt,
+        user: attempt === 1 ? userPrompt : `${userPrompt}\n\nYour previous reply could not be used. Reply with ONLY the JSON array of segments: no markdown, no commentary, and write the full-length script.`,
+        maxTokens: 3000,
+        temperature: 0.7,
+        anthropicModel: 'claude-sonnet-4-6',
+      });
+      try {
+        parsed = parseTopicScript(res.text, minChars);
+        break;
+      } catch (e) {
+        if (!(e instanceof ScriptParseError) || attempt === 2) throw e;
+        console.warn(`[TopicGenerator] script reply unusable (${e.reason}, ${res.model}), retrying once`);
+      }
     }
 
-    const segments: ScriptSegment[] = JSON.parse(jsonMatch[0]).map(
-      (seg: { speaker: string; text: string; type: string }, index: number) => ({
-        sequence: index + 1,
-        speaker: seg.speaker as 'host1' | 'host2',
-        text: this.sanitizeForLanguage(seg.text, language),
-        type: seg.type,
-      })
-    );
+    const segments: ScriptSegment[] = parsed!.map((seg, index) => ({
+      sequence: index + 1,
+      speaker: seg.speaker,
+      text: this.sanitizeForLanguage(seg.text, language),
+      type: seg.type,
+    }));
 
     return {
       segments,

@@ -24,7 +24,7 @@ export interface AskRouterDeps {
   /** Read on every request so the flag and caps can change without a restart of the module (and tests can flip them). */
   config(): AskConfig;
   /** Built lazily: only called once the flag is on. */
-  runtime(): { store: AskStore; deps: AskDeps; gate: JobGate; state: AskState; languages(): string[] };
+  runtime(): { store: AskStore; deps: AskDeps; gate: JobGate; state: AskState; languages(): string[]; budgetCapped?(): Promise<boolean> };
   /** Test hook: how a started job is scheduled. Production: fire and forget. */
   schedule?(job: () => Promise<unknown>): void;
 }
@@ -100,6 +100,11 @@ export function createAskRouter(d: AskRouterDeps): Router {
       if (!(await pass(ipLimiter, req, res))) return;
       const installId = typeof body.installId === 'string' && INSTALL_RE.test(body.installId) ? body.installId : null;
 
+      if (rt.budgetCapped && (await rt.budgetCapped())) {
+        // the persisted daily LLM budget (dollars / calls) is used up: same friendly answer as the daily request cap
+        res.status(429).json({ success: false, error: 'daily_limit', message: 'Ask the hosts has reached its limit for today. Please try again tomorrow.' });
+        return;
+      }
       const now = rt.deps.now();
       const admission = await checkAdmission(rt.store, d.config(), rt.state, installId, now);
       if (!admission.ok) {

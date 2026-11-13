@@ -2,10 +2,10 @@
  * Real wiring for "Ask the hosts" (ask.ts is the logic): Supabase store, Anthropic calls, Piper speech, public-bucket upload.
  * Created lazily on the first request after the feature flag is on, so a disabled deployment builds no clients.
  */
-import Anthropic from '@anthropic-ai/sdk';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { env } from '../../config/environment';
-import { instrumentAnthropic, withFeature } from '../../lib/llm';
+import { generateText, readProvider } from '../../lib/llmText';
+import { llmBudget } from '../../lib/llmBudget';
 import { openaiTTS, type VoiceConfig } from '../tts/openai.tts';
 import { concatenateBuffers } from '../tts/audio.utils';
 import type { ModelCall } from '../scheduler/topic-suggest';
@@ -87,35 +87,28 @@ export class SupabaseAskStore implements AskStore {
   }
 }
 
-/** The two model calls. Literal withFeature labels on `this.anthropic.messages.create` keep the repo-wide usage-accounting guard (lib/llm.test.ts) satisfied. */
+/**
+ * The two model calls, through lib/llmText: OpenRouter (gpt-6-luna) by default, Claude when LLM_PROVIDER=anthropic. ASK_REVIEW_PROVIDER
+ * can pin the review (the safety gate) to a different provider than the script. The model names in AskConfig apply to the anthropic provider only;
+ * OpenRouter models come from OPENROUTER_MODEL / OPENROUTER_FALLBACK_MODEL.
+ */
 class AskModels {
-  private anthropic: Anthropic;
-  constructor() {
-    this.anthropic = instrumentAnthropic(new Anthropic({ apiKey: env.ANTHROPIC_API_KEY }));
-  }
-
-  private static toCall(response: Anthropic.Message): ModelCall {
-    const block = response.content.find((b) => b.type === 'text');
-    return {
-      text: block && block.type === 'text' ? block.text : '',
-      inputTokens: response.usage?.input_tokens ?? 0,
-      outputTokens: response.usage?.output_tokens ?? 0,
-    };
+  private static toCall(r: { text: string; inputTokens: number; outputTokens: number }): ModelCall {
+    return { text: r.text, inputTokens: r.inputTokens, outputTokens: r.outputTokens };
   }
 
   async review(model: string, text: string, language: string): Promise<ModelCall> {
-    const response = await withFeature('ask_review', () => this.anthropic.messages.create({
-      model, system: REVIEW_SYSTEM_PROMPT, messages: [{ role: 'user', content: `<request>\n${JSON.stringify({ text, language })}\n</request>` }],
-      max_tokens: 300, thinking: { type: 'disabled' },
+    const reviewProvider = (process.env.ASK_REVIEW_PROVIDER ?? '').trim() ? readProvider(process.env, process.env.ASK_REVIEW_PROVIDER) : undefined;
+    return AskModels.toCall(await generateText({
+      feature: 'ask_review', system: REVIEW_SYSTEM_PROMPT, user: `<request>\n${JSON.stringify({ text, language })}\n</request>`,
+      maxTokens: 300, anthropicModel: model, disableThinking: true, provider: reviewProvider,
     }));
-    return AskModels.toCall(response as Anthropic.Message);
   }
 
   async script(model: string, system: string, user: string): Promise<ModelCall> {
-    const response = await withFeature('ask_script', () => this.anthropic.messages.create({
-      model, system, messages: [{ role: 'user', content: user }], max_tokens: 2600, temperature: 0.6,
+    return AskModels.toCall(await generateText({
+      feature: 'ask_script', system, user, maxTokens: 2600, temperature: 0.6, anthropicModel: model,
     }));
-    return AskModels.toCall(response as Anthropic.Message);
   }
 }
 
@@ -126,6 +119,8 @@ export interface AskRuntime {
   deps: AskDeps;
   gate: JobGate;
   languages: () => string[];
+  /** True when today's persisted LLM budget (lib/llmBudget) is used up: new requests are turned away with "try again tomorrow". */
+  budgetCapped: () => Promise<boolean>;
 }
 
 let runtime: AskRuntime | null = null;
@@ -166,6 +161,7 @@ export function getAskRuntime(): AskRuntime {
     config, state, store, deps,
     gate: new JobGate(config.maxConcurrent, config.maxQueue),
     languages: () => ['en', ...onDemandLanguages()],
+    budgetCapped: () => llmBudget.isCapped(),
   };
   return runtime;
 }

@@ -11,7 +11,9 @@ import { topicPodcastGenerator } from '../services/content/topic.generator';
 import { adService } from '../services/ads/ad.service';
 import { briefingService } from '../services/notifications/briefing.service';
 import { env } from '../config/environment';
-import { requireOperatorSecret } from '../lib/shared-secret';
+import { requireOperatorSecret, secretMatches, bearerToken } from '../lib/shared-secret';
+import { GenerateGuard, callerKey } from '../lib/generateGuard';
+import { llmBudget, isBudgetExceeded } from '../lib/llmBudget';
 import { optionalUser, ownerForNewRow } from '../lib/user-auth';
 import { tokenVerifier } from '../lib/user-auth-runtime';
 
@@ -543,16 +545,48 @@ router.post('/:topicId/regenerate-audio', async (req: Request, res: Response) =>
 
 const inFlight = new Set<string>();
 const nonEnglishDailyCap = new DailyCap(Number(process.env.ON_DEMAND_DAILY_LIMIT) || 30);
+export const generateGuard = new GenerateGuard();
+
+const DAILY_LIMIT_BODY = { success: false, error: 'daily_limit', message: 'Try again tomorrow.' };
 
 router.post('/:topicId/generate', async (req: Request, res: Response) => {
   try {
     const { topicId } = req.params;
     const userId = req.body.userId as string | undefined;
     // Accept both camelCase and snake_case for compatibility with iOS/Android clients
-    const forceRegenerate = req.body.forceRegenerate === true || req.body.force_regenerate === true;
+    const forceRequested = req.body.forceRegenerate === true || req.body.force_regenerate === true;
     const language = (req.body.language as string) || 'en';
 
+    // forceRegenerate re-runs the LLM script for an episode that already exists, so it is operator-only (Bearer BATCH_SECRET).
+    // The shipped Android app sends it from its "Regenerate" button without any credential: for everyone else it is served as a normal
+    // request (the existing episode comes back, nothing is regenerated), so that button keeps working without costing a script.
+    const isAdmin = secretMatches(bearerToken(req.headers.authorization), process.env.BATCH_SECRET);
+    const forceRegenerate = forceRequested && isAdmin;
+    if (forceRequested && !isAdmin) console.warn(`[topics] forceRegenerate ignored for non-admin caller (topic: ${topicId})`);
+
     console.log(`📡 Generate request for topic: ${topicId} (force: ${forceRegenerate}, lang: ${language})`);
+
+    // Unknown topic: 404 before anything is counted (junk ids must not eat the allowances).
+    if (!(await topicPodcastGenerator.getTopic(topicId))) {
+      return res.status(404).json({ success: false, error: 'Topic not found' });
+    }
+
+    // Will this request start a new LLM script? Existing completed / in-progress episodes are served for free.
+    const todayUtc = new Date().toISOString().split('T')[0];
+    const haveToday = await topicPodcastGenerator.getExistingEpisode(topicId, todayUtc, language);
+    const startsGeneration = forceRegenerate || !haveToday || haveToday.status === 'failed';
+    if (startsGeneration) {
+      // persisted daily LLM budget first (dollars / calls, shared by all machines), then the per-caller and global allowances
+      if (await llmBudget.isCapped()) return res.status(429).json(DAILY_LIMIT_BODY);
+      if (!isAdmin) {
+        let verified: string | undefined;
+        if (req.headers.authorization) {
+          const o = await optionalUser(() => tokenVerifier(), req.headers.authorization).catch(() => ({ kind: 'none' as const }));
+          if (o.kind === 'ok') verified = o.user.id;
+        }
+        if (!generateGuard.take(callerKey(req, verified)).allowed) return res.status(429).json(DAILY_LIMIT_BODY);
+      }
+    }
 
     let nonEnglishReady = false;
     // Non-English episodes are generated on demand, only for languages that have a Piper voice, and capped per day
@@ -638,6 +672,7 @@ router.post('/:topicId/generate', async (req: Request, res: Response) => {
       data: result,
     });
   } catch (error) {
+    if (isBudgetExceeded(error)) return res.status(429).json(DAILY_LIMIT_BODY);
     console.error('Error generating episode:', error);
     res.status(500).json({
       success: false,

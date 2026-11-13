@@ -8,12 +8,15 @@
 const { createLlmUsage } = require('./llmUsage') as typeof import('./llmUsage');
 import { AsyncLocalStorage } from 'node:async_hooks';
 import { reportLlmError } from './monitoring';
+import { assertLlmBudget, llmBudget } from './llmBudget';
 
 const REPORTING = Symbol('failureReporting');
 
 export const llm = createLlmUsage({
   app: 'audexa',
   log: (m: string) => console.warn(`[llm-usage] ${m}`),
+  // Every recorded call (Anthropic through instrumentAnthropic, OpenRouter through llmText) also feeds the persisted daily budget.
+  onRecord: (r) => llmBudget.record(r),
 });
 
 /** Wraps a client's messages.create / messages.stream. Idempotent. Call it on every `new Anthropic(...)`. */
@@ -24,6 +27,7 @@ export function instrumentAnthropic<T>(client: T): T {
   if (messages && typeof messages.create === 'function' && !messages[REPORTING]) {
     const inner = messages.create as (...a: unknown[]) => Promise<unknown>;
     messages.create = async (...args: unknown[]) => {
+      await assertLlmBudget(); // daily cap: refuse before spending (throws LlmBudgetExceeded; not a provider failure, so not reported as one)
       try { return await inner.apply(messages, args); } catch (err) { reportLlmError(err); throw err; }
     };
     messages[REPORTING] = true;
@@ -48,7 +52,7 @@ export async function flushLlmUsage(maxMs = 2500): Promise<void> {
   let timer: NodeJS.Timeout | undefined;
   try {
     await Promise.race([
-      llm.flush(),
+      Promise.all([llm.flush(), llmBudget.flush()]),
       new Promise<void>((resolve) => { timer = setTimeout(resolve, maxMs); }),
     ]);
   } catch {

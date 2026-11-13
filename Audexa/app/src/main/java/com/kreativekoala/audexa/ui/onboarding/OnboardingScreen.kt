@@ -51,6 +51,7 @@ fun OnboardingScreen(
                 )
                 1 -> LanguageSelectionPage(
                     selectedLanguage = uiState.selectedLanguage,
+                    unsupportedDeviceLanguage = uiState.unsupportedDeviceLanguage,
                     onLanguageSelected = { viewModel.selectLanguage(it) },
                     onContinue = { viewModel.nextPage() }
                 )

@@ -69,6 +69,21 @@ class AudioManager @Inject constructor(
     private val _isBuffering = MutableStateFlow(false)
     val isBuffering: StateFlow<Boolean> = _isBuffering.asStateFlow()
 
+    // A player error the user can see (after the silent automatic retry failed). Cleared by retry(), play(), resume() and stop().
+    private val _playbackError = MutableStateFlow<PlaybackError?>(null)
+    val playbackError: StateFlow<PlaybackError?> = _playbackError.asStateFlow()
+
+    private val retryTracker = PlaybackRetryTracker()
+    private var autoRetryPending = false
+    private val autoRetryRunnable = Runnable {
+        autoRetryPending = false
+        mediaController?.let {
+            Log.d(TAG, "Automatic retry after a network error")
+            it.prepare()
+            it.play()
+        }
+    }
+
     // Playback speed
     private val _playbackSpeed = MutableStateFlow(1.0f)
     val playbackSpeed: StateFlow<Float> = _playbackSpeed.asStateFlow()
@@ -92,25 +107,47 @@ class AudioManager @Inject constructor(
 
     private val playerListener = object : Player.Listener {
         override fun onPlayerError(error: androidx.media3.common.PlaybackException) {
-            com.kreativekoala.ratingkit.RatingKit.reportError() // stay quiet for a while after a playback failure
-            // Stable message per Media3 error code (e.g. ERROR_CODE_IO_BAD_HTTP_STATUS = a segment 404 / stream down); no urls, no titles.
-            com.kreativekoala.audexa.monitoring.FailureReporter.failure(
-                "Playback error", message = "Playback failed: ${error.errorCodeName}",
-                context = mapOf("code" to error.errorCodeName)
-            )
-            Analytics.track("error_shown", mapOf("code" to AnalyticsEngine.cleanCode(error.errorCodeName)))
+            when (val decision = retryTracker.onError(error.errorCode)) {
+                is RetryDecision.AutoRetry -> {
+                    // A timeout or dropped connection on a weak network: try once more before telling the user.
+                    Log.w(TAG, "Playback error ${error.errorCodeName}, retrying once")
+                    autoRetryPending = true
+                    _isBuffering.value = true
+                    handler.removeCallbacks(autoRetryRunnable)
+                    handler.postDelayed(autoRetryRunnable, decision.delayMs)
+                }
+                RetryDecision.ShowError -> {
+                    com.kreativekoala.ratingkit.RatingKit.reportError() // stay quiet for a while after a playback failure
+                    val source = PlaybackPolicy.errorSource(listenContext?.source)
+                    val code = AnalyticsEngine.cleanCode(error.errorCodeName)
+                    // Stable message per Media3 error code (e.g. ERROR_CODE_IO_BAD_HTTP_STATUS = a segment 404 / stream down); no urls, no titles.
+                    com.kreativekoala.audexa.monitoring.FailureReporter.failure(
+                        "Playback error", message = "Playback failed: ${error.errorCodeName}",
+                        context = mapOf("code" to error.errorCodeName, "source" to source)
+                    )
+                    // `source` (stream | episode) separates the live radio from episode audio. Only errors the user sees are counted.
+                    Analytics.track("error_shown", mapOf("code" to code, "source" to source))
+                    _isBuffering.value = false
+                    _playbackError.value = PlaybackError(source = source, code = code, episodeId = _currentEpisodeId.value)
+                }
+            }
         }
 
         override fun onIsPlayingChanged(isPlaying: Boolean) {
             _isPlaying.value = isPlaying
+            if (isPlaying) {
+                retryTracker.reset()
+                _playbackError.value = null
+            }
             if (isPlaying) listenContext?.let { Analytics.listenStart(it) } else Analytics.listenStop()
         }
 
         override fun onPlaybackStateChanged(playbackState: Int) {
-            _isBuffering.value = playbackState == Player.STATE_BUFFERING
+            _isBuffering.value = playbackState == Player.STATE_BUFFERING || autoRetryPending
 
             when (playbackState) {
                 Player.STATE_READY -> {
+                    retryTracker.reset()
                     mediaController?.duration?.let {
                         if (it > 0) _duration.value = it
                     }
@@ -181,6 +218,7 @@ class AudioManager @Inject constructor(
         // Save position of previous episode before switching
         saveCurrentPosition()
 
+        clearPlaybackError()
         Analytics.listenStop()
         val src = source ?: if (id.startsWith("audexa-radio-")) "radio" else "brief"
         listenContext = ListenContext(
@@ -231,11 +269,32 @@ class AudioManager @Inject constructor(
 
     fun pause() {
         saveCurrentPosition()
+        cancelAutoRetry()
         mediaController?.pause()
     }
 
     fun resume() {
-        mediaController?.play()
+        clearPlaybackError()
+        mediaController?.apply {
+            // After a player error the player is idle and play() alone does nothing: prepare again first.
+            if (playbackState == Player.STATE_IDLE && currentMediaItem != null) prepare()
+            play()
+        }
+    }
+
+    /** The Retry button of the error UI: same as resume, with a fresh automatic-retry allowance. */
+    fun retry() = resume()
+
+    private fun cancelAutoRetry() {
+        handler.removeCallbacks(autoRetryRunnable)
+        autoRetryPending = false
+        _isBuffering.value = false
+    }
+
+    private fun clearPlaybackError() {
+        cancelAutoRetry()
+        retryTracker.reset()
+        _playbackError.value = null
     }
 
     fun togglePlayPause() {
@@ -362,6 +421,7 @@ class AudioManager @Inject constructor(
         saveCurrentPosition()
         Analytics.listenStop()
         listenContext = null
+        clearPlaybackError()
         mediaController?.stop()
         _currentEpisodeId.value = null
         _currentEpisodeTitle.value = null
@@ -372,6 +432,7 @@ class AudioManager @Inject constructor(
 
     fun release() {
         cancelSleepTimer()
+        cancelAutoRetry()
         mediaController?.removeListener(playerListener)
         controllerFuture?.let { MediaController.releaseFuture(it) }
         controllerFuture = null

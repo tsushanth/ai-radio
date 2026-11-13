@@ -28,6 +28,7 @@ import com.kreativekoala.audexa.billing.BillingManager
 import com.kreativekoala.audexa.data.local.PreferencesManager
 import com.kreativekoala.audexa.data.model.SupportedLanguage
 import com.kreativekoala.audexa.data.model.Topic
+import androidx.compose.ui.res.stringResource
 import com.kreativekoala.audexa.service.AudioManager
 import com.kreativekoala.audexa.service.BriefingManager
 import com.kreativekoala.audexa.service.NotificationService
@@ -112,6 +113,22 @@ class MainActivity : AppCompatActivity() {
         lifecycleScope.launch {
             audioManager.isPlaying.first { it }
             requestNotificationPermissionIfNeeded()
+        }
+
+        // An older version could save a content language podcasts do not exist in (ja, ko, hi, zh, tl). It was replaced at launch;
+        // say so once, in one line.
+        lifecycleScope.launch {
+            runCatching {
+                preferencesManager.migrateUnsupportedLanguage()
+                preferencesManager.takeLanguageFallbackNotice()?.let { from ->
+                    val to = com.kreativekoala.audexa.data.model.ContentLanguage.resolve(from).language
+                    android.widget.Toast.makeText(
+                        this@MainActivity,
+                        getString(R.string.language_fallback_note, com.kreativekoala.audexa.ui.onboarding.languageDisplayName(from), to.nativeName),
+                        android.widget.Toast.LENGTH_LONG
+                    ).show()
+                }
+            }
         }
 
         // Ratings: record the first launch (never asks here). Moments that may lead to a review request:
@@ -344,6 +361,7 @@ fun AudexaApp(
     val currentPosition by audioManager.currentPosition.collectAsState()
     val duration by audioManager.duration.collectAsState()
     val isBuffering by audioManager.isBuffering.collectAsState()
+    val playbackError by audioManager.playbackError.collectAsState()
 
     // Paywall gate: track app opens and subscription status
     val appOpenCount by preferencesManager.appOpenCount.collectAsState(initial = 0)
@@ -395,6 +413,7 @@ fun AudexaApp(
                 currentPosition = currentPosition,
                 duration = duration,
                 isBuffering = isBuffering,
+                playbackError = playbackError,
                 selectedTopic = selectedTopic,
                 onSelectedTopicChange = { selectedTopic = it },
                 pendingLiveLang = pendingLiveLang,
@@ -488,6 +507,7 @@ private fun MainContent(
     currentPosition: Long,
     duration: Long,
     isBuffering: Boolean,
+    playbackError: com.kreativekoala.audexa.service.PlaybackError?,
     selectedTopic: Topic?,
     onSelectedTopicChange: (Topic?) -> Unit,
     pendingLiveLang: String?,
@@ -530,7 +550,14 @@ private fun MainContent(
                     onSkipBack = { audioManager.skipBackward(15) },
                     onClick = {
                         // Could navigate to full player or show topic detail
-                    }
+                    },
+                    errorMessage = playbackError?.let {
+                        stringResource(
+                            if (it.source == com.kreativekoala.audexa.service.PlaybackPolicy.SOURCE_STREAM) R.string.playback_error_stream
+                            else R.string.playback_error_episode
+                        )
+                    },
+                    onRetry = { audioManager.retry() }
                 )
             }
         }

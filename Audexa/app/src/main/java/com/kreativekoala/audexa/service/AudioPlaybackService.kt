@@ -4,8 +4,11 @@ import android.content.Intent
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
+import androidx.media3.datasource.DefaultDataSource
+import androidx.media3.datasource.DefaultHttpDataSource
 import androidx.media3.exoplayer.DefaultLoadControl
 import androidx.media3.exoplayer.ExoPlayer
+import androidx.media3.exoplayer.source.DefaultMediaSourceFactory
 import androidx.media3.session.MediaSession
 import androidx.media3.session.MediaSessionService
 import dagger.hilt.android.AndroidEntryPoint
@@ -33,7 +36,17 @@ class AudioPlaybackService : MediaSessionService() {
             )
             .build()
 
+        // Weak mobile networks: 20 s connect / 30 s read (ExoPlayer default is 8 s / 8 s) and more loader retries with backoff.
+        // See PlaybackPolicy for the numbers and why.
+        val httpFactory = DefaultHttpDataSource.Factory()
+            .setConnectTimeoutMs(PlaybackPolicy.CONNECT_TIMEOUT_MS)
+            .setReadTimeoutMs(PlaybackPolicy.READ_TIMEOUT_MS)
+        val mediaSourceFactory = DefaultMediaSourceFactory(this)
+            .setDataSourceFactory(DefaultDataSource.Factory(this, httpFactory))
+            .setLoadErrorHandlingPolicy(BoundedRetryLoadErrorHandlingPolicy())
+
         player = ExoPlayer.Builder(this)
+            .setMediaSourceFactory(mediaSourceFactory)
             .setLoadControl(loadControl)
             .setHandleAudioBecomingNoisy(true)
             .build()

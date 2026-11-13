@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.*
 import androidx.datastore.preferences.preferencesDataStore
+import com.kreativekoala.audexa.data.model.ContentLanguage
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
@@ -33,6 +34,8 @@ class PreferencesManager @Inject constructor(
         val BOOKMARKED_TOPICS = stringSetPreferencesKey("bookmarked_topics")
         val HIDDEN_TOPICS = stringSetPreferencesKey("hidden_topics")
         val PREFERRED_LANGUAGE = stringPreferencesKey("preferred_language")
+        // Set once when an unsupported saved content language was replaced at launch; read and cleared by takeLanguageFallbackNotice().
+        val LANGUAGE_FALLBACK_FROM = stringPreferencesKey("language_fallback_from")
         val SELECTED_TOPICS = stringSetPreferencesKey("selected_topics")
         val APP_THEME = stringPreferencesKey("app_theme")
         val EMAIL_ENABLED = booleanPreferencesKey("email_enabled")
@@ -122,8 +125,31 @@ class PreferencesManager @Inject constructor(
     }
 
     // Language
+    // Always a language podcasts can be generated in (ContentLanguage), even if an older version saved ja/ko/hi/zh/tl.
     val preferredLanguage: Flow<String> = dataStore.data.map {
-        it[Keys.PREFERRED_LANGUAGE] ?: "en"
+        ContentLanguage.resolve(it[Keys.PREFERRED_LANGUAGE]).language.code
+    }
+
+    /**
+     * Rewrites an already saved unsupported content language (ja, ko, hi, zh, tl, ...) to the closest supported one and remembers
+     * what it was, once, for [takeLanguageFallbackNotice]. Safe to call on every launch: it does nothing when the value is fine.
+     */
+    suspend fun migrateUnsupportedLanguage() {
+        dataStore.edit { prefs ->
+            val m = ContentLanguage.migrationFor(prefs[Keys.PREFERRED_LANGUAGE]) ?: return@edit
+            prefs[Keys.PREFERRED_LANGUAGE] = m.newCode
+            prefs[Keys.LANGUAGE_FALLBACK_FROM] = m.from
+        }
+    }
+
+    /** The language a migration replaced (for the one-line explanation), returned once and then cleared. */
+    suspend fun takeLanguageFallbackNotice(): String? {
+        var from: String? = null
+        dataStore.edit { prefs ->
+            from = prefs[Keys.LANGUAGE_FALLBACK_FROM]
+            if (from != null) prefs.remove(Keys.LANGUAGE_FALLBACK_FROM)
+        }
+        return from
     }
 
     // Theme (system, dark, light)
@@ -333,7 +359,9 @@ class PreferencesManager @Inject constructor(
         }
     }
 
-    suspend fun setPreferredLanguage(language: String) {
+    suspend fun setPreferredLanguage(requested: String) {
+        // Never save a language podcasts cannot be generated in.
+        val language = ContentLanguage.resolve(requested).language.code
         val previous = preferredLanguage.first()
         dataStore.edit { prefs ->
             prefs[Keys.PREFERRED_LANGUAGE] = language

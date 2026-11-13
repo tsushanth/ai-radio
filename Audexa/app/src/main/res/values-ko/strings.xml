@@ -237,4 +237,5 @@
     <!-- Daily Brief Playback -->
     <string name="daily_brief_title_format">\uc77c\uc77c \ube0c\ub9ac\ud551 - %s</string>
     <string name="daily_brief_description">\ub098\ub9cc\uc758 \uc544\uce68 \ube0c\ub9ac\ud551</string>
+    <string name="language_fallback_note">\ud31f\uce90\uc2a4\ud2b8\ub294 \uc544\uc9c1 %1$s\uc744(\ub97c) \uc9c0\uc6d0\ud558\uc9c0 \uc54a\uc544 %2$s(\uc73c)\ub85c \uc124\uc815\ud588\uc2b5\ub2c8\ub2e4.</string>
 </resources>

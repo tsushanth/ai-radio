@@ -237,4 +237,5 @@
     <!-- Daily Brief Playback -->
     <string name="daily_brief_title_format">\u6bcf\u65e5\u7b80\u62a5 - %s</string>
     <string name="daily_brief_description">\u4f60\u7684\u4e2a\u6027\u5316\u6668\u95f4\u7b80\u62a5</string>
+    <string name="language_fallback_note">\u64ad\u5ba2\u6682\u4e0d\u652f\u6301%1$s\uff0c\u5df2\u4e3a\u4f60\u9009\u62e9%2$s\u3002</string>
 </resources>

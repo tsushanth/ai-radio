@@ -30,7 +30,9 @@ fun MiniPlayer(
     onSkipForward: () -> Unit,
     onSkipBack: () -> Unit,
     onClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    errorMessage: String? = null,
+    onRetry: () -> Unit = {}
 ) {
     AnimatedVisibility(
         visible = title != null,
@@ -92,12 +94,26 @@ fun MiniPlayer(
                             overflow = TextOverflow.Ellipsis
                         )
 
-                        if (isBuffering) {
+                        if (errorMessage != null) {
+                            Text(
+                                text = errorMessage,
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.error,
+                                maxLines = 2,
+                                overflow = TextOverflow.Ellipsis
+                            )
+                        } else if (isBuffering) {
                             Text(
                                 text = stringResource(R.string.buffering),
                                 style = MaterialTheme.typography.bodySmall,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
+                        }
+                    }
+
+                    if (errorMessage != null) {
+                        TextButton(onClick = onRetry) {
+                            Text(stringResource(R.string.retry), color = AccentOrange)
                         }
                     }
 

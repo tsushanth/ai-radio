@@ -87,6 +87,8 @@ test('valid examples of each event pass', () => {
     { name: 'language_change', props: { language: 'hi', from: 'en' } },
     { name: 'share_tap', props: { source: 'radio' } },
     { name: 'error_shown', props: { code: 'ERROR_CODE_IO_BAD_HTTP_STATUS' } },
+    { name: 'error_shown', props: { code: 'ERROR_CODE_IO_NETWORK_CONNECTION_TIMEOUT', source: 'stream' } },
+    { name: 'error_shown', props: { code: 'ERROR_CODE_IO_NETWORK_CONNECTION_TIMEOUT', source: 'episode' } },
   ];
   for (const e of ok) assert.equal(validateEvent(e).ok, true, JSON.stringify(e));
 });
@@ -116,6 +118,8 @@ test('rejects unknown names, unknown props, wrong types and bad shapes', () => {
     { name: 'topic_suggest_submitted', props: { language: 'en', topic_name: 'free text' } }, // text never allowed
     { name: 'error_shown', props: { code: 'a message with spaces and detail' } },
     { name: 'error_shown', props: { code: 'x'.repeat(41) } },
+    { name: 'error_shown', props: { code: 'X', source: 'radio' } }, // only stream | episode
+    { name: 'error_shown', props: { code: 'X', source: 'a url https://example.com' } },
     { name: 'topic_open', props: { topic_id: 'ai-ml' }, ago_s: -1 },
     { name: 'topic_open', props: { topic_id: 'ai-ml' }, ago_s: 7 * 24 * 3600 + 1 },
     { name: 'topic_open', props: { topic_id: 'ai-ml' }, ago_s: 1.5 },

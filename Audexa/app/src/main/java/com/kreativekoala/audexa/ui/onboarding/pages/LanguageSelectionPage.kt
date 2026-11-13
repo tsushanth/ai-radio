@@ -24,6 +24,7 @@ import com.kreativekoala.audexa.ui.theme.AccentOrange
 @Composable
 fun LanguageSelectionPage(
     selectedLanguage: SupportedLanguage,
+    unsupportedDeviceLanguage: String?,
     onLanguageSelected: (SupportedLanguage) -> Unit,
     onContinue: () -> Unit
 ) {
@@ -60,7 +61,22 @@ fun LanguageSelectionPage(
             textAlign = TextAlign.Center
         )
 
-        Spacer(modifier = Modifier.height(32.dp))
+        if (unsupportedDeviceLanguage != null) {
+            Spacer(modifier = Modifier.height(12.dp))
+            Text(
+                text = androidx.compose.ui.res.stringResource(
+                    com.kreativekoala.audexa.R.string.language_fallback_note,
+                    unsupportedDeviceLanguage,
+                    selectedLanguage.nativeName
+                ),
+                style = MaterialTheme.typography.bodyMedium,
+                color = AccentOrange,
+                fontWeight = FontWeight.Medium,
+                textAlign = TextAlign.Center
+            )
+        }
+
+        Spacer(modifier = Modifier.height(24.dp))
 
         LazyVerticalGrid(
             columns = GridCells.Fixed(2),

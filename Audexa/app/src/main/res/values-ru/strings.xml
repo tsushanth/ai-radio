@@ -170,7 +170,7 @@
     <!-- Language Settings -->
     <string name="language">Язык</string>
     <string name="language_description">Выберите предпочтительный язык для выпусков подкаста.</string>
-    <string name="language_note">Новые выпуски будут создаваться на выбранном языке. Ранее созданные выпуски останутся на исходном языке.</string>
+    <string name="language_note">Подкасты доступны на английском, испанском, французском, немецком, португальском и итальянском языках. Первый выпуск на новом языке готовится несколько минут. Радио работает только на английском. Для других языков мы записываем, какой язык вы выбрали (без вашего имени), чтобы решить, что добавить дальше.</string>
     <string name="selected">Выбрано</string>
 
     <!-- Voice Settings -->
@@ -237,4 +237,11 @@
     <!-- Daily Brief Playback -->
     <string name="daily_brief_title_format">Ежедневная сводка - %s</string>
     <string name="daily_brief_description">Ваша персонализированная утренняя сводка</string>
+
+    <!-- Language selection page -->
+    <string name="language_page_title">Выберите язык</string>
+    <string name="language_page_subtitle">Подкасты доступны на шести языках. Радио работает только на английском. Ваш выбор помогает нам решить, что добавить.</string>
+    <string name="language_coming_soon">Скоро</string>
+    <string name="language_coming_soon_toast">Пока недоступно. Мы отметили ваш интерес.</string>
+    <string name="language_fallback_note">Подкасты пока недоступны на этом языке (%1$s), поэтому мы выбрали для вас язык: %2$s.</string>
 </resources>

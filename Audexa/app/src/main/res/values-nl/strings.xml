@@ -170,7 +170,7 @@
     <!-- Language Settings -->
     <string name="language">Taal</string>
     <string name="language_description">Kies je voorkeurstaal voor podcastafleveringen.</string>
-    <string name="language_note">Nieuwe afleveringen worden gegenereerd in de geselecteerde taal. Eerder gegenereerde afleveringen blijven in hun oorspronkelijke taal.</string>
+    <string name="language_note">Podcasts zijn beschikbaar in het Engels, Spaans, Frans, Duits, Portugees en Italiaans. De eerste aflevering in een nieuwe taal heeft een paar minuten nodig. De radio is alleen in het Engels. Voor andere talen noteren we welke je kiest, zonder je naam, om te bepalen wat we hierna toevoegen.</string>
     <string name="selected">Geselecteerd</string>
 
     <!-- Voice Settings -->
@@ -237,4 +237,11 @@
     <!-- Daily Brief Playback -->
     <string name="daily_brief_title_format">Dagelijkse Samenvatting - %s</string>
     <string name="daily_brief_description">Jouw gepersonaliseerde ochtendsamenvatting</string>
+
+    <!-- Language selection page -->
+    <string name="language_page_title">Kies je taal</string>
+    <string name="language_page_subtitle">Podcasts zijn er in zes talen. De radio is alleen in het Engels. Jouw keuze helpt ons bepalen wat we toevoegen.</string>
+    <string name="language_coming_soon">Binnenkort</string>
+    <string name="language_coming_soon_toast">Nog niet beschikbaar. We hebben je interesse genoteerd.</string>
+    <string name="language_fallback_note">Podcasts zijn nog niet beschikbaar in de taal %1$s, dus hebben we %2$s voor je gekozen.</string>
 </resources>

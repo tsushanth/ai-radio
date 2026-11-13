@@ -170,7 +170,7 @@
     <!-- Language Settings -->
     <string name="language">\uc5b8\uc5b4</string>
     <string name="language_description">\ud31f\uce90\uc2a4\ud2b8 \uc5d0\ud53c\uc18c\ub4dc\uc758 \uc120\ud638 \uc5b8\uc5b4\ub97c \uc120\ud0dd\ud558\uc138\uc694.</string>
-    <string name="language_note">\uc0c8 \uc5d0\ud53c\uc18c\ub4dc\ub294 \uc120\ud0dd\ud55c \uc5b8\uc5b4\ub85c \uc0dd\uc131\ub429\ub2c8\ub2e4. \uc774\uc804\uc5d0 \uc0dd\uc131\ub41c \uc5d0\ud53c\uc18c\ub4dc\ub294 \uc6d0\ub798 \uc5b8\uc5b4\ub85c \uc720\uc9c0\ub429\ub2c8\ub2e4.</string>
+    <string name="language_note">팟캐스트는 영어, 스페인어, 프랑스어, 독일어, 포르투갈어, 이탈리아어로 제공됩니다. 새로운 언어의 첫 에피소드는 준비하는 데 몇 분이 걸립니다. 라디오는 영어로만 제공됩니다. 그 밖의 언어는 다음에 추가할 언어를 정하기 위해, 이름 없이 선택하신 언어만 기록합니다.</string>
     <string name="selected">\uc120\ud0dd\ub428</string>
 
     <!-- Voice Settings -->
@@ -237,5 +237,11 @@
     <!-- Daily Brief Playback -->
     <string name="daily_brief_title_format">\uc77c\uc77c \ube0c\ub9ac\ud551 - %s</string>
     <string name="daily_brief_description">\ub098\ub9cc\uc758 \uc544\uce68 \ube0c\ub9ac\ud551</string>
-    <string name="language_fallback_note">\ud31f\uce90\uc2a4\ud2b8\ub294 \uc544\uc9c1 %1$s\uc744(\ub97c) \uc9c0\uc6d0\ud558\uc9c0 \uc54a\uc544 %2$s(\uc73c)\ub85c \uc124\uc815\ud588\uc2b5\ub2c8\ub2e4.</string>
+    <string name="language_fallback_note">아직 %1$s 팟캐스트는 제공되지 않아 %2$s 언어로 설정했습니다.</string>
+
+    <!-- Language selection page -->
+    <string name="language_page_title">언어 선택</string>
+    <string name="language_page_subtitle">팟캐스트는 6개 언어로 제공됩니다. 라디오는 영어로만 제공됩니다. 선택하신 언어는 앞으로 추가할 언어를 정하는 데 참고합니다.</string>
+    <string name="language_coming_soon">곧 제공 예정</string>
+    <string name="language_coming_soon_toast">아직 제공되지 않는 언어입니다. 선택하신 내용은 기록해 두었습니다.</string>
 </resources>

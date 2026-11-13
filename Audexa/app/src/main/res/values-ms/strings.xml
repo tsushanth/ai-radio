@@ -170,7 +170,7 @@
     <!-- Language Settings -->
     <string name="language">Bahasa</string>
     <string name="language_description">Pilih bahasa pilihan anda untuk episod podcast.</string>
-    <string name="language_note">Episod baharu akan dijana dalam bahasa yang dipilih. Episod yang dijana sebelumnya akan kekal dalam bahasa asalnya.</string>
+    <string name="language_note">Podcast tersedia dalam bahasa Inggeris, Sepanyol, Perancis, Jerman, Portugis dan Itali. Episod pertama dalam bahasa baharu mengambil masa beberapa minit untuk disediakan. Radio hanya dalam bahasa Inggeris. Bagi bahasa lain, kami merekodkan bahasa yang anda pilih, tanpa nama anda, untuk menentukan apa yang akan ditambah seterusnya.</string>
     <string name="selected">Dipilih</string>
 
     <!-- Voice Settings -->
@@ -237,4 +237,11 @@
     <!-- Daily Brief Playback -->
     <string name="daily_brief_title_format">Ringkasan Harian - %s</string>
     <string name="daily_brief_description">Ringkasan pagi yang diperibadikan untuk anda</string>
+
+    <!-- Language selection page -->
+    <string name="language_page_title">Pilih Bahasa Anda</string>
+    <string name="language_page_subtitle">Podcast tersedia dalam enam bahasa. Radio hanya dalam bahasa Inggeris. Pilihan anda membantu kami menentukan apa yang akan ditambah.</string>
+    <string name="language_coming_soon">Akan datang</string>
+    <string name="language_coming_soon_toast">Belum tersedia. Kami telah mencatat minat anda.</string>
+    <string name="language_fallback_note">Podcast belum tersedia dalam bahasa %1$s, jadi kami memilih %2$s untuk anda.</string>
 </resources>

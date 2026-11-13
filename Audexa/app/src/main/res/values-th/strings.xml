@@ -170,7 +170,7 @@
     <!-- Language Settings -->
     <string name="language">ภาษา</string>
     <string name="language_description">เลือกภาษาที่คุณต้องการสำหรับตอนพอดแคสต์</string>
-    <string name="language_note">ตอนใหม่จะถูกสร้างในภาษาที่คุณเลือก ตอนที่สร้างไว้ก่อนหน้านี้จะยังคงอยู่ในภาษาเดิม</string>
+    <string name="language_note">พอดแคสต์มีให้ฟังในภาษาอังกฤษ สเปน ฝรั่งเศส เยอรมัน โปรตุเกส และอิตาลี ตอนแรกในภาษาใหม่ใช้เวลาเตรียมไม่กี่นาที วิทยุมีเฉพาะภาษาอังกฤษ สำหรับภาษาอื่น เราจะบันทึกภาษาที่คุณเลือกโดยไม่ระบุชื่อของคุณ เพื่อตัดสินใจว่าจะเพิ่มภาษาใดต่อไป</string>
     <string name="selected">เลือกแล้ว</string>
 
     <!-- Voice Settings -->
@@ -237,4 +237,11 @@
     <!-- Daily Brief Playback -->
     <string name="daily_brief_title_format">สรุปรายวัน - %s</string>
     <string name="daily_brief_description">สรุปตอนเช้าที่ปรับแต่งเฉพาะคุณ</string>
+
+    <!-- Language selection page -->
+    <string name="language_page_title">เลือกภาษาของคุณ</string>
+    <string name="language_page_subtitle">พอดแคสต์มีให้เลือก 6 ภาษา ส่วนวิทยุมีเฉพาะภาษาอังกฤษ ตัวเลือกของคุณช่วยให้เราตัดสินใจว่าจะเพิ่มภาษาใดต่อไป</string>
+    <string name="language_coming_soon">เร็วๆ นี้</string>
+    <string name="language_coming_soon_toast">ยังไม่พร้อมใช้งาน เราได้บันทึกความสนใจของคุณแล้ว</string>
+    <string name="language_fallback_note">พอดแคสต์ยังไม่รองรับภาษา %1$s เราจึงเลือก %2$s ให้คุณ</string>
 </resources>

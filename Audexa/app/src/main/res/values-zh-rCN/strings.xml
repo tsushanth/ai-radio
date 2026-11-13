@@ -170,7 +170,7 @@
     <!-- Language Settings -->
     <string name="language">\u8bed\u8a00</string>
     <string name="language_description">\u9009\u62e9\u4f60\u559c\u6b22\u7684\u64ad\u5ba2\u5267\u96c6\u8bed\u8a00\u3002</string>
-    <string name="language_note">\u65b0\u5267\u96c6\u5c06\u4ee5\u6240\u9009\u8bed\u8a00\u751f\u6210\u3002\u4e4b\u524d\u751f\u6210\u7684\u5267\u96c6\u5c06\u4fdd\u6301\u539f\u59cb\u8bed\u8a00\u3002</string>
+    <string name="language_note">播客提供英语、西班牙语、法语、德语、葡萄牙语和意大利语版本。新语言的首期节目需要几分钟准备。电台仅提供英语。对于其他语言，我们会在不记录你姓名的情况下记录你选择的语言，以决定接下来添加什么。</string>
     <string name="selected">\u5df2\u9009\u62e9</string>
 
     <!-- Voice Settings -->
@@ -238,4 +238,10 @@
     <string name="daily_brief_title_format">\u6bcf\u65e5\u7b80\u62a5 - %s</string>
     <string name="daily_brief_description">\u4f60\u7684\u4e2a\u6027\u5316\u6668\u95f4\u7b80\u62a5</string>
     <string name="language_fallback_note">\u64ad\u5ba2\u6682\u4e0d\u652f\u6301%1$s\uff0c\u5df2\u4e3a\u4f60\u9009\u62e9%2$s\u3002</string>
+
+    <!-- Language selection page -->
+    <string name="language_page_title">选择你的语言</string>
+    <string name="language_page_subtitle">播客提供六种语言。电台仅提供英语。你的选择将帮助我们决定接下来添加哪些语言。</string>
+    <string name="language_coming_soon">即将推出</string>
+    <string name="language_coming_soon_toast">暂未开放。我们已记录你的关注。</string>
 </resources>

@@ -179,6 +179,8 @@
     <string name="language_fallback_note">Podcasts aren\'t available in %1$s yet, so we picked %2$s for you.</string>
     <string name="error_language_unavailable">That language is not available yet.</string>
     <string name="error_daily_limit">Today\'s limit for new-language episodes has been reached. Try again tomorrow.</string>
+    <string name="language_page_title">Choose Your Language</string>
+    <string name="language_page_subtitle">Podcasts come in six languages. Radio is English only. Your pick helps us decide what to add.</string>
     <string name="language_description">Choose your preferred language.</string>
     <string name="language_note">Podcasts are available in English, Spanish, French, German, Portuguese and Italian. The first episode in a new language takes a few minutes to prepare. Radio is English only. For other languages, we record which one you pick, without your name, to decide what to add next.</string>
     <string name="selected">Selected</string>

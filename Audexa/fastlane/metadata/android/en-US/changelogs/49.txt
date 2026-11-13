@@ -1,0 +1,1 @@
+Fewer playback failures on slow connections: longer timeouts, an automatic retry and a Retry button. Devices set to languages we cannot yet generate podcasts in now fall back to English with a note. Removed a stale Ad-free row.

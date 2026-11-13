@@ -66,7 +66,7 @@ export const TOPICS: TopicDefinition[] = [
       {
         type: 'rss',
         name: 'Politico',
-        url: 'https://www.politico.com/rss/politicopicks.xml',
+        url: 'https://rss.politico.com/politics-news.xml',
         maxItems: 10,
       },
       {
@@ -300,12 +300,6 @@ export const TOPICS: TopicDefinition[] = [
         name: 'MarketWatch',
         url: 'https://feeds.marketwatch.com/marketwatch/topstories/',
         maxItems: 12,
-      },
-      {
-        type: 'rss',
-        name: 'Yahoo Finance',
-        url: 'https://finance.yahoo.com/news/rssindex',
-        maxItems: 10,
       },
     ],
     promptContext: 'Provide clear market updates without financial advice. Explain market movements in plain terms.',
@@ -675,7 +669,6 @@ export const TOPICS: TopicDefinition[] = [
     localizedDescriptions: { hi: 'क्रिकेट के ताज़ा स्कोर और खबरें', en: 'Latest cricket scores and news' },
     sources: [
       { type: 'rss', name: 'ESPNcricinfo', url: 'https://www.espncricinfo.com/rss/content/story/feeds/0.xml', maxItems: 12 },
-      { type: 'rss', name: 'Cricbuzz', url: 'https://www.cricbuzz.com/cb-rss/cb-top-stories', maxItems: 10 },
     ],
     promptContext: 'Cover cricket news with enthusiasm. Include IPL, international matches, and player updates.',
     targetDurationMinutes: 4,

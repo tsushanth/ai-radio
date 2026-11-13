@@ -1,31 +1,31 @@
-Audexa e sua radio pessoal com IA que transforma as ultimas noticias, tecnologia, negocios e muito mais em resumos de audio envolventes no estilo podcast, personalizados so para voce.
+Audexa é sua rádio pessoal com IA que transforma as últimas notícias, tecnologia, negócios e muito mais em resumos de áudio envolventes no estilo podcast, personalizados só para você.
 
 FUNCIONALIDADES PRINCIPAIS:
 
-Resumos Diarios
-Conecte seu Gmail para receber um resumo matinal personalizado dos seus e-mails importantes, eventos do calendario e principais noticias. Comece cada dia informado e preparado.
+Resumos Diários
+Conecte seu Gmail para receber um resumo matinal personalizado dos seus e-mails importantes, eventos do calendário e principais notícias. Comece cada dia informado e preparado.
 
 Podcasts Gerados por IA
-Escolha entre dezenas de temas incluindo Tecnologia, Financas, Esportes, Ciencia, Entretenimento e mais. Audexa gera episodios de podcast frescos e de alta qualidade diariamente usando vozes avancadas de IA.
+Escolha entre dezenas de temas incluindo Tecnologia, Finanças, Esportes, Ciência, Entretenimento e mais. Audexa gera episódios de podcast frescos e de alta qualidade diariamente usando vozes avançadas de IA.
 
 Conversas com Dois Apresentadores
-Aproveite discussoes naturais entre dois apresentadores de IA. Escolha entre multiplos pares de vozes para encontrar o som perfeito.
+Aproveite discussões naturais entre dois apresentadores de IA. Escolha entre múltiplos pares de vozes para encontrar o som perfeito.
 
-Personalizado Para Voce
-Selecione seus interesses e Audexa seleciona conteudo especificamente para voce. Salve seus temas favoritos, oculte o que nao quer e descubra novos programas na aba Explorar.
+Personalizado Para Você
+Selecione seus interesses e Audexa seleciona conteúdo especificamente para você. Salve seus temas favoritos, oculte o que não quer e descubra novos programas na aba Explorar.
 
 Suporte Multi-Idiomas
-Ouca podcasts no seu idioma preferido. Audexa suporta ingles, espanhol, frances, alemao, japones, chines, coreano, portugues, italiano e hindi.
+Ouça podcasts no seu idioma preferido. Os podcasts do Audexa estão disponíveis em inglês, espanhol, francês, alemão, português e italiano.
 
-Timer de Sono e Controles de Reproducao
-Configure um timer de sono, avance ou retroceda, e aproveite a reproducao continua com suporte de audio em segundo plano e controles na tela de bloqueio.
+Timer de Sono e Controles de Reprodução
+Configure um timer de sono, avance ou retroceda, e aproveite a reprodução contínua com suporte de áudio em segundo plano e controles na tela de bloqueio.
 
 COMO FUNCIONA:
 1. Entre com Google
 2. Escolha seus temas de interesse
 3. Opcionalmente vincule seu e-mail para resumos personalizados
-4. Ouca episodios gerados por IA sob demanda
+4. Ouça episódios gerados por IA sob demanda
 
-Sua privacidade: Gmail e Agenda sao opcionais. Se voce os conectar, nosso servidor le suas mensagens recentes e os eventos de hoje para escrever seu briefing. Trechos curtos (nome do remetente, assunto, o inicio da previa, titulos, horarios e locais dos eventos) sao processados pelo servico de IA que usamos para escrever o roteiro. O audio do briefing pronto e mantido ate voce excluir sua conta no perfil do app. Detalhes: kreativekoala.llc/privacy
+Sua privacidade: Gmail e Agenda são opcionais. Se você os conectar, nosso servidor lê suas mensagens recentes e os eventos de hoje para escrever seu briefing. Trechos curtos (nome do remetente, assunto, o início da prévia, títulos, horários e locais dos eventos) são processados pelo serviço de IA que usamos para escrever o roteiro. O áudio do briefing pronto é mantido até você excluir sua conta no perfil do app. Detalhes: kreativekoala.llc/privacy
 
-Baixe Audexa hoje e experimente o futuro do audio personalizado.
+Baixe Audexa hoje e experimente o futuro do áudio personalizado.

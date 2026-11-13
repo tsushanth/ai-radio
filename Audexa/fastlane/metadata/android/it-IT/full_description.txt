@@ -1,21 +1,21 @@
-Audexa e la tua radio IA personale che trasforma le ultime notizie, tecnologia, business e altro in coinvolgenti riepiloghi audio in stile podcast, creati su misura per te.
+Audexa è la tua radio IA personale che trasforma le ultime notizie, tecnologia, business e altro in coinvolgenti riepiloghi audio in stile podcast, creati su misura per te.
 
-FUNZIONALITA PRINCIPALI:
+FUNZIONALITÀ PRINCIPALI:
 
 Riepiloghi Quotidiani
 Collega il tuo Gmail per ricevere un riepilogo mattutino personalizzato delle tue email importanti, eventi del calendario e notizie principali. Inizia ogni giorno informato e preparato.
 
 Podcast Generati dall'IA
-Scegli tra decine di argomenti tra cui Tecnologia, Finanza, Sport, Scienza, Intrattenimento e altro. Audexa genera ogni giorno episodi podcast freschi e di alta qualita con voci IA avanzate.
+Scegli tra decine di argomenti tra cui Tecnologia, Finanza, Sport, Scienza, Intrattenimento e altro. Audexa genera ogni giorno episodi podcast freschi e di alta qualità con voci IA avanzate.
 
 Conversazioni con Due Conduttori
-Goditi discussioni naturali tra due conduttori IA. Scegli tra piu coppie di voci per trovare il suono perfetto.
+Goditi discussioni naturali tra due conduttori IA. Scegli tra più coppie di voci per trovare il suono perfetto.
 
 Personalizzato Per Te
-Seleziona i tuoi interessi e Audexa cura contenuti specificamente per te. Aggiungi ai preferiti i tuoi argomenti, nascondi cio che non vuoi e scopri nuovi programmi nella scheda Scopri.
+Seleziona i tuoi interessi e Audexa cura contenuti specificamente per te. Aggiungi ai preferiti i tuoi argomenti, nascondi ciò che non vuoi e scopri nuovi programmi nella scheda Scopri.
 
 Supporto Multi-Lingua
-Ascolta podcast nella tua lingua preferita. Audexa supporta inglese, spagnolo, francese, tedesco, giapponese, cinese, coreano, portoghese, italiano e hindi.
+Ascolta podcast nella tua lingua preferita. I podcast di Audexa sono disponibili in inglese, spagnolo, francese, tedesco, portoghese e italiano.
 
 Timer e Controlli di Riproduzione
 Imposta un timer di spegnimento, vai avanti o indietro, e goditi una riproduzione fluida con audio in background e controlli sulla schermata di blocco.
@@ -26,6 +26,6 @@ COME FUNZIONA:
 3. Collega opzionalmente la tua email per riepiloghi personalizzati
 4. Ascolta episodi generati dall'IA su richiesta
 
-La tua privacy: Gmail e Calendario sono facoltativi. Se li colleghi, il nostro server legge i tuoi messaggi recenti e gli eventi di oggi per scrivere il tuo briefing. Brevi estratti (nome del mittente, oggetto, l'inizio dell'anteprima, titoli, orari e luoghi degli eventi) vengono elaborati dal servizio IA che usiamo per scrivere il copione. L'audio del briefing finito viene conservato finche non elimini il tuo account dal profilo nell'app. Dettagli: kreativekoala.llc/privacy
+La tua privacy: Gmail e Calendario sono facoltativi. Se li colleghi, il nostro server legge i tuoi messaggi recenti e gli eventi di oggi per scrivere il tuo briefing. Brevi estratti (nome del mittente, oggetto, l'inizio dell'anteprima, titoli, orari e luoghi degli eventi) vengono elaborati dal servizio IA che usiamo per scrivere il copione. L'audio del briefing finito viene conservato finché non elimini il tuo account dal profilo nell'app. Dettagli: kreativekoala.llc/privacy
 
 Scarica Audexa oggi e scopri il futuro dell'audio personalizzato.

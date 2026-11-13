@@ -1,31 +1,31 @@
-Audexa es tu radio personal con IA que transforma las ultimas noticias, tecnologia, negocios y mas en atractivos resumenes de audio estilo podcast, personalizados solo para ti.
+Audexa es tu radio personal con IA que transforma las últimas noticias, tecnología, negocios y más en atractivos resúmenes de audio estilo podcast, personalizados solo para ti.
 
-CARACTERISTICAS PRINCIPALES:
+CARACTERÍSTICAS PRINCIPALES:
 
-Resumenes Diarios
-Conecta tu Gmail para recibir un resumen matutino personalizado que resume tus correos importantes, eventos del calendario y noticias destacadas. Comienza cada dia informado y preparado.
+Resúmenes Diarios
+Conecta tu Gmail para recibir un resumen matutino personalizado que resume tus correos importantes, eventos del calendario y noticias destacadas. Comienza cada día informado y preparado.
 
 Podcasts Generados por IA
-Elige entre docenas de temas incluyendo Tecnologia, Finanzas, Deportes, Ciencia, Entretenimiento y mas. Audexa genera episodios de podcast frescos y de alta calidad diariamente usando voces avanzadas de IA.
+Elige entre docenas de temas incluyendo Tecnología, Finanzas, Deportes, Ciencia, Entretenimiento y más. Audexa genera episodios de podcast frescos y de alta calidad diariamente usando voces avanzadas de IA.
 
 Conversaciones con Dos Presentadores
-Disfruta de discusiones naturales entre dos presentadores de IA. Elige entre multiples pares de voces para encontrar el sonido perfecto.
+Disfruta de discusiones naturales entre dos presentadores de IA. Elige entre múltiples pares de voces para encontrar el sonido perfecto.
 
 Personalizado Para Ti
-Selecciona tus intereses y Audexa selecciona contenido especificamente para ti. Marca tus temas favoritos, oculta lo que no quieras y descubre nuevos programas en la pestana Explorar.
+Selecciona tus intereses y Audexa selecciona contenido específicamente para ti. Marca tus temas favoritos, oculta lo que no quieras y descubre nuevos programas en la pestaña Explorar.
 
 Soporte Multi-Idioma
-Escucha podcasts en tu idioma preferido. Audexa soporta ingles, espanol, frances, aleman, japones, chino, coreano, portugues, italiano e hindi.
+Escucha podcasts en tu idioma preferido. Los podcasts de Audexa están disponibles en inglés, español, francés, alemán, portugués e italiano.
 
-Temporizador y Controles de Reproduccion
-Configura un temporizador de sueno, avanza o retrocede, y disfruta de reproduccion continua con soporte de audio en segundo plano y controles en la pantalla de bloqueo.
+Temporizador y Controles de Reproducción
+Configura un temporizador de sueño, avanza o retrocede, y disfruta de reproducción continua con soporte de audio en segundo plano y controles en la pantalla de bloqueo.
 
-COMO FUNCIONA:
-1. Inicia sesion con Google
-2. Elige tus temas de interes
-3. Opcionalmente vincula tu correo para resumenes personalizados
+CÓMO FUNCIONA:
+1. Inicia sesión con Google
+2. Elige tus temas de interés
+3. Opcionalmente vincula tu correo para resúmenes personalizados
 4. Escucha episodios generados por IA bajo demanda
 
-Tu privacidad: Gmail y Calendario son opcionales. Si los conectas, nuestro servidor lee tus mensajes recientes y los eventos de hoy para escribir tu resumen. Extractos cortos (nombre del remitente, asunto, el inicio de la vista previa, titulos, horarios y lugares de los eventos) los procesa el servicio de IA que usamos para escribir el guion. El audio del resumen terminado se conserva hasta que elimines tu cuenta desde el perfil de la app. Detalles: kreativekoala.llc/privacy
+Tu privacidad: Gmail y Calendario son opcionales. Si los conectas, nuestro servidor lee tus mensajes recientes y los eventos de hoy para escribir tu resumen. Extractos cortos (nombre del remitente, asunto, el inicio de la vista previa, títulos, horarios y lugares de los eventos) los procesa el servicio de IA que usamos para escribir el guion. El audio del resumen terminado se conserva hasta que elimines tu cuenta desde el perfil de la app. Detalles: kreativekoala.llc/privacy
 
 Descarga Audexa hoy y experimenta el futuro del audio personalizado.

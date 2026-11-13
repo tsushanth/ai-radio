@@ -1,31 +1,31 @@
-Audexa est votre radio IA personnelle qui transforme les dernieres nouvelles, la technologie, les affaires et plus encore en resumes audio captivants au format podcast, concus specialement pour vous.
+Audexa est votre radio IA personnelle qui transforme les dernières nouvelles, la technologie, les affaires et plus encore en résumés audio captivants au format podcast, conçus spécialement pour vous.
 
-FONCTIONNALITES PRINCIPALES :
+FONCTIONNALITÉS PRINCIPALES :
 
-Resumes Quotidiens
-Connectez votre Gmail pour recevoir un resume matinal personnalise de vos e-mails importants, evenements de calendrier et actualites. Commencez chaque journee informe et prepare.
+Résumés Quotidiens
+Connectez votre Gmail pour recevoir un résumé matinal personnalisé de vos e-mails importants, événements de calendrier et actualités. Commencez chaque journée informé et préparé.
 
-Podcasts Generes par IA
-Choisissez parmi des dizaines de sujets : Technologie, Finance, Sports, Science, Divertissement et plus. Audexa genere quotidiennement des episodes de podcast de haute qualite avec des voix IA avancees.
+Podcasts Générés par IA
+Choisissez parmi des dizaines de sujets : Technologie, Finance, Sports, Science, Divertissement et plus. Audexa génère quotidiennement des épisodes de podcast de haute qualité avec des voix IA avancées.
 
-Conversations a Deux Presentateurs
-Profitez de discussions naturelles entre deux presentateurs IA. Choisissez parmi plusieurs paires de voix pour trouver le son parfait.
+Conversations à Deux Présentateurs
+Profitez de discussions naturelles entre deux présentateurs IA. Choisissez parmi plusieurs paires de voix pour trouver le son parfait.
 
-Personnalise Pour Vous
-Selectionnez vos interets et Audexa adapte le contenu pour vous. Mettez en favoris vos sujets preferes, masquez ce que vous ne voulez pas et decouvrez de nouvelles emissions dans l'onglet Decouvrir.
+Personnalisé Pour Vous
+Sélectionnez vos intérêts et Audexa adapte le contenu pour vous. Mettez en favoris vos sujets préférés, masquez ce que vous ne voulez pas et découvrez de nouvelles émissions dans l'onglet Découvrir.
 
 Support Multi-Langues
-Ecoutez des podcasts dans votre langue preferee. Audexa prend en charge l'anglais, l'espagnol, le francais, l'allemand, le japonais, le chinois, le coreen, le portugais, l'italien et l'hindi.
+Écoutez des podcasts dans votre langue préférée. Les podcasts Audexa sont disponibles en anglais, en espagnol, en français, en allemand, en portugais et en italien.
 
-Minuterie et Controles de Lecture
-Configurez une minuterie de sommeil, avancez ou reculez, et profitez d'une lecture fluide avec le support audio en arriere-plan et les controles sur l'ecran de verrouillage.
+Minuterie et Contrôles de Lecture
+Configurez une minuterie de sommeil, avancez ou reculez, et profitez d'une lecture fluide avec le support audio en arrière-plan et les contrôles sur l'écran de verrouillage.
 
-COMMENT CA MARCHE :
+COMMENT ÇA MARCHE :
 1. Connectez-vous avec Google
-2. Choisissez vos sujets d'interet
-3. Liez optionnellement votre e-mail pour des resumes personnalises
-4. Ecoutez des episodes generes par IA a la demande
+2. Choisissez vos sujets d'intérêt
+3. Liez optionnellement votre e-mail pour des résumés personnalisés
+4. Écoutez des épisodes générés par IA à la demande
 
-Votre vie privee : Gmail et Agenda sont facultatifs. Si vous les liez, notre serveur lit vos messages recents et les evenements du jour pour rediger votre briefing. De courts extraits (nom de l'expediteur, objet, debut de l'apercu, titres, horaires et lieux des evenements) sont traites par le service d'IA que nous utilisons pour ecrire le script. L'audio du briefing termine est conserve jusqu'a ce que vous supprimiez votre compte dans le profil de l'app. Details : kreativekoala.llc/privacy
+Votre vie privée : Gmail et Agenda sont facultatifs. Si vous les liez, notre serveur lit vos messages récents et les événements du jour pour rédiger votre briefing. De courts extraits (nom de l'expéditeur, objet, début de l'aperçu, titres, horaires et lieux des événements) sont traités par le service d'IA que nous utilisons pour écrire le script. L'audio du briefing terminé est conservé jusqu'à ce que vous supprimiez votre compte dans le profil de l'app. Détails : kreativekoala.llc/privacy
 
-Telechargez Audexa aujourd'hui et decouvrez le futur de l'audio personnalise.
+Téléchargez Audexa aujourd'hui et découvrez le futur de l'audio personnalisé.

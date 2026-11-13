@@ -15,7 +15,7 @@ Personalized For You
 Select your interests and Audexa curates content specifically for you. Bookmark your favorite topics, hide what you don't want, and discover new shows in the Discover tab.
 
 Multi-Language Support
-Listen to podcasts in your preferred language. Audexa supports English, Spanish, French, German, Japanese, Chinese, Korean, Portuguese, Italian, and Hindi.
+Listen to podcasts in your preferred language. Audexa podcasts are available in English, Spanish, French, German, Portuguese, and Italian.
 
 Sleep Timer & Playback Controls
 Set a sleep timer, skip forward or back, and enjoy seamless playback with background audio support and lock screen controls.

@@ -1,31 +1,31 @@
-Audexa ist dein persoenliches KI-Radio, das die neuesten Nachrichten, Technologie, Wirtschaft und mehr in fesselnde Audio-Briefings im Podcast-Stil verwandelt - massgeschneidert fuer dich.
+Audexa ist dein persönliches KI-Radio, das die neuesten Nachrichten, Technologie, Wirtschaft und mehr in fesselnde Audio-Briefings im Podcast-Stil verwandelt - maßgeschneidert für dich.
 
 HAUPTFUNKTIONEN:
 
-Taegliche Briefings
+Tägliche Briefings
 Verbinde dein Gmail, um ein personalisiertes Morgenbriefing zu erhalten, das deine wichtigen E-Mails, Kalendertermine und Top-Nachrichten zusammenfasst. Starte jeden Tag informiert und vorbereitet.
 
 KI-Generierte Podcasts
-Waehle aus Dutzenden von Themen wie Technologie, Finanzen, Sport, Wissenschaft, Unterhaltung und mehr. Audexa generiert taeglich frische, hochwertige Podcast-Episoden mit fortschrittlichen KI-Stimmen.
+Wähle aus Dutzenden von Themen wie Technologie, Finanzen, Sport, Wissenschaft, Unterhaltung und mehr. Audexa generiert täglich frische, hochwertige Podcast-Episoden mit fortschrittlichen KI-Stimmen.
 
-Duo-Moderatoren-Gespraeche
-Geniesse natuerlich klingende Diskussionen zwischen zwei KI-Moderatoren. Waehle aus mehreren Stimmpaaren, um den perfekten Sound zu finden.
+Duo-Moderatoren-Gespräche
+Genieße natürlich klingende Diskussionen zwischen zwei KI-Moderatoren. Wähle aus mehreren Stimmpaaren, um den perfekten Sound zu finden.
 
-Personalisiert Fuer Dich
-Waehle deine Interessen und Audexa kuratiert Inhalte speziell fuer dich. Setze Lesezeichen fuer Lieblingsthemen, blende aus was du nicht moechtest und entdecke neue Sendungen im Entdecken-Tab.
+Personalisiert Für Dich
+Wähle deine Interessen und Audexa kuratiert Inhalte speziell für dich. Setze Lesezeichen für Lieblingsthemen, blende aus was du nicht möchtest und entdecke neue Sendungen im Entdecken-Tab.
 
-Mehrsprachige Unterstuetzung
-Hoere Podcasts in deiner bevorzugten Sprache. Audexa unterstuetzt Englisch, Spanisch, Franzoesisch, Deutsch, Japanisch, Chinesisch, Koreanisch, Portugiesisch, Italienisch und Hindi.
+Mehrsprachige Unterstützung
+Höre Podcasts in deiner bevorzugten Sprache. Die Audexa-Podcasts sind auf Englisch, Spanisch, Französisch, Deutsch, Portugiesisch und Italienisch verfügbar.
 
 Schlaf-Timer und Wiedergabesteuerung
-Stelle einen Schlaf-Timer ein, springe vor oder zurueck und geniesse nahtlose Wiedergabe mit Hintergrund-Audio und Sperrbildschirm-Steuerung.
+Stelle einen Schlaf-Timer ein, springe vor oder zurück und genieße nahtlose Wiedergabe mit Hintergrund-Audio und Sperrbildschirm-Steuerung.
 
 SO FUNKTIONIERT ES:
 1. Melde dich mit Google an
-2. Waehle deine Interessengebiete
-3. Verknuepfe optional deine E-Mail fuer personalisierte Briefings
-4. Hoere KI-generierte Episoden auf Abruf
+2. Wähle deine Interessengebiete
+3. Verknüpfe optional deine E-Mail für personalisierte Briefings
+4. Höre KI-generierte Episoden auf Abruf
 
-Deine Privatsphaere: Gmail und Kalender sind optional. Wenn du sie verknuepfst, liest unser Server deine letzten Nachrichten und die heutigen Termine, um dein Briefing zu schreiben. Kurze Auszuege (Absendername, Betreff, der Anfang der Vorschau, Termintitel, Zeiten und Orte) werden von dem KI-Dienst verarbeitet, den wir zum Schreiben des Skripts nutzen. Das fertige Briefing-Audio wird gespeichert, bis du dein Konto im Profil der App loeschst. Details: kreativekoala.llc/privacy
+Deine Privatsphäre: Gmail und Kalender sind optional. Wenn du sie verknüpfst, liest unser Server deine letzten Nachrichten und die heutigen Termine, um dein Briefing zu schreiben. Kurze Auszüge (Absendername, Betreff, der Anfang der Vorschau, Termintitel, Zeiten und Orte) werden von dem KI-Dienst verarbeitet, den wir zum Schreiben des Skripts nutzen. Das fertige Briefing-Audio wird gespeichert, bis du dein Konto im Profil der App löschst. Details: kreativekoala.llc/privacy
 
 Lade Audexa noch heute herunter und erlebe die Zukunft des personalisierten Audios.

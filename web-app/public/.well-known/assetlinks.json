@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.kreativekoala.audexa",
+      "sha256_cert_fingerprints": [
+        "DB:B8:7C:58:19:8F:AE:3A:CD:1D:DD:B0:B6:66:7B:7F:D2:27:45:D8:04:A8:41:A7:47:F3:D7:95:90:5F:DC:F4"
+      ]
+    }
+  }
+]

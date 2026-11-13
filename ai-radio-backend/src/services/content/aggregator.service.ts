@@ -5,6 +5,11 @@
 
 import Parser from 'rss-parser';
 import { fetchRedditRss } from './reddit.rss';
+import { fetchRedditArchive } from './reddit.archive';
+import { fetchExaStories } from './exa.source';
+import { getSourcePolicy } from './source-policy';
+import { exaSourceEnabled, redditArchiveEnabled, redditRssEnabled, sourceCacheEnabled, sourceCacheStaleHours } from './source-flags';
+import { getSourceStateStore } from './source-state.store';
 import type {
   ContentSource,
   AggregatedStory,
@@ -94,6 +99,16 @@ interface RedditTokenResponse {
   scope: string;
 }
 
+/** A step of the chain is accepted when it gives at least this many fresh stories (same as the radio's min_results). */
+export const MIN_STORIES = 3;
+const FRESH_HOURS = 48;
+const SUBREDDIT_NAME_RE = /^[A-Za-z0-9_]{1,40}$/;
+
+export interface AggregateOptions {
+  /** Headline previews: no Exa search and no reddit reply fetches. */
+  preview?: boolean;
+}
+
 export class ContentAggregatorService {
   private readonly HN_API_BASE = 'https://hacker-news.firebaseio.com/v0';
   private readonly REDDIT_OAUTH_BASE = 'https://oauth.reddit.com';
@@ -105,14 +120,15 @@ export class ContentAggregatorService {
   /**
    * Aggregate content for a topic from all its sources
    */
-  async aggregateTopicContent(topic: TopicDefinition): Promise<TopicContent> {
+  async aggregateTopicContent(topic: TopicDefinition, opts: AggregateOptions = {}): Promise<TopicContent> {
     const stories: AggregatedStory[] = [];
     let successfulSources = 0;
+    const policy = getSourcePolicy(topic.id);
 
     console.log(`📰 Aggregating content for topic: ${topic.name}`);
 
     // If no sources configured, fall back to HackerNews search using topic name
-    const sources = topic.sources && topic.sources.length > 0
+    const configured = topic.sources && topic.sources.length > 0
       ? topic.sources
       : [{
           type: 'hackernews' as const,
@@ -123,7 +139,78 @@ export class ContentAggregatorService {
           maxItems: 15,
         }];
 
+    // Show topics whose catalog "subreddit" cannot exist read their real community instead (explicit in source-policy.ts).
+    const sources = this.applyArchivePolicy(configured, policy?.archive, opts);
+    let totalSources = sources.length;
+
+    // The chain: [Exa when the topic's position is "first"] -> the topic's own sources -> [Exa when "fallback" and they left it thin]
+    // -> the last good feed stories. Exa text is never kept as "last good".
+    const exaCfg = !opts.preview && exaSourceEnabled() ? policy?.exa : undefined;
+    let decided = false;
+    if (exaCfg?.position === 'first') {
+      const exaStories = await fetchExaStories(topic, exaCfg);
+      if (exaStories && exaStories.length >= MIN_STORIES) {
+        stories.push(...exaStories);
+        successfulSources = 1;
+        totalSources = 1;
+        decided = true;
+      }
+    }
+    if (!decided) {
+      const feed = await this.collectFeedStories(topic, sources);
+      stories.push(...feed.stories);
+      successfulSources = feed.successfulSources;
+      if (this.freshCount(stories) >= MIN_STORIES) {
+        decided = true;
+        if (sourceCacheEnabled()) await this.rememberStories(topic.id, this.limit(stories));
+      } else if (exaCfg && exaCfg.position !== 'first') {
+        const exaStories = await fetchExaStories(topic, exaCfg);
+        if (exaStories && exaStories.length >= MIN_STORIES) {
+          stories.unshift(...exaStories);
+          successfulSources++;
+          decided = true;
+        }
+      }
+    }
+    if (!decided && sourceCacheEnabled()) {
+      const cached = await this.lastGoodStories(topic.id);
+      if (cached && cached.length > stories.length) {
+        console.log(`  ♻️ Live sources gave ${stories.length} stories; using the last good feed stories for ${topic.name} (${cached.length})`);
+        stories.length = 0;
+        stories.push(...cached);
+      }
+    }
+
+    // Sort by score/relevance and deduplicate
+    const uniqueStories = this.deduplicateStories(stories);
+    const sortedStories = this.sortByRelevance(uniqueStories);
+
+    // Limit to top stories
+    const topStories = sortedStories.slice(0, 15);
+
+    console.log(`📊 Total: ${topStories.length} unique stories from ${successfulSources}/${totalSources} sources`);
+
+    return {
+      topicId: topic.id,
+      date: this.getTodayDate(),
+      stories: topStories,
+      fetchedAt: new Date(),
+      totalSources,
+      successfulSources,
+    };
+  }
+
+  /** Step "feeds": every configured source, then the Google News and HackerNews keyword fallbacks when nothing came back. */
+  private async collectFeedStories(topic: TopicDefinition, sources: ContentSource[]): Promise<{ stories: AggregatedStory[]; successfulSources: number }> {
+    const stories: AggregatedStory[] = [];
+    let successfulSources = 0;
+
     for (const source of sources) {
+      // Reddit sources are skipped entirely only when both Reddit paths are switched off.
+      if (source.type === 'reddit' && !redditArchiveEnabled() && !redditRssEnabled()) {
+        console.log(`  ⏭️ ${source.name}: Reddit sources are switched off`);
+        continue;
+      }
       try {
         const sourceStories = await this.fetchFromSource(source);
         stories.push(...sourceStories);
@@ -169,23 +256,59 @@ export class ContentAggregatorService {
       }
     }
 
-    // Sort by score/relevance and deduplicate
-    const uniqueStories = this.deduplicateStories(stories);
-    const sortedStories = this.sortByRelevance(uniqueStories);
+    return { stories, successfulSources };
+  }
 
-    // Limit to top stories
-    const topStories = sortedStories.slice(0, 15);
+  private limit(stories: AggregatedStory[]): AggregatedStory[] {
+    return this.sortByRelevance(this.deduplicateStories(stories)).slice(0, 15);
+  }
 
-    console.log(`📊 Total: ${topStories.length} unique stories from ${successfulSources}/${sources.length} sources`);
+  /** Reddit archive options from the policy: replace the catalog's Reddit sources for topics with a real-subreddit override. */
+  private applyArchivePolicy(
+    sources: ContentSource[],
+    archive: { subreddit?: string; comments?: boolean; minScore?: number; maxItems?: number } | undefined,
+    opts: AggregateOptions,
+  ): ContentSource[] {
+    if (!archive) return sources;
+    const comments = archive.comments && !opts.preview;
+    if (archive.subreddit && SUBREDDIT_NAME_RE.test(archive.subreddit)) {
+      return [
+        ...sources.filter(s => s.type !== 'reddit'),
+        {
+          type: 'reddit' as const,
+          name: `r/${archive.subreddit}`,
+          subreddit: archive.subreddit,
+          maxItems: archive.maxItems ?? 10,
+          archive: { comments, minScore: archive.minScore },
+        },
+      ];
+    }
+    return sources.map(s => (s.type === 'reddit' ? { ...s, archive: { comments, minScore: archive.minScore } } : s));
+  }
 
-    return {
-      topicId: topic.id,
-      date: this.getTodayDate(),
-      stories: topStories,
-      fetchedAt: new Date(),
-      totalSources: sources.length,
-      successfulSources,
-    };
+  /** Stories published inside the freshness window; stories without a date count as fresh. */
+  private freshCount(stories: AggregatedStory[]): number {
+    const cutoff = Date.now() - FRESH_HOURS * 3600_000;
+    return stories.filter(s => !s.publishedAt || s.publishedAt.getTime() >= cutoff).length;
+  }
+
+  private async lastGoodStories(topicId: string): Promise<AggregatedStory[] | undefined> {
+    try {
+      const state = await getSourceStateStore().getTopicState(topicId);
+      if (!state?.stories?.length || !state.storiesAt) return undefined;
+      const ageH = (Date.now() - state.storiesAt.getTime()) / 3600_000;
+      return ageH <= sourceCacheStaleHours() ? state.stories : undefined;
+    } catch {
+      return undefined; // cache unavailable: the topic simply has no content
+    }
+  }
+
+  private async rememberStories(topicId: string, stories: AggregatedStory[]): Promise<void> {
+    try {
+      await getSourceStateStore().saveGoodStories(topicId, stories, new Date());
+    } catch (e) {
+      console.warn(`  ⚠️ Could not save last good source text (${e instanceof Error ? e.message : 'error'})`);
+    }
   }
 
   /**
@@ -340,14 +463,30 @@ export class ContentAggregatorService {
     if (!source.subreddit) {
       throw new Error('Reddit source requires subreddit');
     }
+    // 1. The archive (reddit.com's .rss ends on 2026-11-13). Any error, 429 or empty answer falls through to the feed below.
+    if (redditArchiveEnabled()) {
+      try {
+        return await fetchRedditArchive(source, { maxItems: source.maxItems, minScore: source.archive?.minScore, comments: source.archive?.comments });
+      } catch (error) {
+        console.warn(`  ⚠️ Reddit archive failed for r/${source.subreddit} (${error instanceof Error ? error.message : error})`);
+      }
+    }
+    // 2. reddit.com itself. A 403/429, an unparseable answer and an EMPTY answer are all failures (so a dead feed never counts as a source).
+    if (!redditRssEnabled()) {
+      throw new Error(`No Reddit source available for r/${source.subreddit}`);
+    }
+    let stories: AggregatedStory[];
     if (redditOAuthEnabled()) {
       try {
-        return await this.fetchRedditOAuth(source);
+        stories = await this.fetchRedditOAuth(source);
+        if (stories.length > 0) return stories;
       } catch (error) {
         console.warn(`  ⚠️ Reddit OAuth failed for r/${source.subreddit} (${error instanceof Error ? error.message : error}), using the public feed`);
       }
     }
-    return fetchRedditRss(source, redditUserAgent());
+    stories = await fetchRedditRss(source, redditUserAgent());
+    if (stories.length === 0) throw new Error(`Reddit feed for r/${source.subreddit} returned no posts`);
+    return stories;
   }
 
   /**

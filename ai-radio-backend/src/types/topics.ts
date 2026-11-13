@@ -8,7 +8,7 @@ import type { SegmentTiming } from './ads';
 /**
  * Content source types
  */
-export type SourceType = 'rss' | 'hackernews' | 'reddit' | 'api' | 'twitter';
+export type SourceType = 'rss' | 'hackernews' | 'reddit' | 'api' | 'twitter' | 'web';
 
 /**
  * Content source configuration
@@ -20,6 +20,8 @@ export interface ContentSource {
   subreddit?: string;
   keywords?: string[];
   maxItems?: number;
+  /** Reddit archive options, set by the source policy (never stored in the catalog). */
+  archive?: { comments?: boolean; minScore?: number };
 }
 
 /**
@@ -66,6 +68,11 @@ export interface AggregatedStory {
   commentCount?: number;
   publishedAt?: Date;
   author?: string;
+  /**
+   * Article body or post excerpt (up to about 1500 chars) for web-search and Reddit-archive stories. Used only to ground the script
+   * prompt: the generator strips it before the story list is stored on the episode.
+   */
+  excerpt?: string;
 }
 
 /**

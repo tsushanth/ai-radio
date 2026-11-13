@@ -22,6 +22,12 @@ class LiveShareTest {
         assertTrue(url.contains("utm_campaign=live_share"))
         assertEquals("en", LiveShare.parseLiveLink(url))
         assertEquals("fr", LiveShare.parseLiveLink(LiveShare.buildShareUrl("fr")))
+        // Old links use lang=tl, the app's tag is fil, and the web page only knows tl.
+        assertEquals("fil", LiveShare.parseLiveLink("https://audexa.app/live?lang=tl"))
+        assertEquals("fil", LiveShare.parseLiveLink("https://audexa.app/live?lang=fil"))
+        assertEquals("fil", LiveShare.parseLiveLink(LiveShare.buildShareUrl("fil")))
+        assertTrue(LiveShare.buildShareUrl("fil").contains("lang=tl"))
+        assertEquals("fil", LiveShare.languageFromStreamUrl("https://radio.audexa.app/stream-tl"))
     }
 
     @Test fun parseIgnoresOtherLinks() {

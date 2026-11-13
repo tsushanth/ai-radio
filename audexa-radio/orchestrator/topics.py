@@ -32,6 +32,12 @@ class TopicDefinition:
     is_active: bool = True
     # Optional per-region source overrides — keyed by region code (uk, in, au, ca, de, ...)
     regional_sources: dict[str, list[ContentSource]] = field(default_factory=dict)
+    # Topics that opt in to Exa search (used only when SOURCE_EXA_ENABLED=1 and EXA_API_KEY is set; the `sources` list is
+    # the fallback chain behind it). exa_category is passed to Exa as `category`; None for topics where "news" does not fit.
+    exa_query: Optional[str] = None
+    exa_category: Optional[str] = "news"
+    # "first": Exa before the feed sources (topics with no Reddit source); "fallback": only after the feeds gave < 3 stories
+    exa_position: Literal["first", "fallback"] = "first"
 
 
 def get_sources_for_region(topic: "TopicDefinition", region: str) -> list[ContentSource]:
@@ -54,7 +60,6 @@ TOPICS: list[TopicDefinition] = [
             ContentSource(type="rss", name="BBC World", url="http://feeds.bbci.co.uk/news/world/rss.xml", max_items=10),
             ContentSource(type="rss", name="NPR News", url="https://feeds.npr.org/1001/rss.xml", max_items=10),
             ContentSource(type="rss", name="CBS News", url="https://www.cbsnews.com/latest/rss/main", max_items=10),
-            ContentSource(type="rss", name="AP News", url="https://rsshub.app/apnews/topics/apf-topnews", max_items=10),
         ],
         prompt_context="Focus on the most impactful global stories. Be objective and balanced.",
         target_duration_minutes=4,
@@ -115,12 +120,13 @@ TOPICS: list[TopicDefinition] = [
         description="Latest from Washington and Capitol Hill",
         category="news",
         sources=[
-            ContentSource(type="rss", name="Politico", url="https://www.politico.com/rss/politicopicks.xml", max_items=10),
+            ContentSource(type="rss", name="Politico", url="https://rss.politico.com/politics-news.xml", max_items=10),
             ContentSource(type="rss", name="The Hill", url="https://thehill.com/feed/", max_items=10),
             ContentSource(type="hackernews", name="HackerNews Politics", keywords=["congress", "senate", "white house", "election", "legislation"], max_items=5),
         ],
         prompt_context="Cover US political news objectively. Explain policy implications for everyday people.",
         target_duration_minutes=4,
+        exa_query="US politics news: Congress, White House, Senate, elections, legislation",
     ),
 
     TopicDefinition(
@@ -132,10 +138,10 @@ TOPICS: list[TopicDefinition] = [
             ContentSource(type="rss", name="Al Jazeera", url="https://www.aljazeera.com/xml/rss/all.xml", max_items=10),
             ContentSource(type="rss", name="NPR World", url="https://feeds.npr.org/1004/rss.xml", max_items=10),
             ContentSource(type="rss", name="BBC World", url="http://feeds.bbci.co.uk/news/world/rss.xml", max_items=8),
-            ContentSource(type="rss", name="Reuters World", url="https://feeds.reuters.com/Reuters/worldNews", max_items=10),
         ],
         prompt_context="Provide balanced international coverage. Explain context for complex geopolitical situations.",
         target_duration_minutes=4,
+        exa_query="world news today: international affairs, conflicts, diplomacy, major global stories",
     ),
 
     # ── TECHNOLOGY ────────────────────────────────────────────────────────────
@@ -153,6 +159,8 @@ TOPICS: list[TopicDefinition] = [
         ],
         prompt_context="Make AI news accessible to tech-savvy listeners. Explain implications of new models and research.",
         target_duration_minutes=5,
+        exa_query="latest news in AI and machine learning: new models, research results, open-source LLM releases",
+        exa_position="fallback",
     ),
 
     TopicDefinition(
@@ -191,6 +199,9 @@ TOPICS: list[TopicDefinition] = [
         ],
         prompt_context="Cover developer news with enthusiasm. Mention interesting open source projects and language updates.",
         target_duration_minutes=4,
+        exa_query="programming and software developer news: language and framework releases, open source projects, developer tools",
+        exa_position="fallback",
+        exa_category=None,
     ),
 
     # ── BUSINESS ─────────────────────────────────────────────────────────────
@@ -208,6 +219,8 @@ TOPICS: list[TopicDefinition] = [
         ],
         prompt_context="Cover startup ecosystem news. Highlight interesting funding rounds and founder insights.",
         target_duration_minutes=4,
+        exa_query="startup news: funding rounds, venture capital, founder stories, acquisitions",
+        exa_position="fallback",
         regional_sources={
             "in": [
                 ContentSource(type="rss", name="YourStory", url="https://yourstory.com/feed", max_items=12),
@@ -232,10 +245,11 @@ TOPICS: list[TopicDefinition] = [
             ContentSource(type="rss", name="CNBC Top News", url="https://www.cnbc.com/id/100003114/device/rss/rss.html", max_items=12),
             ContentSource(type="reddit", name="r/investing", subreddit="investing", max_items=8),
             ContentSource(type="rss", name="MarketWatch", url="https://feeds.marketwatch.com/marketwatch/topstories/", max_items=12),
-            ContentSource(type="rss", name="Yahoo Finance", url="https://finance.yahoo.com/news/rssindex", max_items=10),
         ],
         prompt_context="Provide clear market updates without financial advice. Explain market movements in plain terms.",
         target_duration_minutes=4,
+        exa_query="stock market and financial news today: indexes, earnings, economy, Fed",
+        exa_position="fallback",
         regional_sources={
             "uk": [
                 ContentSource(type="rss", name="Financial Times", url="https://www.ft.com/rss/home", max_items=12),
@@ -292,6 +306,7 @@ TOPICS: list[TopicDefinition] = [
         sources=[
             ContentSource(type="rss", name="Medical News Today", url="https://www.medicalnewstoday.com/newsfeeds/rss/medical_news.xml", max_items=12),
             ContentSource(type="rss", name="NIH News", url="https://www.nih.gov/news-events/news-releases/feed", max_items=10),
+            ContentSource(type="rss", name="WHO News", url="https://www.who.int/rss-feeds/news-english.xml", max_items=10),
             ContentSource(type="reddit", name="r/health", subreddit="health", max_items=10),
             ContentSource(type="hackernews", name="HackerNews Health", keywords=["health", "medicine", "medical", "study", "wellness", "diet", "exercise", "mental health"], max_items=10),
         ],

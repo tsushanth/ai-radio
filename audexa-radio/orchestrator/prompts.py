@@ -39,6 +39,16 @@ Valid "type" values: "intro", "headlines", "deep_dive", "listener_request", "tra
 Each segment should be a natural speaking turn, typically 1-3 sentences."""
 
 
+EXA_SUMMARY_PROMPT_CHARS = 700
+
+SOURCING_RULES = """SOURCING RULES (the story list comes from web articles and public discussions):
+- Paraphrase in your own words. Never read a sentence from a source verbatim; quote at most a short phrase (a few words) and only when it is the point.
+- Attribute by outlet name the first time you use a story ("according to CNBC", "TechCrunch reports"). For items labelled "discussion on r/<name>", say listeners are talking about it on that subreddit; do not present the discussion as established fact.
+- Use only facts that appear in the story list. If an item is marked [partial text], do not guess at what the rest of the article says.
+- Never mention or invent usernames, handles, or personal details about private individuals (names, ages, employers, locations, contact details). Public figures and officials named in news reports are fine.
+- Do not mention URLs, links, or that you were given a list."""
+
+
 def build_headlines_prompt(
     topic_name: str, stories_text: str, prompt_context: str,
     language: str = "en", region: str = "us",
@@ -61,7 +71,11 @@ Cover 4-5 of these stories as quick headlines with brief commentary:
 
 {stories_text}
 
-Start with a brief intro referencing the time and topic. Cover each story in 2-3 speaking turns. End with a tease for what's coming next. Return ONLY valid JSON."""
+Start with a brief intro referencing the time and topic. Cover each story in 2-3 speaking turns. End with a tease for what's coming next.
+
+{SOURCING_RULES}
+
+Return ONLY valid JSON."""
 
 
 def build_deep_dive_prompt(
@@ -84,7 +98,11 @@ Pick the 2-3 most interesting stories below and go deeper. Discuss implications,
 
 {stories_text}
 
-The hosts should have a real discussion — Alex asks probing questions, Jordan provides analysis. End with "we'll be right back after this track." Return ONLY valid JSON."""
+The hosts should have a real discussion — Alex asks probing questions, Jordan provides analysis. End with "we'll be right back after this track."
+
+{SOURCING_RULES}
+
+Return ONLY valid JSON."""
 
 
 def build_listener_request_prompt(
@@ -130,7 +148,11 @@ def format_stories_for_prompt(stories: list) -> str:
     for i, story in enumerate(stories[:10], 1):
         line = f"{i}. [{story.source}] {story.title}"
         if story.summary:
-            line += f"\n   {story.summary[:200]}"
+            # Exa articles carry a longer text excerpt to ground the script; feed summaries stay short
+            limit = EXA_SUMMARY_PROMPT_CHARS if story.source_type == "exa" else 200
+            line += f"\n   {story.summary[:limit]}"
+        if getattr(story, "partial", False):
+            line += " [partial text]"
         if story.score:
             line += f" (score: {story.score})"
         lines.append(line)

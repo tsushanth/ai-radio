@@ -228,6 +228,30 @@ fun TopicDetailScreen(
                 }
             }
 
+            // Playback (network) error with Retry
+            if (uiState.playbackError != null) {
+                Spacer(modifier = Modifier.height(16.dp))
+                Surface(
+                    color = Error.copy(alpha = 0.1f),
+                    shape = RoundedCornerShape(8.dp)
+                ) {
+                    Row(
+                        modifier = Modifier.padding(start = 12.dp, end = 4.dp, top = 4.dp, bottom = 4.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = stringResource(R.string.playback_error_episode),
+                            style = MaterialTheme.typography.bodySmall,
+                            color = Error,
+                            modifier = Modifier.weight(1f)
+                        )
+                        TextButton(onClick = { viewModel.retryPlayback() }) {
+                            Text(stringResource(R.string.retry), color = AccentOrange)
+                        }
+                    }
+                }
+            }
+
             // Error
             if (uiState.error != null) {
                 Spacer(modifier = Modifier.height(16.dp))

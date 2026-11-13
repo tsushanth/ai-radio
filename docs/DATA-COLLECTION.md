@@ -29,7 +29,7 @@ has a name, a small property object, and `ago_s` (how many seconds earlier it ha
 | `topic_suggest_submitted` | A topic suggestion was sent | `language` only. The suggestion text is NOT in this event (it is stored separately in `topic_requests`, as before) |
 | `language_change` | The user changes language | `language`, `from` |
 | `share_tap` | The share button is tapped | `source`, optional `language` |
-| `error_shown` | An error is shown to the user | `code` only: a short constant such as a player error code name, never a message |
+| `error_shown` | An error is shown to the user | `code`: a short constant such as a player error code name, never a message; player errors (Android) also carry `source`: `stream` (live radio) or `episode` (episode audio) |
 
 `deepdive` is on the server allowlist for the iOS-only Deep Dive feature; neither the Android nor the web client sends it today.
 
@@ -86,7 +86,7 @@ Declare these (the app's other, existing declarations stay as they are):
 | Play category | Data type | Collected | Shared | Optional | Purpose |
 |---|---|---|---|---|---|
 | App activity | App interactions (topics opened, listening time, plays, generate / suggest / share taps) | Yes | No | Yes, users can turn it off in Profile | Analytics |
-| App info and performance | Diagnostics (the `error_shown` code) | Yes | No | Yes (same switch) | Analytics |
+| App info and performance | Diagnostics (the `error_shown` code and, for player errors, whether it was the radio stream or an episode) | Yes | No | Yes (same switch) | Analytics |
 | Device or other IDs | Random app-generated install id | Yes (see note) | No | Yes (same switch) | Analytics |
 
 Notes:

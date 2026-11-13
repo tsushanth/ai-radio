@@ -63,6 +63,7 @@ fun LiveRadioScreen(
     val context = androidx.compose.ui.platform.LocalContext.current
     val isPlaying by viewModel.isPlaying.collectAsState()
     val isBuffering by viewModel.isBuffering.collectAsState()
+    val playbackError by viewModel.playbackError.collectAsState()
     val chatMessages by viewModel.chatMessages.collectAsState()
     val moderationError by viewModel.moderationError.collectAsState()
     val nowPlaying by viewModel.nowPlaying.collectAsState()
@@ -278,6 +279,22 @@ fun LiveRadioScreen(
                                 modifier = Modifier.size(32.dp)
                             )
                         }
+                    }
+                }
+
+                if (playbackError != null) {
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(
+                        text = androidx.compose.ui.res.stringResource(com.kreativekoala.audexa.R.string.playback_error_stream),
+                        color = Color(0xFFFCA5A5),
+                        fontSize = 13.sp,
+                        modifier = Modifier.padding(horizontal = 24.dp)
+                    )
+                    TextButton(onClick = { viewModel.startStream() }) {
+                        Text(
+                            text = androidx.compose.ui.res.stringResource(com.kreativekoala.audexa.R.string.retry),
+                            color = Color.White
+                        )
                     }
                 }
 

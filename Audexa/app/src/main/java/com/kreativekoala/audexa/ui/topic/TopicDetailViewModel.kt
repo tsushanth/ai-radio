@@ -51,7 +51,9 @@ data class TopicDetailUiState(
     // Playback features
     val playbackSpeed: Float = 1.0f,
     val sleepTimerRemaining: Long? = null, // millis, null = off
-    val queueSize: Int = 0
+    val queueSize: Int = 0,
+    // Player error for the episode on screen (network trouble), shown with a Retry button
+    val playbackError: com.kreativekoala.audexa.service.PlaybackError? = null
 )
 
 @HiltViewModel
@@ -85,6 +87,16 @@ class TopicDetailViewModel @Inject constructor(
     }
 
     init {
+        // Playback errors for this screen's episode
+        viewModelScope.launch {
+            audioManager.playbackError.collect { err ->
+                val current = _uiState.value.currentEpisode?.id
+                _uiState.value = _uiState.value.copy(
+                    playbackError = err?.takeIf { it.episodeId != null && it.episodeId == current }
+                )
+            }
+        }
+
         // Observe audio state
         viewModelScope.launch {
             combine(
@@ -689,6 +701,10 @@ class TopicDetailViewModel @Inject constructor(
             Log.d(TAG, "Playing episode: ${episode.title} with URL: ${episode.audioUrl}")
             audioManager.play(episode)
         }
+    }
+
+    fun retryPlayback() {
+        audioManager.retry()
     }
 
     fun seekTo(positionMs: Long) {

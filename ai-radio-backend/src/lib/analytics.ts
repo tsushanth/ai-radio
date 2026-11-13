@@ -53,6 +53,8 @@ export function readAnalyticsConfig(e: NodeJS.ProcessEnv = process.env): Analyti
 
 export const PLATFORMS = ['android', 'web', 'ios'] as const;
 export const LISTEN_SOURCES = ['radio', 'topic', 'deepdive', 'brief'] as const;
+/** Which kind of audio a player error came from: the live radio stream, or an episode. */
+export const ERROR_SOURCES = ['stream', 'episode'] as const;
 
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const VERSION_RE = /^[0-9A-Za-z._-]{1,20}$/;
@@ -93,7 +95,7 @@ export const EVENT_SCHEMAS: Record<string, Record<string, PropSpec>> = {
   topic_suggest_submitted: { language: req(str(LANG_RE)) },
   language_change: { language: req(str(LANG_RE)), from: opt(str(LANG_RE)) },
   share_tap: { source: req(oneOf(LISTEN_SOURCES)), topic_id: opt(str(TOPIC_ID_RE)), language: opt(str(LANG_RE)) },
-  error_shown: { code: req(str(CODE_RE)) },
+  error_shown: { code: req(str(CODE_RE)), source: opt(oneOf(ERROR_SOURCES)) },
 };
 
 export const EVENT_NAMES = Object.keys(EVENT_SCHEMAS);

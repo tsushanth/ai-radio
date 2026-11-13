@@ -95,6 +95,8 @@
     <string name="skip_back_mini">Skip back</string>
     <string name="skip_forward_mini">Skip forward</string>
     <string name="buffering">Buffering\u2026</string>
+    <string name="playback_error_stream">Can\'t reach the radio. Check your connection and try again.</string>
+    <string name="playback_error_episode">Can\'t load this audio. Check your connection and try again.</string>
     <string name="sleep_timer">Sleep timer</string>
     <string name="timer">Timer</string>
     <string name="sleep_timer_5_min">5 min</string>

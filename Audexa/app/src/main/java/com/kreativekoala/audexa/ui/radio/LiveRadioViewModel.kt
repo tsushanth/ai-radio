@@ -94,6 +94,7 @@ class LiveRadioViewModel @Inject constructor(
 
     val isPlaying: StateFlow<Boolean> = audioManager.isPlaying
     val isBuffering: StateFlow<Boolean> = audioManager.isBuffering
+    val playbackError: StateFlow<com.kreativekoala.audexa.service.PlaybackError?> = audioManager.playbackError
 
     // Chat messages
     private val _chatMessages = MutableStateFlow<List<ChatMessage>>(emptyList())

@@ -118,17 +118,8 @@ fun ProfileScreen(
 
             Spacer(modifier = Modifier.height(32.dp))
 
-            // Premium Section
-            SettingsSection(title = stringResource(R.string.premium)) {
-                SettingsRow(
-                    icon = Icons.Default.Star,
-                    title = if (uiState.isSubscribed) stringResource(R.string.ad_free) else stringResource(R.string.go_ad_free),
-                    subtitle = if (uiState.isSubscribed) stringResource(R.string.active_subscription) else stringResource(R.string.remove_all_ads),
-                    onClick = onNavigateToSubscription
-                )
-            }
-
-            Spacer(modifier = Modifier.height(24.dp))
+            // No "Premium / Ad-free" row: the Android app has no ads SDK and no paywall (removed 2026-07-22), so every user
+            // is treated as subscribed and the row claimed an "Active subscription" that does not exist.
 
             // Linked Accounts Section
             SettingsSection(title = stringResource(R.string.linked_accounts)) {

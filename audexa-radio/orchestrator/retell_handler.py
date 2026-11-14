@@ -36,7 +36,7 @@ def set_queue_manager(qm: QueueManager):
 SIGNATURE_TOLERANCE_MS = 5 * 60 * 1000
 _SIG_RE = re.compile(r"^v=(\d{10,16}),d=([0-9a-fA-F]{64})$")
 
-# Phase 1 (observe only): counts of what the verifier saw, readable from logs / a debugger.
+# Counts of what the verifier saw (readable from logs / a debugger).
 auth_counters = {"verified": 0, "failed": 0}
 
 
@@ -54,21 +54,24 @@ def verify_retell_signature(raw_body: bytes, api_key: str, header: str, now_ms: 
     return hmac.compare_digest(expected, m.group(2).lower())
 
 
-def check_retell_auth(request: Request, raw_body: bytes) -> bool:
-    """Phase 1: verify and record, but never reject. Logs header NAMES only (no values, no body)."""
+def check_retell_auth(request: Request, raw_body: bytes) -> JSONResponse | None:
+    """Phase 2: fail closed. None when the request is authentic, otherwise the response to return.
+
+    Logs header NAMES only (no values, no body)."""
     api_key = os.getenv("RETELL_API_KEY", "")
+    if not api_key:
+        logger.error("Retell webhook rejected: RETELL_API_KEY is not configured")
+        return JSONResponse({"error": "retell webhook not configured"}, status_code=503)
     header = request.headers.get("x-retell-signature", "")
     if verify_retell_signature(raw_body, api_key, header):
         auth_counters["verified"] += 1
-        logger.info("Retell webhook signature verified (verified=%d failed=%d)", auth_counters["verified"], auth_counters["failed"])
-        return True
+        return None
     auth_counters["failed"] += 1
     logger.warning(
-        "Retell webhook NOT verified, accepted anyway (phase 1): key_configured=%s signature_header=%s headers_present=%s verified=%d failed=%d",
-        bool(api_key), "present" if header else "absent", sorted(request.headers.keys()),
-        auth_counters["verified"], auth_counters["failed"],
+        "Retell webhook rejected: bad or missing signature (signature_header=%s headers_present=%s failed=%d)",
+        "present" if header else "absent", sorted(request.headers.keys()), auth_counters["failed"],
     )
-    return False
+    return JSONResponse({"error": "invalid signature"}, status_code=401)
 
 
 # Topics that are clearly off-limits for a public radio service
@@ -125,7 +128,9 @@ async def retell_webhook(request: Request):
         return JSONResponse({"error": "Queue manager not initialized"}, status_code=500)
 
     raw = await request.body()
-    check_retell_auth(request, raw)
+    denied = check_retell_auth(request, raw)
+    if denied is not None:
+        return denied
 
     try:
         event = json.loads(raw)

@@ -265,8 +265,8 @@ export function slugify(name: string): string {
 }
 
 export function normalizeLanguage(l: string | null | undefined): string {
-  const s = (l ?? '').trim().toLowerCase().slice(0, 2);
-  return /^[a-z]{2}$/.test(s) ? s : 'en';
+  const s = (l ?? '').trim().toLowerCase().split(/[-_]/)[0]; // primary subtag: en-US -> en, fil -> fil (not fi)
+  return /^[a-z]{2,3}$/.test(s) ? s : 'en';
 }
 
 export function attemptsOf(error: string | null | undefined): number {

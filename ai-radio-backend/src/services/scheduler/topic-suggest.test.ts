@@ -316,6 +316,8 @@ test('slugify, attemptsOf, normalizeLanguage, newsFeedUrl', () => {
   assert.equal(normalizeLanguage('ES'), 'es');
   assert.equal(normalizeLanguage('pt-BR'), 'pt');
   assert.equal(normalizeLanguage('x'), 'en');
+  assert.equal(normalizeLanguage('fil'), 'fil'); // must not become fi (Finnish)
+  assert.equal(normalizeLanguage('en_US'), 'en');
   assert.equal(normalizeLanguage(null), 'en');
   assert.match(newsFeedUrl('home & garden', 'en'), /^https:\/\/news\.google\.com\/rss\/search\?q=home%20%26%20garden%20when%3A7d&hl=en-US/);
   assert.match(newsFeedUrl('x', 'zz'), /hl=en-US/);

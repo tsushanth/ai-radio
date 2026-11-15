@@ -69,6 +69,9 @@ class StringResourcesTest {
         "ru" to setOf("one", "few", "many", "other"),
         "pl" to setOf("one", "few", "many", "other"),
         "ro" to setOf("one", "few", "other"),
+        // CLDR "many" (millions: "1 million of ...") for the Romance languages; Android lint reports it missing (MissingQuantity).
+        "es" to setOf("one", "many", "other"), "fr" to setOf("one", "many", "other"),
+        "it" to setOf("one", "many", "other"), "pt" to setOf("one", "many", "other"),
         "ar" to setOf("zero", "one", "two", "few", "many", "other"),
         "ja" to setOf("other"), "ko" to setOf("other"), "zh" to setOf("other"), "th" to setOf("other"),
         "vi" to setOf("other"), "in" to setOf("other"), "ms" to setOf("other")

@@ -86,6 +86,13 @@ android {
         compose = true
         buildConfig = true
     }
+    bundle {
+        // The in-app language setting can switch to any shipped translation; with language splits on, Play would only deliver the
+        // phone's language and the switch would fall back to English.
+        language {
+            enableSplit = false
+        }
+    }
     testOptions {
         unitTests {
             // Robolectric reads the app's real resources (R.string.*, values-xx folders) for the language tests.

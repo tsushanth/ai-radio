@@ -308,6 +308,7 @@
     <string name="briefing_notification_body_fallback">A Audexa Rádio está no ar agora. Toque para ouvir.</string>
     <plurals name="briefing_notification_body_topics">
         <item quantity="one">%1$d novo podcast de tema: %2$s. Toque para ouvir.</item>
+        <item quantity="many">%1$d novos podcasts de temas: %2$s. Toque para ouvir.</item>
         <item quantity="other">%1$d novos podcasts de temas: %2$s. Toque para ouvir.</item>
     </plurals>
     <string name="briefing_names_with_more">%1$s e mais %2$d</string>

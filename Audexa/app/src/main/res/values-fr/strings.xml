@@ -308,6 +308,7 @@
     <string name="briefing_notification_body_fallback">Audexa Radio est en cours de diffusion. Appuyez pour écouter.</string>
     <plurals name="briefing_notification_body_topics">
         <item quantity="one">%1$d nouveau podcast par sujet : %2$s. Appuyez pour écouter.</item>
+        <item quantity="many">%1$d nouveaux podcasts par sujet : %2$s. Appuyez pour écouter.</item>
         <item quantity="other">%1$d nouveaux podcasts par sujet : %2$s. Appuyez pour écouter.</item>
     </plurals>
     <string name="briefing_names_with_more">%1$s et %2$d de plus</string>

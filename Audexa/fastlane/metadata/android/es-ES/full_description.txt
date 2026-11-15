@@ -21,7 +21,7 @@ Temporizador y Controles de Reproducción
 Configura un temporizador de sueño, avanza o retrocede, y disfruta de reproducción continua con soporte de audio en segundo plano y controles en la pantalla de bloqueo.
 
 CÓMO FUNCIONA:
-1. Inicia sesión con Google
+1. Abre Audexa y toca Comenzar (no hace falta iniciar sesión)
 2. Elige tus temas de interés
 3. Opcionalmente vincula tu correo para resúmenes personalizados
 4. Escucha episodios generados por IA bajo demanda

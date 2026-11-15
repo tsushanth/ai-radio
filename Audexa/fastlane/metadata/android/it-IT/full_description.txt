@@ -21,7 +21,7 @@ Timer e Controlli di Riproduzione
 Imposta un timer di spegnimento, vai avanti o indietro, e goditi una riproduzione fluida con audio in background e controlli sulla schermata di blocco.
 
 COME FUNZIONA:
-1. Accedi con Google
+1. Apri Audexa e tocca Inizia (non serve accedere)
 2. Scegli i tuoi argomenti di interesse
 3. Collega opzionalmente la tua email per riepiloghi personalizzati
 4. Ascolta episodi generati dall'IA su richiesta

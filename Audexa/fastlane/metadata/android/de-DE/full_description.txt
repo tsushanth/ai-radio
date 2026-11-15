@@ -21,7 +21,7 @@ Schlaf-Timer und Wiedergabesteuerung
 Stelle einen Schlaf-Timer ein, springe vor oder zurück und genieße nahtlose Wiedergabe mit Hintergrund-Audio und Sperrbildschirm-Steuerung.
 
 SO FUNKTIONIERT ES:
-1. Melde dich mit Google an
+1. Öffne Audexa und tippe auf Starten (keine Anmeldung nötig)
 2. Wähle deine Interessengebiete
 3. Verknüpfe optional deine E-Mail für personalisierte Briefings
 4. Höre KI-generierte Episoden auf Abruf

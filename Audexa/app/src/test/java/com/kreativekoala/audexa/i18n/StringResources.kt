@@ -4,7 +4,7 @@ import org.w3c.dom.Element
 import java.io.File
 import javax.xml.parsers.DocumentBuilderFactory
 
-/** Reads the app's real res/values*/strings.xml files from the module directory (gradle runs unit tests there). Pure JVM. */
+/** Reads the app's real strings.xml file of every values folder from the module directory (gradle runs unit tests there). Pure JVM. */
 object StringResources {
     val resDir: File = listOf(File("src/main/res"), File("app/src/main/res"), File("Audexa/app/src/main/res"))
         .first { it.isDirectory }

@@ -14,7 +14,7 @@ object ComposeTextChecks {
 
     fun layout(node: SemanticsNode): TextLayoutResult? {
         val out = mutableListOf<TextLayoutResult>()
-        node.config.getOrNull(SemanticsActions.GetTextLayoutResult)?.action?.invoke(out)
+        if (SemanticsActions.GetTextLayoutResult in node.config) node.config[SemanticsActions.GetTextLayoutResult].action?.invoke(out)
         return out.firstOrNull()
     }
 

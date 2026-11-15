@@ -34,6 +34,8 @@ class PreferencesManager @Inject constructor(
         val BOOKMARKED_TOPICS = stringSetPreferencesKey("bookmarked_topics")
         val HIDDEN_TOPICS = stringSetPreferencesKey("hidden_topics")
         val PREFERRED_LANGUAGE = stringPreferencesKey("preferred_language")
+        // Interface languages the user declined in the onboarding offer "Show the app in <language> too?" (tags, comma separated).
+        val UI_LANGUAGE_OFFER_DECLINED = stringPreferencesKey("ui_language_offer_declined")
         // Set once when an unsupported saved content language was replaced at launch; read and cleared by takeLanguageFallbackNotice().
         val LANGUAGE_FALLBACK_FROM = stringPreferencesKey("language_fallback_from")
         val SELECTED_TOPICS = stringSetPreferencesKey("selected_topics")
@@ -128,6 +130,18 @@ class PreferencesManager @Inject constructor(
     // Always a language podcasts can be generated in (ContentLanguage), even if an older version saved ja/ko/hi/zh/tl.
     val preferredLanguage: Flow<String> = dataStore.data.map {
         ContentLanguage.resolve(it[Keys.PREFERRED_LANGUAGE]).language.code
+    }
+
+    // Interface language offer (onboarding): tags the user said no to, so the same offer is not shown again.
+    val uiLanguageOfferDeclined: Flow<Set<String>> = dataStore.data.map {
+        it[Keys.UI_LANGUAGE_OFFER_DECLINED].orEmpty().split(',').filter { t -> t.isNotBlank() }.toSet()
+    }
+
+    suspend fun addUiLanguageOfferDeclined(tag: String) {
+        dataStore.edit { prefs ->
+            val now = prefs[Keys.UI_LANGUAGE_OFFER_DECLINED].orEmpty().split(',').filter { it.isNotBlank() }.toSet() + tag
+            prefs[Keys.UI_LANGUAGE_OFFER_DECLINED] = now.sorted().joinToString(",")
+        }
     }
 
     /**

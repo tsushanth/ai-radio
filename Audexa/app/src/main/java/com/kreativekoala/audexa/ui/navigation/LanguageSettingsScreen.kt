@@ -10,6 +10,7 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -28,6 +29,7 @@ fun LanguageSettingsScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val context = androidx.compose.ui.platform.LocalContext.current
+    var showAppLanguageDialog by rememberSaveable { mutableStateOf(false) }
 
     Scaffold(
         topBar = {
@@ -55,6 +57,16 @@ fun LanguageSettingsScreen(
         },
         containerColor = Background
     ) { padding ->
+        if (showAppLanguageDialog) {
+            AppLanguageDialog(
+                selected = uiState.appLanguage,
+                onSelect = { language ->
+                    showAppLanguageDialog = false
+                    viewModel.setAppLanguage(language)
+                },
+                onDismiss = { showAppLanguageDialog = false }
+            )
+        }
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
@@ -64,11 +76,26 @@ fun LanguageSettingsScreen(
             contentPadding = PaddingValues(vertical = 16.dp)
         ) {
             item {
+                AppLanguageRow(
+                    selected = uiState.appLanguage,
+                    onClick = { showAppLanguageDialog = true },
+                    modifier = Modifier.padding(bottom = 16.dp)
+                )
+            }
+
+            item {
+                // Names the list below as the PODCAST language, now that the interface language row sits above it.
+                Text(
+                    text = stringResource(R.string.podcast_language),
+                    style = MaterialTheme.typography.titleMedium,
+                    color = PrimaryText,
+                    fontWeight = FontWeight.Bold
+                )
                 Text(
                     text = stringResource(R.string.language_description),
                     style = MaterialTheme.typography.bodyMedium,
                     color = SecondaryText,
-                    modifier = Modifier.padding(bottom = 16.dp)
+                    modifier = Modifier.padding(top = 4.dp, bottom = 16.dp)
                 )
             }
 

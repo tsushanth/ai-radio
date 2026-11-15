@@ -20,6 +20,18 @@ object AppModule {
 
     @Provides
     @Singleton
+    fun provideAppLocaleStore(): com.kreativekoala.audexa.util.AppLocaleStore =
+        com.kreativekoala.audexa.util.AppCompatLocaleStore()
+
+    @Provides
+    @Singleton
+    fun provideUiLanguageOfferStore(
+        preferences: com.kreativekoala.audexa.data.local.PreferencesManager
+    ): com.kreativekoala.audexa.util.UiLanguageOfferStore =
+        com.kreativekoala.audexa.util.PreferencesUiLanguageOfferStore(preferences)
+
+    @Provides
+    @Singleton
     fun provideSupabaseClient(): SupabaseClient {
         return createSupabaseClient(
             supabaseUrl = BuildConfig.SUPABASE_URL,

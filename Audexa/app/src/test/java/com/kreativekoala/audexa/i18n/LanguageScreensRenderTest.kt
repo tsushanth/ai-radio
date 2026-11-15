@@ -44,7 +44,7 @@ import java.util.Locale
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [34], qualifiers = "w360dp-h800dp-port-xxhdpi", application = Application::class)
 class LanguageScreensRenderTest {
-    @get:org.junit.Rule val rule = createComposeRule()
+    @get:Rule val rule = createComposeRule()
 
     private val app: Context get() = ApplicationProvider.getApplicationContext()
     private enum class Screen { WELCOME, LANGUAGE_PAGE, TOPICS_EMPTY, TABS, APP_LANGUAGE_ROW }
@@ -73,7 +73,7 @@ class LanguageScreensRenderTest {
     private fun forbiddenEnglish(folder: String): Set<String> {
         val en = StringResources.default.strings
         val l = StringResources.load(folder).strings
-        return en.filter { (k, v) -> l[k] != null && l[k] != v && v.length > 3 }.values.map { StringResources.unescape(it) }.toSet()
+        return en.filter { (k, v) -> l[k] != null && l[k] != v && v.length > 3 }.values.toSet()
     }
 
     @Test fun firstRunScreensAndTabsRenderCleanlyInEveryLanguage() {

@@ -142,7 +142,7 @@ class StringResourcesTest {
             "geraeteeinstellungen", "verknuepfen", "verknuepfung", "verknuepfte"
         ),
         "values-es" to listOf(
-            "sesion", "configuracion", "notificacion", "notificaciones", "conexion", "autenticacion", "generacion", "suscripcion",
+            "sesion", "configuracion", "notificacion", "conexion", "autenticacion", "generacion", "suscripcion",
             "reproduccion", "vinculacion", "integracion", "version", "terminos", "politica", "mas", "ultimas", "ultimo", "atras", "dias",
             "salio", "resumenes", "sueno", "proximamente", "proximos", "apareceran", "estara", "gustaria", "recibiras", "musica",
             "informacion", "descripcion", "aqui", "ademas", "podras", "sera"

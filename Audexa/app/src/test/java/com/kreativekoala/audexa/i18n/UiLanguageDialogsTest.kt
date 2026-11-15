@@ -3,6 +3,9 @@ package com.kreativekoala.audexa.i18n
 import android.app.Application
 import android.content.Context
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsSelected
 import androidx.compose.ui.test.junit4.createComposeRule
@@ -60,7 +63,7 @@ class UiLanguageDialogsTest {
     }
 
     @Test fun offerRendersWithoutClippingInEveryLanguage() {
-        var offered by androidx.compose.runtime.mutableStateOf(lang("de"))
+        var offered by mutableStateOf(lang("de"))
         rule.setContent { MaterialTheme { UiLanguageOfferDialog(offered, UiLanguages.ENGLISH, onYes = {}, onNo = {}) } }
         val problems = mutableListOf<String>()
         for (l in UiLanguages.ALL.filter { it.tag != "en" }) {

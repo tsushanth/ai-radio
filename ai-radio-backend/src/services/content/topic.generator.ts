@@ -14,6 +14,10 @@ import { SOURCE_HANDLING_RULES, formatStoryLine, hasGroundedExcerpts, stripExcer
 import { openaiTTS, type VoiceConfig } from '../tts/openai.tts';
 import { concatenateBuffers } from '../tts/audio.utils';
 import { finalizeEpisodeAudio } from '../audio/episode-audio';
+import { getLanguageSpec, isNewLanguage, isLaunchTopic } from '../languages/registry';
+import { languageControls } from '../languages/controls';
+import { buildNewLanguageEpisode, speakExistingScript } from '../languages/pipeline';
+import { formatDateFor } from '../languages/script';
 import type {
   TopicDefinition,
   TopicEpisode,
@@ -133,7 +137,7 @@ export class TopicPodcastGenerator {
       topicId,
       date: today,
       status: 'generating',
-      title: `${localizedName} - ${this.formatDate(today)}`,
+      title: `${localizedName} - ${this.displayDate(today, language)}`,
       description: localizedDescription,
       stories: [],
       createdAt: new Date(),
@@ -174,46 +178,58 @@ export class TopicPodcastGenerator {
     episode: TopicEpisode,
     language: string = 'en'
   ): Promise<TopicEpisode> {
-    // Step 1: Aggregate content
-    console.log(`  [1/4] Fetching content...`);
-    const content = await contentAggregator.aggregateTopicContent(topic);
-    episode.stories = stripExcerpts(content.stories);
+    let script: PodcastScript;
+    let audioSegments: Awaited<ReturnType<typeof openaiTTS.synthesizeScript>>;
+    if (isNewLanguage(language)) {
+      // Additional languages (flags in the database, ReadAloud API speech, local-language sources): one pipeline for steps 1-3.
+      console.log(`  [1-3/4] Building ${language} episode (sources, script, speech)...`);
+      const parts = await buildNewLanguageEpisode(topic, language, episode.date);
+      episode.stories = stripExcerpts(parts.stories);
+      script = parts.script;
+      audioSegments = parts.audioSegments;
+      episode.script = JSON.stringify(script);
+    } else {
+      // Step 1: Aggregate content
+      console.log(`  [1/4] Fetching content...`);
+      const content = await contentAggregator.aggregateTopicContent(topic);
+      episode.stories = stripExcerpts(content.stories);
 
-    if (content.stories.length === 0) {
-      // Provide more helpful error message based on source failures
-      const failedSources = content.totalSources - content.successfulSources;
-      if (failedSources === content.totalSources) {
-        throw new Error(`All ${content.totalSources} content sources are temporarily unavailable. Please try again later.`);
-      } else {
-        throw new Error('No content found for this topic. Please try again later.');
+      if (content.stories.length === 0) {
+        // Provide more helpful error message based on source failures
+        const failedSources = content.totalSources - content.successfulSources;
+        if (failedSources === content.totalSources) {
+          throw new Error(`All ${content.totalSources} content sources are temporarily unavailable. Please try again later.`);
+        } else {
+          throw new Error('No content found for this topic. Please try again later.');
+        }
       }
+
+      // Step 2: Generate script (with language)
+      console.log(`  [2/4] Generating script in ${language}...`);
+      script = await this.generateScript(topic, content, language);
+
+      episode.script = JSON.stringify(script);
+
+      // Step 3: Generate audio
+      console.log(`  [3/4] Generating audio...`);
+      // Default female voice changed from 'nova' (Kokoro af_nicole) to
+      // 'shimmer' (Kokoro af_sarah) — feedback was that af_nicole sounded
+      // too sharp/strident for news narration; af_sarah is warmer.
+      // Voice IDs are kept as legacy OpenAI-style names; the Kokoro worker
+      // re-routes them to the correct language family voice based on
+      // `language`. JP scripts get jf_alpha/jm_kumo, ES gets ef_dora/em_alex,
+      // de/ko fall through to Edge TTS. Without `language`, the worker
+      // defaults to English voices and mispronounces non-EN text.
+      const voiceConfig: VoiceConfig = {
+        host1: 'shimmer',
+        host2: 'onyx',
+        model: 'tts-1-hd',
+        speed: 1.0,
+        language,
+      };
+
+      audioSegments = await openaiTTS.synthesizeScript(script, voiceConfig);
     }
-
-    // Step 2: Generate script (with language)
-    console.log(`  [2/4] Generating script in ${language}...`);
-    const script = await this.generateScript(topic, content, language);
-
-    episode.script = JSON.stringify(script);
-
-    // Step 3: Generate audio
-    console.log(`  [3/4] Generating audio...`);
-    // Default female voice changed from 'nova' (Kokoro af_nicole) to
-    // 'shimmer' (Kokoro af_sarah) — feedback was that af_nicole sounded
-    // too sharp/strident for news narration; af_sarah is warmer.
-    // Voice IDs are kept as legacy OpenAI-style names; the Kokoro worker
-    // re-routes them to the correct language family voice based on
-    // `language`. JP scripts get jf_alpha/jm_kumo, ES gets ef_dora/em_alex,
-    // de/ko fall through to Edge TTS. Without `language`, the worker
-    // defaults to English voices and mispronounces non-EN text.
-    const voiceConfig: VoiceConfig = {
-      host1: 'shimmer',
-      host2: 'onyx',
-      model: 'tts-1-hd',
-      speed: 1.0,
-      language,
-    };
-
-    const audioSegments = await openaiTTS.synthesizeScript(script, voiceConfig);
 
     // Concatenate audio
     const audioBuffer = concatenateBuffers(audioSegments.map(s => s.buffer));
@@ -530,7 +546,9 @@ Create an engaging ${topic.targetDurationMinutes}-minute podcast covering the mo
       language,
     };
 
-    const audioSegments = await openaiTTS.synthesizeScript(script, voiceConfig);
+    const audioSegments = isNewLanguage(language)
+      ? await speakExistingScript(language, script)
+      : await openaiTTS.synthesizeScript(script, voiceConfig);
     const audioBuffer = concatenateBuffers(audioSegments.map(s => s.buffer));
     const totalDuration = openaiTTS.calculateTotalDuration(audioSegments);
 
@@ -663,6 +681,16 @@ Create an engaging ${topic.targetDurationMinutes}-minute podcast covering the mo
    * Get all topics list (delegates to Supabase topics service)
    */
   async getTopicsList(language: string = 'en'): Promise<TopicListResponse> {
+    if (isNewLanguage(language)) {
+      // Additional languages: nothing is listed while the language is off, and only the 12 launch topics when it is on.
+      if (!(await languageControls.isEnabled(language))) return { topics: [], categories: [] };
+      const full = await topicsService.getTopicsList(language);
+      const topics = full.topics.filter(t => isLaunchTopic(t.id));
+      const categories = full.categories
+        .map(c => ({ ...c, count: topics.filter(t => t.category === c.id).length }))
+        .filter(c => c.count > 0);
+      return { topics, categories };
+    }
     return topicsService.getTopicsList(language);
   }
 
@@ -730,6 +758,12 @@ Create an engaging ${topic.targetDurationMinutes}-minute podcast covering the mo
    */
   private getTodayDate(): string {
     return new Date().toISOString().split('T')[0];
+  }
+
+  /** Episode-title date: English for the existing languages (unchanged), the language's own format for the additional ones. */
+  private displayDate(dateStr: string, language: string): string {
+    const spec = getLanguageSpec(language);
+    return spec ? formatDateFor(spec, dateStr) : this.formatDate(dateStr);
   }
 
   /**

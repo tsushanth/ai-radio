@@ -31,7 +31,7 @@
     <string name="good_afternoon">مساء الخير</string>
     <string name="good_evening">مساء الخير</string>
     <string name="daily_brief">الملخص اليومي</string>
-    <string name="daily_brief_subtitle">الملخص اليومي \u2022 %s</string>
+    <string name="daily_brief_subtitle">الملخص اليومي • %s</string>
     <string name="keep_listening">تابع الاستماع</string>
     <string name="your_topics">مواضيعك</string>
     <string name="topic_podcasts">بودكاست المواضيع</string>
@@ -60,7 +60,9 @@
     <string name="version">الإصدار</string>
     <string name="terms_of_service">شروط الخدمة</string>
     <string name="privacy_policy">سياسة الخصوصية</string>
-    <string name="premium">بريميوم</string>
+    <string name="analytics_title">مشاركة إحصاءات الاستخدام المجهولة</string>
+    <string name="analytics_subtitle">المواضيع واللغات المستخدمة ومدة استخدامها. معرّف عشوائي على هذا الجهاز، بلا اسم أو بريد إلكتروني أو عنوان IP. إيقاف هذا الخيار يحذف المعرّف.</string>
+    <string name="premium">Premium</string>
     <string name="go_ad_free">إزالة الإعلانات</string>
     <string name="ad_free">بدون إعلانات</string>
     <string name="active_subscription">اشتراك نشط</string>
@@ -69,12 +71,12 @@
     <string name="app_theme">سمة التطبيق</string>
     <string name="voice_settings">إعدادات الصوت</string>
     <string name="choose_podcast_voices">اختر أصوات البودكاست</string>
-    <string name="hidden_count">%d مخفي</string>
+    <string name="hidden_count">%d مخفية</string>
     <string name="notifications">الإشعارات</string>
     <string name="daily_brief_reminders">تذكيرات الملخص اليومي</string>
     <string name="sign_out_confirm">هل أنت متأكد أنك تريد تسجيل الخروج؟</string>
     <string name="delete_account_confirm">هل أنت متأكد أنك تريد حذف حسابك؟ سيؤدي ذلك إلى حذف جميع بياناتك نهائياً بما في ذلك البودكاست والتفضيلات والحسابات المرتبطة. لا يمكن التراجع عن هذا الإجراء.</string>
-    <string name="delete_account_signin_again">انتهت صلاحية تسجيل دخولك، لذلك لم يتم حذف حسابك ولم تتم إزالة أي شيء. سجّل الخروج ثم سجّل الدخول مجددًا وحاول حذف الحساب مرة أخرى.</string>
+    <string name="delete_account_signin_again">انتهت صلاحية تسجيل دخولك، لذلك لم يتم حذف حسابك ولم تتم إزالة أي شيء. سجّل الخروج ثم سجّل الدخول مجدداً وحاول حذف الحساب مرة أخرى.</string>
     <string name="delete_account_failed">تعذّر إكمال حذف حسابك. يرجى التحقق من اتصالك والمحاولة مرة أخرى.</string>
 
     <!-- Player -->
@@ -82,9 +84,9 @@
     <string name="paused">متوقف مؤقتاً</string>
     <string name="play">تشغيل</string>
     <string name="pause">إيقاف مؤقت</string>
-    <string name="loading">جارٍ التحميل\u2026</string>
-    <string name="generating">جارٍ الإنشاء\u2026</string>
-    <string name="generating_progress">جارٍ الإنشاء\u2026 %d%%</string>
+    <string name="loading">جارٍ التحميل…</string>
+    <string name="generating">جارٍ الإنشاء…</string>
+    <string name="generating_progress">جارٍ الإنشاء… %d%%</string>
     <string name="generate_episode">إنشاء حلقة</string>
     <string name="regenerate">إعادة الإنشاء</string>
     <string name="episode_history">سجل الحلقات</string>
@@ -92,7 +94,9 @@
     <string name="skip_forward">تخطي 15 ثانية للأمام</string>
     <string name="skip_back_mini">تخطي للخلف</string>
     <string name="skip_forward_mini">تخطي للأمام</string>
-    <string name="buffering">جارٍ التخزين المؤقت\u2026</string>
+    <string name="buffering">جارٍ التخزين المؤقت…</string>
+    <string name="playback_error_stream">يتعذّر الوصول إلى الراديو. تحقق من اتصالك وحاول مرة أخرى.</string>
+    <string name="playback_error_episode">يتعذّر تحميل هذا الصوت. تحقق من اتصالك وحاول مرة أخرى.</string>
     <string name="sleep_timer">مؤقت النوم</string>
     <string name="timer">مؤقت</string>
     <string name="sleep_timer_5_min">5 دقائق</string>
@@ -110,17 +114,17 @@
     <!-- Errors -->
     <string name="error_generic">حدث خطأ ما</string>
     <string name="error_network">خطأ في الشبكة. يرجى التحقق من اتصالك.</string>
-    <string name="error_auth">فشل المصادقة</string>
+    <string name="error_auth">فشلت المصادقة</string>
     <string name="error_no_internet">لا يوجد اتصال بالإنترنت. يرجى التحقق من شبكتك والمحاولة مرة أخرى.</string>
     <string name="generation_failed">فشل الإنشاء</string>
 
     <!-- Misc -->
     <string name="min_daily">%d دقيقة يومياً</string>
-    <string name="connected">متصل</string>
-    <string name="not_connected">غير متصل</string>
-    <string name="not_connected_lower">غير متصل</string>
+    <string name="connected">مرتبط</string>
+    <string name="not_connected">غير مرتبط</string>
+    <string name="not_connected_lower">غير مرتبط</string>
     <string name="coming_soon">قريباً</string>
-    <string name="microsoft_coming_soon">تكامل حساب Microsoft قادم قريباً. ترقبوا!</string>
+    <string name="microsoft_coming_soon">تكامل حساب Microsoft قادم قريباً. ترقّب المزيد!</string>
 
     <!-- Onboarding -->
     <string name="welcome_to_audexa">مرحباً بك في Audexa</string>
@@ -134,11 +138,11 @@
     <string name="include_calendar_events">تضمين الأحداث القادمة في ملخصك</string>
     <string name="continue_button">متابعة</string>
     <string name="skip_for_now">تخطي الآن</string>
-    <string name="connect_later_hint">يمكنك الاتصال لاحقاً في الإعدادات</string>
-    <string name="connect">اتصال</string>
+    <string name="connect_later_hint">يمكنك الربط لاحقاً في الإعدادات</string>
+    <string name="connect">ربط</string>
     <string name="choose_your_interests">اختر اهتماماتك</string>
     <string name="choose_interests_description">اختر المواضيع التي تود سماعها. سننشئ حلقات يومية مخصصة لك.</string>
-    <string name="topics_selected">%d موضوع محدد</string>
+    <string name="topics_selected">المواضيع المحددة: %d</string>
     <string name="topics_selected_plural_suffix"></string>
     <string name="complete_setup">إكمال الإعداد</string>
 
@@ -159,7 +163,7 @@
     <string name="microsoft_outlook_coming_soon">سيكون ربط Microsoft Outlook متاحاً في تحديث مستقبلي.</string>
     <string name="gmail_linking_cancelled">تم إلغاء ربط Gmail</string>
     <string name="calendar_linking_cancelled">تم إلغاء ربط التقويم</string>
-    <string name="reconnect">إعادة الاتصال</string>
+    <string name="reconnect">إعادة الربط</string>
 
     <!-- Hidden Topics -->
     <string name="no_hidden_topics">لا توجد مواضيع مخفية</string>
@@ -169,15 +173,68 @@
 
     <!-- Language Settings -->
     <string name="language">اللغة</string>
-    <string name="language_description">اختر لغتك المفضلة لحلقات البودكاست.</string>
-    <string name="language_note">تتوفر البودكاست بالإنجليزية والإسبانية والفرنسية والألمانية والبرتغالية والإيطالية. تستغرق الحلقة الأولى بلغة جديدة بضع دقائق للتحضير. الراديو بالإنجليزية فقط. بالنسبة للغات الأخرى، نسجّل اللغة التي تختارها، دون اسمك، لنقرر ما نضيفه لاحقًا.</string>
+    <string name="language_coming_soon">قريباً</string>
+    <string name="language_coming_soon_toast">غير متاح بعد. لقد سجّلنا اهتمامك.</string>
+    <string name="generating_language">جارٍ تحضير حلقتك باللغة %1$s. قد تستغرق الحلقة الأولى بضع دقائق.</string>
+    <string name="language_fallback_note">البودكاست غير متاح بعد باللغة %1$s، لذلك اخترنا لك %2$s.</string>
+    <string name="error_language_unavailable">هذه اللغة غير متاحة بعد.</string>
+    <string name="error_daily_limit">تم بلوغ حد اليوم لحلقات اللغات الجديدة. حاول مجدداً غداً.</string>
+    <string name="language_page_title">اختر لغتك</string>
+    <string name="language_page_subtitle">تتوفر البودكاست بست لغات. الراديو بالإنجليزية فقط. اختيارك يساعدنا في تحديد ما نضيفه.</string>
+    <string name="language_description">اختر لغتك المفضلة.</string>
+    <string name="language_note">تتوفر البودكاست بالإنجليزية والإسبانية والفرنسية والألمانية والبرتغالية والإيطالية. تستغرق الحلقة الأولى بلغة جديدة بضع دقائق للتحضير. الراديو بالإنجليزية فقط. بالنسبة للغات الأخرى، نسجّل اللغة التي تختارها، دون اسمك، لنقرر ما نضيفه لاحقاً.</string>
     <string name="selected">محدد</string>
 
+    <!-- App language (the language of menus and buttons; separate from the podcast language) -->
+    <string name="app_language">لغة التطبيق</string>
+    <string name="app_language_follow_phone">حسب الهاتف</string>
+    <string name="app_language_description">لغة القوائم والأزرار. تبقى البودكاست باللغة التي اخترتها أعلاه.</string>
+    <string name="ui_lang_offer_title">عرض التطبيق بلغة %1$s أيضاً؟</string>
+    <string name="ui_lang_offer_body">تتغير القوائم والأزرار فقط. يمكنك تغيير ذلك في أي وقت من إعدادات ملفك الشخصي.</string>
+    <string name="ui_lang_offer_yes">نعم، استخدم %1$s</string>
+    <string name="ui_lang_offer_no">لا، أبقِ %1$s</string>
+
+    <!-- Suggest a topic -->
+    <string name="suggest_topic">اقترح موضوعاً</string>
+    <string name="suggest_topic_inline">لا ترى موضوعك؟ اقترح موضوعاً</string>
+    <string name="suggest_topic_description">أخبرنا بما تود الاستماع إليه وسننظر في إضافته.</string>
+    <string name="suggest_topic_name_label">اسم الموضوع</string>
+    <string name="suggest_topic_name_hint">مثال: الحوسبة الكمّية</string>
+    <string name="suggest_topic_details_label">الوصف (اختياري)</string>
+    <string name="suggest_topic_details_hint">ما الذي ينبغي أن يغطيه هذا الموضوع؟</string>
+    <string name="suggest_topic_thanks">شكراً لك، نراجع الاقتراحات ونضيف المناسب منها.</string>
+    <string name="submit">إرسال</string>
+    <string name="submitting">جارٍ الإرسال…</string>
+    <string name="no_topics_title">لا توجد مواضيع متاحة الآن.</string>
+    <string name="no_topics_hint">اضغط على متابعة لإنهاء الإعداد — يمكنك اختيار المواضيع لاحقاً من الشاشة الرئيسية.</string>
+
+    <!-- Live radio -->
+    <string name="radio_languages">لغات الراديو</string>
+    <string name="radio_languages_note">ستظهر المحطات المحددة على شاشتك الرئيسية. يجب تفعيل لغة واحدة على الأقل.</string>
+    <string name="radio_home_tagline">أخبار مدعومة بالذكاء الاصطناعي على مدار الساعة · مباشر</string>
+    <string name="radio_tagline">أخبار وحوارات مدعومة بالذكاء الاصطناعي على مدار الساعة</string>
+    <string name="share_whats_playing">شارك ما يُشغَّل الآن</string>
+    <string name="share_station">مشاركة %1$s</string>
+    <string name="radio_up_next">التالي</string>
+    <string name="radio_requests">الطلبات</string>
+    <string name="radio_generating">جارٍ الإنشاء</string>
+    <string name="radio_generating_badge">جارٍ الإنشاء</string>
+    <string name="radio_request_hint">اضغط على الميكروفون لطلب موضوع في قائمة البث المباشر</string>
+    <string name="radio_request_topic">طلب موضوع</string>
+    <string name="radio_request_title">اطلب موضوعاً</string>
+    <string name="radio_request_description">أخبر راديو Audexa بما تود سماعه. سيُضاف إلى قائمة البث المباشر.</string>
+    <string name="radio_add_to_queue">أضف إلى قائمة البث المباشر</string>
+    <string name="radio_chat_hint">تحدّث مع المستمعين...</string>
+    <string name="radio_chat">دردشة</string>
+    <string name="radio_now_badge">الآن</string>
+    <string name="radio_music">موسيقى</string>
+    <string name="send">إرسال</string>
+
     <!-- Voice Settings -->
-    <string name="loading_voices">جارٍ تحميل الأصوات\u2026</string>
+    <string name="loading_voices">جارٍ تحميل الأصوات…</string>
     <string name="no_voice_pairs">لا تتوفر أزواج أصوات</string>
     <string name="no_voices">لا تتوفر أصوات</string>
-    <string name="voice_pairs_description">اختر زوج أصوات مُعد مسبقاً لمقدمي البودكاست.</string>
+    <string name="voice_pairs_description">اختر زوج أصوات مُعدّاً مسبقاً لمقدمي البودكاست.</string>
     <string name="host_1">المقدم 1</string>
     <string name="host_2">المقدم 2</string>
     <string name="host_1_voice">صوت المقدم 1</string>
@@ -206,12 +263,12 @@
 
     <!-- Subscription / Paywall -->
     <string name="enjoy_uninterrupted">استمتع بالاستماع بدون انقطاع</string>
-    <string name="no_audio_ad_interruptions">بدون إعلانات صوتية مقاطعة</string>
-    <string name="seamless_episode_playback">تشغيل حلقات سلس</string>
+    <string name="no_audio_ad_interruptions">بلا مقاطعة من الإعلانات الصوتية</string>
+    <string name="seamless_episode_playback">تشغيل سلس للحلقات</string>
     <string name="support_indie_development">دعم التطوير المستقل</string>
-    <string name="ad_free_subscriber">أنت مشترك بدون إعلانات!</string>
+    <string name="ad_free_subscriber">أنت مشترك في خدمة بدون إعلانات!</string>
     <string name="yearly">سنوي</string>
-    <string name="save_percent">وفر 58%%</string>
+    <string name="save_percent">وفّر 58%%</string>
     <string name="monthly">شهري</string>
     <string name="subscribe">اشترك</string>
     <string name="restore_purchases">استعادة المشتريات</string>
@@ -226,6 +283,10 @@
     <string name="skip_ad">تخطي الإعلان</string>
     <string name="ad_content_description">إعلان</string>
 
+    <!-- Radio Call-In -->
+    <string name="call_to_request">اتصل لطلب موضوع</string>
+    <string name="call_in_label">اتصل على: (833) 398-1230</string>
+
     <!-- Splash Screen -->
     <string name="splash_tagline">ملخصك الصوتي بالذكاء الاصطناعي</string>
 
@@ -233,15 +294,71 @@
     <string name="notification_good_morning">صباح الخير!</string>
     <string name="notification_daily_brief_text">حان وقت ملخصك اليومي. اضغط لمتابعة آخر رسائل البريد والتقويم والأخبار.</string>
     <string name="daily_brief_channel_description">إشعارات تذكير الملخص اليومي</string>
+    <string name="radio_topic_channel_name">تذكيرات مواضيع الراديو</string>
+    <string name="radio_topic_channel_description">تلقَّ إشعاراً عند تشغيل موضوع محفوظ في راديو Audexa</string>
+    <string name="radio_topic_notification_title">الآن في راديو Audexa</string>
+    <string name="radio_topic_notification_body">%1$s يُبثّ مباشرة. اضغط للاستماع.</string>
 
     <!-- Daily Brief Playback -->
     <string name="daily_brief_title_format">الملخص اليومي - %s</string>
     <string name="daily_brief_description">ملخصك الصباحي المخصص</string>
 
-    <!-- Language selection page -->
-    <string name="language_page_title">اختر لغتك</string>
-    <string name="language_page_subtitle">تتوفر البودكاست بست لغات. الراديو بالإنجليزية فقط. اختيارك يساعدنا في تحديد ما نضيفه.</string>
-    <string name="language_coming_soon">قريبًا</string>
-    <string name="language_coming_soon_toast">غير متاح بعد. لقد سجّلنا اهتمامك.</string>
-    <string name="language_fallback_note">البودكاست غير متاح بعد باللغة %1$s، لذلك اخترنا لك %2$s.</string>
+    <!-- Morning briefing: one local notification per day, opt-in after first play -->
+    <string name="briefing_notification_title">اليوم على Audexa</string>
+    <string name="briefing_notification_body_fallback">راديو Audexa يعمل الآن. اضغط للاستماع.</string>
+    <plurals name="briefing_notification_body_topics">
+        <item quantity="zero">%1$d بودكاست جديد للمواضيع: %2$s. اضغط للاستماع.</item>
+        <item quantity="one">%1$d بودكاست جديد للمواضيع: %2$s. اضغط للاستماع.</item>
+        <item quantity="two">%1$d بودكاستان جديدان للمواضيع: %2$s. اضغط للاستماع.</item>
+        <item quantity="few">%1$d بودكاستات جديدة للمواضيع: %2$s. اضغط للاستماع.</item>
+        <item quantity="many">%1$d بودكاست جديداً للمواضيع: %2$s. اضغط للاستماع.</item>
+        <item quantity="other">%1$d بودكاست جديد للمواضيع: %2$s. اضغط للاستماع.</item>
+    </plurals>
+    <string name="briefing_names_with_more">%1$s و%2$d أخرى</string>
+    <string name="briefing_optin_title">هل تريد تذكيراً عند جاهزية بودكاست المواضيع الجديدة؟</string>
+    <string name="briefing_optin_accept">ذكّرني</string>
+    <string name="briefing_optin_decline">ليس الآن</string>
+
+    <!-- Ask the hosts (English only for now) -->
+    <string name="ask_entry_title">اسأل المقدّمين</string>
+    <string name="ask_entry_subtitle">مباراة الليلة أو إطلاق منتج أو خبر: مقدّمان بالذكاء الاصطناعي يناقشانه</string>
+    <string name="ask_title">اسأل المقدّمين</string>
+    <string name="ask_intro">صِف حدثاً أو خبراً. يتحدث المقدّمان فقط عمّا تذكره العناوين الإخبارية الأخيرة، ويخبرانك إذا لم تكن هناك تغطية كافية. الحلقات مُنشأة بالذكاء الاصطناعي وتستغرق دقيقة أو دقيقتين.</string>
+    <string name="ask_field_label">عمَّ ينبغي أن يتحدثا؟</string>
+    <string name="ask_field_placeholder">مثال: من فاز بمباراة وورييرز الليلة؟</string>
+    <string name="ask_counter">%1$d/%2$d</string>
+    <string name="ask_language_label">اللغة</string>
+    <string name="ask_submit">اسأل</string>
+    <string name="ask_sending">جارٍ إرسال طلبك...</string>
+    <string name="ask_stage_queued">في انتظار استوديو شاغر...</string>
+    <string name="ask_stage_reviewing">جارٍ فحص طلبك...</string>
+    <string name="ask_stage_searching">جارٍ قراءة آخر العناوين...</string>
+    <string name="ask_stage_writing">المقدّمان يستعدان...</string>
+    <string name="ask_stage_recording">جارٍ تسجيل الحلقة...</string>
+    <string name="ask_stage_working">جارٍ العمل...</string>
+    <string name="ask_progress_description">التقدّم: %1$d في المئة</string>
+    <string name="ask_leave_hint">يمكنك مغادرة هذه الشاشة. عند العودة ستجد الحلقة نفسها.</string>
+    <string name="ask_ai_note">نقاش مُنشأ بالذكاء الاصطناعي بين مقدّمين يعملان بالذكاء الاصطناعي، استناداً إلى العناوين الإخبارية الأخيرة.</string>
+    <string name="ask_length">المدة %1$s</string>
+    <string name="ask_play">تشغيل الحلقة</string>
+    <string name="ask_pause">إيقاف مؤقت</string>
+    <string name="ask_share">مشاركة</string>
+    <string name="ask_share_chooser">شارك هذه الحلقة</string>
+    <string name="ask_share_failed">تعذّر فتح نافذة المشاركة</string>
+    <string name="ask_sources_title">العناوين التي استندت إليها هذه الحلقة</string>
+    <string name="ask_sources_note">يناقش المقدّمان فقط ما تذكره هذه العناوين. راجع المصادر لقراءة الأخبار كاملة.</string>
+    <string name="ask_ask_another">اسأل سؤالاً آخر</string>
+    <string name="ask_edit_question">تعديل السؤال</string>
+    <string name="ask_check_again">تحقق مجدداً</string>
+    <string name="ask_unavailable">خدمة اسأل المقدّمين غير متاحة الآن.</string>
+    <string name="ask_loading">جارٍ التحقق من التوفر...</string>
+    <string name="ask_err_input">يرجى مراجعة سؤالك والمحاولة مرة أخرى.</string>
+    <string name="ask_err_limited">خدمة اسأل المقدّمين مزدحمة أو بلغت حدها. يرجى المحاولة لاحقاً.</string>
+    <string name="ask_err_not_found">لم نعد نعثر على هذا الطلب. يرجى السؤال مرة أخرى.</string>
+    <string name="ask_err_offline">لا يوجد اتصال. تحقق من الإنترنت وحاول مرة أخرى.</string>
+    <string name="ask_err_timeout">الأمر يستغرق وقتاً أطول من المتوقع. قد تكون الحلقة في الطريق.</string>
+    <string name="ask_err_server">حدث خطأ ما. يرجى المحاولة مرة أخرى.</string>
+    <string name="ask_err_refused">لا يستطيع المقدّمان إنشاء حلقة حول هذا الموضوع.</string>
+    <string name="ask_err_no_coverage">لم نجد تغطية إخبارية حديثة كافية حول هذا الموضوع، لذلك لم ننشئ حلقة.</string>
+    <string name="ask_err_failed">تعذّر إنشاء الحلقة. يرجى المحاولة مرة أخرى.</string>
 </resources>

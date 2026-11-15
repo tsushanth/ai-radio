@@ -31,7 +31,7 @@
     <string name="good_afternoon">สวัสดีตอนบ่าย</string>
     <string name="good_evening">สวัสดีตอนเย็น</string>
     <string name="daily_brief">สรุปรายวัน</string>
-    <string name="daily_brief_subtitle">สรุปรายวัน \u2022 %s</string>
+    <string name="daily_brief_subtitle">สรุปรายวัน • %s</string>
     <string name="keep_listening">ฟังต่อ</string>
     <string name="your_topics">หัวข้อของคุณ</string>
     <string name="topic_podcasts">พอดแคสต์หัวข้อ</string>
@@ -60,6 +60,8 @@
     <string name="version">เวอร์ชัน</string>
     <string name="terms_of_service">ข้อกำหนดการให้บริการ</string>
     <string name="privacy_policy">นโยบายความเป็นส่วนตัว</string>
+    <string name="analytics_title">แชร์สถิติการใช้งานแบบไม่ระบุตัวตน</string>
+    <string name="analytics_subtitle">หัวข้อและภาษาที่ใช้ รวมถึงระยะเวลาที่ใช้ โดยใช้รหัสสุ่มบนอุปกรณ์เครื่องนี้ ไม่มีชื่อ อีเมล หรือที่อยู่ IP การปิดตัวเลือกนี้จะลบรหัสดังกล่าว</string>
     <string name="premium">พรีเมียม</string>
     <string name="go_ad_free">ไร้โฆษณา</string>
     <string name="ad_free">ไร้โฆษณา</string>
@@ -82,9 +84,9 @@
     <string name="paused">หยุดชั่วคราว</string>
     <string name="play">เล่น</string>
     <string name="pause">หยุดชั่วคราว</string>
-    <string name="loading">กำลังโหลด\u2026</string>
-    <string name="generating">กำลังสร้าง\u2026</string>
-    <string name="generating_progress">กำลังสร้าง\u2026 %d%%</string>
+    <string name="loading">กำลังโหลด…</string>
+    <string name="generating">กำลังสร้าง…</string>
+    <string name="generating_progress">กำลังสร้าง… %d%%</string>
     <string name="generate_episode">สร้างตอน</string>
     <string name="regenerate">สร้างใหม่</string>
     <string name="episode_history">ประวัติตอน</string>
@@ -92,7 +94,9 @@
     <string name="skip_forward">ข้ามไป 15 วินาที</string>
     <string name="skip_back_mini">ย้อนกลับ</string>
     <string name="skip_forward_mini">ข้ามไป</string>
-    <string name="buffering">กำลังบัฟเฟอร์\u2026</string>
+    <string name="buffering">กำลังบัฟเฟอร์…</string>
+    <string name="playback_error_stream">เชื่อมต่อวิทยุไม่ได้ โปรดตรวจสอบการเชื่อมต่อแล้วลองอีกครั้ง</string>
+    <string name="playback_error_episode">โหลดเสียงนี้ไม่ได้ โปรดตรวจสอบการเชื่อมต่อแล้วลองอีกครั้ง</string>
     <string name="sleep_timer">ตั้งเวลาปิด</string>
     <string name="timer">ตั้งเวลา</string>
     <string name="sleep_timer_5_min">5 นาที</string>
@@ -130,7 +134,7 @@
     <string name="connect_account_description">เชื่อมต่อบัญชี Google เพื่อรับสรุปรายวันที่ปรับแต่งจากอีเมลและปฏิทินของคุณ</string>
     <string name="gmail">Gmail</string>
     <string name="calendar">ปฏิทิน</string>
-    <string name="include_email_highlights">รวมไฮไลท์อีเมลในสรุปของคุณ</string>
+    <string name="include_email_highlights">รวมไฮไลต์อีเมลในสรุปของคุณ</string>
     <string name="include_calendar_events">รวมกิจกรรมที่กำลังจะมาถึงในสรุปของคุณ</string>
     <string name="continue_button">ดำเนินการต่อ</string>
     <string name="skip_for_now">ข้ามไปก่อน</string>
@@ -155,7 +159,7 @@
     <string name="unlink">ยกเลิกการเชื่อมต่อ</string>
     <string name="soon">เร็วๆ นี้</string>
     <string name="your_privacy">ความเป็นส่วนตัวของคุณ</string>
-    <string name="privacy_note">เพื่อสร้างสรุปของคุณ เซิร์ฟเวอร์ของเราจะอ่านอีเมล Gmail ล่าสุดและกิจกรรมในปฏิทินของคุณ ชื่อผู้ส่ง หัวเรื่อง และ 100 อักขระแรกของอีเมลสำคัญ รวมถึงชื่อ เวลา และสถานที่ของกิจกรรม จะถูกส่งไปยัง Anthropic ผู้ให้บริการ AI ของเรา เพื่อเขียนสคริปต์ เราไม่เก็บข้อความอีเมลของคุณ แต่ไฟล์เสียงสรุปที่สร้างเสร็จจะถูกเก็บไว้จนกว่าคุณจะลบบัญชี การยกเลิกการเชื่อมโยงไม่ได้ลบสิทธิ์เข้าถึง Google ที่เก็บไว้ในเซิร์ฟเวอร์ของเรา แต่ลบบัญชีในโปรไฟล์จะลบให้</string>
+    <string name="privacy_note">เพื่อสร้างสรุปของคุณ เซิร์ฟเวอร์ของเราจะอ่านอีเมล Gmail ล่าสุดและกิจกรรมในปฏิทินของคุณ ชื่อผู้ส่ง หัวเรื่อง และ 100 อักขระแรกของอีเมลสำคัญ รวมถึงชื่อ เวลา และสถานที่ของกิจกรรม จะถูกส่งไปยัง Anthropic ผู้ให้บริการ AI ของเรา เพื่อเขียนสคริปต์ เราไม่เก็บข้อความอีเมลของคุณ แต่ไฟล์เสียงสรุปที่สร้างเสร็จจะถูกเก็บไว้จนกว่าคุณจะลบบัญชี การยกเลิกการเชื่อมต่อไม่ได้ลบสิทธิ์เข้าถึง Google ที่เก็บไว้ในเซิร์ฟเวอร์ของเรา แต่ลบบัญชีในโปรไฟล์จะลบให้</string>
     <string name="microsoft_outlook_coming_soon">การเชื่อมต่อ Microsoft Outlook จะพร้อมใช้งานในการอัปเดตในอนาคต</string>
     <string name="gmail_linking_cancelled">การเชื่อมต่อ Gmail ถูกยกเลิก</string>
     <string name="calendar_linking_cancelled">การเชื่อมต่อปฏิทินถูกยกเลิก</string>
@@ -169,12 +173,65 @@
 
     <!-- Language Settings -->
     <string name="language">ภาษา</string>
-    <string name="language_description">เลือกภาษาที่คุณต้องการสำหรับตอนพอดแคสต์</string>
+    <string name="language_coming_soon">เร็วๆ นี้</string>
+    <string name="language_coming_soon_toast">ยังไม่พร้อมใช้งาน เราได้บันทึกความสนใจของคุณแล้ว</string>
+    <string name="generating_language">กำลังเตรียมตอนของคุณเป็นภาษา %1$s ตอนแรกอาจใช้เวลาไม่กี่นาที</string>
+    <string name="language_fallback_note">พอดแคสต์ยังไม่รองรับภาษา %1$s เราจึงเลือก %2$s ให้คุณ</string>
+    <string name="error_language_unavailable">ยังไม่มีภาษานี้ให้บริการ</string>
+    <string name="error_daily_limit">วันนี้สร้างตอนในภาษาใหม่ครบตามจำนวนที่กำหนดแล้ว โปรดลองอีกครั้งพรุ่งนี้</string>
+    <string name="language_page_title">เลือกภาษาของคุณ</string>
+    <string name="language_page_subtitle">พอดแคสต์มีให้เลือก 6 ภาษา ส่วนวิทยุมีเฉพาะภาษาอังกฤษ ตัวเลือกของคุณช่วยให้เราตัดสินใจว่าจะเพิ่มภาษาใดต่อไป</string>
+    <string name="language_description">เลือกภาษาที่คุณต้องการ</string>
     <string name="language_note">พอดแคสต์มีให้ฟังในภาษาอังกฤษ สเปน ฝรั่งเศส เยอรมัน โปรตุเกส และอิตาลี ตอนแรกในภาษาใหม่ใช้เวลาเตรียมไม่กี่นาที วิทยุมีเฉพาะภาษาอังกฤษ สำหรับภาษาอื่น เราจะบันทึกภาษาที่คุณเลือกโดยไม่ระบุชื่อของคุณ เพื่อตัดสินใจว่าจะเพิ่มภาษาใดต่อไป</string>
     <string name="selected">เลือกแล้ว</string>
 
+    <!-- App language (the language of menus and buttons; separate from the podcast language) -->
+    <string name="app_language">ภาษาของแอป</string>
+    <string name="app_language_follow_phone">ตามโทรศัพท์</string>
+    <string name="app_language_description">ภาษาของเมนูและปุ่มต่างๆ พอดแคสต์ยังคงใช้ภาษาที่คุณเลือกไว้ด้านบน</string>
+    <string name="ui_lang_offer_title">ให้แอปแสดงเป็นภาษา %1$s ด้วยไหม</string>
+    <string name="ui_lang_offer_body">เฉพาะเมนูและปุ่มเท่านั้นที่เปลี่ยน คุณเปลี่ยนได้ทุกเมื่อในการตั้งค่าโปรไฟล์</string>
+    <string name="ui_lang_offer_yes">ใช่ ใช้ภาษา %1$s</string>
+    <string name="ui_lang_offer_no">ไม่ ใช้ภาษา %1$s ต่อ</string>
+
+    <!-- Suggest a topic -->
+    <string name="suggest_topic">แนะนำหัวข้อ</string>
+    <string name="suggest_topic_inline">ไม่เจอหัวข้อที่ต้องการ? แนะนำเลย</string>
+    <string name="suggest_topic_description">บอกเราว่าคุณอยากฟังเรื่องอะไร แล้วเราจะพิจารณาเพิ่มให้</string>
+    <string name="suggest_topic_name_label">ชื่อหัวข้อ</string>
+    <string name="suggest_topic_name_hint">เช่น คอมพิวเตอร์ควอนตัม</string>
+    <string name="suggest_topic_details_label">คำอธิบาย (ไม่บังคับ)</string>
+    <string name="suggest_topic_details_hint">หัวข้อนี้ควรครอบคลุมเรื่องอะไรบ้าง</string>
+    <string name="suggest_topic_thanks">ขอบคุณ เราจะตรวจสอบข้อเสนอแนะและเพิ่มหัวข้อที่ดีให้</string>
+    <string name="submit">ส่ง</string>
+    <string name="submitting">กำลังส่ง…</string>
+    <string name="no_topics_title">ขณะนี้ยังไม่มีหัวข้อให้เลือก</string>
+    <string name="no_topics_hint">แตะดำเนินการต่อเพื่อตั้งค่าให้เสร็จ — คุณเลือกหัวข้อภายหลังได้จากหน้าแรก</string>
+
+    <!-- Live radio -->
+    <string name="radio_languages">ภาษาของวิทยุ</string>
+    <string name="radio_languages_note">สถานีที่เลือกจะแสดงบนหน้าแรกของคุณ ต้องเปิดใช้งานอย่างน้อยหนึ่งภาษา</string>
+    <string name="radio_home_tagline">ข่าว 24/7 ด้วย AI · สด</string>
+    <string name="radio_tagline">ข่าวและรายการสนทนา 24/7 ด้วย AI</string>
+    <string name="share_whats_playing">แชร์สิ่งที่กำลังเล่น</string>
+    <string name="share_station">แชร์ %1$s</string>
+    <string name="radio_up_next">รายการถัดไป</string>
+    <string name="radio_requests">คำขอ</string>
+    <string name="radio_generating">กำลังสร้าง</string>
+    <string name="radio_generating_badge">กำลังสร้าง</string>
+    <string name="radio_request_hint">แตะไมค์เพื่อขอหัวข้อเข้าคิวสด</string>
+    <string name="radio_request_topic">ขอหัวข้อ</string>
+    <string name="radio_request_title">ขอหัวข้อ</string>
+    <string name="radio_request_description">บอก Audexa Radio ว่าคุณอยากฟังเรื่องอะไร หัวข้อนั้นจะถูกเพิ่มในคิวสด</string>
+    <string name="radio_add_to_queue">เพิ่มในคิวสด</string>
+    <string name="radio_chat_hint">แชทกับผู้ฟัง...</string>
+    <string name="radio_chat">แชท</string>
+    <string name="radio_now_badge">ตอนนี้</string>
+    <string name="radio_music">เพลง</string>
+    <string name="send">ส่ง</string>
+
     <!-- Voice Settings -->
-    <string name="loading_voices">กำลังโหลดเสียง\u2026</string>
+    <string name="loading_voices">กำลังโหลดเสียง…</string>
     <string name="no_voice_pairs">ไม่มีคู่เสียงที่พร้อมใช้งาน</string>
     <string name="no_voices">ไม่มีเสียงที่พร้อมใช้งาน</string>
     <string name="voice_pairs_description">เลือกคู่เสียงที่กำหนดค่าไว้ล่วงหน้าสำหรับพิธีกรพอดแคสต์ของคุณ</string>
@@ -226,6 +283,10 @@
     <string name="skip_ad">ข้ามโฆษณา</string>
     <string name="ad_content_description">โฆษณา</string>
 
+    <!-- Radio Call-In -->
+    <string name="call_to_request">โทรเพื่อขอหัวข้อ</string>
+    <string name="call_in_label">โทรเข้า: (833) 398-1230</string>
+
     <!-- Splash Screen -->
     <string name="splash_tagline">สรุปเสียงด้วย AI ของคุณ</string>
 
@@ -233,15 +294,66 @@
     <string name="notification_good_morning">สวัสดีตอนเช้า!</string>
     <string name="notification_daily_brief_text">ถึงเวลาสรุปรายวันของคุณ แตะเพื่อติดตามอีเมล ปฏิทิน และข่าวสาร</string>
     <string name="daily_brief_channel_description">การแจ้งเตือนเตือนความจำสรุปรายวัน</string>
+    <string name="radio_topic_channel_name">การเตือนหัวข้อวิทยุ</string>
+    <string name="radio_topic_channel_description">รับการแจ้งเตือนเมื่อหัวข้อที่บุ๊กมาร์กไว้กำลังเล่นบน Audexa Radio</string>
+    <string name="radio_topic_notification_title">ตอนนี้ใน Audexa Radio</string>
+    <string name="radio_topic_notification_body">%1$s กำลังออกอากาศสด แตะเพื่อรับฟัง</string>
 
     <!-- Daily Brief Playback -->
     <string name="daily_brief_title_format">สรุปรายวัน - %s</string>
     <string name="daily_brief_description">สรุปตอนเช้าที่ปรับแต่งเฉพาะคุณ</string>
 
-    <!-- Language selection page -->
-    <string name="language_page_title">เลือกภาษาของคุณ</string>
-    <string name="language_page_subtitle">พอดแคสต์มีให้เลือก 6 ภาษา ส่วนวิทยุมีเฉพาะภาษาอังกฤษ ตัวเลือกของคุณช่วยให้เราตัดสินใจว่าจะเพิ่มภาษาใดต่อไป</string>
-    <string name="language_coming_soon">เร็วๆ นี้</string>
-    <string name="language_coming_soon_toast">ยังไม่พร้อมใช้งาน เราได้บันทึกความสนใจของคุณแล้ว</string>
-    <string name="language_fallback_note">พอดแคสต์ยังไม่รองรับภาษา %1$s เราจึงเลือก %2$s ให้คุณ</string>
+    <!-- Morning briefing: one local notification per day, opt-in after first play -->
+    <string name="briefing_notification_title">วันนี้ใน Audexa</string>
+    <string name="briefing_notification_body_fallback">Audexa Radio กำลังเล่นอยู่ แตะเพื่อฟัง</string>
+    <plurals name="briefing_notification_body_topics">
+        <item quantity="other">พอดแคสต์หัวข้อใหม่ %1$d รายการ: %2$s แตะเพื่อฟัง</item>
+    </plurals>
+    <string name="briefing_names_with_more">%1$s และอีก %2$d รายการ</string>
+    <string name="briefing_optin_title">ให้เตือนเมื่อพอดแคสต์หัวข้อใหม่พร้อมแล้วไหม</string>
+    <string name="briefing_optin_accept">เตือนฉัน</string>
+    <string name="briefing_optin_decline">ไว้ก่อน</string>
+
+    <!-- Ask the hosts (English only for now) -->
+    <string name="ask_entry_title">ถามพิธีกร</string>
+    <string name="ask_entry_subtitle">เกมคืนนี้ การเปิดตัวสินค้า หรือข่าวเด่น: พิธีกร AI สองคนจะคุยให้ฟัง</string>
+    <string name="ask_title">ถามพิธีกร</string>
+    <string name="ask_intro">อธิบายเหตุการณ์หรือข่าวที่คุณสนใจ พิธีกรจะพูดถึงเฉพาะสิ่งที่พาดหัวข่าวล่าสุดรายงาน และจะบอกคุณหากมีข่าวไม่มากพอ ตอนต่างๆ สร้างโดย AI และใช้เวลาประมาณหนึ่งถึงสองนาที</string>
+    <string name="ask_field_label">อยากให้พวกเขาคุยเรื่องอะไร</string>
+    <string name="ask_field_placeholder">เช่น เกมของวอร์ริเออร์สคืนนี้ใครชนะ</string>
+    <string name="ask_counter">%1$d/%2$d</string>
+    <string name="ask_language_label">ภาษา</string>
+    <string name="ask_submit">ถาม</string>
+    <string name="ask_sending">กำลังส่งคำขอของคุณ...</string>
+    <string name="ask_stage_queued">กำลังรอห้องบันทึกเสียงว่าง...</string>
+    <string name="ask_stage_reviewing">กำลังตรวจสอบคำขอของคุณ...</string>
+    <string name="ask_stage_searching">กำลังอ่านพาดหัวข่าวล่าสุด...</string>
+    <string name="ask_stage_writing">พิธีกรกำลังเตรียมตัว...</string>
+    <string name="ask_stage_recording">กำลังบันทึกตอน...</string>
+    <string name="ask_stage_working">กำลังดำเนินการ...</string>
+    <string name="ask_progress_description">ความคืบหน้า: %1$d เปอร์เซ็นต์</string>
+    <string name="ask_leave_hint">คุณออกจากหน้าจอนี้ได้ เมื่อกลับมาจะเป็นตอนเดิมต่อจากเดิม</string>
+    <string name="ask_ai_note">บทสนทนาที่สร้างโดย AI ระหว่างพิธีกร AI สองคน อ้างอิงจากพาดหัวข่าวล่าสุด</string>
+    <string name="ask_length">ความยาว %1$s</string>
+    <string name="ask_play">เล่นตอน</string>
+    <string name="ask_pause">หยุดชั่วคราว</string>
+    <string name="ask_share">แชร์</string>
+    <string name="ask_share_chooser">แชร์ตอนนี้</string>
+    <string name="ask_share_failed">ไม่สามารถเปิดเมนูแชร์ได้</string>
+    <string name="ask_sources_title">พาดหัวข่าวที่ตอนนี้อ้างอิง</string>
+    <string name="ask_sources_note">พิธีกรพูดถึงเฉพาะสิ่งที่พาดหัวข่าวเหล่านี้รายงาน ตรวจสอบแหล่งที่มาเพื่ออ่านข่าวฉบับเต็ม</string>
+    <string name="ask_ask_another">ถามเรื่องอื่น</string>
+    <string name="ask_edit_question">แก้ไขคำถาม</string>
+    <string name="ask_check_again">ตรวจสอบอีกครั้ง</string>
+    <string name="ask_unavailable">ขณะนี้ยังไม่สามารถถามพิธีกรได้</string>
+    <string name="ask_loading">กำลังตรวจสอบความพร้อมใช้งาน...</string>
+    <string name="ask_err_input">โปรดตรวจสอบคำถามของคุณแล้วลองอีกครั้ง</string>
+    <string name="ask_err_limited">ขณะนี้ถามพิธีกรไม่ว่าง หรือถึงขีดจำกัดแล้ว โปรดลองอีกครั้งภายหลัง</string>
+    <string name="ask_err_not_found">เราไม่พบคำขอนี้แล้ว โปรดถามอีกครั้ง</string>
+    <string name="ask_err_offline">ไม่มีการเชื่อมต่อ โปรดตรวจสอบอินเทอร์เน็ตแล้วลองอีกครั้ง</string>
+    <string name="ask_err_timeout">ใช้เวลานานกว่าที่คาดไว้ ตอนนี้อาจกำลังจะมา</string>
+    <string name="ask_err_server">เกิดข้อผิดพลาด โปรดลองอีกครั้ง</string>
+    <string name="ask_err_refused">พิธีกรไม่สามารถทำตอนเกี่ยวกับเรื่องนั้นได้</string>
+    <string name="ask_err_no_coverage">เราไม่พบข่าวล่าสุดเกี่ยวกับเรื่องนี้มากพอ จึงไม่ได้สร้างตอน</string>
+    <string name="ask_err_failed">ไม่สามารถสร้างตอนได้ โปรดลองอีกครั้ง</string>
 </resources>

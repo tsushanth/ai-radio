@@ -31,7 +31,7 @@
     <string name="good_afternoon">Chào buổi chiều</string>
     <string name="good_evening">Chào buổi tối</string>
     <string name="daily_brief">Tóm tắt hàng ngày</string>
-    <string name="daily_brief_subtitle">Tóm tắt hàng ngày \u2022 %s</string>
+    <string name="daily_brief_subtitle">Tóm tắt hàng ngày • %s</string>
     <string name="keep_listening">Tiếp tục nghe</string>
     <string name="your_topics">Chủ đề của bạn</string>
     <string name="topic_podcasts">Podcast theo chủ đề</string>
@@ -51,7 +51,7 @@
     <string name="profile">Hồ sơ</string>
     <string name="linked_accounts">Tài khoản đã liên kết</string>
     <string name="preferences">Tùy chọn</string>
-    <string name="podcast_language">Ngôn ngữ Podcast</string>
+    <string name="podcast_language">Ngôn ngữ podcast</string>
     <string name="briefing_time">Thời gian tóm tắt</string>
     <string name="topics">Chủ đề</string>
     <string name="voice_preference">Tùy chọn giọng nói</string>
@@ -60,6 +60,8 @@
     <string name="version">Phiên bản</string>
     <string name="terms_of_service">Điều khoản dịch vụ</string>
     <string name="privacy_policy">Chính sách bảo mật</string>
+    <string name="analytics_title">Chia sẻ thống kê sử dụng ẩn danh</string>
+    <string name="analytics_subtitle">Những chủ đề và ngôn ngữ được dùng, và dùng trong bao lâu. Một mã ngẫu nhiên trên thiết bị này, không có tên, email hay địa chỉ IP. Tắt tùy chọn này sẽ xóa mã đó.</string>
     <string name="premium">Premium</string>
     <string name="go_ad_free">Không quảng cáo</string>
     <string name="ad_free">Không quảng cáo</string>
@@ -82,9 +84,9 @@
     <string name="paused">Đã tạm dừng</string>
     <string name="play">Phát</string>
     <string name="pause">Tạm dừng</string>
-    <string name="loading">Đang tải\u2026</string>
-    <string name="generating">Đang tạo\u2026</string>
-    <string name="generating_progress">Đang tạo\u2026 %d%%</string>
+    <string name="loading">Đang tải…</string>
+    <string name="generating">Đang tạo…</string>
+    <string name="generating_progress">Đang tạo… %d%%</string>
     <string name="generate_episode">Tạo tập</string>
     <string name="regenerate">Tạo lại</string>
     <string name="episode_history">Lịch sử tập</string>
@@ -92,7 +94,9 @@
     <string name="skip_forward">Tiến 15 giây</string>
     <string name="skip_back_mini">Lùi lại</string>
     <string name="skip_forward_mini">Tiến tới</string>
-    <string name="buffering">Đang tải bộ đệm\u2026</string>
+    <string name="buffering">Đang tải bộ đệm…</string>
+    <string name="playback_error_stream">Không kết nối được với Radio. Hãy kiểm tra kết nối và thử lại.</string>
+    <string name="playback_error_episode">Không tải được âm thanh này. Hãy kiểm tra kết nối và thử lại.</string>
     <string name="sleep_timer">Hẹn giờ ngủ</string>
     <string name="timer">Hẹn giờ</string>
     <string name="sleep_timer_5_min">5 phút</string>
@@ -155,7 +159,7 @@
     <string name="unlink">Hủy liên kết</string>
     <string name="soon">Sắp có</string>
     <string name="your_privacy">Quyền riêng tư của bạn</string>
-    <string name="privacy_note">Để tạo bản tin của bạn, máy chủ của chúng tôi đọc các email Gmail gần đây và sự kiện lịch của bạn. Tên người gửi, tiêu đề và 100 ký tự đầu của các email quan trọng nhất, cùng tiêu đề, thời gian và địa điểm của sự kiện, được gửi đến Anthropic, nhà cung cấp AI của chúng tôi, để viết kịch bản. Chúng tôi không lưu nội dung email của bạn, nhưng âm thanh bản tin hoàn chỉnh được giữ cho đến khi bạn xóa tài khoản. Hủy liên kết không xóa quyền truy cập Google được lưu trên máy chủ của chúng tôi; Xóa tài khoản trong Hồ sơ thì có.</string>
+    <string name="privacy_note">Để tạo bản tóm tắt của bạn, máy chủ của chúng tôi đọc các email Gmail gần đây và sự kiện lịch của bạn. Tên người gửi, tiêu đề và 100 ký tự đầu của các email quan trọng nhất, cùng tiêu đề, thời gian và địa điểm của sự kiện, được gửi đến Anthropic, nhà cung cấp AI của chúng tôi, để viết kịch bản. Chúng tôi không lưu nội dung email của bạn, nhưng âm thanh bản tóm tắt hoàn chỉnh được giữ cho đến khi bạn xóa tài khoản. Hủy liên kết không xóa quyền truy cập Google được lưu trên máy chủ của chúng tôi; Xóa tài khoản trong Hồ sơ thì có.</string>
     <string name="microsoft_outlook_coming_soon">Liên kết Microsoft Outlook sẽ có trong bản cập nhật tương lai.</string>
     <string name="gmail_linking_cancelled">Liên kết Gmail đã bị hủy</string>
     <string name="calendar_linking_cancelled">Liên kết lịch đã bị hủy</string>
@@ -169,12 +173,65 @@
 
     <!-- Language Settings -->
     <string name="language">Ngôn ngữ</string>
-    <string name="language_description">Chọn ngôn ngữ ưa thích cho các tập podcast.</string>
+    <string name="language_coming_soon">Sắp ra mắt</string>
+    <string name="language_coming_soon_toast">Chưa khả dụng. Chúng tôi đã ghi nhận sự quan tâm của bạn.</string>
+    <string name="generating_language">Đang chuẩn bị tập của bạn bằng %1$s. Tập đầu tiên có thể mất vài phút.</string>
+    <string name="language_fallback_note">Podcast chưa hỗ trợ %1$s nên chúng tôi đã chọn %2$s cho bạn.</string>
+    <string name="error_language_unavailable">Ngôn ngữ này chưa khả dụng.</string>
+    <string name="error_daily_limit">Hôm nay đã đạt giới hạn tập ở ngôn ngữ mới. Hãy thử lại vào ngày mai.</string>
+    <string name="language_page_title">Chọn ngôn ngữ của bạn</string>
+    <string name="language_page_subtitle">Podcast có sáu ngôn ngữ. Radio chỉ có tiếng Anh. Lựa chọn của bạn giúp chúng tôi quyết định nên bổ sung gì tiếp theo.</string>
+    <string name="language_description">Chọn ngôn ngữ bạn muốn dùng.</string>
     <string name="language_note">Podcast có sẵn bằng tiếng Anh, tiếng Tây Ban Nha, tiếng Pháp, tiếng Đức, tiếng Bồ Đào Nha và tiếng Ý. Tập đầu tiên bằng ngôn ngữ mới cần vài phút để chuẩn bị. Radio chỉ có tiếng Anh. Với các ngôn ngữ khác, chúng tôi ghi lại ngôn ngữ bạn chọn, không kèm tên của bạn, để quyết định bổ sung gì tiếp theo.</string>
     <string name="selected">Đã chọn</string>
 
+    <!-- App language (the language of menus and buttons; separate from the podcast language) -->
+    <string name="app_language">Ngôn ngữ ứng dụng</string>
+    <string name="app_language_follow_phone">Theo điện thoại</string>
+    <string name="app_language_description">Ngôn ngữ của menu và nút. Podcast vẫn dùng ngôn ngữ bạn đã chọn ở trên.</string>
+    <string name="ui_lang_offer_title">Hiển thị ứng dụng bằng %1$s luôn nhé?</string>
+    <string name="ui_lang_offer_body">Chỉ menu và nút thay đổi. Bạn có thể đổi bất cứ lúc nào trong cài đặt hồ sơ.</string>
+    <string name="ui_lang_offer_yes">Có, dùng %1$s</string>
+    <string name="ui_lang_offer_no">Không, giữ %1$s</string>
+
+    <!-- Suggest a topic -->
+    <string name="suggest_topic">Đề xuất chủ đề</string>
+    <string name="suggest_topic_inline">Không thấy chủ đề của bạn? Hãy đề xuất</string>
+    <string name="suggest_topic_description">Hãy cho chúng tôi biết bạn muốn nghe gì và chúng tôi sẽ cân nhắc bổ sung.</string>
+    <string name="suggest_topic_name_label">Tên chủ đề</string>
+    <string name="suggest_topic_name_hint">VD: Điện toán lượng tử</string>
+    <string name="suggest_topic_details_label">Mô tả (không bắt buộc)</string>
+    <string name="suggest_topic_details_hint">Chủ đề này nên đề cập đến những gì?</string>
+    <string name="suggest_topic_thanks">Cảm ơn bạn, chúng tôi sẽ xem xét các đề xuất và bổ sung những ý hay.</string>
+    <string name="submit">Gửi</string>
+    <string name="submitting">Đang gửi…</string>
+    <string name="no_topics_title">Hiện chưa có chủ đề nào.</string>
+    <string name="no_topics_hint">Nhấn Tiếp tục để hoàn tất cài đặt — bạn có thể chọn chủ đề sau từ màn hình Trang chủ.</string>
+
+    <!-- Live radio -->
+    <string name="radio_languages">Ngôn ngữ Radio</string>
+    <string name="radio_languages_note">Các đài đã chọn sẽ hiển thị trên màn hình chính của bạn. Phải bật ít nhất một ngôn ngữ.</string>
+    <string name="radio_home_tagline">Tin tức 24/7 do AI tạo · TRỰC TIẾP</string>
+    <string name="radio_tagline">Tin tức và trò chuyện 24/7 do AI tạo</string>
+    <string name="share_whats_playing">Chia sẻ nội dung đang phát</string>
+    <string name="share_station">Chia sẻ %1$s</string>
+    <string name="radio_up_next">Tiếp theo</string>
+    <string name="radio_requests">Yêu cầu</string>
+    <string name="radio_generating">Đang tạo</string>
+    <string name="radio_generating_badge">đang tạo</string>
+    <string name="radio_request_hint">Nhấn vào micro để yêu cầu một chủ đề cho hàng đợi trực tiếp</string>
+    <string name="radio_request_topic">Yêu cầu chủ đề</string>
+    <string name="radio_request_title">Yêu cầu một chủ đề</string>
+    <string name="radio_request_description">Hãy cho Audexa Radio biết bạn muốn nghe gì. Nội dung sẽ được thêm vào hàng đợi trực tiếp.</string>
+    <string name="radio_add_to_queue">Thêm vào hàng đợi trực tiếp</string>
+    <string name="radio_chat_hint">Trò chuyện với người nghe...</string>
+    <string name="radio_chat">Trò chuyện</string>
+    <string name="radio_now_badge">NGAY</string>
+    <string name="radio_music">Nhạc</string>
+    <string name="send">Gửi</string>
+
     <!-- Voice Settings -->
-    <string name="loading_voices">Đang tải giọng nói\u2026</string>
+    <string name="loading_voices">Đang tải giọng nói…</string>
     <string name="no_voice_pairs">Không có cặp giọng nói nào</string>
     <string name="no_voices">Không có giọng nói nào</string>
     <string name="voice_pairs_description">Chọn cặp giọng nói được cấu hình sẵn cho người dẫn podcast.</string>
@@ -205,8 +262,8 @@
     <string name="select_time">Chọn thời gian</string>
 
     <!-- Subscription / Paywall -->
-    <string name="enjoy_uninterrupted">Tận hưởng nghe không gián đoạn</string>
-    <string name="no_audio_ad_interruptions">Không có quảng cáo âm thanh gián đoạn</string>
+    <string name="enjoy_uninterrupted">Tận hưởng trải nghiệm nghe không gián đoạn</string>
+    <string name="no_audio_ad_interruptions">Không bị quảng cáo âm thanh làm gián đoạn</string>
     <string name="seamless_episode_playback">Phát tập liền mạch</string>
     <string name="support_indie_development">Hỗ trợ phát triển độc lập</string>
     <string name="ad_free_subscriber">Bạn là người đăng ký không quảng cáo!</string>
@@ -226,6 +283,10 @@
     <string name="skip_ad">Bỏ qua quảng cáo</string>
     <string name="ad_content_description">Quảng cáo</string>
 
+    <!-- Radio Call-In -->
+    <string name="call_to_request">Gọi để yêu cầu chủ đề</string>
+    <string name="call_in_label">Gọi vào: (833) 398-1230</string>
+
     <!-- Splash Screen -->
     <string name="splash_tagline">Bản tóm tắt âm thanh AI của bạn</string>
 
@@ -233,15 +294,66 @@
     <string name="notification_good_morning">Chào buổi sáng!</string>
     <string name="notification_daily_brief_text">Đã đến giờ Tóm tắt hàng ngày. Nhấn để cập nhật email, lịch và tin tức.</string>
     <string name="daily_brief_channel_description">Thông báo nhắc nhở tóm tắt hàng ngày</string>
+    <string name="radio_topic_channel_name">Nhắc nhở chủ đề Radio</string>
+    <string name="radio_topic_channel_description">Nhận thông báo khi chủ đề đã đánh dấu đang phát trên Audexa Radio</string>
+    <string name="radio_topic_notification_title">Đang phát trên Audexa Radio</string>
+    <string name="radio_topic_notification_body">%1$s đang phát trực tiếp. Nhấn để nghe.</string>
 
     <!-- Daily Brief Playback -->
     <string name="daily_brief_title_format">Tóm tắt hàng ngày - %s</string>
     <string name="daily_brief_description">Bản tóm tắt buổi sáng được cá nhân hóa</string>
 
-    <!-- Language selection page -->
-    <string name="language_page_title">Chọn ngôn ngữ của bạn</string>
-    <string name="language_page_subtitle">Podcast có sáu ngôn ngữ. Radio chỉ có tiếng Anh. Lựa chọn của bạn giúp chúng tôi quyết định nên bổ sung gì tiếp theo.</string>
-    <string name="language_coming_soon">Sắp ra mắt</string>
-    <string name="language_coming_soon_toast">Chưa khả dụng. Chúng tôi đã ghi nhận sự quan tâm của bạn.</string>
-    <string name="language_fallback_note">Podcast chưa hỗ trợ %1$s nên chúng tôi đã chọn %2$s cho bạn.</string>
+    <!-- Morning briefing: one local notification per day, opt-in after first play -->
+    <string name="briefing_notification_title">Hôm nay trên Audexa</string>
+    <string name="briefing_notification_body_fallback">Audexa Radio đang phát. Nhấn để nghe.</string>
+    <plurals name="briefing_notification_body_topics">
+        <item quantity="other">%1$d podcast chủ đề mới: %2$s. Nhấn để nghe.</item>
+    </plurals>
+    <string name="briefing_names_with_more">%1$s và %2$d mục khác</string>
+    <string name="briefing_optin_title">Nhắc bạn khi podcast chủ đề mới sẵn sàng?</string>
+    <string name="briefing_optin_accept">Nhắc tôi</string>
+    <string name="briefing_optin_decline">Để sau</string>
+
+    <!-- Ask the hosts (English only for now) -->
+    <string name="ask_entry_title">Hỏi người dẫn</string>
+    <string name="ask_entry_subtitle">Trận đấu tối nay, một sự kiện ra mắt, một tin tức: hai người dẫn AI sẽ thảo luận</string>
+    <string name="ask_title">Hỏi người dẫn</string>
+    <string name="ask_intro">Hãy mô tả một sự kiện hoặc tin tức. Người dẫn chỉ nói về những gì các tiêu đề tin tức gần đây đưa, và sẽ cho bạn biết nếu chưa có đủ nội dung đưa tin. Các tập do AI tạo và mất khoảng một đến hai phút.</string>
+    <string name="ask_field_label">Bạn muốn họ nói về điều gì?</string>
+    <string name="ask_field_placeholder">VD: Ai thắng trận Warriors tối nay?</string>
+    <string name="ask_counter">%1$d/%2$d</string>
+    <string name="ask_language_label">Ngôn ngữ</string>
+    <string name="ask_submit">Hỏi</string>
+    <string name="ask_sending">Đang gửi yêu cầu của bạn...</string>
+    <string name="ask_stage_queued">Đang chờ phòng thu trống...</string>
+    <string name="ask_stage_reviewing">Đang kiểm tra yêu cầu của bạn...</string>
+    <string name="ask_stage_searching">Đang đọc các tiêu đề mới nhất...</string>
+    <string name="ask_stage_writing">Người dẫn đang chuẩn bị...</string>
+    <string name="ask_stage_recording">Đang ghi âm tập...</string>
+    <string name="ask_stage_working">Đang xử lý...</string>
+    <string name="ask_progress_description">Tiến độ: %1$d phần trăm</string>
+    <string name="ask_leave_hint">Bạn có thể rời màn hình này. Quay lại sẽ tiếp tục đúng tập đó.</string>
+    <string name="ask_ai_note">Cuộc thảo luận do AI tạo giữa hai người dẫn AI, dựa trên các tiêu đề tin tức gần đây.</string>
+    <string name="ask_length">Thời lượng %1$s</string>
+    <string name="ask_play">Phát tập</string>
+    <string name="ask_pause">Tạm dừng</string>
+    <string name="ask_share">Chia sẻ</string>
+    <string name="ask_share_chooser">Chia sẻ tập này</string>
+    <string name="ask_share_failed">Không thể mở bảng chia sẻ</string>
+    <string name="ask_sources_title">Các tiêu đề mà tập này dựa trên</string>
+    <string name="ask_sources_note">Người dẫn chỉ thảo luận những gì các tiêu đề này đưa tin. Hãy xem nguồn để đọc bài đầy đủ.</string>
+    <string name="ask_ask_another">Hỏi tiếp</string>
+    <string name="ask_edit_question">Sửa câu hỏi</string>
+    <string name="ask_check_again">Kiểm tra lại</string>
+    <string name="ask_unavailable">Hỏi người dẫn hiện chưa khả dụng.</string>
+    <string name="ask_loading">Đang kiểm tra khả năng sử dụng...</string>
+    <string name="ask_err_input">Vui lòng kiểm tra câu hỏi và thử lại.</string>
+    <string name="ask_err_limited">Hỏi người dẫn đang bận hoặc đã đạt giới hạn. Vui lòng thử lại sau.</string>
+    <string name="ask_err_not_found">Chúng tôi không còn tìm thấy yêu cầu này. Vui lòng hỏi lại.</string>
+    <string name="ask_err_offline">Không có kết nối. Hãy kiểm tra internet và thử lại.</string>
+    <string name="ask_err_timeout">Việc này mất nhiều thời gian hơn dự kiến. Tập có thể vẫn đang được tạo.</string>
+    <string name="ask_err_server">Đã xảy ra lỗi. Vui lòng thử lại.</string>
+    <string name="ask_err_refused">Người dẫn không thể làm tập về chủ đề đó.</string>
+    <string name="ask_err_no_coverage">Chúng tôi không tìm thấy đủ tin tức gần đây về chủ đề này nên chưa tạo tập.</string>
+    <string name="ask_err_failed">Không thể tạo tập. Vui lòng thử lại.</string>
 </resources>

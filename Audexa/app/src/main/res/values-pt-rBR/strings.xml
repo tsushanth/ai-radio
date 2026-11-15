@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Audexa</string>
-    <string name="app_tagline">Sua radio pessoal com IA</string>
+    <string name="app_tagline">Sua rádio pessoal com IA</string>
 
     <!-- Auth -->
     <string name="sign_in_with_google">Entrar com Google</string>
     <string name="sign_out">Sair</string>
     <string name="delete_account">Excluir conta</string>
-    <string name="auth_description">Ouca podcasts gerados por IA sobre temas que te interessam. Vincule seu e-mail nas configuracoes para receber resumos diarios personalizados.</string>
-    <string name="auth_terms">Ao continuar, voce concorda com nossos Termos de Servico e Politica de Privacidade</string>
-    <string name="start">Comecar</string>
+    <string name="auth_description">Ouça podcasts gerados por IA sobre temas do seu interesse. Vincule seu e-mail nas configurações para receber resumos diários personalizados.</string>
+    <string name="auth_terms">Ao continuar, você concorda com nossos Termos de Serviço e Política de Privacidade</string>
+    <string name="start">Começar</string>
 
     <!-- Navigation -->
-    <string name="nav_home">Inicio</string>
+    <string name="nav_home">Início</string>
     <string name="nav_profile">Perfil</string>
     <string name="back">Voltar</string>
     <string name="close">Fechar</string>
@@ -23,20 +23,20 @@
     <string name="enable">Ativar</string>
 
     <!-- Tabs -->
-    <string name="tab_for_you">Para voce</string>
+    <string name="tab_for_you">Para você</string>
     <string name="tab_discover">Explorar</string>
 
     <!-- Home -->
     <string name="good_morning">Bom dia</string>
     <string name="good_afternoon">Boa tarde</string>
     <string name="good_evening">Boa noite</string>
-    <string name="daily_brief">Resumo diario</string>
-    <string name="daily_brief_subtitle">Resumo diario \u2022 %s</string>
+    <string name="daily_brief">Resumo diário</string>
+    <string name="daily_brief_subtitle">Resumo diário • %s</string>
     <string name="keep_listening">Continue ouvindo</string>
     <string name="your_topics">Seus temas</string>
     <string name="topic_podcasts">Podcasts de temas</string>
-    <string name="recommended_for_you">Recomendado para voce</string>
-    <string name="more_for_you">Mais para voce</string>
+    <string name="recommended_for_you">Recomendado para você</string>
+    <string name="more_for_you">Mais para você</string>
     <string name="all_topics">Todos os temas</string>
     <string name="matching_topics">Temas correspondentes</string>
     <string name="tap_to_explore">Toque para explorar e ouvir</string>
@@ -50,30 +50,32 @@
     <!-- Profile -->
     <string name="profile">Perfil</string>
     <string name="linked_accounts">Contas vinculadas</string>
-    <string name="preferences">Preferencias</string>
+    <string name="preferences">Preferências</string>
     <string name="podcast_language">Idioma do podcast</string>
-    <string name="briefing_time">Horario do resumo</string>
+    <string name="briefing_time">Horário do resumo</string>
     <string name="topics">Temas</string>
-    <string name="voice_preference">Preferencia de voz</string>
+    <string name="voice_preference">Preferência de voz</string>
     <string name="hidden_topics">Temas ocultos</string>
     <string name="about">Sobre</string>
-    <string name="version">Versao</string>
-    <string name="terms_of_service">Termos de Servico</string>
-    <string name="privacy_policy">Politica de Privacidade</string>
+    <string name="version">Versão</string>
+    <string name="terms_of_service">Termos de Serviço</string>
+    <string name="privacy_policy">Política de Privacidade</string>
+    <string name="analytics_title">Compartilhar estatísticas de uso anônimas</string>
+    <string name="analytics_subtitle">Quais temas e idiomas são usados e por quanto tempo. Um ID aleatório neste dispositivo, sem nome, e-mail ou endereço IP. Ao desativar, o ID é excluído.</string>
     <string name="premium">Premium</string>
-    <string name="go_ad_free">Sem anuncios</string>
-    <string name="ad_free">Sem anuncios</string>
+    <string name="go_ad_free">Remover anúncios</string>
+    <string name="ad_free">Sem anúncios</string>
     <string name="active_subscription">Assinatura ativa</string>
-    <string name="remove_all_ads">Remover todos os anuncios</string>
+    <string name="remove_all_ads">Remover todos os anúncios</string>
     <string name="email_accounts">Contas de e-mail</string>
     <string name="app_theme">Tema do aplicativo</string>
-    <string name="voice_settings">Configuracoes de voz</string>
+    <string name="voice_settings">Configurações de voz</string>
     <string name="choose_podcast_voices">Escolha as vozes do podcast</string>
     <string name="hidden_count">%d ocultos</string>
-    <string name="notifications">Notificacoes</string>
-    <string name="daily_brief_reminders">Lembretes do resumo diario</string>
+    <string name="notifications">Notificações</string>
+    <string name="daily_brief_reminders">Lembretes do resumo diário</string>
     <string name="sign_out_confirm">Tem certeza de que deseja sair?</string>
-    <string name="delete_account_confirm">Tem certeza de que deseja excluir sua conta? Isso excluira permanentemente todos os seus dados, incluindo podcasts, preferencias e contas vinculadas. Esta acao nao pode ser desfeita.</string>
+    <string name="delete_account_confirm">Tem certeza de que deseja excluir sua conta? Isso excluirá permanentemente todos os seus dados, incluindo podcasts, preferências e contas vinculadas. Esta ação não pode ser desfeita.</string>
     <string name="delete_account_signin_again">Seu login expirou, então sua conta não foi excluída e nada foi removido. Saia, entre novamente e tente excluir a conta de novo.</string>
     <string name="delete_account_failed">Não foi possível concluir a exclusão da sua conta. Verifique sua conexão e tente novamente.</string>
 
@@ -82,17 +84,19 @@
     <string name="paused">Pausado</string>
     <string name="play">Reproduzir</string>
     <string name="pause">Pausar</string>
-    <string name="loading">Carregando\u2026</string>
-    <string name="generating">Gerando\u2026</string>
-    <string name="generating_progress">Gerando\u2026 %d%%</string>
-    <string name="generate_episode">Gerar episodio</string>
-    <string name="regenerate">Regenerar</string>
-    <string name="episode_history">Historico de episodios</string>
+    <string name="loading">Carregando…</string>
+    <string name="generating">Gerando…</string>
+    <string name="generating_progress">Gerando… %d%%</string>
+    <string name="generate_episode">Gerar episódio</string>
+    <string name="regenerate">Gerar de novo</string>
+    <string name="episode_history">Histórico de episódios</string>
     <string name="skip_back">Voltar 15 segundos</string>
-    <string name="skip_forward">Avancar 15 segundos</string>
+    <string name="skip_forward">Avançar 15 segundos</string>
     <string name="skip_back_mini">Voltar</string>
-    <string name="skip_forward_mini">Avancar</string>
-    <string name="buffering">Carregando\u2026</string>
+    <string name="skip_forward_mini">Avançar</string>
+    <string name="buffering">Carregando…</string>
+    <string name="playback_error_stream">Não foi possível acessar a rádio. Verifique sua conexão e tente novamente.</string>
+    <string name="playback_error_episode">Não foi possível carregar este áudio. Verifique sua conexão e tente novamente.</string>
     <string name="sleep_timer">Timer de sono</string>
     <string name="timer">Timer</string>
     <string name="sleep_timer_5_min">5 min</string>
@@ -109,75 +113,128 @@
 
     <!-- Errors -->
     <string name="error_generic">Algo deu errado</string>
-    <string name="error_network">Erro de rede. Verifique sua conexao.</string>
-    <string name="error_auth">Falha na autenticacao</string>
-    <string name="error_no_internet">Sem conexao com a internet. Verifique sua rede e tente novamente.</string>
-    <string name="generation_failed">Falha na geracao</string>
+    <string name="error_network">Erro de rede. Verifique sua conexão.</string>
+    <string name="error_auth">Falha na autenticação</string>
+    <string name="error_no_internet">Sem conexão com a internet. Verifique sua rede e tente novamente.</string>
+    <string name="generation_failed">Falha na geração</string>
 
     <!-- Misc -->
-    <string name="min_daily">%d min diarios</string>
+    <string name="min_daily">%d min por dia</string>
     <string name="connected">Conectado</string>
-    <string name="not_connected">Nao conectado</string>
-    <string name="not_connected_lower">Nao conectado</string>
+    <string name="not_connected">Não conectado</string>
+    <string name="not_connected_lower">Não conectado</string>
     <string name="coming_soon">Em breve</string>
-    <string name="microsoft_coming_soon">A integracao com a Microsoft esta chegando em breve. Fique atento!</string>
+    <string name="microsoft_coming_soon">A integração com a Microsoft chega em breve. Fique de olho!</string>
 
     <!-- Onboarding -->
-    <string name="welcome_to_audexa">Bem-vindo ao Audexa</string>
-    <string name="welcome_description">Sua radio personalizada com IA que transforma as ultimas noticias, tecnologia e temas em resumos envolventes no estilo podcast.</string>
-    <string name="get_started">Comecar</string>
+    <string name="welcome_to_audexa">Boas-vindas ao Audexa</string>
+    <string name="welcome_description">Sua rádio personalizada com IA que transforma as últimas notícias, tecnologia e temas em resumos envolventes no estilo podcast.</string>
+    <string name="get_started">Começar</string>
     <string name="connect_your_account">Conecte sua conta</string>
-    <string name="connect_account_description">Vincule sua conta Google para receber resumos diarios personalizados de seus e-mails e calendario.</string>
+    <string name="connect_account_description">Vincule sua conta Google para receber resumos diários personalizados com base nos seus e-mails e no seu calendário.</string>
     <string name="gmail">Gmail</string>
-    <string name="calendar">Calendario</string>
+    <string name="calendar">Calendário</string>
     <string name="include_email_highlights">Incluir destaques de e-mail no seu resumo</string>
-    <string name="include_calendar_events">Incluir proximos eventos no seu resumo</string>
+    <string name="include_calendar_events">Incluir próximos eventos no seu resumo</string>
     <string name="continue_button">Continuar</string>
     <string name="skip_for_now">Pular por enquanto</string>
-    <string name="connect_later_hint">Voce sempre pode conectar depois nas Configuracoes</string>
+    <string name="connect_later_hint">Você sempre pode conectar depois, em Configurações</string>
     <string name="connect">Conectar</string>
     <string name="choose_your_interests">Escolha seus interesses</string>
-    <string name="choose_interests_description">Selecione os temas que voce gostaria de ouvir. Geraremos episodios diarios so para voce.</string>
-    <string name="topics_selected">%d tema%s selecionado(s)</string>
-    <string name="topics_selected_plural_suffix">s</string>
-    <string name="complete_setup">Concluir configuracao</string>
+    <string name="choose_interests_description">Selecione os temas que você gostaria de ouvir. Vamos gerar episódios diários só para você.</string>
+    <string name="topics_selected">Temas selecionados: %d%s</string>
+    <string name="topics_selected_plural_suffix"></string>
+    <string name="complete_setup">Concluir configuração</string>
 
     <!-- Linked Accounts -->
-    <string name="enable_daily_brief">Ativar resumo diario</string>
-    <string name="enable_daily_brief_description">Conecte seu Gmail para receber resumos diarios personalizados baseados nos seus e-mails. Resumiremos atualizacoes importantes para que voce comece o dia informado.</string>
+    <string name="enable_daily_brief">Ativar resumo diário</string>
+    <string name="enable_daily_brief_description">Conecte seu Gmail para receber resumos diários personalizados com base nos seus e-mails. Vamos resumir as atualizações importantes para você começar o dia bem informado.</string>
     <string name="google_calendar">Google Calendar</string>
     <string name="outlook">Outlook</string>
-    <string name="daily_brief_sources">Fontes do resumo diario</string>
+    <string name="daily_brief_sources">Fontes do resumo diário</string>
     <string name="email_summaries">Resumos de e-mail</string>
-    <string name="include_email_in_brief">Incluir resumos de e-mail no resumo diario</string>
-    <string name="calendar_events">Eventos do calendario</string>
-    <string name="include_calendar_in_brief">Incluir proximos eventos no resumo diario</string>
+    <string name="include_email_in_brief">Incluir resumos de e-mail no resumo diário</string>
+    <string name="calendar_events">Eventos do calendário</string>
+    <string name="include_calendar_in_brief">Incluir próximos eventos no resumo diário</string>
     <string name="unlink">Desvincular</string>
     <string name="soon">Em breve</string>
     <string name="your_privacy">Sua privacidade</string>
-    <string name="privacy_note">Para criar seu resumo, nosso servidor lê seus e-mails recentes do Gmail e os eventos da agenda. O nome do remetente, o assunto e os primeiros 100 caracteres dos seus principais e-mails, além de títulos, horários e locais dos eventos, são enviados à Anthropic, nosso provedor de IA, para escrever o roteiro. Não guardamos o texto dos seus e-mails, mas o áudio do resumo é mantido até você excluir sua conta. Desvincular não remove o acesso ao Google guardado em nosso servidor; Excluir conta, no Perfil, remove.</string>
-    <string name="microsoft_outlook_coming_soon">A vinculacao com o Microsoft Outlook estara disponivel em uma atualizacao futura.</string>
-    <string name="gmail_linking_cancelled">A vinculacao com o Gmail foi cancelada</string>
-    <string name="calendar_linking_cancelled">A vinculacao do calendario foi cancelada</string>
+    <string name="privacy_note">Para criar seu resumo, nosso servidor lê seus e-mails recentes do Gmail e os eventos do seu calendário. O nome do remetente, o assunto e os primeiros 100 caracteres dos seus principais e-mails, além de títulos, horários e locais dos eventos, são enviados à Anthropic, nosso provedor de IA, para escrever o roteiro. Não guardamos o texto dos seus e-mails, mas o áudio do resumo é mantido até você excluir sua conta. Desvincular não remove o acesso ao Google guardado em nosso servidor; Excluir conta, no Perfil, remove.</string>
+    <string name="microsoft_outlook_coming_soon">A vinculação com o Microsoft Outlook estará disponível em uma atualização futura.</string>
+    <string name="gmail_linking_cancelled">A vinculação com o Gmail foi cancelada</string>
+    <string name="calendar_linking_cancelled">A vinculação do calendário foi cancelada</string>
     <string name="reconnect">Reconectar</string>
 
     <!-- Hidden Topics -->
     <string name="no_hidden_topics">Sem temas ocultos</string>
-    <string name="no_hidden_topics_description">Os temas que voce ocultar aparecerao aqui. Voce pode exibi-los a qualquer momento.</string>
-    <string name="unhide_hint">Toque no icone do olho para mostrar um tema novamente.</string>
+    <string name="no_hidden_topics_description">Os temas que você ocultar aparecerão aqui. Você pode exibi-los de novo quando quiser.</string>
+    <string name="unhide_hint">Toque no ícone do olho para mostrar um tema novamente.</string>
     <string name="unhide">Exibir</string>
 
     <!-- Language Settings -->
     <string name="language">Idioma</string>
-    <string name="language_description">Escolha seu idioma preferido para os episodios de podcast.</string>
+    <string name="language_coming_soon">Em breve</string>
+    <string name="language_coming_soon_toast">Ainda não disponível. Registramos seu interesse.</string>
+    <string name="generating_language">Preparando seu episódio em %1$s. O primeiro pode levar alguns minutos.</string>
+    <string name="language_fallback_note">Os podcasts ainda não estão disponíveis em %1$s, então escolhemos %2$s para você.</string>
+    <string name="error_language_unavailable">Esse idioma ainda não está disponível.</string>
+    <string name="error_daily_limit">O limite de hoje para episódios em novos idiomas foi atingido. Tente novamente amanhã.</string>
+    <string name="language_page_title">Escolha seu idioma</string>
+    <string name="language_page_subtitle">Os podcasts estão disponíveis em seis idiomas. A rádio é apenas em inglês. Sua escolha nos ajuda a decidir o que adicionar.</string>
+    <string name="language_description">Escolha seu idioma preferido.</string>
     <string name="language_note">Os podcasts estão disponíveis em inglês, espanhol, francês, alemão, português e italiano. O primeiro episódio em um novo idioma leva alguns minutos para ficar pronto. A rádio é apenas em inglês. Para outros idiomas, registramos qual você escolhe, sem seu nome, para decidir o que adicionar em seguida.</string>
     <string name="selected">Selecionado</string>
 
+    <!-- App language (the language of menus and buttons; separate from the podcast language) -->
+    <string name="app_language">Idioma do app</string>
+    <string name="app_language_follow_phone">Seguir o celular</string>
+    <string name="app_language_description">O idioma dos menus e botões. Os podcasts continuam no idioma que você escolheu acima.</string>
+    <string name="ui_lang_offer_title">Mostrar o app também em %1$s?</string>
+    <string name="ui_lang_offer_body">Só os menus e botões mudam. Você pode alterar isso quando quiser nas configurações do perfil.</string>
+    <string name="ui_lang_offer_yes">Sim, usar %1$s</string>
+    <string name="ui_lang_offer_no">Não, manter %1$s</string>
+
+    <!-- Suggest a topic -->
+    <string name="suggest_topic">Sugerir um tema</string>
+    <string name="suggest_topic_inline">Não achou seu tema? Sugira um</string>
+    <string name="suggest_topic_description">Conte o que você gostaria de ouvir e vamos considerar adicionar.</string>
+    <string name="suggest_topic_name_label">Nome do tema</string>
+    <string name="suggest_topic_name_hint">ex.: Computação quântica</string>
+    <string name="suggest_topic_details_label">Descrição (opcional)</string>
+    <string name="suggest_topic_details_hint">Sobre o que este tema deve falar?</string>
+    <string name="suggest_topic_thanks">Obrigado! Analisamos as sugestões e adicionamos as boas.</string>
+    <string name="submit">Enviar</string>
+    <string name="submitting">Enviando…</string>
+    <string name="no_topics_title">Nenhum tema disponível no momento.</string>
+    <string name="no_topics_hint">Toque em Continuar para concluir a configuração — você pode escolher temas depois, na tela Início.</string>
+
+    <!-- Live radio -->
+    <string name="radio_languages">Idiomas da rádio</string>
+    <string name="radio_languages_note">As estações selecionadas aparecem na sua tela inicial. Pelo menos um idioma deve estar ativado.</string>
+    <string name="radio_home_tagline">Notícias 24/7 com IA · AO VIVO</string>
+    <string name="radio_tagline">Notícias e conversas 24/7 com IA</string>
+    <string name="share_whats_playing">Compartilhar o que está tocando</string>
+    <string name="share_station">Compartilhar %1$s</string>
+    <string name="radio_up_next">A seguir</string>
+    <string name="radio_requests">Pedidos</string>
+    <string name="radio_generating">Gerando</string>
+    <string name="radio_generating_badge">gerando</string>
+    <string name="radio_request_hint">Toque no microfone para pedir um tema para a fila ao vivo</string>
+    <string name="radio_request_topic">Pedir tema</string>
+    <string name="radio_request_title">Peça um tema</string>
+    <string name="radio_request_description">Diga à Audexa Rádio o que você gostaria de ouvir. O pedido entra na fila ao vivo.</string>
+    <string name="radio_add_to_queue">Adicionar à fila ao vivo</string>
+    <string name="radio_chat_hint">Converse com os ouvintes...</string>
+    <string name="radio_chat">Chat</string>
+    <string name="radio_now_badge">AGORA</string>
+    <string name="radio_music">Música</string>
+    <string name="send">Enviar</string>
+
     <!-- Voice Settings -->
-    <string name="loading_voices">Carregando vozes\u2026</string>
-    <string name="no_voice_pairs">Nenhum par de vozes disponivel</string>
-    <string name="no_voices">Nenhuma voz disponivel</string>
-    <string name="voice_pairs_description">Selecione um par de vozes pre-configurado para os apresentadores do seu podcast.</string>
+    <string name="loading_voices">Carregando vozes…</string>
+    <string name="no_voice_pairs">Nenhum par de vozes disponível</string>
+    <string name="no_voices">Nenhuma voz disponível</string>
+    <string name="voice_pairs_description">Selecione um par de vozes pré-configurado para os apresentadores do seu podcast.</string>
     <string name="host_1">Apresentador 1</string>
     <string name="host_2">Apresentador 2</string>
     <string name="host_1_voice">Voz do apresentador 1</string>
@@ -185,63 +242,119 @@
 
     <!-- Theme Settings -->
     <string name="theme_system">Sistema</string>
-    <string name="theme_system_description">Seguir configuracoes do dispositivo</string>
+    <string name="theme_system_description">Seguir as configurações do dispositivo</string>
     <string name="theme_dark">Escuro</string>
-    <string name="theme_dark_description">Sempre modo escuro</string>
+    <string name="theme_dark_description">Sempre no modo escuro</string>
     <string name="theme_light">Claro</string>
-    <string name="theme_light_description">Sempre modo claro</string>
+    <string name="theme_light_description">Sempre no modo claro</string>
 
     <!-- Notification Settings -->
-    <string name="permission">Permissao</string>
+    <string name="permission">Permissão</string>
     <string name="enabled">Ativado</string>
-    <string name="not_enabled">Nao ativado</string>
-    <string name="daily_brief_schedule">Horario do resumo diario</string>
-    <string name="daily_brief_notifications">Notificacoes do resumo diario</string>
-    <string name="daily_brief_notify_hint">Seja notificado quando seu resumo estiver pronto</string>
-    <string name="daily_brief_content">Conteudo do resumo diario</string>
-    <string name="include_topic_updates">Incluir atualizacoes de temas</string>
-    <string name="include_topic_updates_hint">Adicionar titulos dos seus temas ao resumo diario</string>
-    <string name="notification_info">Seu resumo diario sera gerado e estara pronto no horario programado. Voce recebera uma notificacao quando estiver pronto para ouvir.</string>
-    <string name="select_time">Selecionar horario</string>
+    <string name="not_enabled">Não ativado</string>
+    <string name="daily_brief_schedule">Horário do resumo diário</string>
+    <string name="daily_brief_notifications">Notificações do resumo diário</string>
+    <string name="daily_brief_notify_hint">Receba um aviso quando seu resumo estiver pronto</string>
+    <string name="daily_brief_content">Conteúdo do resumo diário</string>
+    <string name="include_topic_updates">Incluir atualizações de temas</string>
+    <string name="include_topic_updates_hint">Adicionar manchetes dos seus temas ao resumo diário</string>
+    <string name="notification_info">Seu resumo diário será gerado e ficará pronto no horário programado. Você receberá uma notificação quando ele estiver pronto para ouvir.</string>
+    <string name="select_time">Selecionar horário</string>
 
     <!-- Subscription / Paywall -->
-    <string name="enjoy_uninterrupted">Aproveite sem interrupcoes</string>
-    <string name="no_audio_ad_interruptions">Sem interrupcoes de anuncios de audio</string>
-    <string name="seamless_episode_playback">Reproducao continua de episodios</string>
+    <string name="enjoy_uninterrupted">Ouça sem interrupções</string>
+    <string name="no_audio_ad_interruptions">Sem interrupções com anúncios em áudio</string>
+    <string name="seamless_episode_playback">Reprodução contínua de episódios</string>
     <string name="support_indie_development">Apoie o desenvolvimento independente</string>
-    <string name="ad_free_subscriber">Voce e assinante sem anuncios!</string>
+    <string name="ad_free_subscriber">Você é assinante Sem anúncios!</string>
     <string name="yearly">Anual</string>
     <string name="save_percent">Economize 58%%</string>
     <string name="monthly">Mensal</string>
     <string name="subscribe">Assinar</string>
     <string name="restore_purchases">Restaurar compras</string>
-    <string name="payment_fine_print">O pagamento sera cobrado na sua conta Google Play. A assinatura e renovada automaticamente, a menos que seja cancelada pelo menos 24 horas antes do final do periodo atual.</string>
+    <string name="payment_fine_print">O pagamento será cobrado na sua conta do Google Play. A assinatura é renovada automaticamente, a menos que seja cancelada pelo menos 24 horas antes do final do período atual.</string>
     <string name="per_year">/ano</string>
-    <string name="per_month">/mes</string>
+    <string name="per_month">/mês</string>
     <string name="per_week">/semana</string>
 
     <!-- Ads -->
     <string name="sponsored">PATROCINADO</string>
     <string name="skip">Pular</string>
-    <string name="skip_ad">Pular anuncio</string>
-    <string name="ad_content_description">Anuncio</string>
+    <string name="skip_ad">Pular anúncio</string>
+    <string name="ad_content_description">Anúncio</string>
+
+    <!-- Radio Call-In -->
+    <string name="call_to_request">Ligue para pedir um tema</string>
+    <string name="call_in_label">Ligue: (833) 398-1230</string>
 
     <!-- Splash Screen -->
-    <string name="splash_tagline">Seu resumo de audio com IA</string>
+    <string name="splash_tagline">Seu resumo de áudio com IA</string>
 
     <!-- Notifications (non-composable) -->
     <string name="notification_good_morning">Bom dia!</string>
-    <string name="notification_daily_brief_text">Hora do seu resumo diario. Toque para ficar por dentro de e-mails, calendario e noticias.</string>
-    <string name="daily_brief_channel_description">Notificacoes de lembrete do resumo diario</string>
+    <string name="notification_daily_brief_text">Hora do seu resumo diário. Toque para ficar por dentro de e-mails, calendário e notícias.</string>
+    <string name="daily_brief_channel_description">Notificações de lembrete do resumo diário</string>
+    <string name="radio_topic_channel_name">Lembretes de temas da rádio</string>
+    <string name="radio_topic_channel_description">Receba um aviso quando um tema favorito estiver tocando na Audexa Rádio</string>
+    <string name="radio_topic_notification_title">Na Audexa Rádio agora</string>
+    <string name="radio_topic_notification_body">%1$s está no ar agora. Toque para sintonizar.</string>
 
     <!-- Daily Brief Playback -->
-    <string name="daily_brief_title_format">Resumo diario - %s</string>
+    <string name="daily_brief_title_format">Resumo diário - %s</string>
     <string name="daily_brief_description">Seu resumo matinal personalizado</string>
 
-    <!-- Language selection page -->
-    <string name="language_page_title">Escolha seu idioma</string>
-    <string name="language_page_subtitle">Os podcasts estão disponíveis em seis idiomas. A rádio é apenas em inglês. Sua escolha nos ajuda a decidir o que adicionar.</string>
-    <string name="language_coming_soon">Em breve</string>
-    <string name="language_coming_soon_toast">Ainda não disponível. Registramos seu interesse.</string>
-    <string name="language_fallback_note">Os podcasts ainda não estão disponíveis em %1$s, então escolhemos %2$s para você.</string>
+    <!-- Morning briefing: one local notification per day, opt-in after first play -->
+    <string name="briefing_notification_title">Hoje na Audexa</string>
+    <string name="briefing_notification_body_fallback">A Audexa Rádio está no ar agora. Toque para ouvir.</string>
+    <plurals name="briefing_notification_body_topics">
+        <item quantity="one">%1$d novo podcast de tema: %2$s. Toque para ouvir.</item>
+        <item quantity="other">%1$d novos podcasts de temas: %2$s. Toque para ouvir.</item>
+    </plurals>
+    <string name="briefing_names_with_more">%1$s e mais %2$d</string>
+    <string name="briefing_optin_title">Quer um lembrete quando novos podcasts de temas estiverem prontos?</string>
+    <string name="briefing_optin_accept">Me lembrar</string>
+    <string name="briefing_optin_decline">Agora não</string>
+
+    <!-- Ask the hosts (English only for now) -->
+    <string name="ask_entry_title">Pergunte aos apresentadores</string>
+    <string name="ask_entry_subtitle">O jogo desta noite, um lançamento, uma notícia: dois apresentadores de IA conversam sobre isso</string>
+    <string name="ask_title">Pergunte aos apresentadores</string>
+    <string name="ask_intro">Descreva um evento ou uma notícia. Os apresentadores falam apenas sobre o que as manchetes recentes noticiam e avisam se não houver cobertura suficiente. Os episódios são gerados por IA e levam um ou dois minutos.</string>
+    <string name="ask_field_label">Sobre o que eles devem falar?</string>
+    <string name="ask_field_placeholder">ex.: Quem venceu o jogo do Warriors hoje à noite?</string>
+    <string name="ask_counter">%1$d/%2$d</string>
+    <string name="ask_language_label">Idioma</string>
+    <string name="ask_submit">Perguntar</string>
+    <string name="ask_sending">Enviando seu pedido...</string>
+    <string name="ask_stage_queued">Aguardando um estúdio livre...</string>
+    <string name="ask_stage_reviewing">Verificando seu pedido...</string>
+    <string name="ask_stage_searching">Lendo as últimas manchetes...</string>
+    <string name="ask_stage_writing">Os apresentadores estão se preparando...</string>
+    <string name="ask_stage_recording">Gravando o episódio...</string>
+    <string name="ask_stage_working">Trabalhando...</string>
+    <string name="ask_progress_description">Progresso: %1$d por cento</string>
+    <string name="ask_leave_hint">Você pode sair desta tela. Ao voltar, você retoma o mesmo episódio.</string>
+    <string name="ask_ai_note">Conversa gerada por IA entre dois apresentadores de IA, com base nas manchetes recentes.</string>
+    <string name="ask_length">Duração %1$s</string>
+    <string name="ask_play">Ouvir episódio</string>
+    <string name="ask_pause">Pausar</string>
+    <string name="ask_share">Compartilhar</string>
+    <string name="ask_share_chooser">Compartilhar este episódio</string>
+    <string name="ask_share_failed">Não foi possível abrir o menu de compartilhamento</string>
+    <string name="ask_sources_title">Manchetes em que este episódio se baseia</string>
+    <string name="ask_sources_note">Os apresentadores falam apenas sobre o que essas manchetes noticiam. Confira as fontes para ver as matérias completas.</string>
+    <string name="ask_ask_another">Perguntar outra</string>
+    <string name="ask_edit_question">Editar pergunta</string>
+    <string name="ask_check_again">Verificar de novo</string>
+    <string name="ask_unavailable">A pergunta aos apresentadores não está disponível agora.</string>
+    <string name="ask_loading">Verificando disponibilidade...</string>
+    <string name="ask_err_input">Confira sua pergunta e tente novamente.</string>
+    <string name="ask_err_limited">O recurso Pergunte aos apresentadores está ocupado ou atingiu o limite. Tente novamente mais tarde.</string>
+    <string name="ask_err_not_found">Não encontramos mais este pedido. Faça a pergunta de novo.</string>
+    <string name="ask_err_offline">Sem conexão. Verifique sua internet e tente novamente.</string>
+    <string name="ask_err_timeout">Está demorando mais que o esperado. O episódio ainda pode chegar.</string>
+    <string name="ask_err_server">Algo deu errado. Tente novamente.</string>
+    <string name="ask_err_refused">Os apresentadores não podem fazer um episódio sobre isso.</string>
+    <string name="ask_err_no_coverage">Não encontramos cobertura recente suficiente sobre isso, então não criamos um episódio.</string>
+    <string name="ask_err_failed">Não foi possível criar o episódio. Tente novamente.</string>
 </resources>

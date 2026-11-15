@@ -134,8 +134,8 @@ class OnboardingViewModel @Inject constructor(
 
     // Language selection
     fun selectLanguage(language: SupportedLanguage) {
+        viewModelScope.launch { briefingManager.logEvent(BriefingManager.EVENT_LANGUAGE_PICKED, lang = language.code) }
         viewModelScope.launch {
-            briefingManager.logEvent(BriefingManager.EVENT_LANGUAGE_PICKED, lang = language.code)
             // Interface language offer: asked, never applied silently. A "coming soon" podcast language still gets it, because the
             // interface can be in that language even though podcasts cannot yet.
             val offer = appLanguageManager.offerFor(language.code, systemLocaleTag())

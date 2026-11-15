@@ -265,7 +265,7 @@ fun TopicSelectionPage(
                     text = if (selectedCount > 0)
                         stringResource(R.string.complete_setup)
                     else
-                        "Continue",
+                        stringResource(R.string.continue_button),
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.SemiBold
                 )

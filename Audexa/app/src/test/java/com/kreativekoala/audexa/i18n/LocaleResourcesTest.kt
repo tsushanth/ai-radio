@@ -17,7 +17,7 @@ import java.util.Locale
 
 /**
  * Resolves strings through Android's real resource machinery for every interface language tag the app hands to
- * setApplicationLocales. Proves each tag lands on the res folder UiLanguages names for it (id -> values-in, zh-Hans -> values-zh-rCN,
+ * setApplicationLocales. Proves each tag lands on the res folder UiLanguages names for it (id -> values-in, zh-CN -> values-zh-rCN,
  * pt-BR -> values-pt-rBR, fil -> values-fil, cs/el/fi/hu/ro/sv/uk -> their new folders), not on the English fallback.
  */
 @RunWith(RobolectricTestRunner::class)

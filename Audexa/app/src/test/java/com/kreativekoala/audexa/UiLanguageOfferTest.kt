@@ -19,7 +19,7 @@ class UiLanguageOfferTest {
         assertEquals("pt-BR", offer("pt"))
         assertEquals("it", offer("it"))
         assertEquals("ja", offer("ja"))
-        assertEquals("zh-Hans", offer("zh"))
+        assertEquals("zh-CN", offer("zh"))
         assertEquals("fil", offer("fil"))
         assertEquals("fil", offer("tl"))
     }
@@ -69,6 +69,6 @@ class UiLanguageOfferTest {
     }
 
     @Test fun traditionalChinesePhoneIsOfferedSimplifiedChineseBecauseItSeesEnglishToday() {
-        assertEquals("zh-Hans", offer("zh", device = "zh-Hant-TW"))
+        assertEquals("zh-CN", offer("zh", device = "zh-Hant-TW"))
     }
 }

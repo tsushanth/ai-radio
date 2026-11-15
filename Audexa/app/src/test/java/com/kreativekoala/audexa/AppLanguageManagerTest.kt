@@ -38,9 +38,9 @@ class AppLanguageManagerTest {
     @Test fun regionalTagsReachThePlatformWithTheirResourceTag() {
         val store = FakeStore()
         manager(store).select("pt-BR")
-        manager(store).select("zh-CN") // normalised to the tag the zh-rCN folder answers to
+        manager(store).select("zh-CN") // the exact tag of the zh-rCN folder: a script-only "zh-Hans" also matches the plain values-zh of a library
         manager(store).select("in")
-        assertEquals(listOf<String?>("pt-BR", "zh-Hans", "id"), store.calls)
+        assertEquals(listOf<String?>("pt-BR", "zh-CN", "id"), store.calls)
     }
 
     @Test fun followPhoneClearsTheOverride() {

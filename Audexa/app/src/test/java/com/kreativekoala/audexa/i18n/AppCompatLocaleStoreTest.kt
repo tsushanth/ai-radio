@@ -21,7 +21,7 @@ class AppCompatLocaleStoreTest {
         Robolectric.buildActivity(LocaleHostActivity::class.java).setup()
         val store = AppCompatLocaleStore()
         assertNull("starts on Follow phone", store.get())
-        for (tag in listOf("cs", "el", "fi", "hu", "ro", "sv", "uk", "fil", "pt-BR", "zh-Hans", "id")) {
+        for (tag in listOf("cs", "el", "fi", "hu", "ro", "sv", "uk", "fil", "pt-BR", "zh-CN", "id")) {
             store.set(tag)
             assertEquals(tag, store.get())
         }

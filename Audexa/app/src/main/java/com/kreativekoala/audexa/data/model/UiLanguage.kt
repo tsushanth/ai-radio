@@ -44,12 +44,12 @@ object UiLanguages {
         UiLanguage("tr", "values-tr", "Türkçe"),
         UiLanguage("uk", "values-uk", "Українська"),
         UiLanguage("vi", "values-vi", "Tiếng Việt"),
-        UiLanguage("zh-Hans", "values-zh-rCN", "中文 (简体)")
+        UiLanguage("zh-CN", "values-zh-rCN", "中文 (简体)")
     )
 
     val ENGLISH: UiLanguage = ALL.first()
 
-    /** Exact tag match ("pt-BR", "zh-Hans"); also accepts "pt" / "zh" / "in" style language-only input. Null when there is no translation. */
+    /** Exact tag match ("pt-BR", "zh-CN"); also accepts "pt" / "zh" / "in" style language-only input. Null when there is no translation. */
     fun fromTag(raw: String?): UiLanguage? {
         val t = raw.orEmpty().trim().replace('_', '-')
         if (t.isEmpty()) return null

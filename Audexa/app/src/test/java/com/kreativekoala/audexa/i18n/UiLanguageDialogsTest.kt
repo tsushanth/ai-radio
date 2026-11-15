@@ -11,7 +11,9 @@ import androidx.compose.ui.test.assertIsSelected
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
-import androidx.compose.ui.test.performScrollTo
+import androidx.compose.ui.test.hasScrollAction
+import androidx.compose.ui.test.hasText
+import androidx.compose.ui.test.performScrollToNode
 import androidx.test.core.app.ApplicationProvider
 import com.kreativekoala.audexa.R
 import com.kreativekoala.audexa.data.model.UiLanguage
@@ -84,8 +86,10 @@ class UiLanguageDialogsTest {
         rule.setContent { MaterialTheme { AppLanguageDialog(selected = null, onSelect = { picked = it; called = true }, onDismiss = {}) } }
         rule.onNodeWithText(app.getString(R.string.app_language_follow_phone)).assertIsSelected()
         for (l in listOf("Magyar", "Čeština", "Suomi", "Ελληνικά", "Română", "Svenska", "Українська", "Filipino")) {
-            rule.onNodeWithText(l).performScrollTo().assertIsDisplayed()
+            rule.onNode(hasScrollAction()).performScrollToNode(hasText(l))
+            rule.onNodeWithText(l).assertIsDisplayed()
         }
+        rule.onNode(hasScrollAction()).performScrollToNode(hasText("Magyar"))
         rule.onNodeWithText("Magyar").performClick()
         assertTrue(called)
         assertEquals("hu", picked!!.tag)
@@ -94,7 +98,9 @@ class UiLanguageDialogsTest {
     @Test fun pickingFollowPhoneReturnsNull() {
         var picked: UiLanguage? = lang("de")
         rule.setContent { MaterialTheme { AppLanguageDialog(selected = lang("fi"), onSelect = { picked = it }, onDismiss = {}) } }
+        rule.onNode(hasScrollAction()).performScrollToNode(hasText("Suomi"))
         rule.onNodeWithText("Suomi").assertIsSelected()
+        rule.onNode(hasScrollAction()).performScrollToNode(hasText(app.getString(R.string.app_language_follow_phone)))
         rule.onNodeWithText(app.getString(R.string.app_language_follow_phone)).performClick()
         assertEquals(null, picked)
     }

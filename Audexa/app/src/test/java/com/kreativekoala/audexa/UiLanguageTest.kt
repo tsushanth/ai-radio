@@ -27,7 +27,7 @@ class UiLanguageTest {
     @Test fun regionalTagsAndLegacyCodes() {
         assertEquals("pt-BR", UiLanguages.fromTag("pt-BR")!!.tag)
         assertEquals("pt-BR", UiLanguages.fromTag("pt_PT")!!.tag) // Portugal gets the Brazilian translation, as Android resolves it
-        assertEquals("zh-Hans", UiLanguages.fromTag("zh-CN")!!.tag)
+        assertEquals("zh-CN", UiLanguages.fromTag("zh-CN")!!.tag)
         assertEquals("id", UiLanguages.fromTag("in")!!.tag) // Java's old code for Indonesian
         assertEquals("values-in", UiLanguages.fromTag("id")!!.resFolder)
         assertEquals("de", UiLanguages.fromTag("de-AT")!!.tag)
@@ -38,7 +38,7 @@ class UiLanguageTest {
 
     @Test fun contentLanguageCodesMapToTheInterfaceTag() {
         assertEquals("pt-BR", UiLanguages.forContentLanguage("pt")!!.tag)
-        assertEquals("zh-Hans", UiLanguages.forContentLanguage("zh")!!.tag)
+        assertEquals("zh-CN", UiLanguages.forContentLanguage("zh")!!.tag)
         assertEquals("es", UiLanguages.forContentLanguage("es")!!.tag)
         assertEquals("cs", UiLanguages.forContentLanguage("cs")!!.tag)
         assertEquals("id", UiLanguages.forContentLanguage("in")!!.tag)
@@ -51,7 +51,7 @@ class UiLanguageTest {
         assertEquals("cs", UiLanguages.forDeviceLanguage("cs-CZ").tag)
         assertEquals("en", UiLanguages.forDeviceLanguage("sw-KE").tag)
         assertEquals("en", UiLanguages.forDeviceLanguage("").tag)
-        assertEquals("zh-Hans", UiLanguages.forDeviceLanguage("zh-Hans-CN").tag)
+        assertEquals("zh-CN", UiLanguages.forDeviceLanguage("zh-Hans-CN").tag)
         assertEquals("en", UiLanguages.forDeviceLanguage("zh-Hant-TW").tag) // only Simplified Chinese is translated
     }
 

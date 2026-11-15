@@ -22,11 +22,11 @@ object ComposeTextChecks {
     fun texts(rule: ComposeTestRule): List<String> =
         nodes(rule).map { n -> n.config[SemanticsProperties.Text].joinToString("") { it.text } }
 
-    /** Texts that were cut off (ellipsised or clipped) by their container. */
+    /** Texts with an ellipsised line. (TextLayoutResult.hasVisualOverflow is true for any text under Robolectric's font metrics, so it is not used.) */
     fun overflowing(rule: ComposeTestRule): List<String> =
         nodes(rule).mapNotNull { n ->
             val l = layout(n) ?: return@mapNotNull null
-            if (l.hasVisualOverflow) n.config[SemanticsProperties.Text].joinToString("") { it.text } else null
+            if ((0 until l.lineCount).any { l.isLineEllipsized(it) }) n.config[SemanticsProperties.Text].joinToString("") { it.text } else null
         }
 
     /** The number of lines the node with exactly this text needs, or null when no such text is on screen. */

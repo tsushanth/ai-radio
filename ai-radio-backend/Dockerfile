@@ -30,6 +30,10 @@ WORKDIR /app
 # Copy package files
 COPY package*.json ./
 
+# ffmpeg: episode audio is encoded from WAV to loudness-normalised MP3 (src/services/audio/episode-audio.ts). If the binary is ever
+# missing at runtime the backend still works and stores the WAV, and logs why.
+RUN apk add --no-cache ffmpeg
+
 # Install production dependencies only
 RUN npm ci --only=production
 

@@ -1,0 +1,360 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Audexa</string>
+    <string name="app_tagline">Személyes AI-rádiód</string>
+
+    <!-- Auth -->
+    <string name="sign_in_with_google">Bejelentkezés Google-fiókkal</string>
+    <string name="sign_out">Kijelentkezés</string>
+    <string name="delete_account">Fiók törlése</string>
+    <string name="auth_description">Hallgass AI-val készült podcastokat a számodra fontos témákról. Kapcsold össze az e-mail-fiókodat a beállításokban, hogy személyre szabott napi összefoglalókat kapj.</string>
+    <string name="auth_terms">A folytatással elfogadod a Felhasználási feltételeket és az Adatvédelmi szabályzatot</string>
+    <string name="start">Indítás</string>
+
+    <!-- Navigation -->
+    <string name="nav_home">Kezdőlap</string>
+    <string name="nav_profile">Profil</string>
+    <string name="back">Vissza</string>
+    <string name="close">Bezárás</string>
+    <string name="cancel">Mégse</string>
+    <string name="ok">OK</string>
+    <string name="delete">Törlés</string>
+    <string name="retry">Újra</string>
+    <string name="enable">Bekapcsolás</string>
+
+    <!-- Tabs -->
+    <string name="tab_for_you">Neked</string>
+    <string name="tab_discover">Felfedezés</string>
+
+    <!-- Home -->
+    <string name="good_morning">Jó reggelt</string>
+    <string name="good_afternoon">Jó napot</string>
+    <string name="good_evening">Jó estét</string>
+    <string name="daily_brief">Napi összefoglaló</string>
+    <string name="daily_brief_subtitle">Napi összefoglaló • %s</string>
+    <string name="keep_listening">Hallgass tovább</string>
+    <string name="your_topics">Témáid</string>
+    <string name="topic_podcasts">Téma-podcastok</string>
+    <string name="recommended_for_you">Neked ajánljuk</string>
+    <string name="more_for_you">Még neked</string>
+    <string name="all_topics">Összes téma</string>
+    <string name="matching_topics">Egyező témák</string>
+    <string name="tap_to_explore">Koppints a felfedezéshez és a lejátszáshoz</string>
+    <string name="link_account_prompt">Kapcsold össze az e-mail-fiókodat a személyre szabott összefoglalókhoz</string>
+    <string name="link_account">Fiók összekapcsolása</string>
+    <string name="find_new_shows">Új műsorok keresése</string>
+    <string name="search">Keresés</string>
+    <string name="clear">Törlés</string>
+    <string name="no_results_for">Nincs találat erre: \"%s\"</string>
+
+    <!-- Profile -->
+    <string name="profile">Profil</string>
+    <string name="linked_accounts">Összekapcsolt fiókok</string>
+    <string name="preferences">Beállítások</string>
+    <string name="podcast_language">Podcast nyelve</string>
+    <string name="briefing_time">Összefoglaló időpontja</string>
+    <string name="topics">Témák</string>
+    <string name="voice_preference">Hangbeállítás</string>
+    <string name="hidden_topics">Elrejtett témák</string>
+    <string name="about">Névjegy</string>
+    <string name="version">Verzió</string>
+    <string name="terms_of_service">Felhasználási feltételek</string>
+    <string name="privacy_policy">Adatvédelmi szabályzat</string>
+    <string name="analytics_title">Névtelen használati statisztikák megosztása</string>
+    <string name="analytics_subtitle">Mely témákat és nyelveket használod, és mennyi ideig. Véletlenszerű azonosító ezen az eszközön, név, e-mail-cím és IP-cím nélkül. A kikapcsolással az azonosító törlődik.</string>
+    <string name="premium">Premium</string>
+    <string name="go_ad_free">Reklámmentesség</string>
+    <string name="ad_free">Reklámmentes</string>
+    <string name="active_subscription">Aktív előfizetés</string>
+    <string name="remove_all_ads">Minden reklám eltávolítása</string>
+    <string name="email_accounts">E-mail-fiókok</string>
+    <string name="app_theme">Megjelenés</string>
+    <string name="voice_settings">Hangbeállítások</string>
+    <string name="choose_podcast_voices">Válassz hangokat a podcastokhoz</string>
+    <string name="hidden_count">%d elrejtve</string>
+    <string name="notifications">Értesítések</string>
+    <string name="daily_brief_reminders">Napi összefoglaló emlékeztetők</string>
+    <string name="sign_out_confirm">Biztosan kijelentkezel?</string>
+    <string name="delete_account_confirm">Biztosan törölni akarod a fiókodat? Ezzel véglegesen törlődik minden adatod, beleértve a podcastokat, a beállításokat és az összekapcsolt fiókokat. A művelet nem vonható vissza.</string>
+    <string name="delete_account_signin_again">A bejelentkezésed lejárt, ezért a fiókod nem lett törölve, és semmi sem lett eltávolítva. Jelentkezz ki, jelentkezz be újra, majd próbáld meg újra a Fiók törlése műveletet.</string>
+    <string name="delete_account_failed">Nem sikerült befejezni a fiókod törlését. Ellenőrizd a kapcsolatot, és próbáld újra.</string>
+
+    <!-- Player -->
+    <string name="playing">Lejátszás</string>
+    <string name="paused">Szüneteltetve</string>
+    <string name="play">Lejátszás</string>
+    <string name="pause">Szünet</string>
+    <string name="loading">Betöltés…</string>
+    <string name="generating">Készítés…</string>
+    <string name="generating_progress">Készítés… %d%%</string>
+    <string name="generate_episode">Epizód készítése</string>
+    <string name="regenerate">Újrakészítés</string>
+    <string name="episode_history">Epizódelőzmények</string>
+    <string name="skip_back">Vissza 15 másodpercet</string>
+    <string name="skip_forward">Előre 15 másodpercet</string>
+    <string name="skip_back_mini">Vissza</string>
+    <string name="skip_forward_mini">Előre</string>
+    <string name="buffering">Pufferelés…</string>
+    <string name="playback_error_stream">A rádió nem érhető el. Ellenőrizd a kapcsolatot, és próbáld újra.</string>
+    <string name="playback_error_episode">Nem sikerült betölteni ezt a hanganyagot. Ellenőrizd a kapcsolatot, és próbáld újra.</string>
+    <string name="sleep_timer">Elalvási időzítő</string>
+    <string name="timer">Időzítő</string>
+    <string name="sleep_timer_5_min">5 perc</string>
+    <string name="sleep_timer_10_min">10 perc</string>
+    <string name="sleep_timer_15_min">15 perc</string>
+    <string name="sleep_timer_30_min">30 perc</string>
+    <string name="sleep_timer_1_hour">1 óra</string>
+    <string name="min_format">%d perc</string>
+    <string name="today">Ma</string>
+    <string name="bookmark">Könyvjelző</string>
+    <string name="more">Továbbiak</string>
+    <string name="hide_topic">Téma elrejtése</string>
+    <string name="hide">Elrejtés</string>
+
+    <!-- Errors -->
+    <string name="error_generic">Hiba történt</string>
+    <string name="error_network">Hálózati hiba. Ellenőrizd a kapcsolatot.</string>
+    <string name="error_auth">Sikertelen hitelesítés</string>
+    <string name="error_no_internet">Nincs internetkapcsolat. Ellenőrizd a hálózatot, és próbáld újra.</string>
+    <string name="generation_failed">Sikertelen létrehozás</string>
+
+    <!-- Misc -->
+    <string name="min_daily">Naponta %d perc</string>
+    <string name="connected">Csatlakoztatva</string>
+    <string name="not_connected">Nincs csatlakoztatva</string>
+    <string name="not_connected_lower">Nincs csatlakoztatva</string>
+    <string name="coming_soon">Hamarosan</string>
+    <string name="microsoft_coming_soon">A Microsoft-fiók integrációja hamarosan érkezik. Maradj velünk!</string>
+
+    <!-- Onboarding -->
+    <string name="welcome_to_audexa">Üdv az Audexában</string>
+    <string name="welcome_description">Személyre szabott AI-rádiód, amely a legfrissebb híreket, technológiai újdonságokat és témákat izgalmas, podcast stílusú összefoglalókká alakítja.</string>
+    <string name="get_started">Kezdjük</string>
+    <string name="connect_your_account">Kapcsold össze a fiókodat</string>
+    <string name="connect_account_description">Kapcsold össze a Google-fiókodat, hogy az e-mailjeidből és a naptáradból személyre szabott napi összefoglalókat kapj.</string>
+    <string name="gmail">Gmail</string>
+    <string name="calendar">Naptár</string>
+    <string name="include_email_highlights">E-mailes kiemelések az összefoglalódban</string>
+    <string name="include_calendar_events">Közelgő események az összefoglalódban</string>
+    <string name="continue_button">Tovább</string>
+    <string name="skip_for_now">Kihagyás most</string>
+    <string name="connect_later_hint">Később is összekapcsolhatod a Beállításokban</string>
+    <string name="connect">Összekapcsolás</string>
+    <string name="choose_your_interests">Válaszd ki az érdeklődési köreidet</string>
+    <string name="choose_interests_description">Válaszd ki azokat a témákat, amelyekről hallani szeretnél. Kifejezetten neked készítünk napi epizódokat.</string>
+    <string name="topics_selected">Kiválasztott témák: %d</string>
+    <string name="topics_selected_plural_suffix">""</string>
+    <string name="complete_setup">Beállítás befejezése</string>
+
+    <!-- Linked Accounts -->
+    <string name="enable_daily_brief">Napi összefoglaló bekapcsolása</string>
+    <string name="enable_daily_brief_description">Kapcsold össze a Gmailt, hogy az e-mailjeid alapján személyre szabott napi összefoglalókat kapj. Összefoglaljuk a fontos frissítéseket, hogy tájékozottan kezdhesd a napot.</string>
+    <string name="google_calendar">Google Calendar</string>
+    <string name="outlook">Outlook</string>
+    <string name="daily_brief_sources">A napi összefoglaló forrásai</string>
+    <string name="email_summaries">E-mail-összefoglalók</string>
+    <string name="include_email_in_brief">E-mail-összefoglalók a napi összefoglalóban</string>
+    <string name="calendar_events">Naptáresemények</string>
+    <string name="include_calendar_in_brief">Közelgő események a napi összefoglalóban</string>
+    <string name="unlink">Leválasztás</string>
+    <string name="soon">Hamarosan</string>
+    <string name="your_privacy">Adatvédelem</string>
+    <string name="privacy_note">Az összefoglalód elkészítéséhez a szerverünk elolvassa a legutóbbi Gmail-üzeneteidet és naptáreseményeidet. A legfontosabb e-mailjeid feladójának nevét, tárgyát és az első 100 karakterét, valamint az események címét, időpontját és helyszínét elküldjük az Anthropicnak, az AI-szolgáltatónknak, hogy megírja a szöveget. Az e-mailjeid szövegét nem tároljuk, de az elkészült összefoglaló hanganyagát addig őrizzük, amíg törlöd a fiókodat. A Leválasztás nem távolítja el a szerverünkön tárolt Google-hozzáférést; ezt a Profilban a Fiók törlése teszi meg.</string>
+    <string name="microsoft_outlook_coming_soon">A Microsoft Outlook összekapcsolása egy későbbi frissítésben lesz elérhető.</string>
+    <string name="gmail_linking_cancelled">A Gmail összekapcsolása megszakadt</string>
+    <string name="calendar_linking_cancelled">A naptár összekapcsolása megszakadt</string>
+    <string name="reconnect">Újracsatlakozás</string>
+
+    <!-- Hidden Topics -->
+    <string name="no_hidden_topics">Nincsenek elrejtett témák</string>
+    <string name="no_hidden_topics_description">Az elrejtett témák itt jelennek meg. Bármikor újra megjelenítheted őket.</string>
+    <string name="unhide_hint">Koppints a szem ikonra, hogy újra megjelenjen a téma.</string>
+    <string name="unhide">Megjelenítés</string>
+
+    <!-- Language Settings -->
+    <string name="language">Nyelv</string>
+    <string name="language_coming_soon">Hamarosan</string>
+    <string name="language_coming_soon_toast">Ez még nem érhető el. Feljegyeztük az érdeklődésedet.</string>
+    <string name="generating_language">Az epizódod előkészítése %1$s nyelven. Az első akár néhány percig is eltarthat.</string>
+    <string name="language_fallback_note">A podcastok még nem érhetők el %1$s nyelven, ezért %2$s nyelvet választottunk neked.</string>
+    <string name="error_language_unavailable">Ez a nyelv még nem érhető el.</string>
+    <string name="error_daily_limit">Elérted a mai korlátot az új nyelvű epizódokra. Próbáld újra holnap.</string>
+    <string name="language_page_title">Válaszd ki a nyelvet</string>
+    <string name="language_page_subtitle">A podcastok hat nyelven érhetők el. A rádió csak angolul szól. A választásod segít eldönteni, mit adjunk hozzá.</string>
+    <string name="language_description">Válaszd ki a kívánt nyelvet.</string>
+    <string name="language_note">A podcastok angol, spanyol, francia, német, portugál és olasz nyelven érhetők el. Egy új nyelven az első epizód elkészítése néhány percet vesz igénybe. A rádió csak angolul szól. Más nyelvek esetén rögzítjük, melyiket választod (a neved nélkül), hogy eldönthessük, mit adjunk hozzá legközelebb.</string>
+    <string name="selected">Kiválasztva</string>
+
+    <!-- App language (the language of menus and buttons; separate from the podcast language) -->
+    <string name="app_language">Az app nyelve</string>
+    <string name="app_language_follow_phone">Telefon nyelve</string>
+    <string name="app_language_description">A menük és a gombok nyelve. A podcastok a fentebb választott nyelven maradnak.</string>
+    <string name="ui_lang_offer_title">Megjelenjen az app %1$s nyelven is?</string>
+    <string name="ui_lang_offer_body">Csak a menük és a gombok változnak. Ezt bármikor módosíthatod a profilbeállításokban.</string>
+    <string name="ui_lang_offer_yes">Igen, legyen %1$s</string>
+    <string name="ui_lang_offer_no">Nem, marad %1$s</string>
+
+    <!-- Suggest a topic -->
+    <string name="suggest_topic">Témajavaslat</string>
+    <string name="suggest_topic_inline">Nem látod a témádat? Javasolj egyet</string>
+    <string name="suggest_topic_description">Mondd el, mit szeretnél hallgatni, és megfontoljuk a hozzáadását.</string>
+    <string name="suggest_topic_name_label">Téma neve</string>
+    <string name="suggest_topic_name_hint">pl. Kvantumszámítástechnika</string>
+    <string name="suggest_topic_details_label">Leírás (nem kötelező)</string>
+    <string name="suggest_topic_details_hint">Mit fedjen le ez a téma?</string>
+    <string name="suggest_topic_thanks">Köszönjük, átnézzük a javaslatokat, és a jókat hozzáadjuk.</string>
+    <string name="submit">Küldés</string>
+    <string name="submitting">Küldés…</string>
+    <string name="no_topics_title">Jelenleg nincs elérhető téma.</string>
+    <string name="no_topics_hint">Koppints a Tovább gombra a beállítás befejezéséhez — a témákat később is kiválaszthatod a Kezdőlapon.</string>
+
+    <!-- Live radio -->
+    <string name="radio_languages">Rádió nyelvei</string>
+    <string name="radio_languages_note">A kiválasztott adók megjelennek a kezdőképernyődön. Legalább egy nyelvet engedélyezni kell.</string>
+    <string name="radio_home_tagline">AI-alapú hírek éjjel-nappal · ÉLŐ</string>
+    <string name="radio_tagline">AI-alapú hírek és beszélgetések éjjel-nappal</string>
+    <string name="share_whats_playing">Oszd meg, mi szól éppen</string>
+    <string name="share_station">%1$s megosztása</string>
+    <string name="radio_up_next">Következik</string>
+    <string name="radio_requests">Kérések</string>
+    <string name="radio_generating">Készítés</string>
+    <string name="radio_generating_badge">készül</string>
+    <string name="radio_request_hint">Koppints a mikrofonra, és kérj témát az élő sorba</string>
+    <string name="radio_request_topic">Témakérés</string>
+    <string name="radio_request_title">Kérj egy témát</string>
+    <string name="radio_request_description">Mondd el az Audexa Rádiónak, mit szeretnél hallani. Felkerül az élő sorra.</string>
+    <string name="radio_add_to_queue">Hozzáadás az élő sorhoz</string>
+    <string name="radio_chat_hint">Csevegj a hallgatókkal...</string>
+    <string name="radio_chat">Csevegés</string>
+    <string name="radio_now_badge">MOST</string>
+    <string name="radio_music">Zene</string>
+    <string name="send">Küldés</string>
+
+    <!-- Voice Settings -->
+    <string name="loading_voices">Hangok betöltése…</string>
+    <string name="no_voice_pairs">Nincs elérhető hangpár</string>
+    <string name="no_voices">Nincs elérhető hang</string>
+    <string name="voice_pairs_description">Válassz előre beállított hangpárt a podcast műsorvezetőinek.</string>
+    <string name="host_1">1. műsorvezető</string>
+    <string name="host_2">2. műsorvezető</string>
+    <string name="host_1_voice">1. műsorvezető hangja</string>
+    <string name="host_2_voice">2. műsorvezető hangja</string>
+
+    <!-- Theme Settings -->
+    <string name="theme_system">Rendszer</string>
+    <string name="theme_system_description">Az eszköz beállításait követi</string>
+    <string name="theme_dark">Sötét</string>
+    <string name="theme_dark_description">Mindig sötét mód</string>
+    <string name="theme_light">Világos</string>
+    <string name="theme_light_description">Mindig világos mód</string>
+
+    <!-- Notification Settings -->
+    <string name="permission">Engedély</string>
+    <string name="enabled">Bekapcsolva</string>
+    <string name="not_enabled">Kikapcsolva</string>
+    <string name="daily_brief_schedule">A napi összefoglaló időzítése</string>
+    <string name="daily_brief_notifications">Napi összefoglaló értesítései</string>
+    <string name="daily_brief_notify_hint">Értesítést kapsz, amikor kész az összefoglalód</string>
+    <string name="daily_brief_content">A napi összefoglaló tartalma</string>
+    <string name="include_topic_updates">Témafrissítések belevétele</string>
+    <string name="include_topic_updates_hint">A témáid friss hírei bekerülnek a napi összefoglalóba</string>
+    <string name="notification_info">A napi összefoglalód a megadott időpontra elkészül. Értesítést kapsz, amint lejátszható.</string>
+    <string name="select_time">Időpont kiválasztása</string>
+
+    <!-- Subscription / Paywall -->
+    <string name="enjoy_uninterrupted">Zavartalan hallgatás</string>
+    <string name="no_audio_ad_interruptions">Nincsenek hangreklámok</string>
+    <string name="seamless_episode_playback">Megszakítás nélküli epizódlejátszás</string>
+    <string name="support_indie_development">Támogasd a független fejlesztést</string>
+    <string name="ad_free_subscriber">Reklámmentes előfizető vagy!</string>
+    <string name="yearly">Éves</string>
+    <string name="save_percent">58%% megtakarítás</string>
+    <string name="monthly">Havi</string>
+    <string name="subscribe">Előfizetés</string>
+    <string name="restore_purchases">Vásárlások visszaállítása</string>
+    <string name="payment_fine_print">A díjat a Google Play-fiókod terheli. Az előfizetés automatikusan megújul, hacsak legalább 24 órával az aktuális időszak vége előtt le nem mondod.</string>
+    <string name="per_year">/év</string>
+    <string name="per_month">/hó</string>
+    <string name="per_week">/hét</string>
+
+    <!-- Ads -->
+    <string name="sponsored">SZPONZORÁLT</string>
+    <string name="skip">Kihagyás</string>
+    <string name="skip_ad">Reklám kihagyása</string>
+    <string name="ad_content_description">Reklám</string>
+
+    <!-- Radio Call-In -->
+    <string name="call_to_request">Hívj, és kérj témát</string>
+    <string name="call_in_label">Hívás: (833) 398-1230</string>
+
+    <!-- Splash Screen -->
+    <string name="splash_tagline">Az AI-alapú hangos összefoglalód</string>
+
+    <!-- Notifications (non-composable) -->
+    <string name="notification_good_morning">Jó reggelt!</string>
+    <string name="notification_daily_brief_text">Itt a napi összefoglalód ideje. Koppints, és légy naprakész az e-mailjeidről, a naptáradról és a hírekről.</string>
+    <string name="daily_brief_channel_description">Napi összefoglaló emlékeztető értesítések</string>
+    <string name="radio_topic_channel_name">Rádiós témaemlékeztetők</string>
+    <string name="radio_topic_channel_description">Értesítést kapsz, ha egy könyvjelzővel megjelölt téma szól az Audexa Rádióban</string>
+    <string name="radio_topic_notification_title">Most az Audexa Rádióban</string>
+    <string name="radio_topic_notification_body">%1$s élőben szól. Koppints, és hallgasd.</string>
+
+    <!-- Daily Brief Playback -->
+    <string name="daily_brief_title_format">Napi összefoglaló - %s</string>
+    <string name="daily_brief_description">Személyre szabott reggeli összefoglalód</string>
+
+    <!-- Morning briefing: one local notification per day, opt-in after first play -->
+    <string name="briefing_notification_title">Ma az Audexán</string>
+    <string name="briefing_notification_body_fallback">Az Audexa Rádió éppen szól. Koppints a hallgatáshoz.</string>
+    <plurals name="briefing_notification_body_topics">
+        <item quantity="one">%1$d új téma-podcast: %2$s. Koppints a hallgatáshoz.</item>
+        <item quantity="other">%1$d új téma-podcast: %2$s. Koppints a hallgatáshoz.</item>
+    </plurals>
+    <string name="briefing_names_with_more">%1$s és még %2$d</string>
+    <string name="briefing_optin_title">Emlékeztessünk, ha elkészültek az új téma-podcastok?</string>
+    <string name="briefing_optin_accept">Emlékeztess</string>
+    <string name="briefing_optin_decline">Most nem</string>
+
+    <!-- Ask the hosts (English only for now) -->
+    <string name="ask_entry_title">Kérdezd a műsorvezetőket</string>
+    <string name="ask_entry_subtitle">A mai meccs, egy bemutató, egy hír: két AI-műsorvezető megbeszéli</string>
+    <string name="ask_title">Kérdezd a műsorvezetőket</string>
+    <string name="ask_intro">Írj le egy eseményt vagy hírt. A műsorvezetők csak arról beszélnek, amit a friss főcímek közölnek, és szólnak, ha nincs elég tudósítás. Az epizódokat AI készíti, és egy-két percet vesz igénybe.</string>
+    <string name="ask_field_label">Miről beszélgessenek?</string>
+    <string name="ask_field_placeholder">pl. Ki nyerte ma este a Warriors meccsét?</string>
+    <string name="ask_counter">%1$d/%2$d</string>
+    <string name="ask_language_label">Nyelv</string>
+    <string name="ask_submit">Kérdés</string>
+    <string name="ask_sending">Kérés küldése...</string>
+    <string name="ask_stage_queued">Várakozás egy szabad stúdióra...</string>
+    <string name="ask_stage_reviewing">A kérésed ellenőrzése...</string>
+    <string name="ask_stage_searching">A legfrissebb főcímek olvasása...</string>
+    <string name="ask_stage_writing">A műsorvezetők készülnek...</string>
+    <string name="ask_stage_recording">Az epizód felvétele...</string>
+    <string name="ask_stage_working">Dolgozunk rajta...</string>
+    <string name="ask_progress_description">Előrehaladás: %1$d százalék</string>
+    <string name="ask_leave_hint">Elhagyhatod ezt a képernyőt. Ha visszatérsz, ugyanennél az epizódnál folytatod.</string>
+    <string name="ask_ai_note">AI által készített beszélgetés két AI-műsorvezető között, friss hírek főcímei alapján.</string>
+    <string name="ask_length">Hossz: %1$s</string>
+    <string name="ask_play">Epizód lejátszása</string>
+    <string name="ask_pause">Szünet</string>
+    <string name="ask_share">Megosztás</string>
+    <string name="ask_share_chooser">Epizód megosztása</string>
+    <string name="ask_share_failed">Nem sikerült megnyitni a megosztási lapot</string>
+    <string name="ask_sources_title">Főcímek, amelyeken az epizód alapul</string>
+    <string name="ask_sources_note">A műsorvezetők csak azt tárgyalják meg, amit ezek a főcímek közölnek. A teljes cikkekért nézd meg a forrásokat.</string>
+    <string name="ask_ask_another">Új kérdés</string>
+    <string name="ask_edit_question">Kérdés szerkesztése</string>
+    <string name="ask_check_again">Újraellenőrzés</string>
+    <string name="ask_unavailable">A műsorvezetők kérdezése jelenleg nem érhető el.</string>
+    <string name="ask_loading">Elérhetőség ellenőrzése...</string>
+    <string name="ask_err_input">Ellenőrizd a kérdésedet, és próbáld újra.</string>
+    <string name="ask_err_limited">A műsorvezetők kérdezése most túlterhelt, vagy elérte a korlátját. Próbáld újra később.</string>
+    <string name="ask_err_not_found">Ezt a kérést már nem találjuk. Kérdezz újra.</string>
+    <string name="ask_err_offline">Nincs kapcsolat. Ellenőrizd az internetet, és próbáld újra.</string>
+    <string name="ask_err_timeout">Ez a vártnál tovább tart. Lehet, hogy az epizód még úton van.</string>
+    <string name="ask_err_server">Hiba történt. Próbáld újra.</string>
+    <string name="ask_err_refused">A műsorvezetők nem tudnak epizódot készíteni erről.</string>
+    <string name="ask_err_no_coverage">Nem találtunk elég friss tudósítást erről, ezért nem készítettünk epizódot.</string>
+    <string name="ask_err_failed">Az epizódot nem sikerült elkészíteni. Próbáld újra.</string>
+</resources>

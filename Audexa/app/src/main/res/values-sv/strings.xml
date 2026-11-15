@@ -1,0 +1,360 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Audexa</string>
+    <string name="app_tagline">Din personliga AI-radio</string>
+
+    <!-- Auth -->
+    <string name="sign_in_with_google">Logga in med Google</string>
+    <string name="sign_out">Logga ut</string>
+    <string name="delete_account">Radera konto</string>
+    <string name="auth_description">Lyssna på AI-genererade poddar om ämnen du bryr dig om. Länka din e-post i inställningarna för att få personliga dagliga briefingar.</string>
+    <string name="auth_terms">Genom att fortsätta godkänner du våra användarvillkor och vår integritetspolicy</string>
+    <string name="start">Starta</string>
+
+    <!-- Navigation -->
+    <string name="nav_home">Hem</string>
+    <string name="nav_profile">Profil</string>
+    <string name="back">Tillbaka</string>
+    <string name="close">Stäng</string>
+    <string name="cancel">Avbryt</string>
+    <string name="ok">OK</string>
+    <string name="delete">Radera</string>
+    <string name="retry">Försök igen</string>
+    <string name="enable">Aktivera</string>
+
+    <!-- Tabs -->
+    <string name="tab_for_you">För dig</string>
+    <string name="tab_discover">Upptäck</string>
+
+    <!-- Home -->
+    <string name="good_morning">God morgon</string>
+    <string name="good_afternoon">God eftermiddag</string>
+    <string name="good_evening">God kväll</string>
+    <string name="daily_brief">Daglig briefing</string>
+    <string name="daily_brief_subtitle">Daglig briefing • %s</string>
+    <string name="keep_listening">Fortsätt lyssna</string>
+    <string name="your_topics">Dina ämnen</string>
+    <string name="topic_podcasts">Ämnespoddar</string>
+    <string name="recommended_for_you">Rekommenderat för dig</string>
+    <string name="more_for_you">Mer för dig</string>
+    <string name="all_topics">Alla ämnen</string>
+    <string name="matching_topics">Matchande ämnen</string>
+    <string name="tap_to_explore">Tryck för att utforska och spela</string>
+    <string name="link_account_prompt">Länka din e-post för att skapa personliga briefingar</string>
+    <string name="link_account">Länka konto</string>
+    <string name="find_new_shows">Hitta nya program</string>
+    <string name="search">Sök</string>
+    <string name="clear">Rensa</string>
+    <string name="no_results_for">Inga resultat för \"%s\"</string>
+
+    <!-- Profile -->
+    <string name="profile">Profil</string>
+    <string name="linked_accounts">Länkade konton</string>
+    <string name="preferences">Inställningar</string>
+    <string name="podcast_language">Poddspråk</string>
+    <string name="briefing_time">Tid för briefing</string>
+    <string name="topics">Ämnen</string>
+    <string name="voice_preference">Röstval</string>
+    <string name="hidden_topics">Dolda ämnen</string>
+    <string name="about">Om</string>
+    <string name="version">Version</string>
+    <string name="terms_of_service">Användarvillkor</string>
+    <string name="privacy_policy">Integritetspolicy</string>
+    <string name="analytics_title">Dela anonym användningsstatistik</string>
+    <string name="analytics_subtitle">Vilka ämnen och språk som används och hur länge. Ett slumpmässigt id på den här enheten, inget namn, ingen e-postadress och ingen IP-adress. Om du stänger av detta raderas id:t.</string>
+    <string name="premium">Premium</string>
+    <string name="go_ad_free">Bli reklamfri</string>
+    <string name="ad_free">Reklamfri</string>
+    <string name="active_subscription">Aktiv prenumeration</string>
+    <string name="remove_all_ads">Ta bort all reklam</string>
+    <string name="email_accounts">E-postkonton</string>
+    <string name="app_theme">Apptema</string>
+    <string name="voice_settings">Röstinställningar</string>
+    <string name="choose_podcast_voices">Välj poddröster</string>
+    <string name="hidden_count">%d dolda</string>
+    <string name="notifications">Aviseringar</string>
+    <string name="daily_brief_reminders">Påminnelser om daglig briefing</string>
+    <string name="sign_out_confirm">Vill du verkligen logga ut?</string>
+    <string name="delete_account_confirm">Vill du verkligen radera ditt konto? Då raderas all din data permanent, inklusive poddar, inställningar och länkade konton. Det här går inte att ångra.</string>
+    <string name="delete_account_signin_again">Din inloggning har gått ut, så ditt konto raderades inte och inget togs bort. Logga ut, logga in igen och försök sedan med Radera konto en gång till.</string>
+    <string name="delete_account_failed">Vi kunde inte slutföra raderingen av ditt konto. Kontrollera din anslutning och försök igen.</string>
+
+    <!-- Player -->
+    <string name="playing">Spelas nu</string>
+    <string name="paused">Pausad</string>
+    <string name="play">Spela</string>
+    <string name="pause">Pausa</string>
+    <string name="loading">Laddar…</string>
+    <string name="generating">Skapar…</string>
+    <string name="generating_progress">Skapar… %d%%</string>
+    <string name="generate_episode">Skapa avsnitt</string>
+    <string name="regenerate">Skapa på nytt</string>
+    <string name="episode_history">Avsnittshistorik</string>
+    <string name="skip_back">Hoppa bakåt 15 sekunder</string>
+    <string name="skip_forward">Hoppa framåt 15 sekunder</string>
+    <string name="skip_back_mini">Hoppa bakåt</string>
+    <string name="skip_forward_mini">Hoppa framåt</string>
+    <string name="buffering">Buffrar…</string>
+    <string name="playback_error_stream">Det går inte att nå radion. Kontrollera din anslutning och försök igen.</string>
+    <string name="playback_error_episode">Det går inte att ladda ljudet. Kontrollera din anslutning och försök igen.</string>
+    <string name="sleep_timer">Sovtimer</string>
+    <string name="timer">Timer</string>
+    <string name="sleep_timer_5_min">5 min</string>
+    <string name="sleep_timer_10_min">10 min</string>
+    <string name="sleep_timer_15_min">15 min</string>
+    <string name="sleep_timer_30_min">30 min</string>
+    <string name="sleep_timer_1_hour">1 timme</string>
+    <string name="min_format">%d min</string>
+    <string name="today">Idag</string>
+    <string name="bookmark">Bokmärk</string>
+    <string name="more">Mer</string>
+    <string name="hide_topic">Dölj ämne</string>
+    <string name="hide">Dölj</string>
+
+    <!-- Errors -->
+    <string name="error_generic">Något gick fel</string>
+    <string name="error_network">Nätverksfel. Kontrollera din anslutning.</string>
+    <string name="error_auth">Autentiseringen misslyckades</string>
+    <string name="error_no_internet">Ingen internetanslutning. Kontrollera ditt nätverk och försök igen.</string>
+    <string name="generation_failed">Det gick inte att skapa</string>
+
+    <!-- Misc -->
+    <string name="min_daily">%d min per dag</string>
+    <string name="connected">Ansluten</string>
+    <string name="not_connected">Inte ansluten</string>
+    <string name="not_connected_lower">Inte ansluten</string>
+    <string name="coming_soon">Kommer snart</string>
+    <string name="microsoft_coming_soon">Integrationen med Microsoft-konton kommer snart. Håll utkik!</string>
+
+    <!-- Onboarding -->
+    <string name="welcome_to_audexa">Välkommen till Audexa</string>
+    <string name="welcome_description">Din personliga AI-radio som förvandlar de senaste nyheterna, tekniken och ämnena till engagerande briefingar i poddstil.</string>
+    <string name="get_started">Kom igång</string>
+    <string name="connect_your_account">Anslut ditt konto</string>
+    <string name="connect_account_description">Länka ditt Google-konto för att få personliga dagliga briefingar baserade på din e-post och din kalender.</string>
+    <string name="gmail">Gmail</string>
+    <string name="calendar">Kalender</string>
+    <string name="include_email_highlights">Ta med e-postsammanfattningar i din briefing</string>
+    <string name="include_calendar_events">Ta med kommande händelser i din briefing</string>
+    <string name="continue_button">Fortsätt</string>
+    <string name="skip_for_now">Hoppa över</string>
+    <string name="connect_later_hint">Du kan alltid ansluta senare i inställningarna</string>
+    <string name="connect">Anslut</string>
+    <string name="choose_your_interests">Välj dina intressen</string>
+    <string name="choose_interests_description">Välj ämnen du vill höra om. Vi skapar dagliga avsnitt just för dig.</string>
+    <string name="topics_selected">Valda ämnen: %d</string>
+    <string name="topics_selected_plural_suffix"></string>
+    <string name="complete_setup">Slutför</string>
+
+    <!-- Linked Accounts -->
+    <string name="enable_daily_brief">Aktivera daglig briefing</string>
+    <string name="enable_daily_brief_description">Anslut din Gmail för att få personliga dagliga briefingar baserade på din e-post. Vi sammanfattar viktiga uppdateringar så att du kan starta dagen välinformerad.</string>
+    <string name="google_calendar">Google Calendar</string>
+    <string name="outlook">Outlook</string>
+    <string name="daily_brief_sources">Källor för daglig briefing</string>
+    <string name="email_summaries">E-postsammanfattningar</string>
+    <string name="include_email_in_brief">Ta med e-postsammanfattningar i daglig briefing</string>
+    <string name="calendar_events">Kalenderhändelser</string>
+    <string name="include_calendar_in_brief">Ta med kommande händelser i daglig briefing</string>
+    <string name="unlink">Koppla bort</string>
+    <string name="soon">Snart</string>
+    <string name="your_privacy">Din integritet</string>
+    <string name="privacy_note">För att skapa din briefing läser vår server dina senaste Gmail-meddelanden och kalenderhändelser. Avsändarens namn, ämnesraden och de första 100 tecknen i dina viktigaste e-postmeddelanden, plus händelsernas titlar, tider och platser, skickas till Anthropic, vår AI-leverantör, för att skriva manuset. Vi sparar inte din e-posttext, men det färdiga ljudet från briefingen sparas tills du raderar ditt konto. Att koppla bort tar inte bort Google-åtkomsten som är sparad på vår server. Det gör Radera konto under Profil.</string>
+    <string name="microsoft_outlook_coming_soon">Länkning av Microsoft Outlook blir tillgänglig i en kommande uppdatering.</string>
+    <string name="gmail_linking_cancelled">Länkningen av Gmail avbröts</string>
+    <string name="calendar_linking_cancelled">Länkningen av kalendern avbröts</string>
+    <string name="reconnect">Anslut igen</string>
+
+    <!-- Hidden Topics -->
+    <string name="no_hidden_topics">Inga dolda ämnen</string>
+    <string name="no_hidden_topics_description">Ämnen du döljer visas här. Du kan visa dem igen när du vill.</string>
+    <string name="unhide_hint">Tryck på ögonikonen för att visa ett ämne igen.</string>
+    <string name="unhide">Visa igen</string>
+
+    <!-- Language Settings -->
+    <string name="language">Språk</string>
+    <string name="language_coming_soon">Kommer snart</string>
+    <string name="language_coming_soon_toast">Inte tillgängligt än. Vi har noterat ditt intresse.</string>
+    <string name="generating_language">Förbereder ditt avsnitt på %1$s. Det första kan ta några minuter.</string>
+    <string name="language_fallback_note">Poddar finns inte på %1$s ännu, så vi valde %2$s åt dig.</string>
+    <string name="error_language_unavailable">Det språket är inte tillgängligt ännu.</string>
+    <string name="error_daily_limit">Dagens gräns för avsnitt på nya språk är nådd. Försök igen i morgon.</string>
+    <string name="language_page_title">Välj språk</string>
+    <string name="language_page_subtitle">Poddar finns på sex språk. Radion är bara på engelska. Ditt val hjälper oss att bestämma vad vi ska lägga till.</string>
+    <string name="language_description">Välj ditt föredragna språk.</string>
+    <string name="language_note">Poddar finns på engelska, spanska, franska, tyska, portugisiska och italienska. Det första avsnittet på ett nytt språk tar några minuter att förbereda. Radion är bara på engelska. För andra språk sparar vi vilket du väljer, utan ditt namn, för att avgöra vad vi ska lägga till härnäst.</string>
+    <string name="selected">Valt</string>
+
+    <!-- App language (the language of menus and buttons; separate from the podcast language) -->
+    <string name="app_language">Appens språk</string>
+    <string name="app_language_follow_phone">Följ telefonen</string>
+    <string name="app_language_description">Språket för menyer och knappar. Poddar förblir på språket du valde ovan.</string>
+    <string name="ui_lang_offer_title">Vill du visa appen på %1$s också?</string>
+    <string name="ui_lang_offer_body">Bara menyer och knappar ändras. Du kan ändra detta när som helst i dina profilinställningar.</string>
+    <string name="ui_lang_offer_yes">Ja, använd %1$s</string>
+    <string name="ui_lang_offer_no">Nej, behåll %1$s</string>
+
+    <!-- Suggest a topic -->
+    <string name="suggest_topic">Föreslå ett ämne</string>
+    <string name="suggest_topic_inline">Hittar du inte ditt ämne? Föreslå ett</string>
+    <string name="suggest_topic_description">Berätta vad du vill lyssna på så överväger vi att lägga till det.</string>
+    <string name="suggest_topic_name_label">Ämnets namn</string>
+    <string name="suggest_topic_name_hint">t.ex. Kvantdatorer</string>
+    <string name="suggest_topic_details_label">Beskrivning (valfritt)</string>
+    <string name="suggest_topic_details_hint">Vad ska ämnet handla om?</string>
+    <string name="suggest_topic_thanks">Tack! Vi går igenom förslagen och lägger till de bra.</string>
+    <string name="submit">Skicka</string>
+    <string name="submitting">Skickar…</string>
+    <string name="no_topics_title">Inga ämnen tillgängliga just nu.</string>
+    <string name="no_topics_hint">Tryck på Fortsätt för att slutföra installationen — du kan välja ämnen senare från startskärmen.</string>
+
+    <!-- Live radio -->
+    <string name="radio_languages">Radiospråk</string>
+    <string name="radio_languages_note">Valda kanaler visas på din startskärm. Minst ett språk måste vara aktiverat.</string>
+    <string name="radio_home_tagline">AI-drivna nyheter dygnet runt · LIVE</string>
+    <string name="radio_tagline">AI-drivna nyheter och samtal dygnet runt</string>
+    <string name="share_whats_playing">Dela det som spelas</string>
+    <string name="share_station">Dela %1$s</string>
+    <string name="radio_up_next">Nästa</string>
+    <string name="radio_requests">Önskemål</string>
+    <string name="radio_generating">Skapar</string>
+    <string name="radio_generating_badge">skapas</string>
+    <string name="radio_request_hint">Tryck på mikrofonen för att önska ett ämne till livekön</string>
+    <string name="radio_request_topic">Önska ämne</string>
+    <string name="radio_request_title">Önska ett ämne</string>
+    <string name="radio_request_description">Berätta för Audexa Radio vad du vill höra. Det läggs till i livekön.</string>
+    <string name="radio_add_to_queue">Lägg till i livekön</string>
+    <string name="radio_chat_hint">Chatta med lyssnare...</string>
+    <string name="radio_chat">Chatt</string>
+    <string name="radio_now_badge">NU</string>
+    <string name="radio_music">Musik</string>
+    <string name="send">Skicka</string>
+
+    <!-- Voice Settings -->
+    <string name="loading_voices">Laddar röster…</string>
+    <string name="no_voice_pairs">Inga röstpar tillgängliga</string>
+    <string name="no_voices">Inga röster tillgängliga</string>
+    <string name="voice_pairs_description">Välj ett förkonfigurerat röstpar för dina poddvärdar.</string>
+    <string name="host_1">Värd 1</string>
+    <string name="host_2">Värd 2</string>
+    <string name="host_1_voice">Röst för värd 1</string>
+    <string name="host_2_voice">Röst för värd 2</string>
+
+    <!-- Theme Settings -->
+    <string name="theme_system">System</string>
+    <string name="theme_system_description">Följ enhetens inställningar</string>
+    <string name="theme_dark">Mörkt</string>
+    <string name="theme_dark_description">Alltid mörkt läge</string>
+    <string name="theme_light">Ljust</string>
+    <string name="theme_light_description">Alltid ljust läge</string>
+
+    <!-- Notification Settings -->
+    <string name="permission">Behörighet</string>
+    <string name="enabled">Aktiverad</string>
+    <string name="not_enabled">Inte aktiverad</string>
+    <string name="daily_brief_schedule">Schema för daglig briefing</string>
+    <string name="daily_brief_notifications">Aviseringar om daglig briefing</string>
+    <string name="daily_brief_notify_hint">Få en avisering när din briefing är klar</string>
+    <string name="daily_brief_content">Innehåll i daglig briefing</string>
+    <string name="include_topic_updates">Ta med ämnesuppdateringar</string>
+    <string name="include_topic_updates_hint">Lägg till rubriker från dina ämnen i daglig briefing</string>
+    <string name="notification_info">Din dagliga briefing skapas och är klar vid den schemalagda tiden. Du får en avisering när den kan spelas.</string>
+    <string name="select_time">Välj tid</string>
+
+    <!-- Subscription / Paywall -->
+    <string name="enjoy_uninterrupted">Lyssna utan avbrott</string>
+    <string name="no_audio_ad_interruptions">Inga avbrott av ljudreklam</string>
+    <string name="seamless_episode_playback">Sömlös uppspelning av avsnitt</string>
+    <string name="support_indie_development">Stöd oberoende apputveckling</string>
+    <string name="ad_free_subscriber">Du är reklamfri prenumerant!</string>
+    <string name="yearly">Årsvis</string>
+    <string name="save_percent">Spara 58%%</string>
+    <string name="monthly">Månadsvis</string>
+    <string name="subscribe">Prenumerera</string>
+    <string name="restore_purchases">Återställ köp</string>
+    <string name="payment_fine_print">Betalningen debiteras ditt Google Play-konto. Prenumerationen förnyas automatiskt om den inte sägs upp minst 24 timmar före slutet av den aktuella perioden.</string>
+    <string name="per_year">/år</string>
+    <string name="per_month">/månad</string>
+    <string name="per_week">/vecka</string>
+
+    <!-- Ads -->
+    <string name="sponsored">SPONSRAT</string>
+    <string name="skip">Hoppa över</string>
+    <string name="skip_ad">Hoppa över reklam</string>
+    <string name="ad_content_description">Reklam</string>
+
+    <!-- Radio Call-In -->
+    <string name="call_to_request">Ring och önska ett ämne</string>
+    <string name="call_in_label">Ring in: (833) 398-1230</string>
+
+    <!-- Splash Screen -->
+    <string name="splash_tagline">Din AI-drivna ljudbriefing</string>
+
+    <!-- Notifications (non-composable) -->
+    <string name="notification_good_morning">God morgon!</string>
+    <string name="notification_daily_brief_text">Dags för din dagliga briefing. Tryck för att hänga med i e-post, kalender och nyheter.</string>
+    <string name="daily_brief_channel_description">Påminnelser om daglig briefing</string>
+    <string name="radio_topic_channel_name">Påminnelser om radioämnen</string>
+    <string name="radio_topic_channel_description">Få en avisering när ett bokmärkt ämne spelas på Audexa Radio</string>
+    <string name="radio_topic_notification_title">På Audexa Radio just nu</string>
+    <string name="radio_topic_notification_body">%1$s spelas live. Tryck för att lyssna.</string>
+
+    <!-- Daily Brief Playback -->
+    <string name="daily_brief_title_format">Daglig briefing - %s</string>
+    <string name="daily_brief_description">Din personliga morgonbriefing</string>
+
+    <!-- Morning briefing: one local notification per day, opt-in after first play -->
+    <string name="briefing_notification_title">Idag på Audexa</string>
+    <string name="briefing_notification_body_fallback">Audexa Radio spelas just nu. Tryck för att lyssna.</string>
+    <plurals name="briefing_notification_body_topics">
+        <item quantity="one">%1$d ny ämnespodd: %2$s. Tryck för att lyssna.</item>
+        <item quantity="other">%1$d nya ämnespoddar: %2$s. Tryck för att lyssna.</item>
+    </plurals>
+    <string name="briefing_names_with_more">%1$s och %2$d till</string>
+    <string name="briefing_optin_title">Vill du få en påminnelse när nya ämnespoddar är klara?</string>
+    <string name="briefing_optin_accept">Påminn mig</string>
+    <string name="briefing_optin_decline">Inte nu</string>
+
+    <!-- Ask the hosts (English only for now) -->
+    <string name="ask_entry_title">Fråga värdarna</string>
+    <string name="ask_entry_subtitle">Kvällens match, en lansering, en nyhet: två AI-värdar diskuterar det</string>
+    <string name="ask_title">Fråga värdarna</string>
+    <string name="ask_intro">Beskriv en händelse eller en nyhet. Värdarna pratar bara om det som de senaste rubrikerna rapporterar, och säger till om det inte finns tillräckligt med bevakning. Avsnitten är AI-genererade och tar en till två minuter.</string>
+    <string name="ask_field_label">Vad ska de prata om?</string>
+    <string name="ask_field_placeholder">t.ex. Vem vann Warriors-matchen i kväll?</string>
+    <string name="ask_counter">%1$d/%2$d</string>
+    <string name="ask_language_label">Språk</string>
+    <string name="ask_submit">Fråga</string>
+    <string name="ask_sending">Skickar din förfrågan...</string>
+    <string name="ask_stage_queued">Väntar på en ledig studio...</string>
+    <string name="ask_stage_reviewing">Kontrollerar din förfrågan...</string>
+    <string name="ask_stage_searching">Läser de senaste rubrikerna...</string>
+    <string name="ask_stage_writing">Värdarna förbereder sig...</string>
+    <string name="ask_stage_recording">Spelar in avsnittet...</string>
+    <string name="ask_stage_working">Arbetar...</string>
+    <string name="ask_progress_description">Förlopp: %1$d procent</string>
+    <string name="ask_leave_hint">Du kan lämna den här skärmen. När du kommer tillbaka fortsätter du med samma avsnitt.</string>
+    <string name="ask_ai_note">AI-genererat samtal mellan två AI-värdar, baserat på de senaste nyhetsrubrikerna.</string>
+    <string name="ask_length">Längd %1$s</string>
+    <string name="ask_play">Spela avsnitt</string>
+    <string name="ask_pause">Pausa</string>
+    <string name="ask_share">Dela</string>
+    <string name="ask_share_chooser">Dela det här avsnittet</string>
+    <string name="ask_share_failed">Det gick inte att öppna delningsmenyn</string>
+    <string name="ask_sources_title">Rubriker som avsnittet bygger på</string>
+    <string name="ask_sources_note">Värdarna diskuterar bara det som de här rubrikerna rapporterar. Läs källorna för hela artiklarna.</string>
+    <string name="ask_ask_another">Fråga något mer</string>
+    <string name="ask_edit_question">Ändra frågan</string>
+    <string name="ask_check_again">Kontrollera igen</string>
+    <string name="ask_unavailable">Fråga värdarna är inte tillgängligt just nu.</string>
+    <string name="ask_loading">Kontrollerar tillgänglighet...</string>
+    <string name="ask_err_input">Kontrollera din fråga och försök igen.</string>
+    <string name="ask_err_limited">Fråga värdarna är upptaget eller har nått sin gräns. Försök igen senare.</string>
+    <string name="ask_err_not_found">Vi hittar inte den här förfrågan längre. Fråga igen.</string>
+    <string name="ask_err_offline">Ingen anslutning. Kontrollera ditt internet och försök igen.</string>
+    <string name="ask_err_timeout">Det här tar längre tid än väntat. Avsnittet kan fortfarande vara på väg.</string>
+    <string name="ask_err_server">Något gick fel. Försök igen.</string>
+    <string name="ask_err_refused">Värdarna kan inte göra ett avsnitt om det.</string>
+    <string name="ask_err_no_coverage">Vi hittade inte tillräckligt med nyhetsbevakning om det här, så vi gjorde inget avsnitt.</string>
+    <string name="ask_err_failed">Avsnittet kunde inte skapas. Försök igen.</string>
+</resources>

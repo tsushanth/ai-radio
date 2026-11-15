@@ -21,7 +21,7 @@ Minuterie et Contrôles de Lecture
 Configurez une minuterie de sommeil, avancez ou reculez, et profitez d'une lecture fluide avec le support audio en arrière-plan et les contrôles sur l'écran de verrouillage.
 
 COMMENT ÇA MARCHE :
-1. Connectez-vous avec Google
+1. Ouvrez Audexa et appuyez sur Commencer (aucune connexion requise)
 2. Choisissez vos sujets d'intérêt
 3. Liez optionnellement votre e-mail pour des résumés personnalisés
 4. Écoutez des épisodes générés par IA à la demande

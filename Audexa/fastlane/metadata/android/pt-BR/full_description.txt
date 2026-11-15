@@ -21,7 +21,7 @@ Timer de Sono e Controles de Reprodução
 Configure um timer de sono, avance ou retroceda, e aproveite a reprodução contínua com suporte de áudio em segundo plano e controles na tela de bloqueio.
 
 COMO FUNCIONA:
-1. Entre com Google
+1. Abra o Audexa e toque em Começar (não é preciso entrar)
 2. Escolha seus temas de interesse
 3. Opcionalmente vincule seu e-mail para resumos personalizados
 4. Ouça episódios gerados por IA sob demanda

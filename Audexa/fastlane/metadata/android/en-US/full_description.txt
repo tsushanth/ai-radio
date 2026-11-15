@@ -21,7 +21,7 @@ Sleep Timer & Playback Controls
 Set a sleep timer, skip forward or back, and enjoy seamless playback with background audio support and lock screen controls.
 
 HOW IT WORKS:
-1. Sign in with Google
+1. Open Audexa and tap Start (no sign-in needed)
 2. Choose your topics of interest
 3. Optionally link your email for personalized briefings
 4. Listen to AI-generated episodes on demand

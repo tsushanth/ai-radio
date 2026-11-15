@@ -185,6 +185,51 @@
     <string name="language_note">Podcasts are available in English, Spanish, French, German, Portuguese and Italian. The first episode in a new language takes a few minutes to prepare. Radio is English only. For other languages, we record which one you pick, without your name, to decide what to add next.</string>
     <string name="selected">Selected</string>
 
+    <!-- App language (the language of menus and buttons; separate from the podcast language) -->
+    <string name="app_language">App language</string>
+    <string name="app_language_follow_phone">Follow phone</string>
+    <string name="app_language_description">The language of menus and buttons. Podcasts stay in the language you chose above.</string>
+    <string name="ui_lang_offer_title">Show the app in %1$s too?</string>
+    <string name="ui_lang_offer_body">Only menus and buttons change. You can change this any time in your profile settings.</string>
+    <string name="ui_lang_offer_yes">Yes, use %1$s</string>
+    <string name="ui_lang_offer_no">No, keep %1$s</string>
+
+    <!-- Suggest a topic -->
+    <string name="suggest_topic">Suggest a Topic</string>
+    <string name="suggest_topic_inline">Don\'t see your topic? Suggest one</string>
+    <string name="suggest_topic_description">Tell us what you\'d like to listen to and we\'ll consider adding it.</string>
+    <string name="suggest_topic_name_label">Topic name</string>
+    <string name="suggest_topic_name_hint">e.g. Quantum Computing</string>
+    <string name="suggest_topic_details_label">Description (optional)</string>
+    <string name="suggest_topic_details_hint">What should this topic cover?</string>
+    <string name="suggest_topic_thanks">Thanks, we review suggestions and add the good ones.</string>
+    <string name="submit">Submit</string>
+    <string name="submitting">Submitting\u2026</string>
+    <string name="no_topics_title">No topics available right now.</string>
+    <string name="no_topics_hint">Tap Continue to finish setup \u2014 you can pick topics later from the Home screen.</string>
+
+    <!-- Live radio -->
+    <string name="radio_languages">Radio Languages</string>
+    <string name="radio_languages_note">Selected stations will appear on your home screen. At least one language must be enabled.</string>
+    <string name="radio_home_tagline">AI-powered 24/7 news \u00b7 LIVE</string>
+    <string name="radio_tagline">AI-powered 24/7 news and talk</string>
+    <string name="share_whats_playing">Share what\'s playing</string>
+    <string name="share_station">Share %1$s</string>
+    <string name="radio_up_next">Up Next</string>
+    <string name="radio_requests">Requests</string>
+    <string name="radio_generating">Generating</string>
+    <string name="radio_generating_badge">generating</string>
+    <string name="radio_request_hint">Tap the mic to request a topic for the live queue</string>
+    <string name="radio_request_topic">Request Topic</string>
+    <string name="radio_request_title">Request a Topic</string>
+    <string name="radio_request_description">Tell Audexa Radio what you\'d like to hear. It will be added to the live queue.</string>
+    <string name="radio_add_to_queue">Add to Live Queue</string>
+    <string name="radio_chat_hint">Chat with listeners...</string>
+    <string name="radio_chat">Chat</string>
+    <string name="radio_now_badge">NOW</string>
+    <string name="radio_music">Music</string>
+    <string name="send">Send</string>
+
     <!-- Voice Settings -->
     <string name="loading_voices">Loading voices\u2026</string>
     <string name="no_voice_pairs">No voice pairs available</string>
@@ -239,8 +284,8 @@
     <string name="ad_content_description">Ad</string>
 
     <!-- Radio Call-In -->
-    <string name="call_in_phone_number">+1 (833) 398-1230</string>
-    <string name="call_in_phone_uri">tel:+18333981230</string>
+    <string name="call_in_phone_number" translatable="false">+1 (833) 398-1230</string>
+    <string name="call_in_phone_uri" translatable="false">tel:+18333981230</string>
     <string name="call_to_request">Call to request a topic</string>
     <string name="call_in_label">Call in: (833) 398-1230</string>
 

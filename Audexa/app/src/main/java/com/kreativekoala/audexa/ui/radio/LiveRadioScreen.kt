@@ -214,18 +214,18 @@ fun LiveRadioScreen(
                                     com.kreativekoala.audexa.util.LiveShare.buildShareText(viewModel.stationName, topic, url)
                                 )
                             }
-                            context.startActivity(Intent.createChooser(send, "Share ${viewModel.stationName}"))
+                            context.startActivity(Intent.createChooser(send, context.getString(com.kreativekoala.audexa.R.string.share_station, viewModel.stationName)))
                         }) {
                             Icon(
                                 imageVector = Icons.Default.Share,
-                                contentDescription = "Share what's playing",
+                                contentDescription = androidx.compose.ui.res.stringResource(com.kreativekoala.audexa.R.string.share_whats_playing),
                                 tint = Color.White
                             )
                         }
                         IconButton(onClick = onDismiss) {
                             Icon(
                                 imageVector = Icons.Default.Close,
-                                contentDescription = "Close",
+                                contentDescription = androidx.compose.ui.res.stringResource(com.kreativekoala.audexa.R.string.close),
                                 tint = Color.White
                             )
                         }
@@ -249,7 +249,7 @@ fun LiveRadioScreen(
                 Spacer(modifier = Modifier.height(4.dp))
 
                 Text(
-                    text = "AI-powered 24/7 news and talk",
+                    text = androidx.compose.ui.res.stringResource(com.kreativekoala.audexa.R.string.radio_tagline),
                     color = Color.White.copy(alpha = 0.5f),
                     fontSize = 13.sp
                 )
@@ -309,7 +309,7 @@ fun LiveRadioScreen(
                 // Up Next section
                 if (upNextSegments.isNotEmpty()) {
                     QueueSection(
-                        title = "Up Next",
+                        title = androidx.compose.ui.res.stringResource(com.kreativekoala.audexa.R.string.radio_up_next),
                         segments = upNextSegments
                     )
                     Spacer(modifier = Modifier.height(8.dp))
@@ -318,7 +318,7 @@ fun LiveRadioScreen(
                 // Requests section
                 if (requestSegments.isNotEmpty()) {
                     QueueSection(
-                        title = "Requests",
+                        title = androidx.compose.ui.res.stringResource(com.kreativekoala.audexa.R.string.radio_requests),
                         segments = requestSegments
                     )
                     Spacer(modifier = Modifier.height(8.dp))
@@ -338,7 +338,7 @@ fun LiveRadioScreen(
                         ) {
                             Text("🎙️", fontSize = 12.sp)
                             Text(
-                                text = "Generating",
+                                text = androidx.compose.ui.res.stringResource(com.kreativekoala.audexa.R.string.radio_generating),
                                 color = Color(0xFFFB923C).copy(alpha = 0.7f),
                                 fontSize = 12.sp,
                                 fontWeight = FontWeight.Bold
@@ -363,7 +363,7 @@ fun LiveRadioScreen(
                                     color = Color(0xFFFB923C).copy(alpha = 0.3f)
                                 ) {
                                     Text(
-                                        text = "generating",
+                                        text = androidx.compose.ui.res.stringResource(com.kreativekoala.audexa.R.string.radio_generating_badge),
                                         modifier = Modifier.padding(horizontal = 5.dp, vertical = 2.dp),
                                         color = Color(0xFFFB923C),
                                         fontSize = 9.sp,
@@ -432,7 +432,7 @@ fun LiveRadioScreen(
                         Text("📞", fontSize = 16.sp)
                         Column(modifier = Modifier.weight(1f)) {
                             Text(
-                                text = "Call to request a topic",
+                                text = androidx.compose.ui.res.stringResource(com.kreativekoala.audexa.R.string.call_to_request),
                                 color = Color.White,
                                 fontSize = 12.sp,
                                 fontWeight = FontWeight.SemiBold
@@ -456,18 +456,7 @@ fun LiveRadioScreen(
                 ) {
                     Text("🎙️", fontSize = 9.sp)
                     Text(
-                        text = "Tap the",
-                        color = Color.White.copy(alpha = 0.35f),
-                        fontSize = 10.sp
-                    )
-                    Text(
-                        text = "mic",
-                        color = AccentOrange.copy(alpha = 0.7f),
-                        fontSize = 10.sp,
-                        fontWeight = FontWeight.SemiBold
-                    )
-                    Text(
-                        text = "to request a topic for the live queue",
+                        text = androidx.compose.ui.res.stringResource(com.kreativekoala.audexa.R.string.radio_request_hint),
                         color = Color.White.copy(alpha = 0.35f),
                         fontSize = 10.sp
                     )
@@ -495,7 +484,7 @@ fun LiveRadioScreen(
                     ) {
                         Icon(
                             imageVector = Icons.Default.Mic,
-                            contentDescription = "Request Topic",
+                            contentDescription = androidx.compose.ui.res.stringResource(com.kreativekoala.audexa.R.string.radio_request_topic),
                             tint = AccentOrange,
                             modifier = Modifier.size(18.dp)
                         )
@@ -510,7 +499,7 @@ fun LiveRadioScreen(
                         modifier = Modifier.weight(1f),
                         placeholder = {
                             Text(
-                                "Chat with listeners...",
+                                androidx.compose.ui.res.stringResource(com.kreativekoala.audexa.R.string.radio_chat_hint),
                                 color = Color.White.copy(alpha = 0.4f),
                                 fontSize = 13.sp
                             )
@@ -541,7 +530,7 @@ fun LiveRadioScreen(
                     ) {
                         Icon(
                             imageVector = Icons.Default.ArrowUpward,
-                            contentDescription = "Send",
+                            contentDescription = androidx.compose.ui.res.stringResource(com.kreativekoala.audexa.R.string.send),
                             tint = if (chatText.trim().isNotEmpty()) AccentOrange else Color.White.copy(alpha = 0.2f),
                             modifier = Modifier.size(28.dp)
                         )
@@ -650,7 +639,7 @@ private fun RequestTopicSheet(
                 .padding(bottom = 24.dp)
         ) {
             Text(
-                text = "Request a Topic",
+                text = androidx.compose.ui.res.stringResource(com.kreativekoala.audexa.R.string.radio_request_title),
                 color = Color.White,
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold
@@ -659,7 +648,7 @@ private fun RequestTopicSheet(
             Spacer(modifier = Modifier.height(8.dp))
 
             Text(
-                text = "Tell Audexa Radio what you'd like to hear. It will be added to the live queue.",
+                text = androidx.compose.ui.res.stringResource(com.kreativekoala.audexa.R.string.radio_request_description),
                 color = Color.White.copy(alpha = 0.6f),
                 fontSize = 13.sp
             )
@@ -725,7 +714,7 @@ private fun RequestTopicSheet(
                         )
                     }
                     Text(
-                        text = if (isSubmitting) "Submitting…" else "Add to Live Queue",
+                        text = if (isSubmitting) androidx.compose.ui.res.stringResource(com.kreativekoala.audexa.R.string.submitting) else androidx.compose.ui.res.stringResource(com.kreativekoala.audexa.R.string.radio_add_to_queue),
                         fontSize = 15.sp,
                         fontWeight = FontWeight.SemiBold
                     )
@@ -755,7 +744,7 @@ private fun NowPlayingBar(np: NowPlayingInfo) {
             color = Color(0xFFEF4444).copy(alpha = 0.8f)
         ) {
             Text(
-                text = "NOW",
+                text = androidx.compose.ui.res.stringResource(com.kreativekoala.audexa.R.string.radio_now_badge),
                 modifier = Modifier.padding(horizontal = 5.dp, vertical = 2.dp),
                 color = Color.White,
                 fontSize = 9.sp,
@@ -766,7 +755,7 @@ private fun NowPlayingBar(np: NowPlayingInfo) {
         if (np.source == "music") {
             Text("🎵", fontSize = 12.sp)
             Text(
-                text = "Music",
+                text = androidx.compose.ui.res.stringResource(com.kreativekoala.audexa.R.string.radio_music),
                 color = Color.White,
                 fontSize = 13.sp,
                 fontWeight = FontWeight.SemiBold
@@ -892,7 +881,7 @@ private fun ChatSection(messages: List<ChatMessage>) {
                 fontSize = 12.sp
             )
             Text(
-                text = "Chat",
+                text = androidx.compose.ui.res.stringResource(com.kreativekoala.audexa.R.string.radio_chat),
                 color = Color.White.copy(alpha = 0.7f),
                 fontSize = 12.sp,
                 fontWeight = FontWeight.Bold

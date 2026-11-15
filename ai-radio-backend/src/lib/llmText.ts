@@ -60,6 +60,8 @@ export interface TextRequest {
   disableThinking?: boolean;
   /** Forces a provider for this call (e.g. ASK_REVIEW_PROVIDER); otherwise LLM_PROVIDER decides. */
   provider?: LlmProvider;
+  /** OpenRouter only: try the fallback (larger) model first, then the primary. Used for languages with a smaller training share. */
+  preferFallbackModel?: boolean;
 }
 
 export interface TextResult {
@@ -145,7 +147,7 @@ async function callOpenRouter(req: TextRequest, model: string, key: string, deps
 async function viaOpenRouter(req: TextRequest, deps: LlmTextDeps, env: NodeJS.ProcessEnv): Promise<TextResult> {
   const key = (env.OPENROUTER_API_KEY ?? '').trim();
   if (!key) throw new OpenRouterError('LLM_PROVIDER is openrouter but OPENROUTER_API_KEY is not set', undefined, 'config');
-  const models = openRouterModels(env);
+  const models = req.preferFallbackModel ? openRouterModels(env).reverse() : openRouterModels(env);
   let last: unknown;
   for (let i = 0; i < models.length; i++) {
     try {

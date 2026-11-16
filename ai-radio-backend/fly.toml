@@ -8,6 +8,10 @@ primary_region = "iad"
   # Topic episodes are spoken by the shared Piper app (low priority: waits while Calldesk calls use it). The auth token is the PIPER_AUTH_TOKEN secret.
   TTS_BACKEND = "piper"
   PIPER_URL = "http://piper-tts-sjc.internal:8080"
+  # Additional podcast languages: tighter than the code defaults (35 episodes, 150000 characters) so the worst case stays under 19 USD a month
+  # (120000 characters x 30 days x 4 USD per million = 14.4 USD speech, plus script model calls at 30 episodes a day). Per-language flags live in the database.
+  LANG_GLOBAL_DAILY_CAP = "30"
+  LANG_TTS_DAILY_CHARS = "120000"
   # Additional podcast languages (docs/LANGUAGES.md): caps sized so the worst month stays under about 19 USD.
   # 30 episodes a day and 120000 speech characters a day: 120000 x 30 x 4 USD per million = 14.4 USD, script model about 3 USD.
   LANG_GLOBAL_DAILY_CAP = "30"

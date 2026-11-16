@@ -15,7 +15,7 @@ Personnalisé Pour Vous
 Sélectionnez vos intérêts et Audexa adapte le contenu pour vous. Mettez en favoris vos sujets préférés, masquez ce que vous ne voulez pas et découvrez de nouvelles émissions dans l'onglet Découvrir.
 
 Support Multi-Langues
-Écoutez des podcasts dans votre langue préférée. Les podcasts Audexa sont disponibles en anglais, en espagnol, en français, en allemand, en portugais et en italien.
+Écoutez des podcasts dans votre langue préférée. Les podcasts Audexa sont disponibles en anglais, en espagnol, en français, en allemand, en portugais et en italien. Quatorze autres langues sont disponibles en version bêta : tchèque, néerlandais, polonais, roumain, russe, suédois, ukrainien, hongrois, finnois, turc, indonésien, grec, japonais et hindi.
 
 Minuterie et Contrôles de Lecture
 Configurez une minuterie de sommeil, avancez ou reculez, et profitez d'une lecture fluide avec le support audio en arrière-plan et les contrôles sur l'écran de verrouillage.

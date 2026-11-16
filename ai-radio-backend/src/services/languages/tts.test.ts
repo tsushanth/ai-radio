@@ -74,15 +74,18 @@ test('HTTP 402: no retry, onOutOfCredits once, later requests fail without calli
   assert.equal(api.calls.length, 1); assert.equal(credits, 1);
 });
 
-test('HTTP 503 then 200: one retry succeeds; two 503s fail; 502 and a network error are retried once too', async () => {
+test('HTTP 503 then 200: a retry succeeds; four 503s fail; 502, 429 and a network error are retried too', async () => {
   for (const first of [503, 502, 429, 'throw'] as const) {
     const api = fakeApi([first, 200]);
     assert.equal((await client(api).synthesize({ text: 'a', voice: 'aria', language: 'cs' })).format, 'pcm');
     assert.equal(api.calls.length, 2);
   }
-  const bad = fakeApi([503, 503, 200]);
+  const slow = fakeApi([503, 503, 503, 200]);
+  assert.equal((await client(slow).synthesize({ text: 'a', voice: 'aria', language: 'cs' })).format, 'pcm');
+  assert.equal(slow.calls.length, 4);
+  const bad = fakeApi([503, 503, 503, 503, 200]);
   await assert.rejects(client(bad).synthesize({ text: 'a', voice: 'aria', language: 'cs' }), /failed: HTTP 503/);
-  assert.equal(bad.calls.length, 2);
+  assert.equal(bad.calls.length, 4);
 });
 
 test('other 4xx (413, 400) are not retried; 401 and 403 mean the key is refused; no error text leaks the key', async () => {

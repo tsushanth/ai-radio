@@ -174,6 +174,7 @@
     <!-- Language Settings -->
     <string name="language">Язык</string>
     <string name="language_coming_soon">Скоро</string>
+    <string name="language_beta">Beta</string>
     <string name="language_coming_soon_toast">Пока недоступно. Мы отметили ваш интерес.</string>
     <string name="generating_language">Готовим ваш выпуск (язык: %1$s). Первый может занять несколько минут.</string>
     <string name="language_fallback_note">Подкасты пока недоступны на этом языке (%1$s), поэтому мы выбрали для вас язык: %2$s.</string>

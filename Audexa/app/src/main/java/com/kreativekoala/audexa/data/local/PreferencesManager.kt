@@ -5,8 +5,10 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.*
 import androidx.datastore.preferences.preferencesDataStore
 import com.kreativekoala.audexa.data.model.ContentLanguage
+import com.kreativekoala.audexa.data.model.RemoteLanguages
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
@@ -34,6 +36,8 @@ class PreferencesManager @Inject constructor(
         val BOOKMARKED_TOPICS = stringSetPreferencesKey("bookmarked_topics")
         val HIDDEN_TOPICS = stringSetPreferencesKey("hidden_topics")
         val PREFERRED_LANGUAGE = stringPreferencesKey("preferred_language")
+        // Last list of server-enabled podcast languages ("cs:b,nl:b"), so a saved language survives app start before the network answers.
+        val REMOTE_LANGUAGES = stringPreferencesKey("remote_podcast_languages")
         // Interface languages the user declined in the onboarding offer "Show the app in <language> too?" (tags, comma separated).
         val UI_LANGUAGE_OFFER_DECLINED = stringPreferencesKey("ui_language_offer_declined")
         // Set once when an unsupported saved content language was replaced at launch; read and cleared by takeLanguageFallbackNotice().
@@ -128,8 +132,20 @@ class PreferencesManager @Inject constructor(
 
     // Language
     // Always a language podcasts can be generated in (ContentLanguage), even if an older version saved ja/ko/hi/zh/tl.
-    val preferredLanguage: Flow<String> = dataStore.data.map {
-        ContentLanguage.resolve(it[Keys.PREFERRED_LANGUAGE]).language.code
+    // Re-evaluated when the server's language list changes (RemoteLanguages.version).
+    val preferredLanguage: Flow<String> = combine(dataStore.data, RemoteLanguages.version) { prefs, _ ->
+        ContentLanguage.resolve(prefs[Keys.PREFERRED_LANGUAGE]).language.code
+    }
+
+    /** Puts the saved server language list into [RemoteLanguages] unless a fresher one is already there. Call before anything that resolves the saved language. */
+    suspend fun loadRemoteLanguagesCache() {
+        if (RemoteLanguages.isLoaded) return
+        val saved = dataStore.data.first()[Keys.REMOTE_LANGUAGES] ?: return
+        if (!RemoteLanguages.isLoaded) RemoteLanguages.update(RemoteLanguages.decode(saved))
+    }
+
+    suspend fun saveRemoteLanguagesCache(list: Collection<RemoteLanguages.Entry>) {
+        dataStore.edit { it[Keys.REMOTE_LANGUAGES] = RemoteLanguages.encode(list) }
     }
 
     // Interface language offer (onboarding): tags the user said no to, so the same offer is not shown again.
@@ -149,6 +165,7 @@ class PreferencesManager @Inject constructor(
      * what it was, once, for [takeLanguageFallbackNotice]. Safe to call on every launch: it does nothing when the value is fine.
      */
     suspend fun migrateUnsupportedLanguage() {
+        loadRemoteLanguagesCache() // a saved Czech/Dutch/... must not be reset to English just because the network has not answered yet
         dataStore.edit { prefs ->
             val m = ContentLanguage.migrationFor(prefs[Keys.PREFERRED_LANGUAGE]) ?: return@edit
             prefs[Keys.PREFERRED_LANGUAGE] = m.newCode

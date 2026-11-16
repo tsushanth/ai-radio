@@ -18,7 +18,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.kreativekoala.audexa.R
+import com.kreativekoala.audexa.data.model.RemoteLanguages
 import com.kreativekoala.audexa.data.model.SupportedLanguage
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.collectAsState
 import com.kreativekoala.audexa.ui.theme.*
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -28,6 +32,8 @@ fun LanguageSettingsScreen(
     viewModel: LanguageSettingsViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    val remoteVersion by RemoteLanguages.version.collectAsState()
+    val pickerLanguages = remember(remoteVersion) { SupportedLanguage.pickerLanguages() }
     val context = androidx.compose.ui.platform.LocalContext.current
     var showAppLanguageDialog by rememberSaveable { mutableStateOf(false) }
 
@@ -99,7 +105,7 @@ fun LanguageSettingsScreen(
                 )
             }
 
-            items(SupportedLanguage.entries) { language ->
+            items(pickerLanguages) { language ->
                 LanguageRow(
                     language = language,
                     isSelected = language == uiState.selectedLanguage,
@@ -157,7 +163,8 @@ private fun LanguageRow(
                     fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium
                 )
                 Text(
-                    text = if (language.podcastAvailable) language.nativeName else "${language.nativeName} · ${stringResource(R.string.language_coming_soon)}",
+                    text = if (!language.podcastAvailable) "${language.nativeName} · ${stringResource(R.string.language_coming_soon)}"
+                        else if (language.isBeta) "${language.nativeName} · ${stringResource(R.string.language_beta)}" else language.nativeName,
                     style = MaterialTheme.typography.bodySmall,
                     color = SecondaryText
                 )

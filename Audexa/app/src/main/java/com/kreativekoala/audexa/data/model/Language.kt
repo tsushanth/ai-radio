@@ -17,11 +17,29 @@ enum class SupportedLanguage(
     KOREAN("ko", "Korean", "한국어", "🇰🇷"),
     ITALIAN("it", "Italian", "Italiano", "🇮🇹"),
     /** Filipino/Tagalog. The standard tag (Android, Play, ISO 639-2) is "fil"; older app versions stored the ISO 639-1 "tl". */
-    TAGALOG("fil", "Tagalog", "Tagalog", "🇵🇭");
+    TAGALOG("fil", "Tagalog", "Tagalog", "🇵🇭"),
 
-    /** Podcast episodes can be generated in this language (Piper voices exist). Radio is English only. */
+    // Podcast languages the server turns on and off (see RemoteLanguages). They appear in the pickers only while the server lists them.
+    CZECH("cs", "Czech", "Čeština", "🇨🇿"),
+    GREEK("el", "Greek", "Ελληνικά", "🇬🇷"),
+    FINNISH("fi", "Finnish", "Suomi", "🇫🇮"),
+    HUNGARIAN("hu", "Hungarian", "Magyar", "🇭🇺"),
+    INDONESIAN("id", "Indonesian", "Bahasa Indonesia", "🇮🇩"),
+    DUTCH("nl", "Dutch", "Nederlands", "🇳🇱"),
+    POLISH("pl", "Polish", "Polski", "🇵🇱"),
+    ROMANIAN("ro", "Romanian", "Română", "🇷🇴"),
+    RUSSIAN("ru", "Russian", "Русский", "🇷🇺"),
+    SWEDISH("sv", "Swedish", "Svenska", "🇸🇪"),
+    TURKISH("tr", "Turkish", "Türkçe", "🇹🇷"),
+    UKRAINIAN("uk", "Ukrainian", "Українська", "🇺🇦");
+
+    /** Podcast episodes can be generated in this language: built in (Piper voices) or switched on by the server. Radio is English only. */
     val podcastAvailable: Boolean
-        get() = this in PODCAST_LANGUAGES
+        get() = this in PODCAST_LANGUAGES || RemoteLanguages.isEnabled(code)
+
+    /** The server marks this language as Beta (shown as a small label in the pickers). */
+    val isBeta: Boolean
+        get() = RemoteLanguages.isBeta(code)
 
     val displayWithFlag: String
         get() = "$flagEmoji $displayName"
@@ -40,6 +58,7 @@ enum class SupportedLanguage(
             CHINESE -> "Audexa Radio 中文"
             ITALIAN -> "Audexa Radio Italiano"
             TAGALOG -> "Audexa Radio Tagalog"
+            else -> "Audexa Radio $nativeName"
         }
 
     /** Stream URL for this language's radio station */
@@ -53,6 +72,12 @@ enum class SupportedLanguage(
 
     companion object {
         val PODCAST_LANGUAGES = setOf(ENGLISH, SPANISH, FRENCH, GERMAN, PORTUGUESE, ITALIAN)
+
+        /** Languages that exist only because the server can switch them on: hidden from every picker until [RemoteLanguages] lists them. */
+        val REMOTE_ONLY = setOf(CZECH, GREEK, FINNISH, HUNGARIAN, INDONESIAN, DUTCH, POLISH, ROMANIAN, RUSSIAN, SWEDISH, TURKISH, UKRAINIAN)
+
+        /** The rows of every language picker: the original eleven (unavailable ones greyed "coming soon") plus the remote ones the server lists. */
+        fun pickerLanguages(): List<SupportedLanguage> = entries.filter { it !in REMOTE_ONLY || RemoteLanguages.isEnabled(it.code) }
 
         /** Old stored or linked codes that now have a different standard tag: Tagalog "tl" -> "fil". */
         fun canonicalCode(code: String): String = LEGACY_CODES[code.lowercase()] ?: code

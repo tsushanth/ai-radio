@@ -174,6 +174,7 @@
     <!-- Language Settings -->
     <string name="language">Nyelv</string>
     <string name="language_coming_soon">Hamarosan</string>
+    <string name="language_beta">Beta</string>
     <string name="language_coming_soon_toast">Ez még nem érhető el. Feljegyeztük az érdeklődésedet.</string>
     <string name="generating_language">Az epizódod előkészítése %1$s nyelven. Az első akár néhány percig is eltarthat.</string>
     <string name="language_fallback_note">A podcastok még nem érhetők el %1$s nyelven, ezért %2$s nyelvet választottunk neked.</string>

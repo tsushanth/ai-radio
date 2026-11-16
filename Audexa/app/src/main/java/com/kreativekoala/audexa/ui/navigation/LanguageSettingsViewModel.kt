@@ -22,7 +22,8 @@ data class LanguageSettingsUiState(
 class LanguageSettingsViewModel @Inject constructor(
     private val preferencesManager: PreferencesManager,
     private val briefingManager: BriefingManager,
-    private val appLanguageManager: AppLanguageManager
+    private val appLanguageManager: AppLanguageManager,
+    private val remoteLanguages: com.kreativekoala.audexa.data.repository.RemoteLanguagesRepository
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(LanguageSettingsUiState())
@@ -30,6 +31,7 @@ class LanguageSettingsViewModel @Inject constructor(
 
     init {
         _uiState.value = _uiState.value.copy(appLanguage = appLanguageManager.selected())
+        viewModelScope.launch { remoteLanguages.refresh() } // the picker lists the languages the server has on right now
         viewModelScope.launch {
             preferencesManager.preferredLanguage.collect { langCode ->
                 _uiState.value = _uiState.value.copy(

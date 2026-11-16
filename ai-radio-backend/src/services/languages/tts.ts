@@ -9,7 +9,7 @@
  *     HTTP attempt (a retry counts again);
  *   - at most 2 requests in flight; at most 5000 characters per request (413 above): we send sentence-sized pieces (170 characters,
  *     90 for Japanese), which also makes a retry cheap;
- *   - roughly 0.25x real time (an 80 s piece takes about 20 s): per-request timeout 150 s, ONE retry on 502 / 503 / 429 / network error;
+ *   - roughly 0.25x real time (an 80 s piece takes about 20 s): per-request timeout 150 s, up to 3 retries (3 s, 9 s, 21 s) on 502 / 503 / 429 / network error;
  *   - HTTP 402 = the account is out of credits: never retried; generation is paused (onOutOfCredits) and the episode fails with
  *     TtsUnavailableError so the request path answers "paused";
  *   - a missing key fails closed before any text is sent;
@@ -30,6 +30,9 @@ import { requireLanguageSpec, type LanguageSpec } from './registry';
 import type { FlagRow } from './controls.store';
 
 export const READALOUD_MAX_CHARS = 5000;
+/** Up to 4 attempts per piece, waiting 3 s, 9 s, 21 s: the API answered 503 for single pieces under load on the first live run (2 of 17 pieces with one retry). */
+const MAX_ATTEMPTS = 4;
+const RETRY_BACKOFF = [1, 3, 7];
 export const DEFAULT_BASE_URL = 'https://api.readaloudai.org';
 
 export type TtsUnavailableReason = 'no_key' | 'out_of_credits' | 'failed';
@@ -101,7 +104,7 @@ export class ReadAloudClient {
   private async withRetry(req: SpeechRequest, key: string): Promise<SpeechResult> {
     const sleep = this.o.sleep ?? ((ms: number) => new Promise<void>((r) => setTimeout(r, ms)));
     let last = 'no attempt';
-    for (let attempt = 0; attempt < 2; attempt++) {
+    for (let attempt = 0; attempt < MAX_ATTEMPTS; attempt++) {
       if (this.creditsGone) throw new TtsUnavailableError('out_of_credits');
       if (this.o.onChars) await this.o.onChars(req.text.length); // count what is actually sent
       let retryable = false;
@@ -127,7 +130,7 @@ export class ReadAloudClient {
         last = e instanceof Error ? e.name : 'error'; // timeout / network: one retry
         retryable = true;
       }
-      if (retryable && attempt === 0) { await sleep(this.o.retryDelayMs ?? 3000); continue; }
+      if (retryable && attempt < MAX_ATTEMPTS - 1) { await sleep((this.o.retryDelayMs ?? 3000) * RETRY_BACKOFF[attempt]); continue; }
       break;
     }
     throw new Error(`Speech API failed: ${last}`);

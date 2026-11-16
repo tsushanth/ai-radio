@@ -1,0 +1,361 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Audexa</string>
+    <string name="app_tagline">Radioul tău personal cu AI</string>
+
+    <!-- Auth -->
+    <string name="sign_in_with_google">Conectează-te cu Google</string>
+    <string name="sign_out">Deconectează-te</string>
+    <string name="delete_account">Șterge contul</string>
+    <string name="auth_description">Ascultă podcasturi generate de AI despre subiectele care te interesează. Conectează-ți e-mailul în setări ca să primești briefinguri zilnice personalizate.</string>
+    <string name="auth_terms">Dacă continui, ești de acord cu Termenii și condițiile și cu Politica de confidențialitate</string>
+    <string name="start">Start</string>
+
+    <!-- Navigation -->
+    <string name="nav_home">Acasă</string>
+    <string name="nav_profile">Profil</string>
+    <string name="back">Înapoi</string>
+    <string name="close">Închide</string>
+    <string name="cancel">Anulează</string>
+    <string name="ok">OK</string>
+    <string name="delete">Șterge</string>
+    <string name="retry">Încearcă din nou</string>
+    <string name="enable">Activează</string>
+
+    <!-- Tabs -->
+    <string name="tab_for_you">Pentru tine</string>
+    <string name="tab_discover">Descoperă</string>
+
+    <!-- Home -->
+    <string name="good_morning">Bună dimineața</string>
+    <string name="good_afternoon">Bună ziua</string>
+    <string name="good_evening">Bună seara</string>
+    <string name="daily_brief">Briefing zilnic</string>
+    <string name="daily_brief_subtitle">Briefing zilnic • %s</string>
+    <string name="keep_listening">Continuă să asculți</string>
+    <string name="your_topics">Subiectele tale</string>
+    <string name="topic_podcasts">Podcasturi pe subiecte</string>
+    <string name="recommended_for_you">Recomandate pentru tine</string>
+    <string name="more_for_you">Mai multe pentru tine</string>
+    <string name="all_topics">Toate subiectele</string>
+    <string name="matching_topics">Subiecte potrivite</string>
+    <string name="tap_to_explore">Atinge ca să explorezi și să asculți</string>
+    <string name="link_account_prompt">Conectează-ți e-mailul ca să generezi briefinguri personalizate</string>
+    <string name="link_account">Conectează contul</string>
+    <string name="find_new_shows">Găsește emisiuni noi</string>
+    <string name="search">Caută</string>
+    <string name="clear">Șterge</string>
+    <string name="no_results_for">Niciun rezultat pentru „%s”</string>
+
+    <!-- Profile -->
+    <string name="profile">Profil</string>
+    <string name="linked_accounts">Conturi conectate</string>
+    <string name="preferences">Preferințe</string>
+    <string name="podcast_language">Limba podcasturilor</string>
+    <string name="briefing_time">Ora briefingului</string>
+    <string name="topics">Subiecte</string>
+    <string name="voice_preference">Preferință de voce</string>
+    <string name="hidden_topics">Subiecte ascunse</string>
+    <string name="about">Despre</string>
+    <string name="version">Versiune</string>
+    <string name="terms_of_service">Termeni și condiții</string>
+    <string name="privacy_policy">Politica de confidențialitate</string>
+    <string name="analytics_title">Trimite statistici de utilizare anonime</string>
+    <string name="analytics_subtitle">Ce subiecte și limbi sunt folosite și cât timp. Un identificator aleatoriu pe acest dispozitiv, fără nume, e-mail sau adresă IP. Dacă dezactivezi opțiunea, identificatorul este șters.</string>
+    <string name="premium">Premium</string>
+    <string name="go_ad_free">Fără reclame</string>
+    <string name="ad_free">Fără reclame</string>
+    <string name="active_subscription">Abonament activ</string>
+    <string name="remove_all_ads">Elimină toate reclamele</string>
+    <string name="email_accounts">Conturi de e-mail</string>
+    <string name="app_theme">Tema aplicației</string>
+    <string name="voice_settings">Setări de voce</string>
+    <string name="choose_podcast_voices">Alege vocile podcasturilor</string>
+    <string name="hidden_count">%d ascunse</string>
+    <string name="notifications">Notificări</string>
+    <string name="daily_brief_reminders">Mementouri pentru briefingul zilnic</string>
+    <string name="sign_out_confirm">Sigur vrei să te deconectezi?</string>
+    <string name="delete_account_confirm">Sigur vrei să îți ștergi contul? Se vor șterge definitiv toate datele tale, inclusiv podcasturile, preferințele și conturile conectate. Această acțiune nu poate fi anulată.</string>
+    <string name="delete_account_signin_again">Sesiunea ta a expirat, așa că nu ți-am șters contul și nu s-a eliminat nimic. Deconectează-te, conectează-te din nou, apoi încearcă din nou să ștergi contul.</string>
+    <string name="delete_account_failed">Nu am putut finaliza ștergerea contului. Verifică conexiunea și încearcă din nou.</string>
+
+    <!-- Player -->
+    <string name="playing">Se redă</string>
+    <string name="paused">În pauză</string>
+    <string name="play">Redă</string>
+    <string name="pause">Pauză</string>
+    <string name="loading">Se încarcă…</string>
+    <string name="generating">Se generează…</string>
+    <string name="generating_progress">Se generează… %d%%</string>
+    <string name="generate_episode">Generează episodul</string>
+    <string name="regenerate">Generează din nou</string>
+    <string name="episode_history">Istoricul episoadelor</string>
+    <string name="skip_back">Înapoi 15 secunde</string>
+    <string name="skip_forward">Înainte 15 secunde</string>
+    <string name="skip_back_mini">Înapoi</string>
+    <string name="skip_forward_mini">Înainte</string>
+    <string name="buffering">Se încarcă…</string>
+    <string name="playback_error_stream">Nu mă pot conecta la radio. Verifică conexiunea și încearcă din nou.</string>
+    <string name="playback_error_episode">Nu pot încărca acest fișier audio. Verifică conexiunea și încearcă din nou.</string>
+    <string name="sleep_timer">Temporizator de somn</string>
+    <string name="timer">Timer</string>
+    <string name="sleep_timer_5_min">5 min</string>
+    <string name="sleep_timer_10_min">10 min</string>
+    <string name="sleep_timer_15_min">15 min</string>
+    <string name="sleep_timer_30_min">30 min</string>
+    <string name="sleep_timer_1_hour">1 oră</string>
+    <string name="min_format">%d min</string>
+    <string name="today">Astăzi</string>
+    <string name="bookmark">Marchează</string>
+    <string name="more">Mai multe</string>
+    <string name="hide_topic">Ascunde subiectul</string>
+    <string name="hide">Ascunde</string>
+
+    <!-- Errors -->
+    <string name="error_generic">Ceva nu a mers bine</string>
+    <string name="error_network">Eroare de rețea. Verifică conexiunea.</string>
+    <string name="error_auth">Autentificarea a eșuat</string>
+    <string name="error_no_internet">Nu ai conexiune la internet. Verifică rețeaua și încearcă din nou.</string>
+    <string name="generation_failed">Generarea a eșuat</string>
+
+    <!-- Misc -->
+    <string name="min_daily">%d min zilnic</string>
+    <string name="connected">Conectat</string>
+    <string name="not_connected">Neconectat</string>
+    <string name="not_connected_lower">Neconectat</string>
+    <string name="coming_soon">În curând</string>
+    <string name="microsoft_coming_soon">Integrarea cu contul Microsoft vine în curând. Rămâi aproape!</string>
+
+    <!-- Onboarding -->
+    <string name="welcome_to_audexa">Bine ai venit în Audexa</string>
+    <string name="welcome_description">Radioul tău personalizat cu AI, care transformă cele mai noi știri, tehnologii și subiecte în briefinguri captivante, în stil de podcast.</string>
+    <string name="get_started">Începe</string>
+    <string name="connect_your_account">Conectează-ți contul</string>
+    <string name="connect_account_description">Conectează-ți contul Google ca să primești briefinguri zilnice personalizate, pe baza e-mailului și a calendarului tău.</string>
+    <string name="gmail">Gmail</string>
+    <string name="calendar">Calendar</string>
+    <string name="include_email_highlights">Include în briefing ce e important din e-mail</string>
+    <string name="include_calendar_events">Include în briefing evenimentele viitoare</string>
+    <string name="continue_button">Continuă</string>
+    <string name="skip_for_now">Mai târziu</string>
+    <string name="connect_later_hint">Poți conecta oricând mai târziu, din Setări</string>
+    <string name="connect">Conectează</string>
+    <string name="choose_your_interests">Alege-ți interesele</string>
+    <string name="choose_interests_description">Selectează subiectele despre care vrei să auzi. Vom genera episoade zilnice special pentru tine.</string>
+    <string name="topics_selected">Subiecte selectate: %d</string>
+    <string name="topics_selected_plural_suffix"></string>
+    <string name="complete_setup">Finalizează</string>
+
+    <!-- Linked Accounts -->
+    <string name="enable_daily_brief">Activează briefingul zilnic</string>
+    <string name="enable_daily_brief_description">Conectează-ți Gmail ca să primești briefinguri zilnice personalizate, pe baza e-mailurilor tale. Rezumăm noutățile importante, ca să îți începi ziua informat.</string>
+    <string name="google_calendar">Google Calendar</string>
+    <string name="outlook">Outlook</string>
+    <string name="daily_brief_sources">Sursele briefingului zilnic</string>
+    <string name="email_summaries">Rezumate de e-mail</string>
+    <string name="include_email_in_brief">Include rezumatele e-mailurilor în briefingul zilnic</string>
+    <string name="calendar_events">Evenimente din calendar</string>
+    <string name="include_calendar_in_brief">Include evenimentele viitoare în briefingul zilnic</string>
+    <string name="unlink">Deconectează</string>
+    <string name="soon">În curând</string>
+    <string name="your_privacy">Confidențialitatea ta</string>
+    <string name="privacy_note">Ca să îți construiască briefingul, serverul nostru citește mesajele tale recente din Gmail și evenimentele din calendar. Numele expeditorului, subiectul și primele 100 de caractere ale e-mailurilor tale principale, plus titlurile, orele și locurile evenimentelor, sunt trimise către Anthropic, furnizorul nostru de AI, pentru a scrie scenariul. Nu păstrăm textul e-mailurilor tale, dar sunetul briefingului finalizat este păstrat până când îți ștergi contul. Opțiunea Deconectează nu elimină accesul Google stocat pe serverul nostru; Șterge contul din Profil îl elimină.</string>
+    <string name="microsoft_outlook_coming_soon">Conectarea cu Microsoft Outlook va fi disponibilă într-o actualizare viitoare.</string>
+    <string name="gmail_linking_cancelled">Conectarea Gmail a fost anulată</string>
+    <string name="calendar_linking_cancelled">Conectarea calendarului a fost anulată</string>
+    <string name="reconnect">Reconectează</string>
+
+    <!-- Hidden Topics -->
+    <string name="no_hidden_topics">Niciun subiect ascuns</string>
+    <string name="no_hidden_topics_description">Subiectele pe care le ascunzi vor apărea aici. Le poți afișa din nou oricând.</string>
+    <string name="unhide_hint">Atinge pictograma cu ochi ca să afișezi din nou un subiect.</string>
+    <string name="unhide">Afișează</string>
+
+    <!-- Language Settings -->
+    <string name="language">Limbă</string>
+    <string name="language_coming_soon">În curând</string>
+    <string name="language_coming_soon_toast">Încă nu este disponibilă. Am notat interesul tău.</string>
+    <string name="generating_language">Îți pregătim episodul în %1$s. Primul poate dura câteva minute.</string>
+    <string name="language_fallback_note">Podcasturile nu sunt încă disponibile în %1$s, așa că am ales %2$s pentru tine.</string>
+    <string name="error_language_unavailable">Limba aceasta nu este încă disponibilă.</string>
+    <string name="error_daily_limit">Limita de azi pentru episoadele într-o limbă nouă a fost atinsă. Încearcă din nou mâine.</string>
+    <string name="language_page_title">Alege-ți limba</string>
+    <string name="language_page_subtitle">Podcasturile sunt disponibile în șase limbi. Radioul este doar în engleză. Alegerea ta ne ajută să decidem ce adăugăm.</string>
+    <string name="language_description">Alege limba preferată.</string>
+    <string name="language_note">Podcasturile sunt disponibile în engleză, spaniolă, franceză, germană, portugheză și italiană. Primul episod într-o limbă nouă durează câteva minute să fie pregătit. Radioul este doar în engleză. Pentru alte limbi, înregistrăm care îți place, fără numele tău, ca să decidem ce adăugăm în continuare.</string>
+    <string name="selected">Selectat</string>
+
+    <!-- App language (the language of menus and buttons; separate from the podcast language) -->
+    <string name="app_language">Limba aplicației</string>
+    <string name="app_language_follow_phone">Ca pe telefon</string>
+    <string name="app_language_description">Limba meniurilor și a butoanelor. Podcasturile rămân în limba aleasă mai sus.</string>
+    <string name="ui_lang_offer_title">Afișăm aplicația și în %1$s?</string>
+    <string name="ui_lang_offer_body">Se schimbă doar meniurile și butoanele. Poți modifica oricând din setările profilului.</string>
+    <string name="ui_lang_offer_yes">Da, folosește %1$s</string>
+    <string name="ui_lang_offer_no">Nu, păstrează %1$s</string>
+
+    <!-- Suggest a topic -->
+    <string name="suggest_topic">Sugerează un subiect</string>
+    <string name="suggest_topic_inline">Nu vezi subiectul tău? Sugerează unul</string>
+    <string name="suggest_topic_description">Spune-ne ce ai vrea să asculți și vom lua în calcul adăugarea lui.</string>
+    <string name="suggest_topic_name_label">Numele subiectului</string>
+    <string name="suggest_topic_name_hint">de ex. Calcul cuantic</string>
+    <string name="suggest_topic_details_label">Descriere (opțional)</string>
+    <string name="suggest_topic_details_hint">Ce ar trebui să acopere acest subiect?</string>
+    <string name="suggest_topic_thanks">Mulțumim, citim sugestiile și le adăugăm pe cele bune.</string>
+    <string name="submit">Trimite</string>
+    <string name="submitting">Se trimite…</string>
+    <string name="no_topics_title">Momentan nu există subiecte disponibile.</string>
+    <string name="no_topics_hint">Atinge Continuă ca să termini configurarea — poți alege subiecte mai târziu, din ecranul Acasă.</string>
+
+    <!-- Live radio -->
+    <string name="radio_languages">Limbile radioului</string>
+    <string name="radio_languages_note">Stațiile selectate vor apărea pe ecranul tău principal. Cel puțin o limbă trebuie să fie activată.</string>
+    <string name="radio_home_tagline">Știri 24/7 cu AI · LIVE</string>
+    <string name="radio_tagline">Știri și discuții 24/7 cu AI</string>
+    <string name="share_whats_playing">Distribuie ce se aude acum</string>
+    <string name="share_station">Distribuie %1$s</string>
+    <string name="radio_up_next">Urmează</string>
+    <string name="radio_requests">Solicitări</string>
+    <string name="radio_generating">Se generează</string>
+    <string name="radio_generating_badge">se generează</string>
+    <string name="radio_request_hint">Atinge microfonul ca să soliciți un subiect pentru coada live</string>
+    <string name="radio_request_topic">Solicită un subiect</string>
+    <string name="radio_request_title">Solicită un subiect</string>
+    <string name="radio_request_description">Spune-i Audexa Radio ce ai vrea să auzi. Va fi adăugat în coada live.</string>
+    <string name="radio_add_to_queue">Adaugă în coada live</string>
+    <string name="radio_chat_hint">Discută cu ascultătorii...</string>
+    <string name="radio_chat">Chat</string>
+    <string name="radio_now_badge">ACUM</string>
+    <string name="radio_music">Muzică</string>
+    <string name="send">Trimite</string>
+
+    <!-- Voice Settings -->
+    <string name="loading_voices">Se încarcă vocile…</string>
+    <string name="no_voice_pairs">Nu există perechi de voci disponibile</string>
+    <string name="no_voices">Nu există voci disponibile</string>
+    <string name="voice_pairs_description">Selectează o pereche de voci predefinită pentru prezentatorii podcastului tău.</string>
+    <string name="host_1">Prezentator 1</string>
+    <string name="host_2">Prezentator 2</string>
+    <string name="host_1_voice">Vocea prezentatorului 1</string>
+    <string name="host_2_voice">Vocea prezentatorului 2</string>
+
+    <!-- Theme Settings -->
+    <string name="theme_system">Sistem</string>
+    <string name="theme_system_description">Potrivește setările dispozitivului</string>
+    <string name="theme_dark">Întunecată</string>
+    <string name="theme_dark_description">Mereu modul întunecat</string>
+    <string name="theme_light">Luminoasă</string>
+    <string name="theme_light_description">Mereu modul luminos</string>
+
+    <!-- Notification Settings -->
+    <string name="permission">Permisiune</string>
+    <string name="enabled">Activat</string>
+    <string name="not_enabled">Dezactivat</string>
+    <string name="daily_brief_schedule">Programul briefingului zilnic</string>
+    <string name="daily_brief_notifications">Notificări pentru briefingul zilnic</string>
+    <string name="daily_brief_notify_hint">Primești o notificare când briefingul este gata</string>
+    <string name="daily_brief_content">Conținutul briefingului zilnic</string>
+    <string name="include_topic_updates">Include noutăți din subiecte</string>
+    <string name="include_topic_updates_hint">Adaugă în briefingul zilnic titluri din subiectele tale</string>
+    <string name="notification_info">Briefingul tău zilnic va fi generat și va fi gata la ora programată. Vei primi o notificare când poate fi ascultat.</string>
+    <string name="select_time">Alege ora</string>
+
+    <!-- Subscription / Paywall -->
+    <string name="enjoy_uninterrupted">Ascultă fără întreruperi</string>
+    <string name="no_audio_ad_interruptions">Fără reclame audio care te întrerup</string>
+    <string name="seamless_episode_playback">Redare fluidă a episoadelor</string>
+    <string name="support_indie_development">Susține dezvoltarea independentă</string>
+    <string name="ad_free_subscriber">Ești abonat Fără reclame!</string>
+    <string name="yearly">Anual</string>
+    <string name="save_percent">Economisești 58%%</string>
+    <string name="monthly">Lunar</string>
+    <string name="subscribe">Abonează-te</string>
+    <string name="restore_purchases">Restaurează achizițiile</string>
+    <string name="payment_fine_print">Plata va fi taxată în contul tău Google Play. Abonamentul se reînnoiește automat, dacă nu este anulat cu cel puțin 24 de ore înainte de sfârșitul perioadei curente.</string>
+    <string name="per_year">/an</string>
+    <string name="per_month">/lună</string>
+    <string name="per_week">/săptămână</string>
+
+    <!-- Ads -->
+    <string name="sponsored">SPONSORIZAT</string>
+    <string name="skip">Sari peste</string>
+    <string name="skip_ad">Sari peste reclamă</string>
+    <string name="ad_content_description">Reclamă</string>
+
+    <!-- Radio Call-In -->
+    <string name="call_to_request">Sună ca să soliciți un subiect</string>
+    <string name="call_in_label">Sună la: (833) 398-1230</string>
+
+    <!-- Splash Screen -->
+    <string name="splash_tagline">Briefingul tău audio cu AI</string>
+
+    <!-- Notifications (non-composable) -->
+    <string name="notification_good_morning">Bună dimineața!</string>
+    <string name="notification_daily_brief_text">E timpul pentru briefingul tău zilnic. Atinge ca să fii la curent cu e-mailurile, calendarul și știrile.</string>
+    <string name="daily_brief_channel_description">Notificări cu mementouri pentru briefingul zilnic</string>
+    <string name="radio_topic_channel_name">Mementouri pentru subiectele radioului</string>
+    <string name="radio_topic_channel_description">Primești o notificare când un subiect marcat rulează la Audexa Radio</string>
+    <string name="radio_topic_notification_title">Acum la Audexa Radio</string>
+    <string name="radio_topic_notification_body">%1$s rulează live. Atinge ca să asculți.</string>
+
+    <!-- Daily Brief Playback -->
+    <string name="daily_brief_title_format">Briefing zilnic - %s</string>
+    <string name="daily_brief_description">Briefingul tău personalizat de dimineață</string>
+
+    <!-- Morning briefing: one local notification per day, opt-in after first play -->
+    <string name="briefing_notification_title">Azi la Audexa</string>
+    <string name="briefing_notification_body_fallback">Audexa Radio rulează acum. Atinge ca să asculți.</string>
+    <plurals name="briefing_notification_body_topics">
+        <item quantity="one">%1$d podcast nou pe subiect: %2$s. Atinge ca să asculți.</item>
+        <item quantity="few">%1$d podcasturi noi pe subiecte: %2$s. Atinge ca să asculți.</item>
+        <item quantity="other">%1$d de podcasturi noi pe subiecte: %2$s. Atinge ca să asculți.</item>
+    </plurals>
+    <string name="briefing_names_with_more">%1$s și încă %2$d</string>
+    <string name="briefing_optin_title">Vrei un memento când sunt gata podcasturi noi pe subiecte?</string>
+    <string name="briefing_optin_accept">Amintește-mi</string>
+    <string name="briefing_optin_decline">Nu acum</string>
+
+    <!-- Ask the hosts (English only for now) -->
+    <string name="ask_entry_title">Întreabă prezentatorii</string>
+    <string name="ask_entry_subtitle">Meciul de diseară, o lansare, o știre: doi prezentatori AI discută despre ea</string>
+    <string name="ask_title">Întreabă prezentatorii</string>
+    <string name="ask_intro">Descrie un eveniment sau o știre. Prezentatorii vorbesc doar despre ce relatează titlurile recente și îți spun dacă nu există suficientă acoperire. Episoadele sunt generate de AI și durează un minut sau două.</string>
+    <string name="ask_field_label">Despre ce ar trebui să vorbească?</string>
+    <string name="ask_field_placeholder">de ex. Cine a câștigat meciul Warriors de diseară?</string>
+    <string name="ask_counter">%1$d/%2$d</string>
+    <string name="ask_language_label">Limbă</string>
+    <string name="ask_submit">Întreabă</string>
+    <string name="ask_sending">Se trimite solicitarea...</string>
+    <string name="ask_stage_queued">Așteptăm un studio liber...</string>
+    <string name="ask_stage_reviewing">Verificăm solicitarea...</string>
+    <string name="ask_stage_searching">Citim cele mai recente titluri...</string>
+    <string name="ask_stage_writing">Prezentatorii se pregătesc...</string>
+    <string name="ask_stage_recording">Înregistrăm episodul...</string>
+    <string name="ask_stage_working">Se lucrează...</string>
+    <string name="ask_progress_description">Progres: %1$d la sută</string>
+    <string name="ask_leave_hint">Poți părăsi acest ecran. Când revii, găsești același episod.</string>
+    <string name="ask_ai_note">Discuție generată de AI între doi prezentatori AI, pe baza titlurilor recente din știri.</string>
+    <string name="ask_length">Durată %1$s</string>
+    <string name="ask_play">Redă episodul</string>
+    <string name="ask_pause">Pauză</string>
+    <string name="ask_share">Distribuie</string>
+    <string name="ask_share_chooser">Distribuie acest episod</string>
+    <string name="ask_share_failed">Nu s-a putut deschide fereastra de distribuire</string>
+    <string name="ask_sources_title">Titlurile pe baza cărora este făcut episodul</string>
+    <string name="ask_sources_note">Prezentatorii discută doar ce relatează aceste titluri. Verifică sursele pentru poveștile complete.</string>
+    <string name="ask_ask_another">Întreabă altceva</string>
+    <string name="ask_edit_question">Editează întrebarea</string>
+    <string name="ask_check_again">Verifică din nou</string>
+    <string name="ask_unavailable">Întreabă prezentatorii nu este disponibil acum.</string>
+    <string name="ask_loading">Verificăm disponibilitatea...</string>
+    <string name="ask_err_input">Verifică întrebarea și încearcă din nou.</string>
+    <string name="ask_err_limited">Întreabă prezentatorii este aglomerat sau și-a atins limita. Încearcă din nou mai târziu.</string>
+    <string name="ask_err_not_found">Nu mai găsim această solicitare. Întreabă din nou.</string>
+    <string name="ask_err_offline">Nu ai conexiune. Verifică internetul și încearcă din nou.</string>
+    <string name="ask_err_timeout">Durează mai mult decât ne așteptam. Episodul poate fi încă pe drum.</string>
+    <string name="ask_err_server">Ceva nu a mers bine. Încearcă din nou.</string>
+    <string name="ask_err_refused">Prezentatorii nu pot face un episod despre asta.</string>
+    <string name="ask_err_no_coverage">Nu am găsit suficientă acoperire recentă în știri despre acest subiect, așa că nu am făcut un episod.</string>
+    <string name="ask_err_failed">Episodul nu a putut fi creat. Încearcă din nou.</string>
+</resources>

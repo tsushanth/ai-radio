@@ -5,7 +5,7 @@
 
     <!-- Auth -->
     <string name="sign_in_with_google">Mag-sign in gamit ang Google</string>
-    <string name="sign_out">Mag-sign Out</string>
+    <string name="sign_out">Mag-sign out</string>
     <string name="delete_account">I-delete ang Account</string>
     <string name="auth_description">Makinig ng mga podcast na gawa ng AI tungkol sa mga paksang interesado ka. I-link ang iyong email sa settings para makakuha ng mga personalized na araw-araw na buod.</string>
     <string name="auth_terms">Sa pagpapatuloy, sumasang-ayon ka sa aming Mga Tuntunin ng Serbisyo at Patakaran sa Privacy</string>
@@ -60,6 +60,8 @@
     <string name="version">Bersyon</string>
     <string name="terms_of_service">Mga Tuntunin ng Serbisyo</string>
     <string name="privacy_policy">Patakaran sa Privacy</string>
+    <string name="analytics_title">Magbahagi ng anonymous na usage statistics</string>
+    <string name="analytics_subtitle">Kung anong mga paksa at wika ang ginagamit at gaano katagal. Random na id sa device na ito, walang pangalan, email o IP address. Kapag pinatay ito, ide-delete ang id.</string>
     <string name="premium">Premium</string>
     <string name="go_ad_free">Walang Ads</string>
     <string name="ad_free">Walang Ads</string>
@@ -93,6 +95,8 @@
     <string name="skip_back_mini">Bumalik</string>
     <string name="skip_forward_mini">Sumulong</string>
     <string name="buffering">Nagba-buffer\u2026</string>
+    <string name="playback_error_stream">Hindi maabot ang radio. Pakisuri ang koneksyon mo at subukan ulit.</string>
+    <string name="playback_error_episode">Hindi ma-load ang audio na ito. Pakisuri ang koneksyon mo at subukan ulit.</string>
     <string name="sleep_timer">Sleep timer</string>
     <string name="timer">Timer</string>
     <string name="sleep_timer_5_min">5 min</string>
@@ -124,7 +128,7 @@
 
     <!-- Onboarding -->
     <string name="welcome_to_audexa">Maligayang Pagdating sa Audexa</string>
-    <string name="welcome_description">Ang iyong personalized na AI radio na ginagawang mga nakaka-engganyo na podcast-style na buod ang mga pinakabagong balita, tech, at paksa.</string>
+    <string name="welcome_description">Ang iyong personalized na AI radio na ginagawang nakakaengganyong podcast-style na buod ang mga pinakabagong balita, tech, at paksa.</string>
     <string name="get_started">Magsimula</string>
     <string name="connect_your_account">Ikonekta ang Iyong Account</string>
     <string name="connect_account_description">I-link ang iyong Google account para makakuha ng mga personalized na araw-araw na buod mula sa iyong email at calendar.</string>
@@ -144,7 +148,7 @@
 
     <!-- Linked Accounts -->
     <string name="enable_daily_brief">I-enable ang Araw-araw na Buod</string>
-    <string name="enable_daily_brief_description">Ikonekta ang iyong Gmail para makakuha ng mga personalized na araw-araw na buod batay sa iyong mga email. Bubuodin namin ang mga importanteng update para makapagsimula ka ng araw na may kaalaman.</string>
+    <string name="enable_daily_brief_description">Ikonekta ang iyong Gmail para makakuha ng mga personalized na araw-araw na buod batay sa iyong mga email. Bubuodin namin ang mga mahahalagang update para makapagsimula ka ng araw na may kaalaman.</string>
     <string name="google_calendar">Google Calendar</string>
     <string name="outlook">Outlook</string>
     <string name="daily_brief_sources">Mga Pinagmulan ng Araw-araw na Buod</string>
@@ -153,9 +157,9 @@
     <string name="calendar_events">Mga Event sa Calendar</string>
     <string name="include_calendar_in_brief">Isama ang mga paparating na event sa Araw-araw na Buod</string>
     <string name="unlink">I-unlink</string>
-    <string name="soon">Sa Lalong Madaling Panahon</string>
+    <string name="soon">Malapit Na</string>
     <string name="your_privacy">Ang Iyong Privacy</string>
-    <string name="privacy_note">Para gawin ang iyong briefing, binabasa ng aming server ang mga kamakailang Gmail message at event sa kalendaryo mo. Ang pangalan ng nagpadala, paksa at unang 100 character ng iyong mga pangunahing email, pati ang pamagat, oras at lugar ng mga event, ay ipinapadala sa Anthropic, ang aming AI provider, para isulat ang script. Hindi namin iniimbak ang teksto ng email mo, pero ang natapos na audio ng briefing ay itinatago hanggang burahin mo ang account mo. Hindi inaalis ng Unlink ang Google access na nakaimbak sa server namin; inaalis ito ng Delete Account sa Profile.</string>
+    <string name="privacy_note">Para gawin ang iyong buod, binabasa ng aming server ang mga kamakailang Gmail message at event sa calendar mo. Ang pangalan ng nagpadala, paksa at unang 100 character ng iyong mga pangunahing email, pati ang pamagat, oras at lugar ng mga event, ay ipinapadala sa Anthropic, ang aming AI provider, para isulat ang script. Hindi namin iniimbak ang teksto ng email mo, pero ang natapos na audio ng buod ay itinatago hanggang i-delete mo ang account mo. Hindi inaalis ng Unlink ang Google access na nakaimbak sa server namin; inaalis ito ng Delete Account sa Profile.</string>
     <string name="microsoft_outlook_coming_soon">Ang pag-link ng Microsoft Outlook ay magiging available sa hinaharap na update.</string>
     <string name="gmail_linking_cancelled">Nakansela ang pag-link ng Gmail</string>
     <string name="calendar_linking_cancelled">Nakansela ang pag-link ng calendar</string>
@@ -169,9 +173,62 @@
 
     <!-- Language Settings -->
     <string name="language">Wika</string>
-    <string name="language_description">Piliin ang iyong gustong wika para sa mga episode ng podcast.</string>
-    <string name="language_note">Available ang mga podcast sa Ingles, Espanyol, Pranses, Aleman, Portuges at Italyano. Ilang minuto ang paghahanda ng unang episode sa bagong wika. Ingles lang ang radyo. Para sa iba pang wika, itinatala namin kung alin ang pinili mo, nang walang pangalan mo, para makapagpasya kung ano ang susunod na idadagdag.</string>
+    <string name="language_coming_soon">Malapit na</string>
+    <string name="language_coming_soon_toast">Hindi pa available. Naitala na namin ang iyong interes.</string>
+    <string name="generating_language">Inihahanda ang episode mo sa %1$s. Maaaring abutin ng ilang minuto ang una.</string>
+    <string name="language_fallback_note">Wala pang podcast sa %1$s, kaya %2$s ang pinili namin para sa iyo.</string>
+    <string name="error_language_unavailable">Hindi pa available ang wikang iyon.</string>
+    <string name="error_daily_limit">Naabot na ang limitasyon ngayong araw para sa mga episode sa bagong wika. Subukan ulit bukas.</string>
+    <string name="language_page_title">Piliin ang Iyong Wika</string>
+    <string name="language_page_subtitle">Available ang mga podcast sa anim na wika. Ingles lang ang Radio. Nakakatulong ang pinili mo para makapagpasya kami kung ano ang idadagdag.</string>
+    <string name="language_description">Piliin ang iyong gustong wika.</string>
+    <string name="language_note">Available ang mga podcast sa Ingles, Espanyol, Pranses, Aleman, Portuges at Italyano. Ilang minuto ang paghahanda ng unang episode sa bagong wika. Ingles lang ang Radio. Para sa iba pang wika, itinatala namin kung alin ang pinili mo, nang walang pangalan mo, para makapagpasya kung ano ang susunod na idadagdag.</string>
     <string name="selected">Napili</string>
+
+    <!-- App language (the language of menus and buttons; separate from the podcast language) -->
+    <string name="app_language">Wika ng app</string>
+    <string name="app_language_follow_phone">Sundin ang phone</string>
+    <string name="app_language_description">Ang wika ng mga menu at button. Mananatili ang mga podcast sa wikang pinili mo sa itaas.</string>
+    <string name="ui_lang_offer_title">Ipakita rin ang app sa %1$s?</string>
+    <string name="ui_lang_offer_body">Mga menu at button lang ang magbabago. Puwede mo itong baguhin anumang oras sa settings ng profile mo.</string>
+    <string name="ui_lang_offer_yes">Oo, gamitin ang %1$s</string>
+    <string name="ui_lang_offer_no">Hindi, %1$s pa rin</string>
+
+    <!-- Suggest a topic -->
+    <string name="suggest_topic">Magmungkahi ng Paksa</string>
+    <string name="suggest_topic_inline">Wala ang paksa mo? Magmungkahi ng isa</string>
+    <string name="suggest_topic_description">Sabihin sa amin kung ano ang gusto mong pakinggan at pag-iisipan naming idagdag ito.</string>
+    <string name="suggest_topic_name_label">Pangalan ng paksa</string>
+    <string name="suggest_topic_name_hint">hal. Quantum Computing</string>
+    <string name="suggest_topic_details_label">Paglalarawan (opsyonal)</string>
+    <string name="suggest_topic_details_hint">Ano ang dapat saklawin ng paksang ito?</string>
+    <string name="suggest_topic_thanks">Salamat, sinusuri namin ang mga mungkahi at idinadagdag ang magagandang ideya.</string>
+    <string name="submit">Isumite</string>
+    <string name="submitting">Isinusumite\u2026</string>
+    <string name="no_topics_title">Walang available na paksa ngayon.</string>
+    <string name="no_topics_hint">I-tap ang Magpatuloy para tapusin ang setup \u2014 makakapili ka ng mga paksa mamaya mula sa Home screen.</string>
+
+    <!-- Live radio -->
+    <string name="radio_languages">Mga Wika ng Radio</string>
+    <string name="radio_languages_note">Lalabas sa home screen mo ang mga napiling station. Kailangang naka-enable ang kahit isang wika.</string>
+    <string name="radio_home_tagline">AI-powered na balita 24/7 \u00b7 LIVE</string>
+    <string name="radio_tagline">AI-powered na balita at talakayan 24/7</string>
+    <string name="share_whats_playing">I-share ang pinapatugtog</string>
+    <string name="share_station">I-share ang %1$s</string>
+    <string name="radio_up_next">Susunod</string>
+    <string name="radio_requests">Mga Request</string>
+    <string name="radio_generating">Ginagawa</string>
+    <string name="radio_generating_badge">ginagawa</string>
+    <string name="radio_request_hint">I-tap ang mic para mag-request ng paksa sa live queue</string>
+    <string name="radio_request_topic">Mag-request ng Paksa</string>
+    <string name="radio_request_title">Mag-request ng Paksa</string>
+    <string name="radio_request_description">Sabihin sa Audexa Radio kung ano ang gusto mong marinig. Idadagdag ito sa live queue.</string>
+    <string name="radio_add_to_queue">Idagdag sa Live Queue</string>
+    <string name="radio_chat_hint">Makipag-chat sa mga listener...</string>
+    <string name="radio_chat">Chat</string>
+    <string name="radio_now_badge">NGAYON</string>
+    <string name="radio_music">Musika</string>
+    <string name="send">Ipadala</string>
 
     <!-- Voice Settings -->
     <string name="loading_voices">Naglo-load ng mga boses\u2026</string>
@@ -206,10 +263,10 @@
 
     <!-- Subscription / Paywall -->
     <string name="enjoy_uninterrupted">Mag-enjoy ng walang patid na pakikinig</string>
-    <string name="no_audio_ad_interruptions">Walang audio ad na interruption</string>
+    <string name="no_audio_ad_interruptions">Walang audio ad na pumuputol sa pakikinig</string>
     <string name="seamless_episode_playback">Tuloy-tuloy na pag-play ng episode</string>
     <string name="support_indie_development">Suportahan ang indie development</string>
-    <string name="ad_free_subscriber">Ikaw ay isang Ad-Free subscriber!</string>
+    <string name="ad_free_subscriber">Subscriber ka ng Walang Ads!</string>
     <string name="yearly">Taunan</string>
     <string name="save_percent">Makatipid ng 58%%</string>
     <string name="monthly">Buwanan</string>
@@ -226,6 +283,10 @@
     <string name="skip_ad">Laktawan ang ad</string>
     <string name="ad_content_description">Ad</string>
 
+    <!-- Radio Call-In -->
+    <string name="call_to_request">Tumawag para mag-request ng paksa</string>
+    <string name="call_in_label">Tumawag: (833) 398-1230</string>
+
     <!-- Splash Screen -->
     <string name="splash_tagline">Ang iyong AI-powered audio briefing</string>
 
@@ -233,15 +294,67 @@
     <string name="notification_good_morning">Magandang Umaga!</string>
     <string name="notification_daily_brief_text">Oras na para sa iyong Araw-araw na Buod. I-tap para malaman ang mga email, calendar, at balita.</string>
     <string name="daily_brief_channel_description">Mga paalala ng araw-araw na buod</string>
+    <string name="radio_topic_channel_name">Mga paalala sa paksa ng radio</string>
+    <string name="radio_topic_channel_description">Maabisuhan kapag pinapatugtog sa Audexa Radio ang paksang na-bookmark mo</string>
+    <string name="radio_topic_notification_title">Ngayon sa Audexa Radio</string>
+    <string name="radio_topic_notification_body">Live na ang %1$s. I-tap para makinig.</string>
 
     <!-- Daily Brief Playback -->
     <string name="daily_brief_title_format">Araw-araw na Buod - %s</string>
-    <string name="daily_brief_description">Ang iyong personalized na umaga na buod</string>
-    <string name="language_fallback_note">Wala pang podcast sa %1$s, kaya %2$s ang pinili namin para sa iyo.</string>
+    <string name="daily_brief_description">Ang iyong personalized na buod sa umaga</string>
 
-    <!-- Language selection page -->
-    <string name="language_page_title">Piliin ang Iyong Wika</string>
-    <string name="language_page_subtitle">Available ang mga podcast sa anim na wika. Ingles lang ang radyo. Nakakatulong ang pinili mo para makapagpasya kami kung ano ang idadagdag.</string>
-    <string name="language_coming_soon">Malapit na</string>
-    <string name="language_coming_soon_toast">Hindi pa available. Naitala na namin ang iyong interes.</string>
+    <!-- Morning briefing: one local notification per day, opt-in after first play -->
+    <string name="briefing_notification_title">Ngayon sa Audexa</string>
+    <string name="briefing_notification_body_fallback">Nagpe-play ang Audexa Radio ngayon. I-tap para makinig.</string>
+    <plurals name="briefing_notification_body_topics">
+        <item quantity="one">%1$d bagong podcast ng paksa: %2$s. I-tap para makinig.</item>
+        <item quantity="other">%1$d bagong podcast ng paksa: %2$s. I-tap para makinig.</item>
+    </plurals>
+    <string name="briefing_names_with_more">%1$s at %2$d pa</string>
+    <string name="briefing_optin_title">Paalalahanan ka kapag handa na ang mga bagong podcast ng paksa?</string>
+    <string name="briefing_optin_accept">Paalalahanan ako</string>
+    <string name="briefing_optin_decline">Hindi muna</string>
+
+    <!-- Ask the hosts (English only for now) -->
+    <string name="ask_entry_title">Magtanong sa mga host</string>
+    <string name="ask_entry_subtitle">Laro ngayong gabi, isang launch, isang balita: pag-uusapan ito ng dalawang AI host</string>
+    <string name="ask_title">Magtanong sa mga host</string>
+    <string name="ask_intro">Maglarawan ng isang pangyayari o balita. Ang pinag-uusapan lang ng mga host ay ang iniuulat ng mga kamakailang headline, at sasabihin nila sa iyo kung kulang ang coverage. Gawa ng AI ang mga episode at inaabot ng isa o dalawang minuto.</string>
+    <string name="ask_field_label">Ano ang dapat nilang pag-usapan?</string>
+    <string name="ask_field_placeholder">hal. Sino ang nanalo sa laro ng Warriors ngayong gabi?</string>
+    <string name="ask_counter">%1$d/%2$d</string>
+    <string name="ask_language_label">Wika</string>
+    <string name="ask_submit">Itanong</string>
+    <string name="ask_sending">Ipinapadala ang request mo...</string>
+    <string name="ask_stage_queued">Naghihintay ng bakanteng studio...</string>
+    <string name="ask_stage_reviewing">Sinusuri ang request mo...</string>
+    <string name="ask_stage_searching">Binabasa ang pinakabagong mga headline...</string>
+    <string name="ask_stage_writing">Naghahanda ang mga host...</string>
+    <string name="ask_stage_recording">Nire-record ang episode...</string>
+    <string name="ask_stage_working">Pinoproseso...</string>
+    <string name="ask_progress_description">Progress: %1$d porsyento</string>
+    <string name="ask_leave_hint">Puwede kang umalis sa screen na ito. Pagbalik mo, ito pa rin ang episode.</string>
+    <string name="ask_ai_note">Talakayang gawa ng AI sa pagitan ng dalawang AI host, batay sa mga kamakailang headline ng balita.</string>
+    <string name="ask_length">Haba: %1$s</string>
+    <string name="ask_play">I-play ang episode</string>
+    <string name="ask_pause">I-pause</string>
+    <string name="ask_share">I-share</string>
+    <string name="ask_share_chooser">I-share ang episode na ito</string>
+    <string name="ask_share_failed">Hindi mabuksan ang share sheet</string>
+    <string name="ask_sources_title">Mga headline na pinagbatayan ng episode na ito</string>
+    <string name="ask_sources_note">Ang iniuulat lang ng mga headline na ito ang pinag-uusapan ng mga host. Tingnan ang mga source para sa buong kuwento.</string>
+    <string name="ask_ask_another">Magtanong ulit</string>
+    <string name="ask_edit_question">I-edit ang tanong</string>
+    <string name="ask_check_again">Tingnan ulit</string>
+    <string name="ask_unavailable">Hindi available ang Magtanong sa mga host ngayon.</string>
+    <string name="ask_loading">Tinitingnan kung available...</string>
+    <string name="ask_err_input">Pakisuri ang tanong mo at subukan ulit.</string>
+    <string name="ask_err_limited">Abala o naabot na ang limitasyon ng Magtanong sa mga host. Pakisubukan ulit mamaya.</string>
+    <string name="ask_err_not_found">Hindi na namin mahanap ang request na ito. Pakitanong ulit.</string>
+    <string name="ask_err_offline">Walang koneksyon. Pakisuri ang internet mo at subukan ulit.</string>
+    <string name="ask_err_timeout">Mas matagal ito kaysa inaasahan. Baka paparating pa ang episode.</string>
+    <string name="ask_err_server">May nangyaring mali. Pakisubukan ulit.</string>
+    <string name="ask_err_refused">Hindi makakagawa ang mga host ng episode tungkol diyan.</string>
+    <string name="ask_err_no_coverage">Wala kaming nakitang sapat na kamakailang coverage ng balita tungkol dito, kaya hindi kami gumawa ng episode.</string>
+    <string name="ask_err_failed">Hindi nagawa ang episode. Pakisubukan ulit.</string>
 </resources>

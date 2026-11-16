@@ -31,7 +31,7 @@
     <string name="good_afternoon">İyi Öğlenler</string>
     <string name="good_evening">İyi Akşamlar</string>
     <string name="daily_brief">Günlük Özet</string>
-    <string name="daily_brief_subtitle">Günlük Özet \u2022 %s</string>
+    <string name="daily_brief_subtitle">Günlük Özet • %s</string>
     <string name="keep_listening">Dinlemeye devam et</string>
     <string name="your_topics">Konularınız</string>
     <string name="topic_podcasts">Konu Podcast\'leri</string>
@@ -60,8 +60,10 @@
     <string name="version">Sürüm</string>
     <string name="terms_of_service">Hizmet Şartları</string>
     <string name="privacy_policy">Gizlilik Politikası</string>
+    <string name="analytics_title">Anonim kullanım istatistiklerini paylaş</string>
+    <string name="analytics_subtitle">Hangi konuların ve dillerin ne kadar süreyle kullanıldığı. Bu cihazda rastgele bir kimlik tutulur; ad, e-posta veya IP adresi yoktur. Bunu kapatmak kimliği siler.</string>
     <string name="premium">Premium</string>
-    <string name="go_ad_free">Reklamsız Geç</string>
+    <string name="go_ad_free">Reklamsıza Geç</string>
     <string name="ad_free">Reklamsız</string>
     <string name="active_subscription">Aktif abonelik</string>
     <string name="remove_all_ads">Tüm reklamları kaldır</string>
@@ -82,9 +84,9 @@
     <string name="paused">Duraklatıldı</string>
     <string name="play">Çal</string>
     <string name="pause">Duraklat</string>
-    <string name="loading">Yükleniyor\u2026</string>
-    <string name="generating">Oluşturuluyor\u2026</string>
-    <string name="generating_progress">Oluşturuluyor\u2026 %d%%</string>
+    <string name="loading">Yükleniyor…</string>
+    <string name="generating">Oluşturuluyor…</string>
+    <string name="generating_progress">Oluşturuluyor… %d%%</string>
     <string name="generate_episode">Bölüm Oluştur</string>
     <string name="regenerate">Yeniden Oluştur</string>
     <string name="episode_history">Bölüm Geçmişi</string>
@@ -92,7 +94,9 @@
     <string name="skip_forward">15 saniye ileri sar</string>
     <string name="skip_back_mini">Geri sar</string>
     <string name="skip_forward_mini">İleri sar</string>
-    <string name="buffering">Arabelleğe alınıyor\u2026</string>
+    <string name="buffering">Arabelleğe alınıyor…</string>
+    <string name="playback_error_stream">Radyoya ulaşılamıyor. Bağlantınızı kontrol edip tekrar deneyin.</string>
+    <string name="playback_error_episode">Bu ses yüklenemiyor. Bağlantınızı kontrol edip tekrar deneyin.</string>
     <string name="sleep_timer">Uyku zamanlayıcısı</string>
     <string name="timer">Zamanlayıcı</string>
     <string name="sleep_timer_5_min">5 dk</string>
@@ -169,12 +173,65 @@
 
     <!-- Language Settings -->
     <string name="language">Dil</string>
-    <string name="language_description">Podcast bölümleri için tercih ettiğiniz dili seçin.</string>
+    <string name="language_coming_soon">Yakında</string>
+    <string name="language_coming_soon_toast">Henüz kullanılamıyor. İlginizi not ettik.</string>
+    <string name="generating_language">Bölümünüz %1$s dilinde hazırlanıyor. İlki birkaç dakika sürebilir.</string>
+    <string name="language_fallback_note">Podcast\'ler henüz şu dilde kullanılamıyor: %1$s. Sizin için şu dili seçtik: %2$s.</string>
+    <string name="error_language_unavailable">Bu dil henüz kullanılamıyor.</string>
+    <string name="error_daily_limit">Yeni dildeki bölümler için bugünkü sınıra ulaşıldı. Yarın tekrar deneyin.</string>
+    <string name="language_page_title">Dilinizi Seçin</string>
+    <string name="language_page_subtitle">Podcast\'ler altı dilde sunuluyor. Radyo yalnızca İngilizce. Seçiminiz, neyi ekleyeceğimize karar vermemize yardımcı olur.</string>
+    <string name="language_description">Tercih ettiğiniz dili seçin.</string>
     <string name="language_note">Podcast\'ler İngilizce, İspanyolca, Fransızca, Almanca, Portekizce ve İtalyanca dillerinde sunuluyor. Yeni bir dildeki ilk bölümün hazırlanması birkaç dakika sürer. Radyo yalnızca İngilizce. Diğer diller için, sonraki adımda neyi ekleyeceğimize karar vermek amacıyla adınız olmadan hangisini seçtiğinizi kaydediyoruz.</string>
     <string name="selected">Seçili</string>
 
+    <!-- App language (the language of menus and buttons; separate from the podcast language) -->
+    <string name="app_language">Uygulama dili</string>
+    <string name="app_language_follow_phone">Telefon diliyle aynı</string>
+    <string name="app_language_description">Menülerin ve düğmelerin dili. Podcast\'ler yukarıda seçtiğiniz dilde kalır.</string>
+    <string name="ui_lang_offer_title">Uygulama şu dilde de gösterilsin mi: %1$s?</string>
+    <string name="ui_lang_offer_body">Yalnızca menüler ve düğmeler değişir. Bunu istediğiniz zaman profil ayarlarınızdan değiştirebilirsiniz.</string>
+    <string name="ui_lang_offer_yes">Evet, %1$s kullan</string>
+    <string name="ui_lang_offer_no">Hayır, %1$s kalsın</string>
+
+    <!-- Suggest a topic -->
+    <string name="suggest_topic">Konu Öner</string>
+    <string name="suggest_topic_inline">Konunuzu görmüyor musunuz? Bir konu önerin</string>
+    <string name="suggest_topic_description">Ne dinlemek istediğinizi bize söyleyin, eklemeyi değerlendirelim.</string>
+    <string name="suggest_topic_name_label">Konu adı</string>
+    <string name="suggest_topic_name_hint">örn. Kuantum Bilişim</string>
+    <string name="suggest_topic_details_label">Açıklama (isteğe bağlı)</string>
+    <string name="suggest_topic_details_hint">Bu konu neleri kapsamalı?</string>
+    <string name="suggest_topic_thanks">Teşekkürler, önerileri inceliyor ve uygun olanları ekliyoruz.</string>
+    <string name="submit">Gönder</string>
+    <string name="submitting">Gönderiliyor…</string>
+    <string name="no_topics_title">Şu anda uygun konu yok.</string>
+    <string name="no_topics_hint">Kurulumu bitirmek için Devam\'a dokunun — konuları daha sonra Ana Sayfa ekranından seçebilirsiniz.</string>
+
+    <!-- Live radio -->
+    <string name="radio_languages">Radyo Dilleri</string>
+    <string name="radio_languages_note">Seçilen istasyonlar ana ekranınızda görünür. En az bir dil etkin olmalıdır.</string>
+    <string name="radio_home_tagline">Yapay zeka destekli 7/24 haber · CANLI</string>
+    <string name="radio_tagline">Yapay zeka destekli 7/24 haber ve sohbet</string>
+    <string name="share_whats_playing">Çalanı paylaş</string>
+    <string name="share_station">%1$s istasyonunu paylaş</string>
+    <string name="radio_up_next">Sırada</string>
+    <string name="radio_requests">İstekler</string>
+    <string name="radio_generating">Oluşturuluyor</string>
+    <string name="radio_generating_badge">oluşturuluyor</string>
+    <string name="radio_request_hint">Canlı sıraya konu istemek için mikrofona dokunun</string>
+    <string name="radio_request_topic">Konu İste</string>
+    <string name="radio_request_title">Bir Konu İsteyin</string>
+    <string name="radio_request_description">Audexa Radyo\'ya ne dinlemek istediğinizi söyleyin. Canlı sıraya eklenecek.</string>
+    <string name="radio_add_to_queue">Canlı Sıraya Ekle</string>
+    <string name="radio_chat_hint">Dinleyicilerle sohbet edin...</string>
+    <string name="radio_chat">Sohbet</string>
+    <string name="radio_now_badge">ŞİMDİ</string>
+    <string name="radio_music">Müzik</string>
+    <string name="send">Gönder</string>
+
     <!-- Voice Settings -->
-    <string name="loading_voices">Sesler yükleniyor\u2026</string>
+    <string name="loading_voices">Sesler yükleniyor…</string>
     <string name="no_voice_pairs">Ses çifti mevcut değil</string>
     <string name="no_voices">Ses mevcut değil</string>
     <string name="voice_pairs_description">Podcast sunucularınız için önceden yapılandırılmış bir ses çifti seçin.</string>
@@ -209,7 +266,7 @@
     <string name="no_audio_ad_interruptions">Sesli reklam kesintisi yok</string>
     <string name="seamless_episode_playback">Kesintisiz bölüm oynatma</string>
     <string name="support_indie_development">Bağımsız geliştirmeyi destekleyin</string>
-    <string name="ad_free_subscriber">Reklamsız abonesiniz!</string>
+    <string name="ad_free_subscriber">Reklamsız aboneliğiniz aktif!</string>
     <string name="yearly">Yıllık</string>
     <string name="save_percent">%%58 Tasarruf</string>
     <string name="monthly">Aylık</string>
@@ -226,6 +283,10 @@
     <string name="skip_ad">Reklamı atla</string>
     <string name="ad_content_description">Reklam</string>
 
+    <!-- Radio Call-In -->
+    <string name="call_to_request">Konu istemek için arayın</string>
+    <string name="call_in_label">Arayın: (833) 398-1230</string>
+
     <!-- Splash Screen -->
     <string name="splash_tagline">Yapay zeka destekli sesli özetiniz</string>
 
@@ -233,15 +294,67 @@
     <string name="notification_good_morning">Günaydın!</string>
     <string name="notification_daily_brief_text">Günlük özetinizin zamanı geldi. E-postalar, takvim ve haberlerden haberdar olmak için dokunun.</string>
     <string name="daily_brief_channel_description">Günlük özet hatırlatma bildirimleri</string>
+    <string name="radio_topic_channel_name">Radyo konu hatırlatıcıları</string>
+    <string name="radio_topic_channel_description">Yer imi eklediğiniz bir konu Audexa Radyo\'da çaldığında bildirim alın</string>
+    <string name="radio_topic_notification_title">Şu anda Audexa Radyo\'da</string>
+    <string name="radio_topic_notification_body">%1$s canlı yayında. Dinlemek için dokunun.</string>
 
     <!-- Daily Brief Playback -->
     <string name="daily_brief_title_format">Günlük Özet - %s</string>
     <string name="daily_brief_description">Kişiselleştirilmiş sabah özetiniz</string>
 
-    <!-- Language selection page -->
-    <string name="language_page_title">Dilinizi Seçin</string>
-    <string name="language_page_subtitle">Podcast\'ler altı dilde sunuluyor. Radyo yalnızca İngilizce. Seçiminiz, neyi ekleyeceğimize karar vermemize yardımcı olur.</string>
-    <string name="language_coming_soon">Yakında</string>
-    <string name="language_coming_soon_toast">Henüz kullanılamıyor. İlginizi not ettik.</string>
-    <string name="language_fallback_note">Podcast\'ler henüz şu dilde kullanılamıyor: %1$s. Sizin için şu dili seçtik: %2$s.</string>
+    <!-- Morning briefing: one local notification per day, opt-in after first play -->
+    <string name="briefing_notification_title">Bugün Audexa\'da</string>
+    <string name="briefing_notification_body_fallback">Audexa Radyo şu anda yayında. Dinlemek için dokunun.</string>
+    <plurals name="briefing_notification_body_topics">
+        <item quantity="one">%1$d yeni konu podcast\'i: %2$s. Dinlemek için dokunun.</item>
+        <item quantity="other">%1$d yeni konu podcast\'i: %2$s. Dinlemek için dokunun.</item>
+    </plurals>
+    <string name="briefing_names_with_more">%1$s ve %2$d tane daha</string>
+    <string name="briefing_optin_title">Yeni konu podcast\'leri hazır olduğunda hatırlatalım mı?</string>
+    <string name="briefing_optin_accept">Hatırlat</string>
+    <string name="briefing_optin_decline">Şimdi değil</string>
+
+    <!-- Ask the hosts (English only for now) -->
+    <string name="ask_entry_title">Sunuculara Sor</string>
+    <string name="ask_entry_subtitle">Bu geceki maç, bir lansman, bir haber: iki yapay zeka sunucu tartışıyor</string>
+    <string name="ask_title">Sunuculara Sor</string>
+    <string name="ask_intro">Bir olayı veya haberi anlatın. Sunucular yalnızca güncel manşetlerde yer alanlardan söz eder; yeterli haber kapsamı yoksa size söyler. Bölümler yapay zeka tarafından oluşturulur ve bir iki dakika sürer.</string>
+    <string name="ask_field_label">Ne hakkında konuşsunlar?</string>
+    <string name="ask_field_placeholder">örn. Bu gece Warriors maçını kim kazandı?</string>
+    <string name="ask_counter">%1$d/%2$d</string>
+    <string name="ask_language_label">Dil</string>
+    <string name="ask_submit">Sor</string>
+    <string name="ask_sending">İsteğiniz gönderiliyor...</string>
+    <string name="ask_stage_queued">Boş bir stüdyo bekleniyor...</string>
+    <string name="ask_stage_reviewing">İsteğiniz kontrol ediliyor...</string>
+    <string name="ask_stage_searching">Son manşetler okunuyor...</string>
+    <string name="ask_stage_writing">Sunucular hazırlanıyor...</string>
+    <string name="ask_stage_recording">Bölüm kaydediliyor...</string>
+    <string name="ask_stage_working">Çalışılıyor...</string>
+    <string name="ask_progress_description">İlerleme: yüzde %1$d</string>
+    <string name="ask_leave_hint">Bu ekrandan ayrılabilirsiniz. Geri döndüğünüzde aynı bölümden devam edersiniz.</string>
+    <string name="ask_ai_note">Güncel haber manşetlerine dayanan, iki yapay zeka sunucu arasında yapay zeka ile oluşturulmuş sohbet.</string>
+    <string name="ask_length">Süre %1$s</string>
+    <string name="ask_play">Bölümü çal</string>
+    <string name="ask_pause">Duraklat</string>
+    <string name="ask_share">Paylaş</string>
+    <string name="ask_share_chooser">Bu bölümü paylaş</string>
+    <string name="ask_share_failed">Paylaşım menüsü açılamadı</string>
+    <string name="ask_sources_title">Bu bölümün dayandığı manşetler</string>
+    <string name="ask_sources_note">Sunucular yalnızca bu manşetlerde yer alanları tartışır. Haberlerin tamamı için kaynaklara bakın.</string>
+    <string name="ask_ask_another">Bir tane daha sor</string>
+    <string name="ask_edit_question">Soruyu düzenle</string>
+    <string name="ask_check_again">Tekrar kontrol et</string>
+    <string name="ask_unavailable">Sunuculara Sor şu anda kullanılamıyor.</string>
+    <string name="ask_loading">Uygunluk kontrol ediliyor...</string>
+    <string name="ask_err_input">Lütfen sorunuzu kontrol edip tekrar deneyin.</string>
+    <string name="ask_err_limited">Sunuculara Sor şu anda yoğun veya sınırına ulaştı. Lütfen daha sonra tekrar deneyin.</string>
+    <string name="ask_err_not_found">Bu isteği artık bulamadık. Lütfen tekrar sorun.</string>
+    <string name="ask_err_offline">Bağlantı yok. İnternetinizi kontrol edip tekrar deneyin.</string>
+    <string name="ask_err_timeout">Beklenenden uzun sürüyor. Bölüm yine de yolda olabilir.</string>
+    <string name="ask_err_server">Bir şeyler ters gitti. Lütfen tekrar deneyin.</string>
+    <string name="ask_err_refused">Sunucular bu konuda bir bölüm yapamaz.</string>
+    <string name="ask_err_no_coverage">Bu konuda yeterli güncel haber kapsamı bulamadık, bu yüzden bölüm oluşturmadık.</string>
+    <string name="ask_err_failed">Bölüm oluşturulamadı. Lütfen tekrar deneyin.</string>
 </resources>

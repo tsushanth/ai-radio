@@ -86,6 +86,19 @@ android {
         compose = true
         buildConfig = true
     }
+    bundle {
+        // The in-app language setting can switch to any shipped translation; with language splits on, Play would only deliver the
+        // phone's language and the switch would fall back to English.
+        language {
+            enableSplit = false
+        }
+    }
+    testOptions {
+        unitTests {
+            // Robolectric reads the app's real resources (R.string.*, values-xx folders) for the language tests.
+            isIncludeAndroidResources = true
+        }
+    }
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
@@ -183,6 +196,11 @@ dependencies {
 
     // Testing
     testImplementation("junit:junit:4.13.2")
+    // Language tests: real resource resolution per locale, and Compose screens rendered on the JVM.
+    testImplementation("org.robolectric:robolectric:4.14.1")
+    testImplementation("androidx.test:core:1.6.1")
+    testImplementation(platform(libs.androidx.compose.bom))
+    testImplementation("androidx.compose.ui:ui-test-junit4")
 
     // Google Sign-In (Credential Manager)
     implementation("androidx.credentials:credentials:1.3.0")

@@ -1,0 +1,362 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Audexa</string>
+    <string name="app_tagline">Твоє персональне ШІ-радіо</string>
+
+    <!-- Auth -->
+    <string name="sign_in_with_google">Увійти через Google</string>
+    <string name="sign_out">Вийти</string>
+    <string name="delete_account">Видалити акаунт</string>
+    <string name="auth_description">Слухай подкасти, створені ШІ, на теми, які тебе цікавлять. Додай свою пошту в налаштуваннях, щоб отримувати персональні щоденні брифінги.</string>
+    <string name="auth_terms">Продовжуючи, ти погоджуєшся з нашими Умовами використання та Політикою конфіденційності</string>
+    <string name="start">Почати</string>
+
+    <!-- Navigation -->
+    <string name="nav_home">Головна</string>
+    <string name="nav_profile">Профіль</string>
+    <string name="back">Назад</string>
+    <string name="close">Закрити</string>
+    <string name="cancel">Скасувати</string>
+    <string name="ok">OK</string>
+    <string name="delete">Видалити</string>
+    <string name="retry">Повторити</string>
+    <string name="enable">Увімкнути</string>
+
+    <!-- Tabs -->
+    <string name="tab_for_you">Для тебе</string>
+    <string name="tab_discover">Відкриття</string>
+
+    <!-- Home -->
+    <string name="good_morning">Доброго ранку</string>
+    <string name="good_afternoon">Добрий день</string>
+    <string name="good_evening">Добрий вечір</string>
+    <string name="daily_brief">Щоденний брифінг</string>
+    <string name="daily_brief_subtitle">Щоденний брифінг • %s</string>
+    <string name="keep_listening">Продовжити слухати</string>
+    <string name="your_topics">Твої теми</string>
+    <string name="topic_podcasts">Подкасти за темами</string>
+    <string name="recommended_for_you">Рекомендовано тобі</string>
+    <string name="more_for_you">Ще для тебе</string>
+    <string name="all_topics">Усі теми</string>
+    <string name="matching_topics">Відповідні теми</string>
+    <string name="tap_to_explore">Торкнись, щоб переглянути й увімкнути</string>
+    <string name="link_account_prompt">Прив\'яжи пошту, щоб створювати персональні брифінги</string>
+    <string name="link_account">Прив\'язати акаунт</string>
+    <string name="find_new_shows">Знайти нові шоу</string>
+    <string name="search">Пошук</string>
+    <string name="clear">Очистити</string>
+    <string name="no_results_for">Нічого не знайдено за запитом \"%s\"</string>
+
+    <!-- Profile -->
+    <string name="profile">Профіль</string>
+    <string name="linked_accounts">Прив\'язані акаунти</string>
+    <string name="preferences">Налаштування</string>
+    <string name="podcast_language">Мова подкастів</string>
+    <string name="briefing_time">Час брифінгу</string>
+    <string name="topics">Теми</string>
+    <string name="voice_preference">Вибір голосу</string>
+    <string name="hidden_topics">Приховані теми</string>
+    <string name="about">Про застосунок</string>
+    <string name="version">Версія</string>
+    <string name="terms_of_service">Умови використання</string>
+    <string name="privacy_policy">Політика конфіденційності</string>
+    <string name="analytics_title">Ділитися анонімною статистикою використання</string>
+    <string name="analytics_subtitle">Які теми й мови використовуються та як довго. Випадковий ідентифікатор на цьому пристрої, без імені, пошти чи IP-адреси. Якщо вимкнути, ідентифікатор буде видалено.</string>
+    <string name="premium">Premium</string>
+    <string name="go_ad_free">Вимкни рекламу</string>
+    <string name="ad_free">Без реклами</string>
+    <string name="active_subscription">Активна підписка</string>
+    <string name="remove_all_ads">Прибрати всю рекламу</string>
+    <string name="email_accounts">Поштові акаунти</string>
+    <string name="app_theme">Тема застосунку</string>
+    <string name="voice_settings">Налаштування голосу</string>
+    <string name="choose_podcast_voices">Обери голоси для подкастів</string>
+    <string name="hidden_count">Приховано: %d</string>
+    <string name="notifications">Сповіщення</string>
+    <string name="daily_brief_reminders">Нагадування про щоденний брифінг</string>
+    <string name="sign_out_confirm">Точно хочеш вийти?</string>
+    <string name="delete_account_confirm">Точно хочеш видалити свій акаунт? Усі твої дані, зокрема подкасти, налаштування та прив\'язані акаунти, буде видалено назавжди. Цю дію не можна скасувати.</string>
+    <string name="delete_account_signin_again">Термін дії твого входу минув, тому акаунт не видалено, і нічого не стерто. Вийди, увійди знову, а потім ще раз спробуй «Видалити акаунт».</string>
+    <string name="delete_account_failed">Не вдалося завершити видалення твого акаунта. Перевір підключення й спробуй ще раз.</string>
+
+    <!-- Player -->
+    <string name="playing">Грає</string>
+    <string name="paused">Пауза</string>
+    <string name="play">Грати</string>
+    <string name="pause">Пауза</string>
+    <string name="loading">Завантаження…</string>
+    <string name="generating">Створення…</string>
+    <string name="generating_progress">Створення… %d%%</string>
+    <string name="generate_episode">Створити епізод</string>
+    <string name="regenerate">Створити заново</string>
+    <string name="episode_history">Історія епізодів</string>
+    <string name="skip_back">Назад на 15 секунд</string>
+    <string name="skip_forward">Вперед на 15 секунд</string>
+    <string name="skip_back_mini">Назад</string>
+    <string name="skip_forward_mini">Вперед</string>
+    <string name="buffering">Буферизація…</string>
+    <string name="playback_error_stream">Не вдається зв\'язатися з радіо. Перевір підключення й спробуй ще раз.</string>
+    <string name="playback_error_episode">Не вдається завантажити це аудіо. Перевір підключення й спробуй ще раз.</string>
+    <string name="sleep_timer">Таймер сну</string>
+    <string name="timer">Таймер</string>
+    <string name="sleep_timer_5_min">5 хв</string>
+    <string name="sleep_timer_10_min">10 хв</string>
+    <string name="sleep_timer_15_min">15 хв</string>
+    <string name="sleep_timer_30_min">30 хв</string>
+    <string name="sleep_timer_1_hour">1 год</string>
+    <string name="min_format">%d хв</string>
+    <string name="today">Сьогодні</string>
+    <string name="bookmark">Закладка</string>
+    <string name="more">Більше</string>
+    <string name="hide_topic">Приховати тему</string>
+    <string name="hide">Приховати</string>
+
+    <!-- Errors -->
+    <string name="error_generic">Щось пішло не так</string>
+    <string name="error_network">Помилка мережі. Перевір підключення.</string>
+    <string name="error_auth">Не вдалося пройти автентифікацію</string>
+    <string name="error_no_internet">Немає підключення до інтернету. Перевір мережу й спробуй ще раз.</string>
+    <string name="generation_failed">Не вдалося створити</string>
+
+    <!-- Misc -->
+    <string name="min_daily">%d хв щодня</string>
+    <string name="connected">Підключено</string>
+    <string name="not_connected">Не підключено</string>
+    <string name="not_connected_lower">Не підключено</string>
+    <string name="coming_soon">Незабаром</string>
+    <string name="microsoft_coming_soon">Інтеграція з акаунтом Microsoft з\'явиться незабаром. Слідкуй за оновленнями!</string>
+
+    <!-- Onboarding -->
+    <string name="welcome_to_audexa">Ласкаво просимо до Audexa</string>
+    <string name="welcome_description">Твоє персональне ШІ-радіо, яке перетворює найсвіжіші новини, технології та теми на цікаві брифінги у форматі подкастів.</string>
+    <string name="get_started">Почати</string>
+    <string name="connect_your_account">Підключи свій акаунт</string>
+    <string name="connect_account_description">Прив\'яжи свій акаунт Google, щоб отримувати персональні щоденні брифінги на основі пошти й календаря.</string>
+    <string name="gmail">Gmail</string>
+    <string name="calendar">Календар</string>
+    <string name="include_email_highlights">Додавати до брифінгу головне з пошти</string>
+    <string name="include_calendar_events">Додавати до брифінгу майбутні події</string>
+    <string name="continue_button">Далі</string>
+    <string name="skip_for_now">Пропустити</string>
+    <string name="connect_later_hint">Підключити можна будь-коли пізніше в налаштуваннях</string>
+    <string name="connect">Підключити</string>
+    <string name="choose_your_interests">Обери свої інтереси</string>
+    <string name="choose_interests_description">Познач теми, про які хочеш слухати. Ми створюватимемо щоденні епізоди спеціально для тебе.</string>
+    <string name="topics_selected">Вибрано тем: %d</string>
+    <string name="topics_selected_plural_suffix">""</string>
+    <string name="complete_setup">Завершити</string>
+
+    <!-- Linked Accounts -->
+    <string name="enable_daily_brief">Увімкни щоденний брифінг</string>
+    <string name="enable_daily_brief_description">Підключи Gmail, щоб отримувати персональні щоденні брифінги на основі твоїх листів. Ми коротко перекажемо важливі новини, щоб ти починав день у курсі подій.</string>
+    <string name="google_calendar">Google Calendar</string>
+    <string name="outlook">Outlook</string>
+    <string name="daily_brief_sources">Джерела щоденного брифінгу</string>
+    <string name="email_summaries">Підсумки листів</string>
+    <string name="include_email_in_brief">Додавати підсумки листів до щоденного брифінгу</string>
+    <string name="calendar_events">Події календаря</string>
+    <string name="include_calendar_in_brief">Додавати майбутні події до щоденного брифінгу</string>
+    <string name="unlink">Відв\'язати</string>
+    <string name="soon">Скоро</string>
+    <string name="your_privacy">Твоя приватність</string>
+    <string name="privacy_note">Щоб підготувати твій брифінг, наш сервер читає твої нещодавні листи в Gmail і події календаря. Ім\'я відправника, тема та перші 100 символів найважливіших листів, а також назви, час і місця подій надсилаються до Anthropic, нашого постачальника ШІ, щоб написати сценарій. Ми не зберігаємо текст твоїх листів, але готове аудіо брифінгу зберігається, доки ти не видалиш свій акаунт. Відв\'язування не прибирає доступ до Google, збережений на нашому сервері; це робить «Видалити акаунт» у профілі.</string>
+    <string name="microsoft_outlook_coming_soon">Прив\'язування Microsoft Outlook з\'явиться в одному з наступних оновлень.</string>
+    <string name="gmail_linking_cancelled">Прив\'язування Gmail скасовано</string>
+    <string name="calendar_linking_cancelled">Прив\'язування календаря скасовано</string>
+    <string name="reconnect">Підключити знову</string>
+
+    <!-- Hidden Topics -->
+    <string name="no_hidden_topics">Немає прихованих тем</string>
+    <string name="no_hidden_topics_description">Теми, які ти приховаєш, з\'являться тут. Повернути їх можна будь-коли.</string>
+    <string name="unhide_hint">Торкнись значка ока, щоб знову показати тему.</string>
+    <string name="unhide">Показати</string>
+
+    <!-- Language Settings -->
+    <string name="language">Мова</string>
+    <string name="language_coming_soon">Незабаром</string>
+    <string name="language_coming_soon_toast">Поки що недоступно. Ми врахували твій інтерес.</string>
+    <string name="generating_language">Готуємо твій епізод, мова: %1$s. Перший може зайняти кілька хвилин.</string>
+    <string name="language_fallback_note">Для мови «%1$s» подкастів поки немає, тому ми вибрали для тебе «%2$s».</string>
+    <string name="error_language_unavailable">Ця мова поки недоступна.</string>
+    <string name="error_daily_limit">Сьогоднішній ліміт епізодів новою мовою вичерпано. Спробуй завтра.</string>
+    <string name="language_page_title">Обери мову</string>
+    <string name="language_page_subtitle">Подкасти доступні шістьма мовами. Радіо лише англійською. Твій вибір допомагає нам вирішити, що додати.</string>
+    <string name="language_description">Обери бажану мову.</string>
+    <string name="language_note">Подкасти доступні англійською, іспанською, французькою, німецькою, португальською та італійською мовами. Перший епізод новою мовою готується кілька хвилин. Радіо лише англійською. Для інших мов ми фіксуємо, яку з них ти вибрав, без твого імені, щоб вирішити, що додати далі.</string>
+    <string name="selected">Вибрано</string>
+
+    <!-- App language (the language of menus and buttons; separate from the podcast language) -->
+    <string name="app_language">Мова застосунку</string>
+    <string name="app_language_follow_phone">Як на телефоні</string>
+    <string name="app_language_description">Мова меню й кнопок. Подкасти залишаються мовою, яку ти вибрав вище.</string>
+    <string name="ui_lang_offer_title">Показувати застосунок мовою «%1$s»?</string>
+    <string name="ui_lang_offer_body">Зміниться лише мова меню й кнопок. Це можна змінити будь-коли в налаштуваннях профілю.</string>
+    <string name="ui_lang_offer_yes">Так, мова: %1$s</string>
+    <string name="ui_lang_offer_no">Ні, лишити: %1$s</string>
+
+    <!-- Suggest a topic -->
+    <string name="suggest_topic">Запропонуй тему</string>
+    <string name="suggest_topic_inline">Не бачиш потрібної теми? Запропонуй свою</string>
+    <string name="suggest_topic_description">Розкажи, що ти хочеш слухати, і ми розглянемо можливість додати це.</string>
+    <string name="suggest_topic_name_label">Назва теми</string>
+    <string name="suggest_topic_name_hint">напр. Квантові обчислення</string>
+    <string name="suggest_topic_details_label">Опис (необов\'язково)</string>
+    <string name="suggest_topic_details_hint">Що має охоплювати ця тема?</string>
+    <string name="suggest_topic_thanks">Дякуємо, ми переглядаємо пропозиції й додаємо найкращі.</string>
+    <string name="submit">Надіслати</string>
+    <string name="submitting">Надсилання…</string>
+    <string name="no_topics_title">Зараз немає доступних тем.</string>
+    <string name="no_topics_hint">Торкнись «Далі», щоб завершити налаштування — теми можна вибрати пізніше на головному екрані.</string>
+
+    <!-- Live radio -->
+    <string name="radio_languages">Мови радіо</string>
+    <string name="radio_languages_note">Вибрані станції з\'являться на твоєму головному екрані. Має бути ввімкнена принаймні одна мова.</string>
+    <string name="radio_home_tagline">Новини 24/7 від ШІ · НАЖИВО</string>
+    <string name="radio_tagline">Новини й розмови 24/7 від ШІ</string>
+    <string name="share_whats_playing">Поділитися тим, що грає</string>
+    <string name="share_station">Поділитися: %1$s</string>
+    <string name="radio_up_next">Далі в ефірі</string>
+    <string name="radio_requests">Запити</string>
+    <string name="radio_generating">Створення</string>
+    <string name="radio_generating_badge">створення</string>
+    <string name="radio_request_hint">Торкнись мікрофона, щоб замовити тему в живу чергу</string>
+    <string name="radio_request_topic">Замовити тему</string>
+    <string name="radio_request_title">Замов тему</string>
+    <string name="radio_request_description">Розкажи Audexa Radio, що ти хочеш почути. Це додадуть до живої черги.</string>
+    <string name="radio_add_to_queue">Додати до живої черги</string>
+    <string name="radio_chat_hint">Спілкуйся зі слухачами...</string>
+    <string name="radio_chat">Чат</string>
+    <string name="radio_now_badge">ЗАРАЗ</string>
+    <string name="radio_music">Музика</string>
+    <string name="send">Надіслати</string>
+
+    <!-- Voice Settings -->
+    <string name="loading_voices">Завантаження голосів…</string>
+    <string name="no_voice_pairs">Немає доступних пар голосів</string>
+    <string name="no_voices">Немає доступних голосів</string>
+    <string name="voice_pairs_description">Обери готову пару голосів для ведучих твого подкасту.</string>
+    <string name="host_1">Ведучий 1</string>
+    <string name="host_2">Ведучий 2</string>
+    <string name="host_1_voice">Голос ведучого 1</string>
+    <string name="host_2_voice">Голос ведучого 2</string>
+
+    <!-- Theme Settings -->
+    <string name="theme_system">Системна</string>
+    <string name="theme_system_description">Як у налаштуваннях пристрою</string>
+    <string name="theme_dark">Темна</string>
+    <string name="theme_dark_description">Завжди темний режим</string>
+    <string name="theme_light">Світла</string>
+    <string name="theme_light_description">Завжди світлий режим</string>
+
+    <!-- Notification Settings -->
+    <string name="permission">Дозвіл</string>
+    <string name="enabled">Увімкнено</string>
+    <string name="not_enabled">Не ввімкнено</string>
+    <string name="daily_brief_schedule">Розклад щоденного брифінгу</string>
+    <string name="daily_brief_notifications">Сповіщення про щоденний брифінг</string>
+    <string name="daily_brief_notify_hint">Отримуй сповіщення, коли брифінг буде готовий</string>
+    <string name="daily_brief_content">Вміст щоденного брифінгу</string>
+    <string name="include_topic_updates">Додавати новини за темами</string>
+    <string name="include_topic_updates_hint">Додавати до щоденного брифінгу заголовки з твоїх тем</string>
+    <string name="notification_info">Твій щоденний брифінг буде створено й підготовлено на заплановану годину. Коли його можна буде слухати, ти отримаєш сповіщення.</string>
+    <string name="select_time">Обери час</string>
+
+    <!-- Subscription / Paywall -->
+    <string name="enjoy_uninterrupted">Слухай без перерв</string>
+    <string name="no_audio_ad_interruptions">Жодних аудіореклам, що переривають</string>
+    <string name="seamless_episode_playback">Безперервне відтворення епізодів</string>
+    <string name="support_indie_development">Підтримай незалежну розробку</string>
+    <string name="ad_free_subscriber">Ти підписник «Без реклами»!</string>
+    <string name="yearly">Щороку</string>
+    <string name="save_percent">Економія 58%%</string>
+    <string name="monthly">Щомісяця</string>
+    <string name="subscribe">Підписатися</string>
+    <string name="restore_purchases">Відновити покупки</string>
+    <string name="payment_fine_print">Оплату буде списано з твого акаунта Google Play. Підписка автоматично поновлюється, якщо її не скасувати щонайменше за 24 години до завершення поточного періоду.</string>
+    <string name="per_year">/рік</string>
+    <string name="per_month">/міс.</string>
+    <string name="per_week">/тиж.</string>
+
+    <!-- Ads -->
+    <string name="sponsored">РЕКЛАМА</string>
+    <string name="skip">Пропустити</string>
+    <string name="skip_ad">Пропустити рекламу</string>
+    <string name="ad_content_description">Реклама</string>
+
+    <!-- Radio Call-In -->
+    <string name="call_to_request">Зателефонуй, щоб замовити тему</string>
+    <string name="call_in_label">Дзвінок в ефір: (833) 398-1230</string>
+
+    <!-- Splash Screen -->
+    <string name="splash_tagline">Твій аудіобрифінг від ШІ</string>
+
+    <!-- Notifications (non-composable) -->
+    <string name="notification_good_morning">Доброго ранку!</string>
+    <string name="notification_daily_brief_text">Час для твого щоденного брифінгу. Торкнись, щоб дізнатися, що нового в листах, календарі й новинах.</string>
+    <string name="daily_brief_channel_description">Нагадування про щоденний брифінг</string>
+    <string name="radio_topic_channel_name">Нагадування про теми радіо</string>
+    <string name="radio_topic_channel_description">Отримуй сповіщення, коли тема із закладок грає на Audexa Radio</string>
+    <string name="radio_topic_notification_title">Зараз на Audexa Radio</string>
+    <string name="radio_topic_notification_body">%1$s грає наживо. Торкнись, щоб увімкнути.</string>
+
+    <!-- Daily Brief Playback -->
+    <string name="daily_brief_title_format">Щоденний брифінг - %s</string>
+    <string name="daily_brief_description">Твій персональний ранковий брифінг</string>
+
+    <!-- Morning briefing: one local notification per day, opt-in after first play -->
+    <string name="briefing_notification_title">Сьогодні в Audexa</string>
+    <string name="briefing_notification_body_fallback">Audexa Radio зараз в ефірі. Торкнись, щоб послухати.</string>
+    <plurals name="briefing_notification_body_topics">
+        <item quantity="one">%1$d новий подкаст за темою: %2$s. Торкнись, щоб послухати.</item>
+        <item quantity="few">%1$d нові подкасти за темами: %2$s. Торкнись, щоб послухати.</item>
+        <item quantity="many">%1$d нових подкастів за темами: %2$s. Торкнись, щоб послухати.</item>
+        <item quantity="other">%1$d нового подкасту за темами: %2$s. Торкнись, щоб послухати.</item>
+    </plurals>
+    <string name="briefing_names_with_more">%1$s і ще %2$d</string>
+    <string name="briefing_optin_title">Нагадувати, коли будуть готові нові подкасти за темами?</string>
+    <string name="briefing_optin_accept">Нагадати</string>
+    <string name="briefing_optin_decline">Не зараз</string>
+
+    <!-- Ask the hosts (English only for now) -->
+    <string name="ask_entry_title">Запитай ведучих</string>
+    <string name="ask_entry_subtitle">Сьогоднішній матч, запуск, новина: двоє ведучих від ШІ обговорять це</string>
+    <string name="ask_title">Запитай ведучих</string>
+    <string name="ask_intro">Опиши подію чи новину. Ведучі говорять лише про те, що пишуть свіжі заголовки, і скажуть тобі, якщо матеріалів недостатньо. Епізоди створює ШІ, це займає хвилину-дві.</string>
+    <string name="ask_field_label">Про що вони мають поговорити?</string>
+    <string name="ask_field_placeholder">напр. Хто виграв сьогоднішній матч «Ворріорз»?</string>
+    <string name="ask_counter">%1$d/%2$d</string>
+    <string name="ask_language_label">Мова</string>
+    <string name="ask_submit">Запитати</string>
+    <string name="ask_sending">Надсилаємо твій запит...</string>
+    <string name="ask_stage_queued">Чекаємо на вільну студію...</string>
+    <string name="ask_stage_reviewing">Перевіряємо твій запит...</string>
+    <string name="ask_stage_searching">Читаємо найсвіжіші заголовки...</string>
+    <string name="ask_stage_writing">Ведучі готуються...</string>
+    <string name="ask_stage_recording">Записуємо епізод...</string>
+    <string name="ask_stage_working">Працюємо...</string>
+    <string name="ask_progress_description">Прогрес: %1$d відсотків</string>
+    <string name="ask_leave_hint">Цей екран можна залишити. Коли повернешся, побачиш той самий епізод.</string>
+    <string name="ask_ai_note">Обговорення двох ведучих від ШІ, створене ШІ на основі свіжих новинних заголовків.</string>
+    <string name="ask_length">Тривалість: %1$s</string>
+    <string name="ask_play">Слухати епізод</string>
+    <string name="ask_pause">Пауза</string>
+    <string name="ask_share">Поділитися</string>
+    <string name="ask_share_chooser">Поділитися цим епізодом</string>
+    <string name="ask_share_failed">Не вдалося відкрити меню «Поділитися»</string>
+    <string name="ask_sources_title">Заголовки, на яких базується цей епізод</string>
+    <string name="ask_sources_note">Ведучі обговорюють лише те, про що пишуть ці заголовки. Повні матеріали шукай у джерелах.</string>
+    <string name="ask_ask_another">Запитати ще</string>
+    <string name="ask_edit_question">Змінити запитання</string>
+    <string name="ask_check_again">Перевірити ще раз</string>
+    <string name="ask_unavailable">«Запитай ведучих» зараз недоступно.</string>
+    <string name="ask_loading">Перевіряємо доступність...</string>
+    <string name="ask_err_input">Перевір своє запитання й спробуй ще раз.</string>
+    <string name="ask_err_limited">«Запитай ведучих» перевантажено або досягнуто ліміту. Спробуй пізніше.</string>
+    <string name="ask_err_not_found">Ми більше не можемо знайти цей запит. Запитай ще раз.</string>
+    <string name="ask_err_offline">Немає зв\'язку. Перевір інтернет і спробуй ще раз.</string>
+    <string name="ask_err_timeout">Це триває довше, ніж очікувалося. Можливо, епізод усе ще в дорозі.</string>
+    <string name="ask_err_server">Щось пішло не так. Спробуй ще раз.</string>
+    <string name="ask_err_refused">Ведучі не можуть зробити епізод на цю тему.</string>
+    <string name="ask_err_no_coverage">Ми не знайшли достатньо свіжих новинних матеріалів на цю тему, тому епізод не створено.</string>
+    <string name="ask_err_failed">Не вдалося створити епізод. Спробуй ще раз.</string>
+</resources>

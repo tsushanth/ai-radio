@@ -31,7 +31,7 @@
     <string name="good_afternoon">Dzień dobry</string>
     <string name="good_evening">Dobry wieczór</string>
     <string name="daily_brief">Codzienny skrót</string>
-    <string name="daily_brief_subtitle">Codzienny skrót \u2022 %s</string>
+    <string name="daily_brief_subtitle">Codzienny skrót • %s</string>
     <string name="keep_listening">Kontynuuj słuchanie</string>
     <string name="your_topics">Twoje tematy</string>
     <string name="topic_podcasts">Podcasty tematyczne</string>
@@ -60,6 +60,8 @@
     <string name="version">Wersja</string>
     <string name="terms_of_service">Warunki korzystania z usługi</string>
     <string name="privacy_policy">Polityka prywatności</string>
+    <string name="analytics_title">Udostępniaj anonimowe statystyki użycia</string>
+    <string name="analytics_subtitle">Które tematy i języki są używane i jak długo. Losowy identyfikator na tym urządzeniu, bez imienia, e-maila i adresu IP. Wyłączenie tej opcji usuwa identyfikator.</string>
     <string name="premium">Premium</string>
     <string name="go_ad_free">Usuń reklamy</string>
     <string name="ad_free">Bez reklam</string>
@@ -82,17 +84,19 @@
     <string name="paused">Wstrzymano</string>
     <string name="play">Odtwórz</string>
     <string name="pause">Wstrzymaj</string>
-    <string name="loading">Ładowanie\u2026</string>
-    <string name="generating">Generowanie\u2026</string>
-    <string name="generating_progress">Generowanie\u2026 %d%%</string>
+    <string name="loading">Ładowanie…</string>
+    <string name="generating">Generowanie…</string>
+    <string name="generating_progress">Generowanie… %d%%</string>
     <string name="generate_episode">Wygeneruj odcinek</string>
     <string name="regenerate">Wygeneruj ponownie</string>
     <string name="episode_history">Historia odcinków</string>
     <string name="skip_back">Cofnij o 15 sekund</string>
-    <string name="skip_forward">Przewiń o 15 sekund</string>
+    <string name="skip_forward">Przewiń do przodu o 15 sekund</string>
     <string name="skip_back_mini">Cofnij</string>
-    <string name="skip_forward_mini">Przewiń</string>
-    <string name="buffering">Buforowanie\u2026</string>
+    <string name="skip_forward_mini">Do przodu</string>
+    <string name="buffering">Buforowanie…</string>
+    <string name="playback_error_stream">Nie można połączyć się z radiem. Sprawdź połączenie i spróbuj ponownie.</string>
+    <string name="playback_error_episode">Nie można wczytać tego nagrania. Sprawdź połączenie i spróbuj ponownie.</string>
     <string name="sleep_timer">Wyłącznik czasowy</string>
     <string name="timer">Minutnik</string>
     <string name="sleep_timer_5_min">5 min</string>
@@ -144,14 +148,14 @@
 
     <!-- Linked Accounts -->
     <string name="enable_daily_brief">Włącz codzienny skrót</string>
-    <string name="enable_daily_brief_description">Połącz Gmail, aby otrzymywać spersonalizowane codzienne podsumowania na podstawie e-maili. Podsumujemy ważne aktualizacje, abyś mógł rozpocząć dzień dobrze poinformowany.</string>
-    <string name="google_calendar">Kalendarz Google</string>
+    <string name="enable_daily_brief_description">Połącz Gmail, aby otrzymywać spersonalizowane codzienne podsumowania na podstawie e-maili. Podsumujemy ważne aktualizacje, aby Twój dzień zaczynał się od najważniejszych informacji.</string>
+    <string name="google_calendar">Google Calendar</string>
     <string name="outlook">Outlook</string>
     <string name="daily_brief_sources">Źródła codziennego skrótu</string>
     <string name="email_summaries">Podsumowania e-maili</string>
-    <string name="include_email_in_brief">Uwzględnij podsumowania e-maili w Codziennym skrócie</string>
+    <string name="include_email_in_brief">Uwzględnij podsumowania e-maili w codziennym skrócie</string>
     <string name="calendar_events">Wydarzenia z kalendarza</string>
-    <string name="include_calendar_in_brief">Uwzględnij nadchodzące wydarzenia w Codziennym skrócie</string>
+    <string name="include_calendar_in_brief">Uwzględnij nadchodzące wydarzenia w codziennym skrócie</string>
     <string name="unlink">Odłącz</string>
     <string name="soon">Wkrótce</string>
     <string name="your_privacy">Twoja prywatność</string>
@@ -163,18 +167,71 @@
 
     <!-- Hidden Topics -->
     <string name="no_hidden_topics">Brak ukrytych tematów</string>
-    <string name="no_hidden_topics_description">Tematy, które ukryjesz, pojawią się tutaj. Możesz je odkryć w dowolnym momencie.</string>
+    <string name="no_hidden_topics_description">Tematy, które ukryjesz, pojawią się tutaj. Możesz je ponownie pokazać w dowolnym momencie.</string>
     <string name="unhide_hint">Dotknij ikony oka, aby ponownie pokazać temat.</string>
-    <string name="unhide">Odkryj</string>
+    <string name="unhide">Pokaż</string>
 
     <!-- Language Settings -->
     <string name="language">Język</string>
-    <string name="language_description">Wybierz preferowany język odcinków podcastu.</string>
+    <string name="language_coming_soon">Wkrótce</string>
+    <string name="language_coming_soon_toast">Jeszcze niedostępne. Zapisaliśmy Twoje zainteresowanie.</string>
+    <string name="generating_language">Przygotowujemy Twój odcinek (język: %1$s). Pierwszy może potrwać kilka minut.</string>
+    <string name="language_fallback_note">Podcasty nie są jeszcze dostępne w tym języku (%1$s), dlatego wybraliśmy dla Ciebie język: %2$s.</string>
+    <string name="error_language_unavailable">Ten język nie jest jeszcze dostępny.</string>
+    <string name="error_daily_limit">Dzisiejszy limit odcinków w nowych językach został wyczerpany. Spróbuj jutro.</string>
+    <string name="language_page_title">Wybierz język</string>
+    <string name="language_page_subtitle">Podcasty są dostępne w sześciu językach. Radio jest tylko po angielsku. Twój wybór pomaga nam zdecydować, co dodać.</string>
+    <string name="language_description">Wybierz preferowany język.</string>
     <string name="language_note">Podcasty są dostępne po angielsku, hiszpańsku, francusku, niemiecku, portugalsku i włosku. Przygotowanie pierwszego odcinka w nowym języku trwa kilka minut. Radio jest tylko po angielsku. W przypadku innych języków zapisujemy, który wybierasz (bez Twojego imienia), aby zdecydować, co dodać w następnej kolejności.</string>
     <string name="selected">Wybrano</string>
 
+    <!-- App language (the language of menus and buttons; separate from the podcast language) -->
+    <string name="app_language">Język aplikacji</string>
+    <string name="app_language_follow_phone">Jak w telefonie</string>
+    <string name="app_language_description">Język menu i przycisków. Podcasty pozostają w języku wybranym powyżej.</string>
+    <string name="ui_lang_offer_title">Pokazać aplikację także w języku: %1$s?</string>
+    <string name="ui_lang_offer_body">Zmienią się tylko menu i przyciski. Możesz to zmienić w każdej chwili w ustawieniach profilu.</string>
+    <string name="ui_lang_offer_yes">Tak, użyj: %1$s</string>
+    <string name="ui_lang_offer_no">Nie, zostaw: %1$s</string>
+
+    <!-- Suggest a topic -->
+    <string name="suggest_topic">Zaproponuj temat</string>
+    <string name="suggest_topic_inline">Nie widzisz swojego tematu? Zaproponuj go</string>
+    <string name="suggest_topic_description">Powiedz nam, czego chcesz słuchać, a rozważymy dodanie tego.</string>
+    <string name="suggest_topic_name_label">Nazwa tematu</string>
+    <string name="suggest_topic_name_hint">np. Obliczenia kwantowe</string>
+    <string name="suggest_topic_details_label">Opis (opcjonalnie)</string>
+    <string name="suggest_topic_details_hint">Czego powinien dotyczyć ten temat?</string>
+    <string name="suggest_topic_thanks">Dziękujemy! Przeglądamy propozycje i dodajemy te najlepsze.</string>
+    <string name="submit">Wyślij</string>
+    <string name="submitting">Wysyłanie…</string>
+    <string name="no_topics_title">Brak dostępnych tematów.</string>
+    <string name="no_topics_hint">Dotknij Kontynuuj, aby zakończyć konfigurację — tematy możesz wybrać później na ekranie głównym.</string>
+
+    <!-- Live radio -->
+    <string name="radio_languages">Języki radia</string>
+    <string name="radio_languages_note">Wybrane stacje pojawią się na ekranie głównym. Co najmniej jeden język musi być włączony.</string>
+    <string name="radio_home_tagline">Wiadomości AI 24/7 · NA ŻYWO</string>
+    <string name="radio_tagline">Wiadomości i rozmowy AI 24/7</string>
+    <string name="share_whats_playing">Udostępnij, co leci</string>
+    <string name="share_station">Udostępnij: %1$s</string>
+    <string name="radio_up_next">Następne</string>
+    <string name="radio_requests">Prośby</string>
+    <string name="radio_generating">Generowanie</string>
+    <string name="radio_generating_badge">generowanie</string>
+    <string name="radio_request_hint">Dotknij mikrofonu, aby zgłosić temat do kolejki na żywo</string>
+    <string name="radio_request_topic">Zgłoś temat</string>
+    <string name="radio_request_title">Zgłoś temat</string>
+    <string name="radio_request_description">Powiedz Audexa Radio, czego chcesz posłuchać. Temat trafi do kolejki na żywo.</string>
+    <string name="radio_add_to_queue">Dodaj do kolejki na żywo</string>
+    <string name="radio_chat_hint">Czat ze słuchaczami...</string>
+    <string name="radio_chat">Czat</string>
+    <string name="radio_now_badge">TERAZ</string>
+    <string name="radio_music">Muzyka</string>
+    <string name="send">Wyślij</string>
+
     <!-- Voice Settings -->
-    <string name="loading_voices">Ładowanie głosów\u2026</string>
+    <string name="loading_voices">Ładowanie głosów…</string>
     <string name="no_voice_pairs">Brak dostępnych par głosów</string>
     <string name="no_voices">Brak dostępnych głosów</string>
     <string name="voice_pairs_description">Wybierz wstępnie skonfigurowaną parę głosów dla prowadzących podcast.</string>
@@ -200,7 +257,7 @@
     <string name="daily_brief_notify_hint">Otrzymuj powiadomienie, gdy skrót jest gotowy</string>
     <string name="daily_brief_content">Treść codziennego skrótu</string>
     <string name="include_topic_updates">Uwzględnij aktualizacje tematów</string>
-    <string name="include_topic_updates_hint">Dodaj nagłówki z Twoich tematów do Codziennego skrótu</string>
+    <string name="include_topic_updates_hint">Dodaj nagłówki z Twoich tematów do codziennego skrótu</string>
     <string name="notification_info">Twój codzienny skrót zostanie wygenerowany i będzie gotowy o zaplanowanej godzinie. Otrzymasz powiadomienie, gdy będzie gotowy do odtworzenia.</string>
     <string name="select_time">Wybierz godzinę</string>
 
@@ -226,22 +283,80 @@
     <string name="skip_ad">Pomiń reklamę</string>
     <string name="ad_content_description">Reklama</string>
 
+    <!-- Radio Call-In -->
+    <string name="call_to_request">Zadzwoń, aby zgłosić temat</string>
+    <string name="call_in_label">Zadzwoń: (833) 398-1230</string>
+
     <!-- Splash Screen -->
     <string name="splash_tagline">Twoje podsumowanie audio oparte na AI</string>
 
     <!-- Notifications (non-composable) -->
     <string name="notification_good_morning">Dzień dobry!</string>
-    <string name="notification_daily_brief_text">Czas na Twój Codzienny Skrót. Dotknij, aby dowiedzieć się o e-mailach, kalendarzu i wiadomościach.</string>
+    <string name="notification_daily_brief_text">Czas na Twój codzienny skrót. Dotknij, aby dowiedzieć się o e-mailach, kalendarzu i aktualnościach.</string>
     <string name="daily_brief_channel_description">Powiadomienia przypominające o codziennym skrócie</string>
+    <string name="radio_topic_channel_name">Przypomnienia o tematach w radiu</string>
+    <string name="radio_topic_channel_description">Powiadomimy Cię, gdy temat z zakładek będzie grany w Audexa Radio</string>
+    <string name="radio_topic_notification_title">Teraz w Audexa Radio</string>
+    <string name="radio_topic_notification_body">%1$s leci teraz na żywo. Dotknij, aby posłuchać.</string>
 
     <!-- Daily Brief Playback -->
-    <string name="daily_brief_title_format">Codzienny Skrót - %s</string>
+    <string name="daily_brief_title_format">Codzienny skrót - %s</string>
     <string name="daily_brief_description">Twoje spersonalizowane poranne podsumowanie</string>
 
-    <!-- Language selection page -->
-    <string name="language_page_title">Wybierz język</string>
-    <string name="language_page_subtitle">Podcasty są dostępne w sześciu językach. Radio jest tylko po angielsku. Twój wybór pomaga nam zdecydować, co dodać.</string>
-    <string name="language_coming_soon">Wkrótce</string>
-    <string name="language_coming_soon_toast">Jeszcze niedostępne. Zapisaliśmy Twoje zainteresowanie.</string>
-    <string name="language_fallback_note">Podcasty nie są jeszcze dostępne w tym języku (%1$s), dlatego wybraliśmy dla Ciebie język: %2$s.</string>
+    <!-- Morning briefing: one local notification per day, opt-in after first play -->
+    <string name="briefing_notification_title">Dziś w Audexa</string>
+    <string name="briefing_notification_body_fallback">Audexa Radio gra teraz. Dotknij, aby posłuchać.</string>
+    <plurals name="briefing_notification_body_topics">
+        <item quantity="one">%1$d nowy podcast tematyczny: %2$s. Dotknij, aby posłuchać.</item>
+        <item quantity="few">%1$d nowe podcasty tematyczne: %2$s. Dotknij, aby posłuchać.</item>
+        <item quantity="many">%1$d nowych podcastów tematycznych: %2$s. Dotknij, aby posłuchać.</item>
+        <item quantity="other">%1$d nowego podcastu tematycznego: %2$s. Dotknij, aby posłuchać.</item>
+    </plurals>
+    <string name="briefing_names_with_more">%1$s i jeszcze %2$d</string>
+    <string name="briefing_optin_title">Przypomnieć Ci, gdy nowe podcasty tematyczne będą gotowe?</string>
+    <string name="briefing_optin_accept">Przypomnij</string>
+    <string name="briefing_optin_decline">Nie teraz</string>
+
+    <!-- Ask the hosts (English only for now) -->
+    <string name="ask_entry_title">Zapytaj prowadzących</string>
+    <string name="ask_entry_subtitle">Dzisiejszy mecz, premiera, wiadomość: omówi to dwoje prowadzących AI</string>
+    <string name="ask_title">Zapytaj prowadzących</string>
+    <string name="ask_intro">Opisz wydarzenie lub wiadomość. Prowadzący mówią tylko o tym, co podają najnowsze nagłówki, i powiedzą Ci, jeśli informacji jest za mało. Odcinki są tworzone przez AI i zajmują minutę lub dwie.</string>
+    <string name="ask_field_label">O czym mają porozmawiać?</string>
+    <string name="ask_field_placeholder">np. Kto wygrał dzisiejszy mecz Warriors?</string>
+    <string name="ask_counter">%1$d/%2$d</string>
+    <string name="ask_language_label">Język</string>
+    <string name="ask_submit">Zapytaj</string>
+    <string name="ask_sending">Wysyłamy Twoją prośbę...</string>
+    <string name="ask_stage_queued">Czekamy na wolne studio...</string>
+    <string name="ask_stage_reviewing">Sprawdzamy Twoją prośbę...</string>
+    <string name="ask_stage_searching">Czytamy najnowsze nagłówki...</string>
+    <string name="ask_stage_writing">Prowadzący się przygotowują...</string>
+    <string name="ask_stage_recording">Nagrywamy odcinek...</string>
+    <string name="ask_stage_working">Pracujemy...</string>
+    <string name="ask_progress_description">Postęp: %1$d%%</string>
+    <string name="ask_leave_hint">Możesz opuścić ten ekran. Po powrocie zobaczysz ten sam odcinek.</string>
+    <string name="ask_ai_note">Rozmowa dwojga prowadzących AI, wygenerowana przez AI na podstawie najnowszych nagłówków.</string>
+    <string name="ask_length">Długość: %1$s</string>
+    <string name="ask_play">Odtwórz odcinek</string>
+    <string name="ask_pause">Wstrzymaj</string>
+    <string name="ask_share">Udostępnij</string>
+    <string name="ask_share_chooser">Udostępnij ten odcinek</string>
+    <string name="ask_share_failed">Nie udało się otworzyć okna udostępniania</string>
+    <string name="ask_sources_title">Nagłówki, na których oparty jest odcinek</string>
+    <string name="ask_sources_note">Prowadzący omawiają tylko to, o czym informują te nagłówki. Pełne historie znajdziesz w źródłach.</string>
+    <string name="ask_ask_another">Zadaj kolejne pytanie</string>
+    <string name="ask_edit_question">Edytuj pytanie</string>
+    <string name="ask_check_again">Sprawdź ponownie</string>
+    <string name="ask_unavailable">Funkcja Zapytaj prowadzących jest teraz niedostępna.</string>
+    <string name="ask_loading">Sprawdzanie dostępności...</string>
+    <string name="ask_err_input">Sprawdź swoje pytanie i spróbuj ponownie.</string>
+    <string name="ask_err_limited">Funkcja Zapytaj prowadzących jest przeciążona lub osiągnęła limit. Spróbuj ponownie później.</string>
+    <string name="ask_err_not_found">Nie możemy już znaleźć tej prośby. Zadaj pytanie ponownie.</string>
+    <string name="ask_err_offline">Brak połączenia. Sprawdź internet i spróbuj ponownie.</string>
+    <string name="ask_err_timeout">To trwa dłużej, niż oczekiwano. Odcinek może jeszcze się pojawić.</string>
+    <string name="ask_err_server">Coś poszło nie tak. Spróbuj ponownie.</string>
+    <string name="ask_err_refused">Prowadzący nie mogą przygotować odcinka na ten temat.</string>
+    <string name="ask_err_no_coverage">Nie znaleźliśmy wystarczającej liczby aktualnych wiadomości na ten temat, więc nie przygotowaliśmy odcinka.</string>
+    <string name="ask_err_failed">Nie udało się przygotować odcinka. Spróbuj ponownie.</string>
 </resources>

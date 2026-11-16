@@ -1,0 +1,360 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Audexa</string>
+    <string name="app_tagline">Oma tekoälyradiosi</string>
+
+    <!-- Auth -->
+    <string name="sign_in_with_google">Kirjaudu Googlella</string>
+    <string name="sign_out">Kirjaudu ulos</string>
+    <string name="delete_account">Poista tili</string>
+    <string name="auth_description">Kuuntele tekoälyn tekemiä podcasteja sinua kiinnostavista aiheista. Yhdistä sähköpostisi asetuksissa, niin saat henkilökohtaisia päivittäisiä katsauksia.</string>
+    <string name="auth_terms">Jatkamalla hyväksyt käyttöehdot ja tietosuojakäytännön</string>
+    <string name="start">Aloita</string>
+
+    <!-- Navigation -->
+    <string name="nav_home">Koti</string>
+    <string name="nav_profile">Profiili</string>
+    <string name="back">Takaisin</string>
+    <string name="close">Sulje</string>
+    <string name="cancel">Peruuta</string>
+    <string name="ok">OK</string>
+    <string name="delete">Poista</string>
+    <string name="retry">Yritä uudelleen</string>
+    <string name="enable">Ota käyttöön</string>
+
+    <!-- Tabs -->
+    <string name="tab_for_you">Sinulle</string>
+    <string name="tab_discover">Löydä</string>
+
+    <!-- Home -->
+    <string name="good_morning">Hyvää huomenta</string>
+    <string name="good_afternoon">Hyvää päivää</string>
+    <string name="good_evening">Hyvää iltaa</string>
+    <string name="daily_brief">Päivän katsaus</string>
+    <string name="daily_brief_subtitle">Päivän katsaus • %s</string>
+    <string name="keep_listening">Jatka kuuntelua</string>
+    <string name="your_topics">Omat aiheesi</string>
+    <string name="topic_podcasts">Aihepodcastit</string>
+    <string name="recommended_for_you">Suositeltu sinulle</string>
+    <string name="more_for_you">Lisää sinulle</string>
+    <string name="all_topics">Kaikki aiheet</string>
+    <string name="matching_topics">Vastaavat aiheet</string>
+    <string name="tap_to_explore">Napauta ja tutustu</string>
+    <string name="link_account_prompt">Yhdistä sähköpostisi, niin saat henkilökohtaisia katsauksia</string>
+    <string name="link_account">Yhdistä tili</string>
+    <string name="find_new_shows">Löydä uusia ohjelmia</string>
+    <string name="search">Haku</string>
+    <string name="clear">Tyhjennä</string>
+    <string name="no_results_for">Ei tuloksia haulle \"%s\"</string>
+
+    <!-- Profile -->
+    <string name="profile">Profiili</string>
+    <string name="linked_accounts">Yhdistetyt tilit</string>
+    <string name="preferences">Asetukset</string>
+    <string name="podcast_language">Podcastien kieli</string>
+    <string name="briefing_time">Katsauksen aika</string>
+    <string name="topics">Aiheet</string>
+    <string name="voice_preference">Äänen valinta</string>
+    <string name="hidden_topics">Piilotetut aiheet</string>
+    <string name="about">Tietoa</string>
+    <string name="version">Versio</string>
+    <string name="terms_of_service">Käyttöehdot</string>
+    <string name="privacy_policy">Tietosuojakäytäntö</string>
+    <string name="analytics_title">Jaa nimettömiä käyttötilastoja</string>
+    <string name="analytics_subtitle">Mitä aiheita ja kieliä käytetään ja kuinka kauan. Satunnainen tunnus tällä laitteella, ei nimeä, sähköpostiosoitetta eikä IP-osoitetta. Kun poistat tämän käytöstä, tunnus poistetaan.</string>
+    <string name="premium">Premium</string>
+    <string name="go_ad_free">Poista mainokset</string>
+    <string name="ad_free">Mainoksiton</string>
+    <string name="active_subscription">Aktiivinen tilaus</string>
+    <string name="remove_all_ads">Poista kaikki mainokset</string>
+    <string name="email_accounts">Sähköpostitilit</string>
+    <string name="app_theme">Sovelluksen teema</string>
+    <string name="voice_settings">Ääniasetukset</string>
+    <string name="choose_podcast_voices">Valitse podcastien äänet</string>
+    <string name="hidden_count">%d piilotettu</string>
+    <string name="notifications">Ilmoitukset</string>
+    <string name="daily_brief_reminders">Päivän katsauksen muistutukset</string>
+    <string name="sign_out_confirm">Haluatko varmasti kirjautua ulos?</string>
+    <string name="delete_account_confirm">Haluatko varmasti poistaa tilisi? Kaikki tietosi poistetaan pysyvästi, mukaan lukien podcastit, asetukset ja yhdistetyt tilit. Tätä toimintoa ei voi perua.</string>
+    <string name="delete_account_signin_again">Kirjautumisesi on vanhentunut, joten tiliäsi ei poistettu eikä mitään poistettu. Kirjaudu ulos, kirjaudu uudelleen sisään ja yritä sitten Poista tili uudelleen.</string>
+    <string name="delete_account_failed">Tilisi poistamista ei voitu viimeistellä. Tarkista yhteytesi ja yritä uudelleen.</string>
+
+    <!-- Player -->
+    <string name="playing">Toistetaan</string>
+    <string name="paused">Tauolla</string>
+    <string name="play">Toista</string>
+    <string name="pause">Tauko</string>
+    <string name="loading">Ladataan…</string>
+    <string name="generating">Luodaan…</string>
+    <string name="generating_progress">Luodaan… %d %%</string>
+    <string name="generate_episode">Luo jakso</string>
+    <string name="regenerate">Luo uudelleen</string>
+    <string name="episode_history">Jaksohistoria</string>
+    <string name="skip_back">Siirry taakse 15 sekuntia</string>
+    <string name="skip_forward">Siirry eteen 15 sekuntia</string>
+    <string name="skip_back_mini">Taakse</string>
+    <string name="skip_forward_mini">Eteen</string>
+    <string name="buffering">Puskuroidaan…</string>
+    <string name="playback_error_stream">Radioon ei saada yhteyttä. Tarkista yhteytesi ja yritä uudelleen.</string>
+    <string name="playback_error_episode">Äänen lataaminen ei onnistu. Tarkista yhteytesi ja yritä uudelleen.</string>
+    <string name="sleep_timer">Uniajastin</string>
+    <string name="timer">Ajastin</string>
+    <string name="sleep_timer_5_min">5 min</string>
+    <string name="sleep_timer_10_min">10 min</string>
+    <string name="sleep_timer_15_min">15 min</string>
+    <string name="sleep_timer_30_min">30 min</string>
+    <string name="sleep_timer_1_hour">1 tunti</string>
+    <string name="min_format">%d min</string>
+    <string name="today">Tänään</string>
+    <string name="bookmark">Kirjanmerkki</string>
+    <string name="more">Lisää</string>
+    <string name="hide_topic">Piilota aihe</string>
+    <string name="hide">Piilota</string>
+
+    <!-- Errors -->
+    <string name="error_generic">Jokin meni pieleen</string>
+    <string name="error_network">Verkkovirhe. Tarkista yhteytesi.</string>
+    <string name="error_auth">Todennus epäonnistui</string>
+    <string name="error_no_internet">Ei internetyhteyttä. Tarkista verkkosi ja yritä uudelleen.</string>
+    <string name="generation_failed">Luonti epäonnistui</string>
+
+    <!-- Misc -->
+    <string name="min_daily">%d min päivässä</string>
+    <string name="connected">Yhdistetty</string>
+    <string name="not_connected">Ei yhdistetty</string>
+    <string name="not_connected_lower">Ei yhdistetty</string>
+    <string name="coming_soon">Tulossa pian</string>
+    <string name="microsoft_coming_soon">Microsoft-tilin tuki on tulossa pian. Pysy kuulolla!</string>
+
+    <!-- Onboarding -->
+    <string name="welcome_to_audexa">Tervetuloa Audexaan</string>
+    <string name="welcome_description">Oma tekoälyradiosi, joka muuttaa uusimmat uutiset, tekniikan ja aiheet kiinnostaviksi podcast-tyylisiksi katsauksiksi.</string>
+    <string name="get_started">Aloita</string>
+    <string name="connect_your_account">Yhdistä tilisi</string>
+    <string name="connect_account_description">Yhdistä Google-tilisi, niin saat sähköpostistasi ja kalenteristasi koottuja henkilökohtaisia päivittäisiä katsauksia.</string>
+    <string name="gmail">Gmail</string>
+    <string name="calendar">Kalenteri</string>
+    <string name="include_email_highlights">Ota sähköpostien tärkeimmät asiat mukaan katsaukseen</string>
+    <string name="include_calendar_events">Ota tulevat tapahtumat mukaan katsaukseen</string>
+    <string name="continue_button">Jatka</string>
+    <string name="skip_for_now">Ohita nyt</string>
+    <string name="connect_later_hint">Voit yhdistää tilin myöhemmin asetuksissa</string>
+    <string name="connect">Yhdistä</string>
+    <string name="choose_your_interests">Valitse kiinnostuksen kohteesi</string>
+    <string name="choose_interests_description">Valitse aiheet, joista haluaisit kuulla. Luomme sinulle omia päivittäisiä jaksoja.</string>
+    <string name="topics_selected">Valittuja aiheita: %d</string>
+    <string name="topics_selected_plural_suffix">""</string>
+    <string name="complete_setup">Viimeistele</string>
+
+    <!-- Linked Accounts -->
+    <string name="enable_daily_brief">Ota Päivän katsaus käyttöön</string>
+    <string name="enable_daily_brief_description">Yhdistä Gmail, niin saat sähköposteihisi perustuvia henkilökohtaisia päivittäisiä katsauksia. Tiivistämme tärkeimmät uutiset, jotta päiväsi alkaa ajan tasalta.</string>
+    <string name="google_calendar">Google Calendar</string>
+    <string name="outlook">Outlook</string>
+    <string name="daily_brief_sources">Päivän katsauksen lähteet</string>
+    <string name="email_summaries">Sähköpostitiivistelmät</string>
+    <string name="include_email_in_brief">Ota sähköpostitiivistelmät mukaan Päivän katsaukseen</string>
+    <string name="calendar_events">Kalenteritapahtumat</string>
+    <string name="include_calendar_in_brief">Ota tulevat tapahtumat mukaan Päivän katsaukseen</string>
+    <string name="unlink">Poista yhteys</string>
+    <string name="soon">Pian</string>
+    <string name="your_privacy">Yksityisyytesi</string>
+    <string name="privacy_note">Katsauksesi luomiseksi palvelimemme lukee viimeisimmät Gmail-viestisi ja kalenteritapahtumasi. Tärkeimpien sähköpostiesi lähettäjän nimi, otsikko ja ensimmäiset 100 merkkiä sekä tapahtumien nimet, ajat ja paikat lähetetään tekoälypalveluntarjoajallemme Anthropicille käsikirjoituksen kirjoittamista varten. Emme säilytä sähköpostiesi tekstiä, mutta valmis katsauksen ääni säilytetään, kunnes poistat tilisi. Yhteyden poistaminen ei poista palvelimellemme tallennettua Google-käyttöoikeutta, mutta Profiilin Poista tili poistaa sen.</string>
+    <string name="microsoft_outlook_coming_soon">Microsoft Outlookin yhdistäminen tulee saataville myöhemmässä päivityksessä.</string>
+    <string name="gmail_linking_cancelled">Gmailin yhdistäminen peruttiin</string>
+    <string name="calendar_linking_cancelled">Kalenterin yhdistäminen peruttiin</string>
+    <string name="reconnect">Yhdistä uudelleen</string>
+
+    <!-- Hidden Topics -->
+    <string name="no_hidden_topics">Ei piilotettuja aiheita</string>
+    <string name="no_hidden_topics_description">Piilottamasi aiheet näkyvät täällä. Voit tuoda ne takaisin milloin tahansa.</string>
+    <string name="unhide_hint">Napauta silmäkuvaketta, jos haluat näyttää aiheen uudelleen.</string>
+    <string name="unhide">Näytä</string>
+
+    <!-- Language Settings -->
+    <string name="language">Kieli</string>
+    <string name="language_coming_soon">Tulossa pian</string>
+    <string name="language_coming_soon_toast">Ei vielä saatavilla. Olemme merkinneet kiinnostuksesi muistiin.</string>
+    <string name="generating_language">Valmistellaan jaksoasi kielellä %1$s. Ensimmäisen jakson valmistuminen voi kestää muutaman minuutin.</string>
+    <string name="language_fallback_note">Podcastit eivät ole vielä saatavilla kielellä %1$s, joten valitsimme sinulle kielen %2$s.</string>
+    <string name="error_language_unavailable">Tämä kieli ei ole vielä saatavilla.</string>
+    <string name="error_daily_limit">Uusien kielten jaksojen päiväraja on täyttynyt. Yritä huomenna uudelleen.</string>
+    <string name="language_page_title">Valitse kielesi</string>
+    <string name="language_page_subtitle">Podcasteja on kuudella kielellä. Radio on vain englanniksi. Valintasi auttaa meitä päättämään, mitä lisätään.</string>
+    <string name="language_description">Valitse haluamasi kieli.</string>
+    <string name="language_note">Podcasteja on saatavilla englanniksi, espanjaksi, ranskaksi, saksaksi, portugaliksi ja italiaksi. Ensimmäisen jakson valmistelu uudella kielellä kestää muutaman minuutin. Radio on vain englanniksi. Muiden kielten osalta tallennamme, minkä kielen valitset, ilman nimeäsi, jotta voimme päättää, mitä lisätään seuraavaksi.</string>
+    <string name="selected">Valittu</string>
+
+    <!-- App language (the language of menus and buttons; separate from the podcast language) -->
+    <string name="app_language">Sovelluksen kieli</string>
+    <string name="app_language_follow_phone">Puhelimen mukaan</string>
+    <string name="app_language_description">Valikkojen ja painikkeiden kieli. Podcastit pysyvät yllä valitsemallasi kielellä.</string>
+    <string name="ui_lang_offer_title">Näytetäänkö sovellus myös kielellä %1$s?</string>
+    <string name="ui_lang_offer_body">Vain valikot ja painikkeet muuttuvat. Voit muuttaa tämän milloin tahansa profiiliasetuksissa.</string>
+    <string name="ui_lang_offer_yes">Kyllä, käytä: %1$s</string>
+    <string name="ui_lang_offer_no">Ei, pidä: %1$s</string>
+
+    <!-- Suggest a topic -->
+    <string name="suggest_topic">Ehdota aihetta</string>
+    <string name="suggest_topic_inline">Etkö löydä aihettasi? Ehdota sitä</string>
+    <string name="suggest_topic_description">Kerro, mitä haluaisit kuunnella, niin harkitsemme sen lisäämistä.</string>
+    <string name="suggest_topic_name_label">Aiheen nimi</string>
+    <string name="suggest_topic_name_hint">esim. Kvanttilaskenta</string>
+    <string name="suggest_topic_details_label">Kuvaus (valinnainen)</string>
+    <string name="suggest_topic_details_hint">Mitä tämän aiheen pitäisi käsitellä?</string>
+    <string name="suggest_topic_thanks">Kiitos! Käymme ehdotukset läpi ja lisäämme hyvät.</string>
+    <string name="submit">Lähetä</string>
+    <string name="submitting">Lähetetään…</string>
+    <string name="no_topics_title">Aiheita ei ole juuri nyt saatavilla.</string>
+    <string name="no_topics_hint">Viimeistele käyttöönotto napauttamalla Jatka — voit valita aiheet myöhemmin Koti-näkymässä.</string>
+
+    <!-- Live radio -->
+    <string name="radio_languages">Radion kielet</string>
+    <string name="radio_languages_note">Valitut asemat näkyvät kotinäkymässäsi. Vähintään yksi kieli on oltava käytössä.</string>
+    <string name="radio_home_tagline">Tekoälyuutiset 24/7 · LIVE</string>
+    <string name="radio_tagline">Tekoälyuutiset ja puhe 24/7</string>
+    <string name="share_whats_playing">Jaa, mitä soi</string>
+    <string name="share_station">Jaa %1$s</string>
+    <string name="radio_up_next">Seuraavaksi</string>
+    <string name="radio_requests">Toiveet</string>
+    <string name="radio_generating">Luodaan</string>
+    <string name="radio_generating_badge">luodaan</string>
+    <string name="radio_request_hint">Napauta mikrofonia ja toivo aihetta live-jonoon</string>
+    <string name="radio_request_topic">Toivo aihetta</string>
+    <string name="radio_request_title">Toivo aihetta</string>
+    <string name="radio_request_description">Kerro Audexa Radiolle, mitä haluaisit kuulla. Se lisätään live-jonoon.</string>
+    <string name="radio_add_to_queue">Lisää live-jonoon</string>
+    <string name="radio_chat_hint">Keskustele kuuntelijoiden kanssa...</string>
+    <string name="radio_chat">Chat</string>
+    <string name="radio_now_badge">NYT</string>
+    <string name="radio_music">Musiikki</string>
+    <string name="send">Lähetä</string>
+
+    <!-- Voice Settings -->
+    <string name="loading_voices">Ladataan ääniä…</string>
+    <string name="no_voice_pairs">Ääniparit eivät ole saatavilla</string>
+    <string name="no_voices">Ääniä ei ole saatavilla</string>
+    <string name="voice_pairs_description">Valitse valmis ääripari podcastisi juontajille.</string>
+    <string name="host_1">Juontaja 1</string>
+    <string name="host_2">Juontaja 2</string>
+    <string name="host_1_voice">Juontajan 1 ääni</string>
+    <string name="host_2_voice">Juontajan 2 ääni</string>
+
+    <!-- Theme Settings -->
+    <string name="theme_system">Järjestelmä</string>
+    <string name="theme_system_description">Noudata laitteen asetuksia</string>
+    <string name="theme_dark">Tumma</string>
+    <string name="theme_dark_description">Aina tumma tila</string>
+    <string name="theme_light">Vaalea</string>
+    <string name="theme_light_description">Aina vaalea tila</string>
+
+    <!-- Notification Settings -->
+    <string name="permission">Lupa</string>
+    <string name="enabled">Käytössä</string>
+    <string name="not_enabled">Ei käytössä</string>
+    <string name="daily_brief_schedule">Päivän katsauksen aikataulu</string>
+    <string name="daily_brief_notifications">Päivän katsauksen ilmoitukset</string>
+    <string name="daily_brief_notify_hint">Saat ilmoituksen, kun katsauksesi on valmis</string>
+    <string name="daily_brief_content">Päivän katsauksen sisältö</string>
+    <string name="include_topic_updates">Ota aiheiden uutiset mukaan</string>
+    <string name="include_topic_updates_hint">Lisää aiheidesi otsikot Päivän katsaukseen</string>
+    <string name="notification_info">Päivän katsauksesi luodaan ja on valmis ajastettuna aikana. Saat ilmoituksen, kun se on valmis toistettavaksi.</string>
+    <string name="select_time">Valitse aika</string>
+
+    <!-- Subscription / Paywall -->
+    <string name="enjoy_uninterrupted">Nauti keskeytyksettömästä kuuntelusta</string>
+    <string name="no_audio_ad_interruptions">Ei äänimainoskeskeytyksiä</string>
+    <string name="seamless_episode_playback">Saumaton jaksojen toisto</string>
+    <string name="support_indie_development">Tue indie-kehitystä</string>
+    <string name="ad_free_subscriber">Olet mainoksettoman version tilaaja!</string>
+    <string name="yearly">Vuosittain</string>
+    <string name="save_percent">Säästä 58 %%</string>
+    <string name="monthly">Kuukausittain</string>
+    <string name="subscribe">Tilaa</string>
+    <string name="restore_purchases">Palauta ostokset</string>
+    <string name="payment_fine_print">Maksu veloitetaan Google Play -tilistäsi. Tilaus uusiutuu automaattisesti, ellei sitä peruuteta vähintään 24 tuntia ennen nykyisen jakson päättymistä.</string>
+    <string name="per_year">/vuosi</string>
+    <string name="per_month">/kk</string>
+    <string name="per_week">/vk</string>
+
+    <!-- Ads -->
+    <string name="sponsored">MAINOS</string>
+    <string name="skip">Ohita</string>
+    <string name="skip_ad">Ohita mainos</string>
+    <string name="ad_content_description">Mainos</string>
+
+    <!-- Radio Call-In -->
+    <string name="call_to_request">Soita ja toivo aihetta</string>
+    <string name="call_in_label">Soita: (833) 398-1230</string>
+
+    <!-- Splash Screen -->
+    <string name="splash_tagline">Tekoälyllä toimiva äänikatsauksesi</string>
+
+    <!-- Notifications (non-composable) -->
+    <string name="notification_good_morning">Hyvää huomenta!</string>
+    <string name="notification_daily_brief_text">Aika Päivän katsaukselle. Napauta ja pysy ajan tasalla sähköposteista, kalenterista ja uutisista.</string>
+    <string name="daily_brief_channel_description">Päivän katsauksen muistutusilmoitukset</string>
+    <string name="radio_topic_channel_name">Radion aihemuistutukset</string>
+    <string name="radio_topic_channel_description">Saat ilmoituksen, kun kirjanmerkillä merkitty aihe on esillä Audexa Radiossa</string>
+    <string name="radio_topic_notification_title">Nyt Audexa Radiossa</string>
+    <string name="radio_topic_notification_body">%1$s on nyt livenä. Napauta ja virittäydy.</string>
+
+    <!-- Daily Brief Playback -->
+    <string name="daily_brief_title_format">Päivän katsaus - %s</string>
+    <string name="daily_brief_description">Henkilökohtainen aamukatsauksesi</string>
+
+    <!-- Morning briefing: one local notification per day, opt-in after first play -->
+    <string name="briefing_notification_title">Tänään Audexassa</string>
+    <string name="briefing_notification_body_fallback">Audexa Radio on nyt livenä. Napauta ja kuuntele.</string>
+    <plurals name="briefing_notification_body_topics">
+        <item quantity="one">%1$d uusi aihepodcast: %2$s. Napauta ja kuuntele.</item>
+        <item quantity="other">%1$d uutta aihepodcastia: %2$s. Napauta ja kuuntele.</item>
+    </plurals>
+    <string name="briefing_names_with_more">%1$s ja %2$d muuta</string>
+    <string name="briefing_optin_title">Muistutetaanko sinua, kun uusia aihepodcasteja on valmiina?</string>
+    <string name="briefing_optin_accept">Muistuta minua</string>
+    <string name="briefing_optin_decline">Ei nyt</string>
+
+    <!-- Ask the hosts (English only for now) -->
+    <string name="ask_entry_title">Kysy juontajilta</string>
+    <string name="ask_entry_subtitle">Illan peli, julkaisu tai uutisaihe: kaksi tekoälyjuontajaa keskustelee siitä</string>
+    <string name="ask_title">Kysy juontajilta</string>
+    <string name="ask_intro">Kuvaile tapahtuma tai uutisaihe. Juontajat puhuvat vain siitä, mitä tuoreet otsikot kertovat, ja kertovat sinulle, jos aiheesta ei ole tarpeeksi uutisointia. Jaksot ovat tekoälyn tekemiä ja valmistuvat minuutissa tai kahdessa.</string>
+    <string name="ask_field_label">Mistä heidän pitäisi puhua?</string>
+    <string name="ask_field_placeholder">esim. Kuka voitti Warriorsin pelin tänä iltana?</string>
+    <string name="ask_counter">%1$d/%2$d</string>
+    <string name="ask_language_label">Kieli</string>
+    <string name="ask_submit">Kysy</string>
+    <string name="ask_sending">Lähetetään pyyntöäsi...</string>
+    <string name="ask_stage_queued">Odotetaan vapaata studiota...</string>
+    <string name="ask_stage_reviewing">Tarkistetaan pyyntöäsi...</string>
+    <string name="ask_stage_searching">Luetaan tuoreimpia otsikoita...</string>
+    <string name="ask_stage_writing">Juontajat valmistautuvat...</string>
+    <string name="ask_stage_recording">Äänitetään jaksoa...</string>
+    <string name="ask_stage_working">Työstetään...</string>
+    <string name="ask_progress_description">Edistyminen: %1$d prosenttia</string>
+    <string name="ask_leave_hint">Voit poistua tästä näkymästä. Kun palaat, näet saman jakson.</string>
+    <string name="ask_ai_note">Tekoälyn tekemä keskustelu kahden tekoälyjuontajan välillä tuoreiden uutisotsikoiden pohjalta.</string>
+    <string name="ask_length">Kesto %1$s</string>
+    <string name="ask_play">Toista jakso</string>
+    <string name="ask_pause">Tauko</string>
+    <string name="ask_share">Jaa</string>
+    <string name="ask_share_chooser">Jaa tämä jakso</string>
+    <string name="ask_share_failed">Jakovalikkoa ei voitu avata</string>
+    <string name="ask_sources_title">Otsikot, joihin tämä jakso perustuu</string>
+    <string name="ask_sources_note">Juontajat käsittelevät vain sitä, mitä nämä otsikot kertovat. Tarkista lähteistä koko jutut.</string>
+    <string name="ask_ask_another">Kysy toinen</string>
+    <string name="ask_edit_question">Muokkaa kysymystä</string>
+    <string name="ask_check_again">Tarkista uudelleen</string>
+    <string name="ask_unavailable">Kysy juontajilta ei ole käytettävissä juuri nyt.</string>
+    <string name="ask_loading">Tarkistetaan saatavuutta...</string>
+    <string name="ask_err_input">Tarkista kysymyksesi ja yritä uudelleen.</string>
+    <string name="ask_err_limited">Kysy juontajilta on ruuhkautunut tai sen raja on täyttynyt. Yritä myöhemmin uudelleen.</string>
+    <string name="ask_err_not_found">Tätä pyyntöä ei enää löydy. Kysy uudelleen.</string>
+    <string name="ask_err_offline">Ei yhteyttä. Tarkista internetyhteytesi ja yritä uudelleen.</string>
+    <string name="ask_err_timeout">Tämä kestää odotettua pidempään. Jakso voi silti olla tulossa.</string>
+    <string name="ask_err_server">Jokin meni pieleen. Yritä uudelleen.</string>
+    <string name="ask_err_refused">Juontajat eivät voi tehdä jaksoa tästä aiheesta.</string>
+    <string name="ask_err_no_coverage">Emme löytäneet aiheesta tarpeeksi tuoretta uutisointia, joten emme tehneet jaksoa.</string>
+    <string name="ask_err_failed">Jaksoa ei voitu tehdä. Yritä uudelleen.</string>
+</resources>

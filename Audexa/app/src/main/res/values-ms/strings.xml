@@ -39,7 +39,7 @@
     <string name="more_for_you">Lebih banyak untuk anda</string>
     <string name="all_topics">Semua Topik</string>
     <string name="matching_topics">Topik Sepadan</string>
-    <string name="tap_to_explore">Ketik untuk meneroka dan mainkan</string>
+    <string name="tap_to_explore">Ketik untuk meneroka dan memainkan</string>
     <string name="link_account_prompt">Pautkan e-mel anda untuk menjana ringkasan yang diperibadikan</string>
     <string name="link_account">Pautkan Akaun</string>
     <string name="find_new_shows">Cari rancangan baharu</string>
@@ -60,6 +60,8 @@
     <string name="version">Versi</string>
     <string name="terms_of_service">Syarat Perkhidmatan</string>
     <string name="privacy_policy">Dasar Privasi</string>
+    <string name="analytics_title">Kongsi statistik penggunaan tanpa nama</string>
+    <string name="analytics_subtitle">Topik dan bahasa yang digunakan serta tempohnya. ID rawak pada peranti ini, tanpa nama, e-mel atau alamat IP. Mematikan ini akan memadam ID tersebut.</string>
     <string name="premium">Premium</string>
     <string name="go_ad_free">Tanpa Iklan</string>
     <string name="ad_free">Tanpa Iklan</string>
@@ -78,7 +80,7 @@
     <string name="delete_account_failed">Kami tidak dapat menyiapkan pemadaman akaun anda. Sila semak sambungan anda dan cuba lagi.</string>
 
     <!-- Player -->
-    <string name="playing">Sedang Bermain</string>
+    <string name="playing">Sedang Dimainkan</string>
     <string name="paused">Dijeda</string>
     <string name="play">Main</string>
     <string name="pause">Jeda</string>
@@ -92,7 +94,9 @@
     <string name="skip_forward">Maju 15 saat</string>
     <string name="skip_back_mini">Undur</string>
     <string name="skip_forward_mini">Maju</string>
-    <string name="buffering">Menimbal\u2026</string>
+    <string name="buffering">Buffering\u2026</string>
+    <string name="playback_error_stream">Tidak dapat menyambung ke radio. Semak sambungan anda dan cuba lagi.</string>
+    <string name="playback_error_episode">Audio ini tidak dapat dimuatkan. Semak sambungan anda dan cuba lagi.</string>
     <string name="sleep_timer">Pemasa tidur</string>
     <string name="timer">Pemasa</string>
     <string name="sleep_timer_5_min">5 min</string>
@@ -108,7 +112,7 @@
     <string name="hide">Sembunyikan</string>
 
     <!-- Errors -->
-    <string name="error_generic">Sesuatu telah berlaku</string>
+    <string name="error_generic">Ada yang tidak kena</string>
     <string name="error_network">Ralat rangkaian. Sila semak sambungan anda.</string>
     <string name="error_auth">Pengesahan gagal</string>
     <string name="error_no_internet">Tiada sambungan internet. Sila semak rangkaian anda dan cuba semula.</string>
@@ -120,7 +124,7 @@
     <string name="not_connected">Tidak Disambungkan</string>
     <string name="not_connected_lower">Tidak disambungkan</string>
     <string name="coming_soon">Akan Datang</string>
-    <string name="microsoft_coming_soon">Integrasi akaun Microsoft akan datang tidak lama lagi. Nantikan!</string>
+    <string name="microsoft_coming_soon">Integrasi akaun Microsoft akan hadir tidak lama lagi. Nantikan!</string>
 
     <!-- Onboarding -->
     <string name="welcome_to_audexa">Selamat Datang ke Audexa</string>
@@ -169,9 +173,62 @@
 
     <!-- Language Settings -->
     <string name="language">Bahasa</string>
-    <string name="language_description">Pilih bahasa pilihan anda untuk episod podcast.</string>
+    <string name="language_coming_soon">Akan datang</string>
+    <string name="language_coming_soon_toast">Belum tersedia. Kami telah mencatat minat anda.</string>
+    <string name="generating_language">Menyediakan episod anda dalam bahasa %1$s. Episod pertama mungkin mengambil masa beberapa minit.</string>
+    <string name="language_fallback_note">Podcast belum tersedia dalam bahasa %1$s, jadi kami memilih %2$s untuk anda.</string>
+    <string name="error_language_unavailable">Bahasa itu belum tersedia.</string>
+    <string name="error_daily_limit">Had harian untuk episod bahasa baharu telah dicapai. Cuba lagi esok.</string>
+    <string name="language_page_title">Pilih Bahasa Anda</string>
+    <string name="language_page_subtitle">Podcast tersedia dalam enam bahasa. Radio hanya dalam bahasa Inggeris. Pilihan anda membantu kami menentukan apa yang akan ditambah.</string>
+    <string name="language_description">Pilih bahasa pilihan anda.</string>
     <string name="language_note">Podcast tersedia dalam bahasa Inggeris, Sepanyol, Perancis, Jerman, Portugis dan Itali. Episod pertama dalam bahasa baharu mengambil masa beberapa minit untuk disediakan. Radio hanya dalam bahasa Inggeris. Bagi bahasa lain, kami merekodkan bahasa yang anda pilih, tanpa nama anda, untuk menentukan apa yang akan ditambah seterusnya.</string>
     <string name="selected">Dipilih</string>
+
+    <!-- App language (the language of menus and buttons; separate from the podcast language) -->
+    <string name="app_language">Bahasa aplikasi</string>
+    <string name="app_language_follow_phone">Ikut telefon</string>
+    <string name="app_language_description">Bahasa untuk menu dan butang. Podcast kekal dalam bahasa yang anda pilih di atas.</string>
+    <string name="ui_lang_offer_title">Papar aplikasi dalam %1$s juga?</string>
+    <string name="ui_lang_offer_body">Hanya menu dan butang yang berubah. Anda boleh menukarnya pada bila-bila masa dalam tetapan profil anda.</string>
+    <string name="ui_lang_offer_yes">Ya, guna %1$s</string>
+    <string name="ui_lang_offer_no">Tidak, kekal %1$s</string>
+
+    <!-- Suggest a topic -->
+    <string name="suggest_topic">Cadangkan Topik</string>
+    <string name="suggest_topic_inline">Tidak jumpa topik anda? Cadangkan satu</string>
+    <string name="suggest_topic_description">Beritahu kami apa yang anda ingin dengar dan kami akan mempertimbangkan untuk menambahnya.</string>
+    <string name="suggest_topic_name_label">Nama topik</string>
+    <string name="suggest_topic_name_hint">cth. Pengkomputeran Kuantum</string>
+    <string name="suggest_topic_details_label">Penerangan (pilihan)</string>
+    <string name="suggest_topic_details_hint">Apakah yang perlu diliputi oleh topik ini?</string>
+    <string name="suggest_topic_thanks">Terima kasih, kami menyemak cadangan dan menambah yang bagus.</string>
+    <string name="submit">Hantar</string>
+    <string name="submitting">Menghantar\u2026</string>
+    <string name="no_topics_title">Tiada topik tersedia buat masa ini.</string>
+    <string name="no_topics_hint">Ketik Teruskan untuk menamatkan persediaan \u2014 anda boleh memilih topik kemudian dari skrin Laman Utama.</string>
+
+    <!-- Live radio -->
+    <string name="radio_languages">Bahasa Radio</string>
+    <string name="radio_languages_note">Stesen yang dipilih akan muncul pada skrin utama anda. Sekurang-kurangnya satu bahasa mesti didayakan.</string>
+    <string name="radio_home_tagline">Berita 24/7 dikuasakan AI \u00b7 LANGSUNG</string>
+    <string name="radio_tagline">Berita dan bual bicara 24/7 dikuasakan AI</string>
+    <string name="share_whats_playing">Kongsi yang sedang dimainkan</string>
+    <string name="share_station">Kongsi %1$s</string>
+    <string name="radio_up_next">Seterusnya</string>
+    <string name="radio_requests">Permintaan</string>
+    <string name="radio_generating">Menjana</string>
+    <string name="radio_generating_badge">menjana</string>
+    <string name="radio_request_hint">Ketik mikrofon untuk meminta topik dalam baris gilir langsung</string>
+    <string name="radio_request_topic">Minta Topik</string>
+    <string name="radio_request_title">Minta Topik</string>
+    <string name="radio_request_description">Beritahu Audexa Radio apa yang anda ingin dengar. Ia akan ditambah ke baris gilir langsung.</string>
+    <string name="radio_add_to_queue">Tambah ke Baris Gilir Langsung</string>
+    <string name="radio_chat_hint">Berbual dengan pendengar...</string>
+    <string name="radio_chat">Sembang</string>
+    <string name="radio_now_badge">KINI</string>
+    <string name="radio_music">Muzik</string>
+    <string name="send">Hantar</string>
 
     <!-- Voice Settings -->
     <string name="loading_voices">Memuat suara\u2026</string>
@@ -226,22 +283,77 @@
     <string name="skip_ad">Langkau iklan</string>
     <string name="ad_content_description">Iklan</string>
 
+    <!-- Radio Call-In -->
+    <string name="call_to_request">Telefon untuk meminta topik</string>
+    <string name="call_in_label">Telefon: (833) 398-1230</string>
+
     <!-- Splash Screen -->
-    <string name="splash_tagline">Ringkasan audio berkuasa AI anda</string>
+    <string name="splash_tagline">Ringkasan audio anda yang dikuasakan AI</string>
 
     <!-- Notifications (non-composable) -->
     <string name="notification_good_morning">Selamat Pagi!</string>
-    <string name="notification_daily_brief_text">Masa untuk Ringkasan Harian anda. Ketik untuk mengetahui tentang e-mel, kalendar dan berita.</string>
+    <string name="notification_daily_brief_text">Masa untuk Ringkasan Harian anda. Ketik untuk mendapatkan ringkasan e-mel, kalendar dan berita.</string>
     <string name="daily_brief_channel_description">Pemberitahuan peringatan ringkasan harian</string>
+    <string name="radio_topic_channel_name">Peringatan topik radio</string>
+    <string name="radio_topic_channel_description">Dapatkan pemberitahuan apabila topik yang anda tandakan sedang dimainkan di Audexa Radio</string>
+    <string name="radio_topic_notification_title">Kini di Audexa Radio</string>
+    <string name="radio_topic_notification_body">%1$s sedang bersiaran secara langsung. Ketik untuk mendengar.</string>
 
     <!-- Daily Brief Playback -->
     <string name="daily_brief_title_format">Ringkasan Harian - %s</string>
     <string name="daily_brief_description">Ringkasan pagi yang diperibadikan untuk anda</string>
 
-    <!-- Language selection page -->
-    <string name="language_page_title">Pilih Bahasa Anda</string>
-    <string name="language_page_subtitle">Podcast tersedia dalam enam bahasa. Radio hanya dalam bahasa Inggeris. Pilihan anda membantu kami menentukan apa yang akan ditambah.</string>
-    <string name="language_coming_soon">Akan datang</string>
-    <string name="language_coming_soon_toast">Belum tersedia. Kami telah mencatat minat anda.</string>
-    <string name="language_fallback_note">Podcast belum tersedia dalam bahasa %1$s, jadi kami memilih %2$s untuk anda.</string>
+    <!-- Morning briefing: one local notification per day, opt-in after first play -->
+    <string name="briefing_notification_title">Hari ini di Audexa</string>
+    <string name="briefing_notification_body_fallback">Audexa Radio sedang dimainkan sekarang. Ketik untuk mendengar.</string>
+    <plurals name="briefing_notification_body_topics">
+        <item quantity="other">%1$d podcast topik baharu: %2$s. Ketik untuk mendengar.</item>
+    </plurals>
+    <string name="briefing_names_with_more">%1$s dan %2$d lagi</string>
+    <string name="briefing_optin_title">Ingatkan anda apabila podcast topik baharu sudah sedia?</string>
+    <string name="briefing_optin_accept">Ingatkan saya</string>
+    <string name="briefing_optin_decline">Bukan sekarang</string>
+
+    <!-- Ask the hosts (English only for now) -->
+    <string name="ask_entry_title">Tanya hos</string>
+    <string name="ask_entry_subtitle">Perlawanan malam ini, pelancaran, berita: dua hos AI membincangkannya</string>
+    <string name="ask_title">Tanya hos</string>
+    <string name="ask_intro">Terangkan sesuatu peristiwa atau berita. Hos hanya bercakap tentang apa yang dilaporkan oleh tajuk berita terkini dan akan memberitahu anda jika liputan tidak mencukupi. Episod dijana oleh AI dan mengambil masa seminit dua.</string>
+    <string name="ask_field_label">Apa yang perlu mereka bualkan?</string>
+    <string name="ask_field_placeholder">cth. Siapa menang perlawanan Warriors malam ini?</string>
+    <string name="ask_counter">%1$d/%2$d</string>
+    <string name="ask_language_label">Bahasa</string>
+    <string name="ask_submit">Tanya</string>
+    <string name="ask_sending">Menghantar permintaan anda...</string>
+    <string name="ask_stage_queued">Menunggu studio kosong...</string>
+    <string name="ask_stage_reviewing">Menyemak permintaan anda...</string>
+    <string name="ask_stage_searching">Membaca tajuk berita terkini...</string>
+    <string name="ask_stage_writing">Hos sedang bersiap...</string>
+    <string name="ask_stage_recording">Merakam episod...</string>
+    <string name="ask_stage_working">Sedang diproses...</string>
+    <string name="ask_progress_description">Kemajuan: %1$d peratus</string>
+    <string name="ask_leave_hint">Anda boleh keluar dari skrin ini. Apabila kembali, anda akan menyambung episod yang sama.</string>
+    <string name="ask_ai_note">Perbincangan dijana AI antara dua hos AI, berdasarkan tajuk berita terkini.</string>
+    <string name="ask_length">Tempoh %1$s</string>
+    <string name="ask_play">Main episod</string>
+    <string name="ask_pause">Jeda</string>
+    <string name="ask_share">Kongsi</string>
+    <string name="ask_share_chooser">Kongsi episod ini</string>
+    <string name="ask_share_failed">Tidak dapat membuka helaian kongsi</string>
+    <string name="ask_sources_title">Tajuk berita yang menjadi asas episod ini</string>
+    <string name="ask_sources_note">Hos hanya membincangkan apa yang dilaporkan oleh tajuk berita ini. Semak sumber untuk berita penuh.</string>
+    <string name="ask_ask_another">Tanya lagi</string>
+    <string name="ask_edit_question">Edit soalan</string>
+    <string name="ask_check_again">Semak lagi</string>
+    <string name="ask_unavailable">Ciri Tanya hos tidak tersedia buat masa ini.</string>
+    <string name="ask_loading">Menyemak ketersediaan...</string>
+    <string name="ask_err_input">Sila semak soalan anda dan cuba lagi.</string>
+    <string name="ask_err_limited">Ciri Tanya hos sedang sibuk atau telah mencapai had. Sila cuba lagi nanti.</string>
+    <string name="ask_err_not_found">Kami tidak dapat menemui permintaan ini lagi. Sila tanya semula.</string>
+    <string name="ask_err_offline">Tiada sambungan. Semak internet anda dan cuba lagi.</string>
+    <string name="ask_err_timeout">Ini mengambil masa lebih lama daripada dijangka. Episod mungkin masih dalam perjalanan.</string>
+    <string name="ask_err_server">Ada yang tidak kena. Sila cuba lagi.</string>
+    <string name="ask_err_refused">Hos tidak dapat membuat episod tentang itu.</string>
+    <string name="ask_err_no_coverage">Kami tidak menemui liputan berita terkini yang mencukupi tentang ini, jadi kami tidak membuat episod.</string>
+    <string name="ask_err_failed">Episod tidak dapat dibuat. Sila cuba lagi.</string>
 </resources>

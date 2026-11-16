@@ -1,0 +1,362 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Audexa</string>
+    <string name="app_tagline">Tvoje osobní AI rádio</string>
+
+    <!-- Auth -->
+    <string name="sign_in_with_google">Přihlásit se přes Google</string>
+    <string name="sign_out">Odhlásit se</string>
+    <string name="delete_account">Smazat účet</string>
+    <string name="auth_description">Poslouchej podcasty vytvořené AI na témata, která tě zajímají. V nastavení si propoj e-mail a získej osobní denní přehledy.</string>
+    <string name="auth_terms">Pokračováním souhlasíš s našimi Podmínkami služby a Zásadami ochrany osobních údajů</string>
+    <string name="start">Začít</string>
+
+    <!-- Navigation -->
+    <string name="nav_home">Domů</string>
+    <string name="nav_profile">Profil</string>
+    <string name="back">Zpět</string>
+    <string name="close">Zavřít</string>
+    <string name="cancel">Zrušit</string>
+    <string name="ok">OK</string>
+    <string name="delete">Smazat</string>
+    <string name="retry">Zkusit znovu</string>
+    <string name="enable">Zapnout</string>
+
+    <!-- Tabs -->
+    <string name="tab_for_you">Pro tebe</string>
+    <string name="tab_discover">Objevuj</string>
+
+    <!-- Home -->
+    <string name="good_morning">Dobré ráno</string>
+    <string name="good_afternoon">Dobré odpoledne</string>
+    <string name="good_evening">Dobrý večer</string>
+    <string name="daily_brief">Denní přehled</string>
+    <string name="daily_brief_subtitle">Denní přehled • %s</string>
+    <string name="keep_listening">Poslouchej dál</string>
+    <string name="your_topics">Tvoje témata</string>
+    <string name="topic_podcasts">Podcasty k tématům</string>
+    <string name="recommended_for_you">Doporučeno pro tebe</string>
+    <string name="more_for_you">Další pro tebe</string>
+    <string name="all_topics">Všechna témata</string>
+    <string name="matching_topics">Odpovídající témata</string>
+    <string name="tap_to_explore">Klepni a objevuj nebo přehrávej</string>
+    <string name="link_account_prompt">Propoj e-mail a získej osobní přehledy</string>
+    <string name="link_account">Propojit účet</string>
+    <string name="find_new_shows">Najdi nové pořady</string>
+    <string name="search">Hledat</string>
+    <string name="clear">Vymazat</string>
+    <string name="no_results_for">Žádné výsledky pro „%s“</string>
+
+    <!-- Profile -->
+    <string name="profile">Profil</string>
+    <string name="linked_accounts">Propojené účty</string>
+    <string name="preferences">Předvolby</string>
+    <string name="podcast_language">Jazyk podcastů</string>
+    <string name="briefing_time">Čas přehledu</string>
+    <string name="topics">Témata</string>
+    <string name="voice_preference">Preferovaný hlas</string>
+    <string name="hidden_topics">Skrytá témata</string>
+    <string name="about">O aplikaci</string>
+    <string name="version">Verze</string>
+    <string name="terms_of_service">Podmínky služby</string>
+    <string name="privacy_policy">Zásady ochrany osobních údajů</string>
+    <string name="analytics_title">Sdílet anonymní statistiky používání</string>
+    <string name="analytics_subtitle">Která témata a jazyky se používají a jak dlouho. Náhodné ID na tomto zařízení, bez jména, e-mailu nebo IP adresy. Po vypnutí se ID smaže.</string>
+    <string name="premium">Premium</string>
+    <string name="go_ad_free">Přejít na verzi bez reklam</string>
+    <string name="ad_free">Bez reklam</string>
+    <string name="active_subscription">Aktivní předplatné</string>
+    <string name="remove_all_ads">Odstranit všechny reklamy</string>
+    <string name="email_accounts">E-mailové účty</string>
+    <string name="app_theme">Motiv aplikace</string>
+    <string name="voice_settings">Nastavení hlasu</string>
+    <string name="choose_podcast_voices">Vyber hlasy podcastů</string>
+    <string name="hidden_count">Skrytých: %d</string>
+    <string name="notifications">Oznámení</string>
+    <string name="daily_brief_reminders">Připomínky denního přehledu</string>
+    <string name="sign_out_confirm">Opravdu se chceš odhlásit?</string>
+    <string name="delete_account_confirm">Opravdu chceš smazat svůj účet? Tím se trvale smažou všechna tvoje data včetně podcastů, předvoleb a propojených účtů. Tuto akci nelze vrátit zpět.</string>
+    <string name="delete_account_signin_again">Platnost tvého přihlášení vypršela, takže tvůj účet nebyl smazán a nic se neodstranilo. Odhlas se, přihlas se znovu a zkus Smazat účet ještě jednou.</string>
+    <string name="delete_account_failed">Smazání tvého účtu se nepodařilo dokončit. Zkontroluj připojení a zkus to znovu.</string>
+
+    <!-- Player -->
+    <string name="playing">Přehrává se</string>
+    <string name="paused">Pozastaveno</string>
+    <string name="play">Přehrát</string>
+    <string name="pause">Pozastavit</string>
+    <string name="loading">Načítání…</string>
+    <string name="generating">Vytváření…</string>
+    <string name="generating_progress">Vytváření… %d %%</string>
+    <string name="generate_episode">Vytvořit epizodu</string>
+    <string name="regenerate">Vytvořit znovu</string>
+    <string name="episode_history">Historie epizod</string>
+    <string name="skip_back">Přetočit zpět o 15 sekund</string>
+    <string name="skip_forward">Přetočit vpřed o 15 sekund</string>
+    <string name="skip_back_mini">Zpět</string>
+    <string name="skip_forward_mini">Vpřed</string>
+    <string name="buffering">Ukládání do vyrovnávací paměti…</string>
+    <string name="playback_error_stream">Nepodařilo se připojit k rádiu. Zkontroluj připojení a zkus to znovu.</string>
+    <string name="playback_error_episode">Nepodařilo se načíst tento zvuk. Zkontroluj připojení a zkus to znovu.</string>
+    <string name="sleep_timer">Časovač vypnutí</string>
+    <string name="timer">Časovač</string>
+    <string name="sleep_timer_5_min">5 min</string>
+    <string name="sleep_timer_10_min">10 min</string>
+    <string name="sleep_timer_15_min">15 min</string>
+    <string name="sleep_timer_30_min">30 min</string>
+    <string name="sleep_timer_1_hour">1 hodina</string>
+    <string name="min_format">%d min</string>
+    <string name="today">Dnes</string>
+    <string name="bookmark">Záložka</string>
+    <string name="more">Více</string>
+    <string name="hide_topic">Skrýt téma</string>
+    <string name="hide">Skrýt</string>
+
+    <!-- Errors -->
+    <string name="error_generic">Něco se pokazilo</string>
+    <string name="error_network">Chyba sítě. Zkontroluj připojení.</string>
+    <string name="error_auth">Ověření se nezdařilo</string>
+    <string name="error_no_internet">Žádné připojení k internetu. Zkontroluj síť a zkus to znovu.</string>
+    <string name="generation_failed">Vytvoření se nezdařilo</string>
+
+    <!-- Misc -->
+    <string name="min_daily">%d min denně</string>
+    <string name="connected">Připojeno</string>
+    <string name="not_connected">Nepřipojeno</string>
+    <string name="not_connected_lower">Nepřipojeno</string>
+    <string name="coming_soon">Již brzy</string>
+    <string name="microsoft_coming_soon">Integrace účtu Microsoft již brzy. Zůstaň naladěn!</string>
+
+    <!-- Onboarding -->
+    <string name="welcome_to_audexa">Vítej v Audexa</string>
+    <string name="welcome_description">Tvoje osobní AI rádio, které mění nejnovější zprávy, technologie a témata v poutavé přehledy ve stylu podcastu.</string>
+    <string name="get_started">Začínáme</string>
+    <string name="connect_your_account">Připoj svůj účet</string>
+    <string name="connect_account_description">Propoj svůj účet Google a získej osobní denní přehledy ze svého e-mailu a kalendáře.</string>
+    <string name="gmail">Gmail</string>
+    <string name="calendar">Kalendář</string>
+    <string name="include_email_highlights">Zahrnout nejdůležitější e-maily do přehledu</string>
+    <string name="include_calendar_events">Zahrnout nadcházející události do přehledu</string>
+    <string name="continue_button">Pokračovat</string>
+    <string name="skip_for_now">Zatím přeskočit</string>
+    <string name="connect_later_hint">Připojit se můžeš kdykoli později v Nastavení</string>
+    <string name="connect">Připojit</string>
+    <string name="choose_your_interests">Vyber své zájmy</string>
+    <string name="choose_interests_description">Vyber témata, o kterých chceš slyšet. Budeme pro tebe vytvářet denní epizody.</string>
+    <string name="topics_selected">Vybráno témat: %d</string>
+    <string name="topics_selected_plural_suffix"></string>
+    <string name="complete_setup">Dokončit nastavení</string>
+
+    <!-- Linked Accounts -->
+    <string name="enable_daily_brief">Zapnout denní přehled</string>
+    <string name="enable_daily_brief_description">Připoj svůj Gmail a získej osobní denní přehledy podle svých e-mailů. Shrneme důležité novinky, abys mohl začít den informovaný.</string>
+    <string name="google_calendar">Google Calendar</string>
+    <string name="outlook">Outlook</string>
+    <string name="daily_brief_sources">Zdroje denního přehledu</string>
+    <string name="email_summaries">Shrnutí e-mailů</string>
+    <string name="include_email_in_brief">Zahrnout shrnutí e-mailů do denního přehledu</string>
+    <string name="calendar_events">Události v kalendáři</string>
+    <string name="include_calendar_in_brief">Zahrnout nadcházející události do denního přehledu</string>
+    <string name="unlink">Odpojit</string>
+    <string name="soon">Brzy</string>
+    <string name="your_privacy">Tvoje soukromí</string>
+    <string name="privacy_note">Abychom vytvořili tvůj přehled, náš server čte tvé nedávné zprávy v Gmailu a události v kalendáři. Jméno odesílatele, předmět a prvních 100 znaků tvých nejdůležitějších e-mailů, spolu s názvy, časy a místy událostí, se odesílají společnosti Anthropic, naší poskytovatelce AI, aby napsala scénář. Text tvých e-mailů neukládáme, ale hotový zvuk přehledu zůstává uložený, dokud nesmažeš svůj účet. Odpojení neodstraní přístup ke Googlu uložený na našem serveru; to udělá až Smazat účet v Profilu.</string>
+    <string name="microsoft_outlook_coming_soon">Propojení s Microsoft Outlook bude k dispozici v budoucí aktualizaci.</string>
+    <string name="gmail_linking_cancelled">Propojení s Gmailem bylo zrušeno</string>
+    <string name="calendar_linking_cancelled">Propojení s kalendářem bylo zrušeno</string>
+    <string name="reconnect">Připojit znovu</string>
+
+    <!-- Hidden Topics -->
+    <string name="no_hidden_topics">Žádná skrytá témata</string>
+    <string name="no_hidden_topics_description">Témata, která skryješ, se zobrazí tady. Můžeš je kdykoli znovu zobrazit.</string>
+    <string name="unhide_hint">Klepnutím na ikonu oka téma znovu zobrazíš.</string>
+    <string name="unhide">Zobrazit</string>
+
+    <!-- Language Settings -->
+    <string name="language">Jazyk</string>
+    <string name="language_coming_soon">Již brzy</string>
+    <string name="language_coming_soon_toast">Zatím není k dispozici. Tvůj zájem jsme si poznamenali.</string>
+    <string name="generating_language">Připravujeme tvou epizodu v jazyce %1$s. První může trvat několik minut.</string>
+    <string name="language_fallback_note">Podcasty zatím nejsou k dispozici v jazyce %1$s, a tak jsme pro tebe vybrali jazyk %2$s.</string>
+    <string name="error_language_unavailable">Tento jazyk zatím není k dispozici.</string>
+    <string name="error_daily_limit">Dnešní limit epizod v nových jazycích byl vyčerpán. Zkus to znovu zítra.</string>
+    <string name="language_page_title">Vyber svůj jazyk</string>
+    <string name="language_page_subtitle">Podcasty jsou k dispozici v šesti jazycích. Rádio je jen v angličtině. Tvůj výběr nám pomáhá rozhodnout, co přidat.</string>
+    <string name="language_description">Vyber preferovaný jazyk.</string>
+    <string name="language_note">Podcasty jsou k dispozici v angličtině, španělštině, francouzštině, němčině, portugalštině a italštině. Příprava první epizody v novém jazyce trvá několik minut. Rádio je jen v angličtině. U ostatních jazyků si zaznamenáváme, který jsi vybral, bez tvého jména, abychom se rozhodli, co přidat jako další.</string>
+    <string name="selected">Vybráno</string>
+
+    <!-- App language (the language of menus and buttons; separate from the podcast language) -->
+    <string name="app_language">Jazyk aplikace</string>
+    <string name="app_language_follow_phone">Podle telefonu</string>
+    <string name="app_language_description">Jazyk nabídek a tlačítek. Podcasty zůstanou v jazyce, který jsi vybral výše.</string>
+    <string name="ui_lang_offer_title">Zobrazit aplikaci také v jazyce %1$s?</string>
+    <string name="ui_lang_offer_body">Změní se jen nabídky a tlačítka. Můžeš to kdykoli změnit v nastavení profilu.</string>
+    <string name="ui_lang_offer_yes">Ano, jazyk: %1$s</string>
+    <string name="ui_lang_offer_no">Ne, ponechat: %1$s</string>
+
+    <!-- Suggest a topic -->
+    <string name="suggest_topic">Navrhni téma</string>
+    <string name="suggest_topic_inline">Nevidíš své téma? Navrhni ho</string>
+    <string name="suggest_topic_description">Řekni nám, co bys rád poslouchal, a my zvážíme jeho přidání.</string>
+    <string name="suggest_topic_name_label">Název tématu</string>
+    <string name="suggest_topic_name_hint">např. Kvantové počítače</string>
+    <string name="suggest_topic_details_label">Popis (nepovinné)</string>
+    <string name="suggest_topic_details_hint">Co by toto téma mělo pokrývat?</string>
+    <string name="suggest_topic_thanks">Díky, návrhy čteme a ty dobré přidáváme.</string>
+    <string name="submit">Odeslat</string>
+    <string name="submitting">Odesílání…</string>
+    <string name="no_topics_title">Momentálně nejsou k dispozici žádná témata.</string>
+    <string name="no_topics_hint">Klepnutím na Pokračovat dokončíš nastavení — témata můžeš vybrat později na domovské obrazovce.</string>
+
+    <!-- Live radio -->
+    <string name="radio_languages">Jazyky rádia</string>
+    <string name="radio_languages_note">Vybrané stanice se zobrazí na tvé domovské obrazovce. Musí být zapnutý alespoň jeden jazyk.</string>
+    <string name="radio_home_tagline">Zprávy s AI 24/7 · ŽIVĚ</string>
+    <string name="radio_tagline">Zprávy a rozhovory s AI 24/7</string>
+    <string name="share_whats_playing">Sdílet, co hraje</string>
+    <string name="share_station">Sdílet %1$s</string>
+    <string name="radio_up_next">Příště</string>
+    <string name="radio_requests">Žádosti</string>
+    <string name="radio_generating">Vytváření</string>
+    <string name="radio_generating_badge">vytváří se</string>
+    <string name="radio_request_hint">Klepni na mikrofon a požádej o téma do živé fronty</string>
+    <string name="radio_request_topic">Požádat o téma</string>
+    <string name="radio_request_title">Požádej o téma</string>
+    <string name="radio_request_description">Řekni Audexa Rádiu, co bys rád slyšel. Přidá se do živé fronty.</string>
+    <string name="radio_add_to_queue">Přidat do živé fronty</string>
+    <string name="radio_chat_hint">Pokecej s posluchači...</string>
+    <string name="radio_chat">Chat</string>
+    <string name="radio_now_badge">TEĎ</string>
+    <string name="radio_music">Hudba</string>
+    <string name="send">Odeslat</string>
+
+    <!-- Voice Settings -->
+    <string name="loading_voices">Načítání hlasů…</string>
+    <string name="no_voice_pairs">Žádné dvojice hlasů nejsou k dispozici</string>
+    <string name="no_voices">Žádné hlasy nejsou k dispozici</string>
+    <string name="voice_pairs_description">Vyber předem nastavenou dvojici hlasů pro moderátory svého podcastu.</string>
+    <string name="host_1">Moderátor 1</string>
+    <string name="host_2">Moderátor 2</string>
+    <string name="host_1_voice">Hlas moderátora 1</string>
+    <string name="host_2_voice">Hlas moderátora 2</string>
+
+    <!-- Theme Settings -->
+    <string name="theme_system">Systémový</string>
+    <string name="theme_system_description">Podle nastavení zařízení</string>
+    <string name="theme_dark">Tmavý</string>
+    <string name="theme_dark_description">Vždy tmavý režim</string>
+    <string name="theme_light">Světlý</string>
+    <string name="theme_light_description">Vždy světlý režim</string>
+
+    <!-- Notification Settings -->
+    <string name="permission">Oprávnění</string>
+    <string name="enabled">Zapnuto</string>
+    <string name="not_enabled">Vypnuto</string>
+    <string name="daily_brief_schedule">Plán denního přehledu</string>
+    <string name="daily_brief_notifications">Oznámení denního přehledu</string>
+    <string name="daily_brief_notify_hint">Upozorni mě, až bude přehled připravený</string>
+    <string name="daily_brief_content">Obsah denního přehledu</string>
+    <string name="include_topic_updates">Zahrnout novinky z témat</string>
+    <string name="include_topic_updates_hint">Přidat do denního přehledu titulky z tvých témat</string>
+    <string name="notification_info">Tvůj denní přehled se vytvoří a bude připravený v naplánovaný čas. Až bude připravený k přehrání, dostaneš oznámení.</string>
+    <string name="select_time">Vyber čas</string>
+
+    <!-- Subscription / Paywall -->
+    <string name="enjoy_uninterrupted">Poslouchej bez přerušování</string>
+    <string name="no_audio_ad_interruptions">Žádné zvukové reklamy</string>
+    <string name="seamless_episode_playback">Plynulé přehrávání epizod</string>
+    <string name="support_indie_development">Podpoř nezávislý vývoj</string>
+    <string name="ad_free_subscriber">Máš předplatné bez reklam!</string>
+    <string name="yearly">Ročně</string>
+    <string name="save_percent">Ušetři 58 %%</string>
+    <string name="monthly">Měsíčně</string>
+    <string name="subscribe">Předplatit</string>
+    <string name="restore_purchases">Obnovit nákupy</string>
+    <string name="payment_fine_print">Platba bude stržena z tvého účtu Google Play. Předplatné se automaticky obnovuje, pokud ho nezrušíš nejméně 24 hodin před koncem aktuálního období.</string>
+    <string name="per_year">/rok</string>
+    <string name="per_month">/měsíc</string>
+    <string name="per_week">/týden</string>
+
+    <!-- Ads -->
+    <string name="sponsored">SPONZOROVANÉ</string>
+    <string name="skip">Přeskočit</string>
+    <string name="skip_ad">Přeskočit reklamu</string>
+    <string name="ad_content_description">Reklama</string>
+
+    <!-- Radio Call-In -->
+    <string name="call_to_request">Zavolej a požádej o téma</string>
+    <string name="call_in_label">Zavolej: (833) 398-1230</string>
+
+    <!-- Splash Screen -->
+    <string name="splash_tagline">Tvůj zvukový přehled s AI</string>
+
+    <!-- Notifications (non-composable) -->
+    <string name="notification_good_morning">Dobré ráno!</string>
+    <string name="notification_daily_brief_text">Čas na tvůj denní přehled. Klepni a buď v obraze s e-maily, kalendářem a zprávami.</string>
+    <string name="daily_brief_channel_description">Oznámení s připomínkou denního přehledu</string>
+    <string name="radio_topic_channel_name">Připomínky témat v rádiu</string>
+    <string name="radio_topic_channel_description">Upozorníme tě, když v Audexa Rádiu hraje téma s tvou záložkou</string>
+    <string name="radio_topic_notification_title">Právě v Audexa Rádiu</string>
+    <string name="radio_topic_notification_body">%1$s právě hraje živě. Klepni a naladíš se.</string>
+
+    <!-- Daily Brief Playback -->
+    <string name="daily_brief_title_format">Denní přehled - %s</string>
+    <string name="daily_brief_description">Tvůj osobní ranní přehled</string>
+
+    <!-- Morning briefing: one local notification per day, opt-in after first play -->
+    <string name="briefing_notification_title">Dnes v Audexa</string>
+    <string name="briefing_notification_body_fallback">Audexa Rádio právě hraje. Klepni a poslouchej.</string>
+    <plurals name="briefing_notification_body_topics">
+        <item quantity="one">%1$d nový podcast k tématu: %2$s. Klepni a poslouchej.</item>
+        <item quantity="few">%1$d nové podcasty k tématům: %2$s. Klepni a poslouchej.</item>
+        <item quantity="many">%1$d nového podcastu k tématům: %2$s. Klepni a poslouchej.</item>
+        <item quantity="other">%1$d nových podcastů k tématům: %2$s. Klepni a poslouchej.</item>
+    </plurals>
+    <string name="briefing_names_with_more">%1$s a dalších %2$d</string>
+    <string name="briefing_optin_title">Připomenout ti, až budou nové podcasty k tématům připravené?</string>
+    <string name="briefing_optin_accept">Připomenout</string>
+    <string name="briefing_optin_decline">Teď ne</string>
+
+    <!-- Ask the hosts (English only for now) -->
+    <string name="ask_entry_title">Zeptej se moderátorů</string>
+    <string name="ask_entry_subtitle">Dnešní zápas, premiéra, zpráva: probírají to dva AI moderátoři</string>
+    <string name="ask_title">Zeptej se moderátorů</string>
+    <string name="ask_intro">Popiš událost nebo zprávu. Moderátoři mluví jen o tom, co uvádějí nedávné titulky, a když je zpravodajství málo, řeknou ti to. Epizody vytváří AI a trvá to minutu nebo dvě.</string>
+    <string name="ask_field_label">O čem by měli mluvit?</string>
+    <string name="ask_field_placeholder">např. Kdo vyhrál dnešní zápas Warriors?</string>
+    <string name="ask_counter">%1$d/%2$d</string>
+    <string name="ask_language_label">Jazyk</string>
+    <string name="ask_submit">Zeptat se</string>
+    <string name="ask_sending">Odesílání tvého požadavku...</string>
+    <string name="ask_stage_queued">Čekání na volné studio...</string>
+    <string name="ask_stage_reviewing">Kontrola tvého požadavku...</string>
+    <string name="ask_stage_searching">Čtení nejnovějších titulků...</string>
+    <string name="ask_stage_writing">Moderátoři se připravují...</string>
+    <string name="ask_stage_recording">Nahrávání epizody...</string>
+    <string name="ask_stage_working">Pracuje se na tom...</string>
+    <string name="ask_progress_description">Průběh: %1$d procent</string>
+    <string name="ask_leave_hint">Tuto obrazovku můžeš opustit. Po návratu bude pokračovat stejná epizoda.</string>
+    <string name="ask_ai_note">Diskuse vytvořená AI mezi dvěma AI moderátory na základě nedávných zpravodajských titulků.</string>
+    <string name="ask_length">Délka %1$s</string>
+    <string name="ask_play">Přehrát epizodu</string>
+    <string name="ask_pause">Pozastavit</string>
+    <string name="ask_share">Sdílet</string>
+    <string name="ask_share_chooser">Sdílet tuto epizodu</string>
+    <string name="ask_share_failed">Nepodařilo se otevřít nabídku sdílení</string>
+    <string name="ask_sources_title">Titulky, o které se epizoda opírá</string>
+    <string name="ask_sources_note">Moderátoři probírají jen to, co tyto titulky uvádějí. Celé příběhy najdeš ve zdrojích.</string>
+    <string name="ask_ask_another">Zeptat se na další</string>
+    <string name="ask_edit_question">Upravit otázku</string>
+    <string name="ask_check_again">Zkontrolovat znovu</string>
+    <string name="ask_unavailable">Zeptej se moderátorů teď není k dispozici.</string>
+    <string name="ask_loading">Kontrola dostupnosti...</string>
+    <string name="ask_err_input">Zkontroluj prosím svou otázku a zkus to znovu.</string>
+    <string name="ask_err_limited">Zeptej se moderátorů je vytížené nebo dosáhlo limitu. Zkus to prosím později.</string>
+    <string name="ask_err_not_found">Tento požadavek už nemůžeme najít. Zeptej se prosím znovu.</string>
+    <string name="ask_err_offline">Žádné připojení. Zkontroluj internet a zkus to znovu.</string>
+    <string name="ask_err_timeout">Trvá to déle, než se čekalo. Epizoda může být stále na cestě.</string>
+    <string name="ask_err_server">Něco se pokazilo. Zkus to prosím znovu.</string>
+    <string name="ask_err_refused">Moderátoři o tomhle epizodu vytvořit nemohou.</string>
+    <string name="ask_err_no_coverage">K tomuto tématu jsme nenašli dost nedávného zpravodajství, a proto jsme epizodu nevytvořili.</string>
+    <string name="ask_err_failed">Epizodu se nepodařilo vytvořit. Zkus to prosím znovu.</string>
+</resources>

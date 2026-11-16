@@ -17,7 +17,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.kreativekoala.audexa.data.model.UiLanguages
 import com.kreativekoala.audexa.ui.onboarding.pages.LanguageSelectionPage
 import com.kreativekoala.audexa.ui.onboarding.pages.LinkAccountPage
 import com.kreativekoala.audexa.ui.onboarding.pages.TopicSelectionPage
@@ -69,6 +71,17 @@ fun OnboardingScreen(
                     }
                 )
             }
+        }
+
+        // "Show the app in <language> too?" after picking a podcast language. Asks; never switches on its own.
+        uiState.uiLanguageOffer?.let { offer ->
+            val currentTag = LocalConfiguration.current.locales[0]?.toLanguageTag()
+            UiLanguageOfferDialog(
+                offer = offer,
+                current = UiLanguages.forDeviceLanguage(currentTag),
+                onYes = { viewModel.answerUiLanguageOffer(accept = true) },
+                onNo = { viewModel.answerUiLanguageOffer(accept = false) }
+            )
         }
 
         // Page indicator dots

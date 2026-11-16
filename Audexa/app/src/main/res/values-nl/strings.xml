@@ -30,15 +30,15 @@
     <string name="good_morning">Goedemorgen</string>
     <string name="good_afternoon">Goedemiddag</string>
     <string name="good_evening">Goedenavond</string>
-    <string name="daily_brief">Dagelijkse Samenvatting</string>
-    <string name="daily_brief_subtitle">Dagelijkse Samenvatting \u2022 %s</string>
+    <string name="daily_brief">Dagelijkse samenvatting</string>
+    <string name="daily_brief_subtitle">Dagelijkse samenvatting • %s</string>
     <string name="keep_listening">Blijf luisteren</string>
     <string name="your_topics">Jouw onderwerpen</string>
-    <string name="topic_podcasts">Onderwerpspodcasts</string>
+    <string name="topic_podcasts">Podcasts per onderwerp</string>
     <string name="recommended_for_you">Aanbevolen voor jou</string>
     <string name="more_for_you">Meer voor jou</string>
     <string name="all_topics">Alle onderwerpen</string>
-    <string name="matching_topics">Overeenkomende onderwerpen</string>
+    <string name="matching_topics">Passende onderwerpen</string>
     <string name="tap_to_explore">Tik om te verkennen en af te spelen</string>
     <string name="link_account_prompt">Koppel je e-mail om gepersonaliseerde samenvattingen te genereren</string>
     <string name="link_account">Account koppelen</string>
@@ -60,6 +60,8 @@
     <string name="version">Versie</string>
     <string name="terms_of_service">Servicevoorwaarden</string>
     <string name="privacy_policy">Privacybeleid</string>
+    <string name="analytics_title">Deel anonieme gebruiksstatistieken</string>
+    <string name="analytics_subtitle">Welke onderwerpen en talen worden gebruikt en hoe lang. Een willekeurige id op dit apparaat, geen naam, e-mailadres of IP-adres. Als je dit uitzet, wordt de id verwijderd.</string>
     <string name="premium">Premium</string>
     <string name="go_ad_free">Advertentievrij worden</string>
     <string name="ad_free">Advertentievrij</string>
@@ -74,7 +76,7 @@
     <string name="daily_brief_reminders">Herinneringen dagelijkse samenvatting</string>
     <string name="sign_out_confirm">Weet je zeker dat je wilt uitloggen?</string>
     <string name="delete_account_confirm">Weet je zeker dat je je account wilt verwijderen? Dit verwijdert permanent al je gegevens inclusief podcasts, voorkeuren en gekoppelde accounts. Deze actie kan niet ongedaan worden gemaakt.</string>
-    <string name="delete_account_signin_again">Je aanmelding is verlopen, dus je account is niet verwijderd en er is niets gewist. Meld je af, meld je opnieuw aan en probeer dan opnieuw je account te verwijderen.</string>
+    <string name="delete_account_signin_again">Je sessie is verlopen, dus je account is niet verwijderd en er is niets gewist. Log uit, log opnieuw in en probeer dan opnieuw je account te verwijderen.</string>
     <string name="delete_account_failed">We konden het verwijderen van je account niet afronden. Controleer je verbinding en probeer het opnieuw.</string>
 
     <!-- Player -->
@@ -82,9 +84,9 @@
     <string name="paused">Gepauzeerd</string>
     <string name="play">Afspelen</string>
     <string name="pause">Pauzeren</string>
-    <string name="loading">Laden\u2026</string>
-    <string name="generating">Genereren\u2026</string>
-    <string name="generating_progress">Genereren\u2026 %d%%</string>
+    <string name="loading">Laden…</string>
+    <string name="generating">Genereren…</string>
+    <string name="generating_progress">Genereren… %d%%</string>
     <string name="generate_episode">Aflevering genereren</string>
     <string name="regenerate">Opnieuw genereren</string>
     <string name="episode_history">Afleveringsgeschiedenis</string>
@@ -92,7 +94,9 @@
     <string name="skip_forward">15 seconden vooruit</string>
     <string name="skip_back_mini">Terugspoelen</string>
     <string name="skip_forward_mini">Vooruitspoelen</string>
-    <string name="buffering">Bufferen\u2026</string>
+    <string name="buffering">Bufferen…</string>
+    <string name="playback_error_stream">Kan de radio niet bereiken. Controleer je verbinding en probeer het opnieuw.</string>
+    <string name="playback_error_episode">Kan deze audio niet laden. Controleer je verbinding en probeer het opnieuw.</string>
     <string name="sleep_timer">Slaaptimer</string>
     <string name="timer">Timer</string>
     <string name="sleep_timer_5_min">5 min</string>
@@ -131,14 +135,14 @@
     <string name="gmail">Gmail</string>
     <string name="calendar">Agenda</string>
     <string name="include_email_highlights">E-mailhoogtepunten opnemen in je samenvatting</string>
-    <string name="include_calendar_events">Aankomende evenementen opnemen in je samenvatting</string>
+    <string name="include_calendar_events">Aankomende afspraken opnemen in je samenvatting</string>
     <string name="continue_button">Doorgaan</string>
     <string name="skip_for_now">Nu overslaan</string>
     <string name="connect_later_hint">Je kunt later altijd koppelen in Instellingen</string>
     <string name="connect">Verbinden</string>
     <string name="choose_your_interests">Kies je interesses</string>
     <string name="choose_interests_description">Selecteer onderwerpen waar je over wilt horen. We genereren dagelijkse afleveringen speciaal voor jou.</string>
-    <string name="topics_selected">%d onderwerp(en) geselecteerd</string>
+    <string name="topics_selected">Onderwerpen geselecteerd: %d</string>
     <string name="topics_selected_plural_suffix"></string>
     <string name="complete_setup">Setup voltooien</string>
 
@@ -150,12 +154,12 @@
     <string name="daily_brief_sources">Bronnen dagelijkse samenvatting</string>
     <string name="email_summaries">E-mailsamenvattingen</string>
     <string name="include_email_in_brief">E-mailsamenvattingen opnemen in Dagelijkse samenvatting</string>
-    <string name="calendar_events">Agenda-evenementen</string>
-    <string name="include_calendar_in_brief">Aankomende evenementen opnemen in Dagelijkse samenvatting</string>
+    <string name="calendar_events">Agenda-afspraken</string>
+    <string name="include_calendar_in_brief">Aankomende afspraken opnemen in Dagelijkse samenvatting</string>
     <string name="unlink">Ontkoppelen</string>
     <string name="soon">Binnenkort</string>
     <string name="your_privacy">Jouw privacy</string>
-    <string name="privacy_note">Om je briefing te maken, leest onze server je recente Gmail-berichten en agenda-afspraken. De naam van de afzender, het onderwerp en de eerste 100 tekens van je belangrijkste e-mails, plus titels, tijden en plaatsen van afspraken, worden naar Anthropic, onze AI-leverancier, gestuurd om het script te schrijven. We bewaren je e-mailtekst niet, maar de audio van de briefing wordt bewaard tot je je account verwijdert. Ontkoppelen verwijdert de Google-toegang op onze server niet; Account verwijderen in Profiel wel.</string>
+    <string name="privacy_note">Om je samenvatting te maken, leest onze server je recente Gmail-berichten en agenda-afspraken. De naam van de afzender, het onderwerp en de eerste 100 tekens van je belangrijkste e-mails, plus titels, tijden en plaatsen van afspraken, worden naar Anthropic, onze AI-leverancier, gestuurd om het script te schrijven. We bewaren je e-mailtekst niet, maar de audio van de samenvatting wordt bewaard tot je je account verwijdert. Ontkoppelen verwijdert de Google-toegang op onze server niet; Account verwijderen in Profiel wel.</string>
     <string name="microsoft_outlook_coming_soon">Microsoft Outlook-koppeling wordt beschikbaar in een toekomstige update.</string>
     <string name="gmail_linking_cancelled">Gmail-koppeling is geannuleerd</string>
     <string name="calendar_linking_cancelled">Agendakoppeling is geannuleerd</string>
@@ -169,12 +173,65 @@
 
     <!-- Language Settings -->
     <string name="language">Taal</string>
-    <string name="language_description">Kies je voorkeurstaal voor podcastafleveringen.</string>
+    <string name="language_coming_soon">Binnenkort</string>
+    <string name="language_coming_soon_toast">Nog niet beschikbaar. We hebben je interesse genoteerd.</string>
+    <string name="generating_language">Je aflevering wordt voorbereid (taal: %1$s). De eerste kan een paar minuten duren.</string>
+    <string name="language_fallback_note">Podcasts zijn nog niet beschikbaar in de taal %1$s, dus hebben we %2$s voor je gekozen.</string>
+    <string name="error_language_unavailable">Deze taal is nog niet beschikbaar.</string>
+    <string name="error_daily_limit">De limiet voor afleveringen in een nieuwe taal is voor vandaag bereikt. Probeer het morgen opnieuw.</string>
+    <string name="language_page_title">Kies je taal</string>
+    <string name="language_page_subtitle">Podcasts zijn er in zes talen. De radio is alleen in het Engels. Jouw keuze helpt ons bepalen wat we toevoegen.</string>
+    <string name="language_description">Kies je voorkeurstaal.</string>
     <string name="language_note">Podcasts zijn beschikbaar in het Engels, Spaans, Frans, Duits, Portugees en Italiaans. De eerste aflevering in een nieuwe taal heeft een paar minuten nodig. De radio is alleen in het Engels. Voor andere talen noteren we welke je kiest, zonder je naam, om te bepalen wat we hierna toevoegen.</string>
     <string name="selected">Geselecteerd</string>
 
+    <!-- App language (the language of menus and buttons; separate from the podcast language) -->
+    <string name="app_language">App-taal</string>
+    <string name="app_language_follow_phone">Telefoon volgen</string>
+    <string name="app_language_description">De taal van menu\'s en knoppen. Podcasts blijven in de taal die je hierboven hebt gekozen.</string>
+    <string name="ui_lang_offer_title">Wil je de app ook tonen in: %1$s?</string>
+    <string name="ui_lang_offer_body">Alleen menu\'s en knoppen veranderen. Je kunt dit altijd wijzigen in je profielinstellingen.</string>
+    <string name="ui_lang_offer_yes">Ja, gebruik %1$s</string>
+    <string name="ui_lang_offer_no">Nee, houd %1$s</string>
+
+    <!-- Suggest a topic -->
+    <string name="suggest_topic">Onderwerp voorstellen</string>
+    <string name="suggest_topic_inline">Zie je je onderwerp niet? Stel er een voor</string>
+    <string name="suggest_topic_description">Vertel ons waar je naar wilt luisteren, dan overwegen we het toe te voegen.</string>
+    <string name="suggest_topic_name_label">Naam van onderwerp</string>
+    <string name="suggest_topic_name_hint">bijv. Quantumcomputing</string>
+    <string name="suggest_topic_details_label">Beschrijving (optioneel)</string>
+    <string name="suggest_topic_details_hint">Wat moet dit onderwerp behandelen?</string>
+    <string name="suggest_topic_thanks">Bedankt, we bekijken voorstellen en voegen de goede toe.</string>
+    <string name="submit">Verzenden</string>
+    <string name="submitting">Verzenden…</string>
+    <string name="no_topics_title">Er zijn nu geen onderwerpen beschikbaar.</string>
+    <string name="no_topics_hint">Tik op Doorgaan om de setup af te ronden — je kunt later onderwerpen kiezen op het startscherm.</string>
+
+    <!-- Live radio -->
+    <string name="radio_languages">Radiotalen</string>
+    <string name="radio_languages_note">Geselecteerde zenders verschijnen op je startscherm. Minstens één taal moet zijn ingeschakeld.</string>
+    <string name="radio_home_tagline">AI-nieuws 24/7 · LIVE</string>
+    <string name="radio_tagline">AI-nieuws en talk, 24/7</string>
+    <string name="share_whats_playing">Deel wat er speelt</string>
+    <string name="share_station">%1$s delen</string>
+    <string name="radio_up_next">Hierna</string>
+    <string name="radio_requests">Verzoeken</string>
+    <string name="radio_generating">Genereren</string>
+    <string name="radio_generating_badge">genereren</string>
+    <string name="radio_request_hint">Tik op de microfoon om een onderwerp aan te vragen voor de live wachtrij</string>
+    <string name="radio_request_topic">Onderwerp aanvragen</string>
+    <string name="radio_request_title">Vraag een onderwerp aan</string>
+    <string name="radio_request_description">Vertel Audexa Radio waar je naar wilt luisteren. Het wordt aan de live wachtrij toegevoegd.</string>
+    <string name="radio_add_to_queue">Aan live wachtrij toevoegen</string>
+    <string name="radio_chat_hint">Chat met luisteraars...</string>
+    <string name="radio_chat">Chat</string>
+    <string name="radio_now_badge">NU</string>
+    <string name="radio_music">Muziek</string>
+    <string name="send">Verzenden</string>
+
     <!-- Voice Settings -->
-    <string name="loading_voices">Stemmen laden\u2026</string>
+    <string name="loading_voices">Stemmen laden…</string>
     <string name="no_voice_pairs">Geen stemparen beschikbaar</string>
     <string name="no_voices">Geen stemmen beschikbaar</string>
     <string name="voice_pairs_description">Selecteer een vooraf geconfigureerd stempaar voor je podcastpresentatoren.</string>
@@ -206,10 +263,10 @@
 
     <!-- Subscription / Paywall -->
     <string name="enjoy_uninterrupted">Geniet van ononderbroken luisteren</string>
-    <string name="no_audio_ad_interruptions">Geen audio-advertentieonderbrekingen</string>
+    <string name="no_audio_ad_interruptions">Geen onderbrekingen door audioadvertenties</string>
     <string name="seamless_episode_playback">Naadloos afleveringen afspelen</string>
     <string name="support_indie_development">Steun onafhankelijke ontwikkeling</string>
-    <string name="ad_free_subscriber">Je bent een advertentievrij abonnee!</string>
+    <string name="ad_free_subscriber">Je hebt een advertentievrij abonnement!</string>
     <string name="yearly">Jaarlijks</string>
     <string name="save_percent">Bespaar 58%%</string>
     <string name="monthly">Maandelijks</string>
@@ -226,22 +283,78 @@
     <string name="skip_ad">Advertentie overslaan</string>
     <string name="ad_content_description">Advertentie</string>
 
+    <!-- Radio Call-In -->
+    <string name="call_to_request">Bel om een onderwerp aan te vragen</string>
+    <string name="call_in_label">Bel: (833) 398-1230</string>
+
     <!-- Splash Screen -->
-    <string name="splash_tagline">Jouw AI-aangedreven audiooverzicht</string>
+    <string name="splash_tagline">Jouw audiosamenvatting met AI</string>
 
     <!-- Notifications (non-composable) -->
     <string name="notification_good_morning">Goedemorgen!</string>
-    <string name="notification_daily_brief_text">Tijd voor je Dagelijkse Samenvatting. Tik om bij te praten over e-mails, agenda en nieuws.</string>
+    <string name="notification_daily_brief_text">Tijd voor je dagelijkse samenvatting. Tik om bij te praten over e-mails, agenda en nieuws.</string>
     <string name="daily_brief_channel_description">Herinneringsmeldingen dagelijkse samenvatting</string>
+    <string name="radio_topic_channel_name">Herinneringen radio-onderwerpen</string>
+    <string name="radio_topic_channel_description">Ontvang een melding wanneer een onderwerp met bladwijzer op Audexa Radio speelt</string>
+    <string name="radio_topic_notification_title">Nu op Audexa Radio</string>
+    <string name="radio_topic_notification_body">%1$s speelt nu live. Tik om af te stemmen.</string>
 
     <!-- Daily Brief Playback -->
-    <string name="daily_brief_title_format">Dagelijkse Samenvatting - %s</string>
+    <string name="daily_brief_title_format">Dagelijkse samenvatting - %s</string>
     <string name="daily_brief_description">Jouw gepersonaliseerde ochtendsamenvatting</string>
 
-    <!-- Language selection page -->
-    <string name="language_page_title">Kies je taal</string>
-    <string name="language_page_subtitle">Podcasts zijn er in zes talen. De radio is alleen in het Engels. Jouw keuze helpt ons bepalen wat we toevoegen.</string>
-    <string name="language_coming_soon">Binnenkort</string>
-    <string name="language_coming_soon_toast">Nog niet beschikbaar. We hebben je interesse genoteerd.</string>
-    <string name="language_fallback_note">Podcasts zijn nog niet beschikbaar in de taal %1$s, dus hebben we %2$s voor je gekozen.</string>
+    <!-- Morning briefing: one local notification per day, opt-in after first play -->
+    <string name="briefing_notification_title">Vandaag op Audexa</string>
+    <string name="briefing_notification_body_fallback">Audexa Radio speelt nu. Tik om te luisteren.</string>
+    <plurals name="briefing_notification_body_topics">
+        <item quantity="one">%1$d nieuwe onderwerppodcast: %2$s. Tik om te luisteren.</item>
+        <item quantity="other">%1$d nieuwe onderwerppodcasts: %2$s. Tik om te luisteren.</item>
+    </plurals>
+    <string name="briefing_names_with_more">%1$s en nog %2$d</string>
+    <string name="briefing_optin_title">Herinneren als er nieuwe onderwerppodcasts klaar zijn?</string>
+    <string name="briefing_optin_accept">Herinner mij</string>
+    <string name="briefing_optin_decline">Niet nu</string>
+
+    <!-- Ask the hosts (English only for now) -->
+    <string name="ask_entry_title">Vraag de presentatoren</string>
+    <string name="ask_entry_subtitle">De wedstrijd van vanavond, een lancering, een nieuwsbericht: twee AI-presentatoren bespreken het</string>
+    <string name="ask_title">Vraag de presentatoren</string>
+    <string name="ask_intro">Beschrijf een gebeurtenis of nieuwsbericht. De presentatoren praten alleen over wat recente koppen melden en zeggen het als er te weinig berichtgeving is. Afleveringen worden door AI gegenereerd en duren een minuut of twee.</string>
+    <string name="ask_field_label">Waarover moeten ze praten?</string>
+    <string name="ask_field_placeholder">bijv. Wie won vanavond de Warriors-wedstrijd?</string>
+    <string name="ask_counter">%1$d/%2$d</string>
+    <string name="ask_language_label">Taal</string>
+    <string name="ask_submit">Vraag</string>
+    <string name="ask_sending">Je verzoek wordt verstuurd...</string>
+    <string name="ask_stage_queued">Wachten op een vrije studio...</string>
+    <string name="ask_stage_reviewing">Je verzoek wordt gecontroleerd...</string>
+    <string name="ask_stage_searching">De laatste koppen lezen...</string>
+    <string name="ask_stage_writing">De presentatoren bereiden zich voor...</string>
+    <string name="ask_stage_recording">De aflevering opnemen...</string>
+    <string name="ask_stage_working">Bezig...</string>
+    <string name="ask_progress_description">Voortgang: %1$d procent</string>
+    <string name="ask_leave_hint">Je kunt dit scherm verlaten. Als je terugkomt, ga je verder met dezelfde aflevering.</string>
+    <string name="ask_ai_note">Door AI gegenereerd gesprek tussen twee AI-presentatoren, gebaseerd op recente nieuwskoppen.</string>
+    <string name="ask_length">Duur %1$s</string>
+    <string name="ask_play">Aflevering afspelen</string>
+    <string name="ask_pause">Pauzeren</string>
+    <string name="ask_share">Delen</string>
+    <string name="ask_share_chooser">Deel deze aflevering</string>
+    <string name="ask_share_failed">Kon het deelmenu niet openen</string>
+    <string name="ask_sources_title">Koppen waarop deze aflevering is gebaseerd</string>
+    <string name="ask_sources_note">De presentatoren bespreken alleen wat deze koppen melden. Bekijk de bronnen voor de volledige verhalen.</string>
+    <string name="ask_ask_another">Nog een vraag</string>
+    <string name="ask_edit_question">Vraag bewerken</string>
+    <string name="ask_check_again">Opnieuw controleren</string>
+    <string name="ask_unavailable">Vraag de presentatoren is nu niet beschikbaar.</string>
+    <string name="ask_loading">Beschikbaarheid controleren...</string>
+    <string name="ask_err_input">Controleer je vraag en probeer het opnieuw.</string>
+    <string name="ask_err_limited">Vraag de presentatoren is druk of heeft de limiet bereikt. Probeer het later opnieuw.</string>
+    <string name="ask_err_not_found">We kunnen dit verzoek niet meer vinden. Stel je vraag opnieuw.</string>
+    <string name="ask_err_offline">Geen verbinding. Controleer je internet en probeer het opnieuw.</string>
+    <string name="ask_err_timeout">Dit duurt langer dan verwacht. De aflevering is misschien nog onderweg.</string>
+    <string name="ask_err_server">Er is iets misgegaan. Probeer het opnieuw.</string>
+    <string name="ask_err_refused">De presentatoren kunnen daar geen aflevering over maken.</string>
+    <string name="ask_err_no_coverage">We konden niet genoeg recente berichtgeving hierover vinden, dus we hebben geen aflevering gemaakt.</string>
+    <string name="ask_err_failed">De aflevering kon niet worden gemaakt. Probeer het opnieuw.</string>
 </resources>

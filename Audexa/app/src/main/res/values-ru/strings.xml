@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Audexa</string>
-    <string name="app_tagline">Ваше персональное AI-радио</string>
+    <string name="app_tagline">Ваше персональное ИИ-радио</string>
 
     <!-- Auth -->
     <string name="sign_in_with_google">Войти через Google</string>
@@ -31,7 +31,7 @@
     <string name="good_afternoon">Добрый день</string>
     <string name="good_evening">Добрый вечер</string>
     <string name="daily_brief">Ежедневная сводка</string>
-    <string name="daily_brief_subtitle">Ежедневная сводка \u2022 %s</string>
+    <string name="daily_brief_subtitle">Ежедневная сводка • %s</string>
     <string name="keep_listening">Продолжить прослушивание</string>
     <string name="your_topics">Ваши темы</string>
     <string name="topic_podcasts">Подкасты по темам</string>
@@ -54,13 +54,15 @@
     <string name="podcast_language">Язык подкаста</string>
     <string name="briefing_time">Время сводки</string>
     <string name="topics">Темы</string>
-    <string name="voice_preference">Предпочтение голоса</string>
+    <string name="voice_preference">Предпочитаемый голос</string>
     <string name="hidden_topics">Скрытые темы</string>
     <string name="about">О приложении</string>
     <string name="version">Версия</string>
     <string name="terms_of_service">Условия использования</string>
     <string name="privacy_policy">Политика конфиденциальности</string>
-    <string name="premium">Премиум</string>
+    <string name="analytics_title">Делиться анонимной статистикой использования</string>
+    <string name="analytics_subtitle">Какие темы и языки используются и как долго. Случайный идентификатор на этом устройстве, без имени, email и IP-адреса. При отключении этой опции идентификатор удаляется.</string>
+    <string name="premium">Premium</string>
     <string name="go_ad_free">Отключить рекламу</string>
     <string name="ad_free">Без рекламы</string>
     <string name="active_subscription">Активная подписка</string>
@@ -82,9 +84,9 @@
     <string name="paused">Пауза</string>
     <string name="play">Воспроизвести</string>
     <string name="pause">Пауза</string>
-    <string name="loading">Загрузка\u2026</string>
-    <string name="generating">Генерация\u2026</string>
-    <string name="generating_progress">Генерация\u2026 %d%%</string>
+    <string name="loading">Загрузка…</string>
+    <string name="generating">Генерация…</string>
+    <string name="generating_progress">Генерация… %d%%</string>
     <string name="generate_episode">Создать выпуск</string>
     <string name="regenerate">Пересоздать</string>
     <string name="episode_history">История выпусков</string>
@@ -92,7 +94,9 @@
     <string name="skip_forward">Вперёд на 15 секунд</string>
     <string name="skip_back_mini">Назад</string>
     <string name="skip_forward_mini">Вперёд</string>
-    <string name="buffering">Буферизация\u2026</string>
+    <string name="buffering">Буферизация…</string>
+    <string name="playback_error_stream">Не удаётся подключиться к радио. Проверьте подключение и попробуйте ещё раз.</string>
+    <string name="playback_error_episode">Не удаётся загрузить это аудио. Проверьте подключение и попробуйте ещё раз.</string>
     <string name="sleep_timer">Таймер сна</string>
     <string name="timer">Таймер</string>
     <string name="sleep_timer_5_min">5 мин</string>
@@ -124,7 +128,7 @@
 
     <!-- Onboarding -->
     <string name="welcome_to_audexa">Добро пожаловать в Audexa</string>
-    <string name="welcome_description">Ваше персонализированное AI-радио, которое превращает последние новости, технологии и темы в увлекательные сводки в стиле подкастов.</string>
+    <string name="welcome_description">Ваше персонализированное ИИ-радио, которое превращает последние новости, технологии и темы в увлекательные сводки в стиле подкастов.</string>
     <string name="get_started">Начать</string>
     <string name="connect_your_account">Подключите аккаунт</string>
     <string name="connect_account_description">Привяжите аккаунт Google для получения персонализированных ежедневных сводок из почты и календаря.</string>
@@ -145,17 +149,17 @@
     <!-- Linked Accounts -->
     <string name="enable_daily_brief">Включить ежедневную сводку</string>
     <string name="enable_daily_brief_description">Подключите Gmail для получения персонализированных ежедневных сводок на основе ваших писем. Мы обобщим важные обновления, чтобы вы начинали день в курсе событий.</string>
-    <string name="google_calendar">Google Календарь</string>
+    <string name="google_calendar">Google Calendar</string>
     <string name="outlook">Outlook</string>
     <string name="daily_brief_sources">Источники ежедневной сводки</string>
     <string name="email_summaries">Сводки по email</string>
-    <string name="include_email_in_brief">Включить сводки email в ежедневную сводку</string>
+    <string name="include_email_in_brief">Включить сводки по email в ежедневную сводку</string>
     <string name="calendar_events">События календаря</string>
     <string name="include_calendar_in_brief">Включить предстоящие события в ежедневную сводку</string>
     <string name="unlink">Отвязать</string>
     <string name="soon">Скоро</string>
     <string name="your_privacy">Ваша конфиденциальность</string>
-    <string name="privacy_note">Чтобы создать сводку, наш сервер читает ваши недавние письма Gmail и события календаря. Имя отправителя, тема и первые 100 символов важнейших писем, а также названия, время и места событий отправляются в Anthropic, нашему поставщику ИИ, для написания сценария. Мы не храним текст ваших писем, но готовая аудиосводка хранится, пока вы не удалите аккаунт. Отключение не удаляет доступ к Google, сохранённый на нашем сервере; это делает «Удалить аккаунт» в профиле.</string>
+    <string name="privacy_note">Чтобы создать сводку, наш сервер читает ваши недавние письма Gmail и события календаря. Имя отправителя, тема и первые 100 символов важнейших писем, а также названия, время и места событий отправляются в Anthropic, нашему поставщику ИИ, для написания сценария. Мы не храним текст ваших писем, но готовая аудиосводка хранится, пока вы не удалите аккаунт. Отвязывание не удаляет доступ к Google, сохранённый на нашем сервере; это делает «Удалить аккаунт» в профиле.</string>
     <string name="microsoft_outlook_coming_soon">Привязка Microsoft Outlook будет доступна в будущем обновлении.</string>
     <string name="gmail_linking_cancelled">Привязка Gmail отменена</string>
     <string name="calendar_linking_cancelled">Привязка календаря отменена</string>
@@ -169,12 +173,65 @@
 
     <!-- Language Settings -->
     <string name="language">Язык</string>
-    <string name="language_description">Выберите предпочтительный язык для выпусков подкаста.</string>
+    <string name="language_coming_soon">Скоро</string>
+    <string name="language_coming_soon_toast">Пока недоступно. Мы отметили ваш интерес.</string>
+    <string name="generating_language">Готовим ваш выпуск (язык: %1$s). Первый может занять несколько минут.</string>
+    <string name="language_fallback_note">Подкасты пока недоступны на этом языке (%1$s), поэтому мы выбрали для вас язык: %2$s.</string>
+    <string name="error_language_unavailable">Этот язык пока недоступен.</string>
+    <string name="error_daily_limit">Сегодняшний лимит выпусков на новых языках исчерпан. Попробуйте завтра.</string>
+    <string name="language_page_title">Выберите язык</string>
+    <string name="language_page_subtitle">Подкасты доступны на шести языках. Радио работает только на английском. Ваш выбор помогает нам решить, что добавить.</string>
+    <string name="language_description">Выберите предпочтительный язык.</string>
     <string name="language_note">Подкасты доступны на английском, испанском, французском, немецком, португальском и итальянском языках. Первый выпуск на новом языке готовится несколько минут. Радио работает только на английском. Для других языков мы записываем, какой язык вы выбрали (без вашего имени), чтобы решить, что добавить дальше.</string>
     <string name="selected">Выбрано</string>
 
+    <!-- App language (the language of menus and buttons; separate from the podcast language) -->
+    <string name="app_language">Язык приложения</string>
+    <string name="app_language_follow_phone">Как в телефоне</string>
+    <string name="app_language_description">Язык меню и кнопок. Подкасты остаются на языке, который вы выбрали выше.</string>
+    <string name="ui_lang_offer_title">Показать приложение ещё и на языке «%1$s»?</string>
+    <string name="ui_lang_offer_body">Изменятся только меню и кнопки. Это можно изменить в любое время в настройках профиля.</string>
+    <string name="ui_lang_offer_yes">Да, язык: %1$s</string>
+    <string name="ui_lang_offer_no">Нет, оставить: %1$s</string>
+
+    <!-- Suggest a topic -->
+    <string name="suggest_topic">Предложить тему</string>
+    <string name="suggest_topic_inline">Не нашли свою тему? Предложите её</string>
+    <string name="suggest_topic_description">Расскажите, что вы хотели бы послушать, и мы рассмотрим возможность добавить это.</string>
+    <string name="suggest_topic_name_label">Название темы</string>
+    <string name="suggest_topic_name_hint">например, Квантовые вычисления</string>
+    <string name="suggest_topic_details_label">Описание (необязательно)</string>
+    <string name="suggest_topic_details_hint">О чём должна быть эта тема?</string>
+    <string name="suggest_topic_thanks">Спасибо! Мы просматриваем предложения и добавляем лучшие.</string>
+    <string name="submit">Отправить</string>
+    <string name="submitting">Отправка…</string>
+    <string name="no_topics_title">Сейчас нет доступных тем.</string>
+    <string name="no_topics_hint">Нажмите «Продолжить», чтобы завершить настройку — темы можно выбрать позже на главном экране.</string>
+
+    <!-- Live radio -->
+    <string name="radio_languages">Языки радио</string>
+    <string name="radio_languages_note">Выбранные станции появятся на главном экране. Должен быть включён хотя бы один язык.</string>
+    <string name="radio_home_tagline">Новости на базе ИИ 24/7 · В ЭФИРЕ</string>
+    <string name="radio_tagline">Новости и беседы на базе ИИ 24/7</string>
+    <string name="share_whats_playing">Поделиться текущим эфиром</string>
+    <string name="share_station">Поделиться: %1$s</string>
+    <string name="radio_up_next">Далее</string>
+    <string name="radio_requests">Запросы</string>
+    <string name="radio_generating">Создаётся</string>
+    <string name="radio_generating_badge">создаётся</string>
+    <string name="radio_request_hint">Нажмите на микрофон, чтобы заказать тему в живую очередь</string>
+    <string name="radio_request_topic">Заказать тему</string>
+    <string name="radio_request_title">Заказать тему</string>
+    <string name="radio_request_description">Скажите Audexa Radio, что вы хотите услышать. Тема попадёт в живую очередь.</string>
+    <string name="radio_add_to_queue">Добавить в живую очередь</string>
+    <string name="radio_chat_hint">Чат со слушателями...</string>
+    <string name="radio_chat">Чат</string>
+    <string name="radio_now_badge">СЕЙЧАС</string>
+    <string name="radio_music">Музыка</string>
+    <string name="send">Отправить</string>
+
     <!-- Voice Settings -->
-    <string name="loading_voices">Загрузка голосов\u2026</string>
+    <string name="loading_voices">Загрузка голосов…</string>
     <string name="no_voice_pairs">Нет доступных пар голосов</string>
     <string name="no_voices">Нет доступных голосов</string>
     <string name="voice_pairs_description">Выберите предустановленную пару голосов для ведущих подкаста.</string>
@@ -226,22 +283,80 @@
     <string name="skip_ad">Пропустить рекламу</string>
     <string name="ad_content_description">Реклама</string>
 
+    <!-- Radio Call-In -->
+    <string name="call_to_request">Позвоните, чтобы заказать тему</string>
+    <string name="call_in_label">Звоните: (833) 398-1230</string>
+
     <!-- Splash Screen -->
-    <string name="splash_tagline">Ваша AI-аудиосводка</string>
+    <string name="splash_tagline">Ваша аудиосводка на базе ИИ</string>
 
     <!-- Notifications (non-composable) -->
     <string name="notification_good_morning">Доброе утро!</string>
     <string name="notification_daily_brief_text">Время для ежедневной сводки. Нажмите, чтобы узнать о письмах, календаре и новостях.</string>
     <string name="daily_brief_channel_description">Уведомления-напоминания о ежедневной сводке</string>
+    <string name="radio_topic_channel_name">Напоминания о темах на радио</string>
+    <string name="radio_topic_channel_description">Уведомлять, когда тема из закладок звучит на Audexa Radio</string>
+    <string name="radio_topic_notification_title">Сейчас на Audexa Radio</string>
+    <string name="radio_topic_notification_body">%1$s сейчас в эфире. Нажмите, чтобы подключиться.</string>
 
     <!-- Daily Brief Playback -->
     <string name="daily_brief_title_format">Ежедневная сводка - %s</string>
     <string name="daily_brief_description">Ваша персонализированная утренняя сводка</string>
 
-    <!-- Language selection page -->
-    <string name="language_page_title">Выберите язык</string>
-    <string name="language_page_subtitle">Подкасты доступны на шести языках. Радио работает только на английском. Ваш выбор помогает нам решить, что добавить.</string>
-    <string name="language_coming_soon">Скоро</string>
-    <string name="language_coming_soon_toast">Пока недоступно. Мы отметили ваш интерес.</string>
-    <string name="language_fallback_note">Подкасты пока недоступны на этом языке (%1$s), поэтому мы выбрали для вас язык: %2$s.</string>
+    <!-- Morning briefing: one local notification per day, opt-in after first play -->
+    <string name="briefing_notification_title">Сегодня в Audexa</string>
+    <string name="briefing_notification_body_fallback">Audexa Radio сейчас в эфире. Нажмите, чтобы послушать.</string>
+    <plurals name="briefing_notification_body_topics">
+        <item quantity="one">%1$d новый тематический подкаст: %2$s. Нажмите, чтобы послушать.</item>
+        <item quantity="few">%1$d новых тематических подкаста: %2$s. Нажмите, чтобы послушать.</item>
+        <item quantity="many">%1$d новых тематических подкастов: %2$s. Нажмите, чтобы послушать.</item>
+        <item quantity="other">%1$d нового тематического подкаста: %2$s. Нажмите, чтобы послушать.</item>
+    </plurals>
+    <string name="briefing_names_with_more">%1$s и ещё %2$d</string>
+    <string name="briefing_optin_title">Напомнить, когда будут готовы новые тематические подкасты?</string>
+    <string name="briefing_optin_accept">Напомнить</string>
+    <string name="briefing_optin_decline">Не сейчас</string>
+
+    <!-- Ask the hosts (English only for now) -->
+    <string name="ask_entry_title">Спросите ведущих</string>
+    <string name="ask_entry_subtitle">Сегодняшний матч, запуск, новость: два ИИ-ведущих обсудят это</string>
+    <string name="ask_title">Спросите ведущих</string>
+    <string name="ask_intro">Опишите событие или новость. Ведущие говорят только о том, что сообщают свежие заголовки, и скажут вам, если материалов недостаточно. Выпуски создаются ИИ и занимают минуту-две.</string>
+    <string name="ask_field_label">О чём им поговорить?</string>
+    <string name="ask_field_placeholder">например, Кто выиграл сегодняшний матч «Уорриорз»?</string>
+    <string name="ask_counter">%1$d/%2$d</string>
+    <string name="ask_language_label">Язык</string>
+    <string name="ask_submit">Спросить</string>
+    <string name="ask_sending">Отправляем запрос...</string>
+    <string name="ask_stage_queued">Ждём свободную студию...</string>
+    <string name="ask_stage_reviewing">Проверяем ваш запрос...</string>
+    <string name="ask_stage_searching">Читаем свежие заголовки...</string>
+    <string name="ask_stage_writing">Ведущие готовятся...</string>
+    <string name="ask_stage_recording">Записываем выпуск...</string>
+    <string name="ask_stage_working">Работаем...</string>
+    <string name="ask_progress_description">Прогресс: %1$d%%</string>
+    <string name="ask_leave_hint">Можно закрыть этот экран. Когда вернётесь, увидите тот же выпуск.</string>
+    <string name="ask_ai_note">Обсуждение двух ИИ-ведущих, созданное ИИ на основе свежих новостных заголовков.</string>
+    <string name="ask_length">Длительность: %1$s</string>
+    <string name="ask_play">Воспроизвести выпуск</string>
+    <string name="ask_pause">Пауза</string>
+    <string name="ask_share">Поделиться</string>
+    <string name="ask_share_chooser">Поделиться этим выпуском</string>
+    <string name="ask_share_failed">Не удалось открыть меню «Поделиться»</string>
+    <string name="ask_sources_title">Заголовки, на которых основан выпуск</string>
+    <string name="ask_sources_note">Ведущие обсуждают только то, о чём сообщают эти заголовки. Полные материалы смотрите в источниках.</string>
+    <string name="ask_ask_another">Задать ещё вопрос</string>
+    <string name="ask_edit_question">Изменить вопрос</string>
+    <string name="ask_check_again">Проверить снова</string>
+    <string name="ask_unavailable">Функция «Спросите ведущих» сейчас недоступна.</string>
+    <string name="ask_loading">Проверяем доступность...</string>
+    <string name="ask_err_input">Проверьте свой вопрос и попробуйте ещё раз.</string>
+    <string name="ask_err_limited">Функция «Спросите ведущих» перегружена или достигла лимита. Попробуйте позже.</string>
+    <string name="ask_err_not_found">Мы больше не можем найти этот запрос. Задайте вопрос ещё раз.</string>
+    <string name="ask_err_offline">Нет соединения. Проверьте интернет и попробуйте ещё раз.</string>
+    <string name="ask_err_timeout">Это занимает больше времени, чем ожидалось. Выпуск всё ещё может появиться.</string>
+    <string name="ask_err_server">Что-то пошло не так. Попробуйте ещё раз.</string>
+    <string name="ask_err_refused">Ведущие не могут сделать выпуск на эту тему.</string>
+    <string name="ask_err_no_coverage">Мы не нашли достаточно свежих новостей по этой теме, поэтому выпуск не создан.</string>
+    <string name="ask_err_failed">Не удалось создать выпуск. Попробуйте ещё раз.</string>
 </resources>

@@ -6,7 +6,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.outlined.Circle
 import androidx.compose.material3.*
@@ -33,7 +33,7 @@ fun RadioLanguagesScreen(
             TopAppBar(
                 title = {
                     Text(
-                        "Radio Languages",
+                        androidx.compose.ui.res.stringResource(com.kreativekoala.audexa.R.string.radio_languages),
                         color = MaterialTheme.colorScheme.onBackground,
                         fontWeight = FontWeight.Bold
                     )
@@ -41,8 +41,8 @@ fun RadioLanguagesScreen(
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
                         Icon(
-                            Icons.Default.ArrowBack,
-                            contentDescription = "Back",
+                            Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = androidx.compose.ui.res.stringResource(com.kreativekoala.audexa.R.string.back),
                             tint = MaterialTheme.colorScheme.onBackground
                         )
                     }
@@ -127,7 +127,7 @@ fun RadioLanguagesScreen(
             item {
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = "Selected stations will appear on your home screen. At least one language must be enabled.",
+                    text = androidx.compose.ui.res.stringResource(com.kreativekoala.audexa.R.string.radio_languages_note),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.padding(horizontal = 4.dp)

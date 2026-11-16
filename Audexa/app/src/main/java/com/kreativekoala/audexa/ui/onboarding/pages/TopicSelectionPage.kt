@@ -58,14 +58,14 @@ fun TopicSelectionPage(
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 Text(
-                    text = "Suggest a Topic",
+                    text = androidx.compose.ui.res.stringResource(com.kreativekoala.audexa.R.string.suggest_topic),
                     style = MaterialTheme.typography.headlineSmall,
                     color = MaterialTheme.colorScheme.onSurface,
                     fontWeight = FontWeight.Bold
                 )
 
                 Text(
-                    text = "Tell us what you'd like to listen to and we'll consider adding it.",
+                    text = androidx.compose.ui.res.stringResource(com.kreativekoala.audexa.R.string.suggest_topic_description),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -73,8 +73,8 @@ fun TopicSelectionPage(
                 OutlinedTextField(
                     value = suggestName,
                     onValueChange = { suggestName = it },
-                    label = { Text("Topic name") },
-                    placeholder = { Text("e.g. Quantum Computing") },
+                    label = { Text(androidx.compose.ui.res.stringResource(com.kreativekoala.audexa.R.string.suggest_topic_name_label)) },
+                    placeholder = { Text(androidx.compose.ui.res.stringResource(com.kreativekoala.audexa.R.string.suggest_topic_name_hint)) },
                     modifier = Modifier.fillMaxWidth(),
                     singleLine = true,
                     shape = RoundedCornerShape(12.dp),
@@ -95,7 +95,7 @@ fun TopicSelectionPage(
                         isSuggesting = false
                         showSuggestSheet = false
                         suggestName = ""
-                        Toast.makeText(context, "Thanks, we review suggestions and add the good ones.", Toast.LENGTH_LONG).show()
+                        Toast.makeText(context, context.getString(R.string.suggest_topic_thanks), Toast.LENGTH_LONG).show()
                     },
                     modifier = Modifier.fillMaxWidth(),
                     enabled = suggestName.isNotBlank() && !isSuggesting,
@@ -103,7 +103,7 @@ fun TopicSelectionPage(
                     colors = ButtonDefaults.buttonColors(containerColor = AccentOrange)
                 ) {
                     Text(
-                        text = if (isSuggesting) "Submitting..." else "Submit",
+                        text = if (isSuggesting) androidx.compose.ui.res.stringResource(com.kreativekoala.audexa.R.string.submitting) else androidx.compose.ui.res.stringResource(com.kreativekoala.audexa.R.string.submit),
                         style = MaterialTheme.typography.bodyLarge,
                         fontWeight = FontWeight.SemiBold,
                         modifier = Modifier.padding(vertical = 4.dp)
@@ -165,13 +165,13 @@ fun TopicSelectionPage(
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     Text(
-                        text = "No topics available right now.",
+                        text = androidx.compose.ui.res.stringResource(com.kreativekoala.audexa.R.string.no_topics_title),
                         style = MaterialTheme.typography.bodyLarge,
                         color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f),
                         textAlign = TextAlign.Center
                     )
                     Text(
-                        text = "Tap Continue to finish setup — you can pick topics later from the Home screen.",
+                        text = androidx.compose.ui.res.stringResource(com.kreativekoala.audexa.R.string.no_topics_hint),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.5f),
                         textAlign = TextAlign.Center
@@ -217,7 +217,7 @@ fun TopicSelectionPage(
             )
             Spacer(modifier = Modifier.width(8.dp))
             Text(
-                text = "Don't see your topic? Suggest one",
+                text = androidx.compose.ui.res.stringResource(com.kreativekoala.audexa.R.string.suggest_topic_inline),
                 style = MaterialTheme.typography.bodyMedium,
                 fontWeight = FontWeight.Medium
             )
@@ -265,7 +265,7 @@ fun TopicSelectionPage(
                     text = if (selectedCount > 0)
                         stringResource(R.string.complete_setup)
                     else
-                        "Continue",
+                        stringResource(R.string.continue_button),
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.SemiBold
                 )

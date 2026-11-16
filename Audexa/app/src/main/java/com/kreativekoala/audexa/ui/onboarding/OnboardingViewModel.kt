@@ -10,6 +10,8 @@ import com.kreativekoala.audexa.data.local.PreferencesManager
 import com.kreativekoala.audexa.data.model.ContentLanguage
 import com.kreativekoala.audexa.data.model.SupportedLanguage
 import com.kreativekoala.audexa.data.model.Topic
+import com.kreativekoala.audexa.data.model.UiLanguage
+import com.kreativekoala.audexa.util.AppLanguageManager
 import com.kreativekoala.audexa.data.remote.SuggestTopicRequest
 import com.kreativekoala.audexa.data.repository.AuthRepository
 import com.kreativekoala.audexa.data.repository.TopicRepository
@@ -34,6 +36,9 @@ data class OnboardingUiState(
     val selectedLanguage: SupportedLanguage = SupportedLanguage.ENGLISH,
     // Device language that podcasts do not exist in (display name), so the language page can say what we picked instead.
     val unsupportedDeviceLanguage: String? = null,
+    // Pending offer "Show the app in <language> too?" after the user picked a podcast language the interface is translated into.
+    // Held here (not in the screen) so it survives rotation. Null = nothing to ask.
+    val uiLanguageOffer: UiLanguage? = null,
     val isLoadingTopics: Boolean = false,
     val isCompleting: Boolean = false,
     val error: String? = null
@@ -44,7 +49,8 @@ class OnboardingViewModel @Inject constructor(
     private val preferencesManager: PreferencesManager,
     private val authRepository: AuthRepository,
     private val topicRepository: TopicRepository,
-    private val briefingManager: BriefingManager
+    private val briefingManager: BriefingManager,
+    private val appLanguageManager: AppLanguageManager
 ) : ViewModel() {
 
     companion object {
@@ -67,7 +73,8 @@ class OnboardingViewModel @Inject constructor(
             // Auto-detect device locale
             // Only a language podcasts can be generated in may be pre-selected (and later saved): a Japanese, Korean, Hindi, Chinese
             // or Tagalog device gets the closest supported language (English by default) plus a one-line explanation.
-            val deviceLocale = java.util.Locale.getDefault().language
+            // The phone's own language, not the app language: choosing the app interface language must not change the podcast language.
+            val deviceLocale = systemLocaleTag().substringBefore('-')
             val resolved = ContentLanguage.resolve(deviceLocale)
 
             _uiState.value = _uiState.value.copy(
@@ -128,9 +135,24 @@ class OnboardingViewModel @Inject constructor(
     // Language selection
     fun selectLanguage(language: SupportedLanguage) {
         viewModelScope.launch { briefingManager.logEvent(BriefingManager.EVENT_LANGUAGE_PICKED, lang = language.code) }
+        viewModelScope.launch {
+            // Interface language offer: asked, never applied silently. A "coming soon" podcast language still gets it, because the
+            // interface can be in that language even though podcasts cannot yet.
+            val offer = appLanguageManager.offerFor(language.code, systemLocaleTag())
+            if (offer != null) _uiState.value = _uiState.value.copy(uiLanguageOffer = offer)
+        }
         if (!language.podcastAvailable) return // coming soon: the pick is recorded, the selection stays
         _uiState.value = _uiState.value.copy(selectedLanguage = language, unsupportedDeviceLanguage = null)
         loadTopics() // Reload with new language
+    }
+
+    /** Answer to the interface language offer: Yes switches the app language, No keeps it and is remembered. */
+    fun answerUiLanguageOffer(accept: Boolean) {
+        val offer = _uiState.value.uiLanguageOffer ?: return
+        _uiState.value = _uiState.value.copy(uiLanguageOffer = null)
+        viewModelScope.launch {
+            if (accept) appLanguageManager.acceptOffer(offer) else appLanguageManager.declineOffer(offer)
+        }
     }
 
     // Page 2: Account linking
@@ -259,3 +281,7 @@ fun languageDisplayName(code: String): String {
     val name = java.util.Locale.forLanguageTag(code).getDisplayLanguage(java.util.Locale.getDefault())
     return name.takeIf { it.isNotBlank() && !it.equals(code, ignoreCase = true) } ?: code
 }
+
+/** The phone's system language tag (not the per-app language), for example "de-DE". */
+internal fun systemLocaleTag(): String =
+    androidx.core.os.ConfigurationCompat.getLocales(android.content.res.Resources.getSystem().configuration)[0]?.toLanguageTag().orEmpty()

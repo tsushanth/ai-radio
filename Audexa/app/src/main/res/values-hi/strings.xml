@@ -1,247 +1,361 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Audexa</string>
-    <string name="app_tagline">\u0906\u092a\u0915\u093e \u0928\u093f\u091c\u0940 AI \u0930\u0947\u0921\u093f\u092f\u094b</string>
+    <string name="app_tagline">आपका निजी AI रेडियो</string>
 
     <!-- Auth -->
-    <string name="sign_in_with_google">Google \u0938\u0947 \u0938\u093e\u0907\u0928 \u0907\u0928 \u0915\u0930\u0947\u0902</string>
-    <string name="sign_out">\u0938\u093e\u0907\u0928 \u0906\u0909\u091f</string>
-    <string name="delete_account">\u0916\u093e\u0924\u093e \u0939\u091f\u093e\u090f\u0902</string>
-    <string name="auth_description">\u0906\u092a\u0915\u0940 \u0930\u0941\u091a\u093f \u0915\u0947 \u0935\u093f\u0937\u092f\u094b\u0902 \u092a\u0930 AI \u0926\u094d\u0935\u093e\u0930\u093e \u092c\u0928\u093e\u090f \u0917\u090f \u092a\u0949\u0921\u0915\u093e\u0938\u094d\u091f \u0938\u0941\u0928\u0947\u0902\u0964 \u0935\u094d\u092f\u0915\u094d\u0924\u093f\u0917\u0924 \u0926\u0948\u0928\u093f\u0915 \u0938\u093e\u0930\u093e\u0902\u0936 \u092a\u094d\u0930\u093e\u092a\u094d\u0924 \u0915\u0930\u0928\u0947 \u0915\u0947 \u0932\u093f\u090f \u0938\u0947\u091f\u093f\u0902\u0917\u094d\u0938 \u092e\u0947\u0902 \u0905\u092a\u0928\u093e \u0908\u092e\u0947\u0932 \u0932\u093f\u0902\u0915 \u0915\u0930\u0947\u0902\u0964</string>
-    <string name="auth_terms">\u091c\u093e\u0930\u0940 \u0930\u0916\u0915\u0930, \u0906\u092a \u0939\u092e\u093e\u0930\u0940 \u0938\u0947\u0935\u093e \u0936\u0930\u094d\u0924\u094b\u0902 \u0914\u0930 \u0917\u094b\u092a\u0928\u0940\u092f\u0924\u093e \u0928\u0940\u0924\u093f \u0938\u0947 \u0938\u0939\u092e\u0924 \u0939\u094b\u0924\u0947 \u0939\u0948\u0902</string>
-    <string name="start">\u0936\u0941\u0930\u0942 \u0915\u0930\u0947\u0902</string>
+    <string name="sign_in_with_google">Google से साइन इन करें</string>
+    <string name="sign_out">साइन आउट</string>
+    <string name="delete_account">खाता हटाएं</string>
+    <string name="auth_description">आपकी रुचि के विषयों पर AI द्वारा बनाए गए पॉडकास्ट सुनें। व्यक्तिगत दैनिक सारांश प्राप्त करने के लिए सेटिंग्स में अपना ईमेल लिंक करें।</string>
+    <string name="auth_terms">जारी रखकर, आप हमारी सेवा शर्तों और गोपनीयता नीति से सहमत होते हैं</string>
+    <string name="start">शुरू करें</string>
 
     <!-- Navigation -->
-    <string name="nav_home">\u0939\u094b\u092e</string>
-    <string name="nav_profile">\u092a\u094d\u0930\u094b\u092b\u093e\u0907\u0932</string>
-    <string name="back">\u0935\u093e\u092a\u0938</string>
-    <string name="close">\u092c\u0902\u0926 \u0915\u0930\u0947\u0902</string>
-    <string name="cancel">\u0930\u0926\u094d\u0926 \u0915\u0930\u0947\u0902</string>
-    <string name="ok">\u0920\u0940\u0915 \u0939\u0948</string>
-    <string name="delete">\u0939\u091f\u093e\u090f\u0902</string>
-    <string name="retry">\u092a\u0941\u0928\u0903 \u092a\u094d\u0930\u092f\u093e\u0938 \u0915\u0930\u0947\u0902</string>
-    <string name="enable">\u0938\u0915\u094d\u0930\u093f\u092f \u0915\u0930\u0947\u0902</string>
+    <string name="nav_home">होम</string>
+    <string name="nav_profile">प्रोफ़ाइल</string>
+    <string name="back">वापस</string>
+    <string name="close">बंद करें</string>
+    <string name="cancel">रद्द करें</string>
+    <string name="ok">ठीक है</string>
+    <string name="delete">हटाएं</string>
+    <string name="retry">पुनः प्रयास करें</string>
+    <string name="enable">सक्रिय करें</string>
 
     <!-- Tabs -->
-    <string name="tab_for_you">\u0906\u092a\u0915\u0947 \u0932\u093f\u090f</string>
-    <string name="tab_discover">\u0916\u094b\u091c\u0947\u0902</string>
+    <string name="tab_for_you">आपके लिए</string>
+    <string name="tab_discover">खोजें</string>
 
     <!-- Home -->
-    <string name="good_morning">\u0938\u0941\u092a\u094d\u0930\u092d\u093e\u0924</string>
-    <string name="good_afternoon">\u0928\u092e\u0938\u094d\u0915\u093e\u0930</string>
-    <string name="good_evening">\u0936\u0941\u092d \u0938\u0902\u0927\u094d\u092f\u093e</string>
-    <string name="daily_brief">\u0926\u0948\u0928\u093f\u0915 \u0938\u093e\u0930\u093e\u0902\u0936</string>
-    <string name="daily_brief_subtitle">\u0926\u0948\u0928\u093f\u0915 \u0938\u093e\u0930\u093e\u0902\u0936 \u2022 %s</string>
-    <string name="keep_listening">\u0938\u0941\u0928\u0924\u0947 \u0930\u0939\u0947\u0902</string>
-    <string name="your_topics">\u0906\u092a\u0915\u0947 \u0935\u093f\u0937\u092f</string>
-    <string name="topic_podcasts">\u0935\u093f\u0937\u092f \u092a\u0949\u0921\u0915\u093e\u0938\u094d\u091f</string>
-    <string name="recommended_for_you">\u0906\u092a\u0915\u0947 \u0932\u093f\u090f \u0905\u0928\u0941\u0936\u0902\u0938\u093f\u0924</string>
-    <string name="more_for_you">\u0906\u092a\u0915\u0947 \u0932\u093f\u090f \u0914\u0930</string>
-    <string name="all_topics">\u0938\u092d\u0940 \u0935\u093f\u0937\u092f</string>
-    <string name="matching_topics">\u092e\u0947\u0932 \u0916\u093e\u0924\u0947 \u0935\u093f\u0937\u092f</string>
-    <string name="tap_to_explore">\u0916\u094b\u091c\u0928\u0947 \u0914\u0930 \u091a\u0932\u093e\u0928\u0947 \u0915\u0947 \u0932\u093f\u090f \u091f\u0948\u092a \u0915\u0930\u0947\u0902</string>
-    <string name="link_account_prompt">\u0935\u094d\u092f\u0915\u094d\u0924\u093f\u0917\u0924 \u0938\u093e\u0930\u093e\u0902\u0936 \u092c\u0928\u093e\u0928\u0947 \u0915\u0947 \u0932\u093f\u090f \u0905\u092a\u0928\u093e \u0908\u092e\u0947\u0932 \u0932\u093f\u0902\u0915 \u0915\u0930\u0947\u0902</string>
-    <string name="link_account">\u0916\u093e\u0924\u093e \u0932\u093f\u0902\u0915 \u0915\u0930\u0947\u0902</string>
-    <string name="find_new_shows">\u0928\u090f \u0936\u094b \u0916\u094b\u091c\u0947\u0902</string>
-    <string name="search">\u0916\u094b\u091c\u0947\u0902</string>
-    <string name="clear">\u0938\u093e\u092b \u0915\u0930\u0947\u0902</string>
-    <string name="no_results_for">\"%s\" \u0915\u0947 \u0932\u093f\u090f \u0915\u094b\u0908 \u092a\u0930\u093f\u0923\u093e\u092e \u0928\u0939\u0940\u0902</string>
+    <string name="good_morning">सुप्रभात</string>
+    <string name="good_afternoon">शुभ दोपहर</string>
+    <string name="good_evening">शुभ संध्या</string>
+    <string name="daily_brief">दैनिक सारांश</string>
+    <string name="daily_brief_subtitle">दैनिक सारांश • %s</string>
+    <string name="keep_listening">सुनते रहें</string>
+    <string name="your_topics">आपके विषय</string>
+    <string name="topic_podcasts">विषय पॉडकास्ट</string>
+    <string name="recommended_for_you">आपके लिए अनुशंसित</string>
+    <string name="more_for_you">आपके लिए और</string>
+    <string name="all_topics">सभी विषय</string>
+    <string name="matching_topics">मेल खाते विषय</string>
+    <string name="tap_to_explore">खोजने और चलाने के लिए टैप करें</string>
+    <string name="link_account_prompt">व्यक्तिगत सारांश बनाने के लिए अपना ईमेल लिंक करें</string>
+    <string name="link_account">खाता लिंक करें</string>
+    <string name="find_new_shows">नए शो खोजें</string>
+    <string name="search">खोजें</string>
+    <string name="clear">साफ़ करें</string>
+    <string name="no_results_for">\"%s\" के लिए कोई परिणाम नहीं</string>
 
     <!-- Profile -->
-    <string name="profile">\u092a\u094d\u0930\u094b\u092b\u093e\u0907\u0932</string>
-    <string name="linked_accounts">\u0932\u093f\u0902\u0915 \u0915\u093f\u090f \u0917\u090f \u0916\u093e\u0924\u0947</string>
-    <string name="preferences">\u092a\u094d\u0930\u093e\u0925\u092e\u093f\u0915\u0924\u093e\u090f\u0902</string>
-    <string name="podcast_language">\u092a\u0949\u0921\u0915\u093e\u0938\u094d\u091f \u092d\u093e\u0937\u093e</string>
-    <string name="briefing_time">\u0938\u093e\u0930\u093e\u0902\u0936 \u0915\u093e \u0938\u092e\u092f</string>
-    <string name="topics">\u0935\u093f\u0937\u092f</string>
-    <string name="voice_preference">\u0906\u0935\u093e\u091c \u092a\u094d\u0930\u093e\u0925\u092e\u093f\u0915\u0924\u093e</string>
-    <string name="hidden_topics">\u091b\u093f\u092a\u0947 \u0939\u0941\u090f \u0935\u093f\u0937\u092f</string>
-    <string name="about">\u091c\u093e\u0928\u0915\u093e\u0930\u0940</string>
-    <string name="version">\u0938\u0902\u0938\u094d\u0915\u0930\u0923</string>
-    <string name="terms_of_service">\u0938\u0947\u0935\u093e \u0936\u0930\u094d\u0924\u0947\u0902</string>
-    <string name="privacy_policy">\u0917\u094b\u092a\u0928\u0940\u092f\u0924\u093e \u0928\u0940\u0924\u093f</string>
-    <string name="premium">\u092a\u094d\u0930\u0940\u092e\u093f\u092f\u092e</string>
-    <string name="go_ad_free">\u0935\u093f\u091c\u094d\u091e\u093e\u092a\u0928 \u092e\u0941\u0915\u094d\u0924</string>
-    <string name="ad_free">\u0935\u093f\u091c\u094d\u091e\u093e\u092a\u0928 \u092e\u0941\u0915\u094d\u0924</string>
-    <string name="active_subscription">\u0938\u0915\u094d\u0930\u093f\u092f \u0938\u0926\u0938\u094d\u092f\u0924\u093e</string>
-    <string name="remove_all_ads">\u0938\u092d\u0940 \u0935\u093f\u091c\u094d\u091e\u093e\u092a\u0928 \u0939\u091f\u093e\u090f\u0902</string>
-    <string name="email_accounts">\u0908\u092e\u0947\u0932 \u0916\u093e\u0924\u0947</string>
-    <string name="app_theme">\u090f\u092a \u0925\u0940\u092e</string>
-    <string name="voice_settings">\u0906\u0935\u093e\u091c \u0938\u0947\u091f\u093f\u0902\u0917\u094d\u0938</string>
-    <string name="choose_podcast_voices">\u092a\u0949\u0921\u0915\u093e\u0938\u094d\u091f \u0906\u0935\u093e\u091c\u0947\u0902 \u091a\u0941\u0928\u0947\u0902</string>
-    <string name="hidden_count">%d \u091b\u093f\u092a\u0947 \u0939\u0941\u090f</string>
-    <string name="notifications">\u0938\u0942\u091a\u0928\u093e\u090f\u0902</string>
-    <string name="daily_brief_reminders">\u0926\u0948\u0928\u093f\u0915 \u0938\u093e\u0930\u093e\u0902\u0936 \u0930\u093f\u092e\u093e\u0907\u0902\u0921\u0930</string>
-    <string name="sign_out_confirm">\u0915\u094d\u092f\u093e \u0906\u092a \u0935\u093e\u0915\u0908 \u092e\u0947\u0902 \u0938\u093e\u0907\u0928 \u0906\u0909\u091f \u0915\u0930\u0928\u093e \u091a\u093e\u0939\u0924\u0947 \u0939\u0948\u0902?</string>
-    <string name="delete_account_confirm">\u0915\u094d\u092f\u093e \u0906\u092a \u0935\u093e\u0915\u0908 \u092e\u0947\u0902 \u0905\u092a\u0928\u093e \u0916\u093e\u0924\u093e \u0939\u091f\u093e\u0928\u093e \u091a\u093e\u0939\u0924\u0947 \u0939\u0948\u0902? \u092f\u0939 \u092a\u0949\u0921\u0915\u093e\u0938\u094d\u091f, \u092a\u094d\u0930\u093e\u0925\u092e\u093f\u0915\u0924\u093e\u090f\u0902 \u0914\u0930 \u0932\u093f\u0902\u0915 \u0915\u093f\u090f \u0917\u090f \u0916\u093e\u0924\u094b\u0902 \u0938\u0939\u093f\u0924 \u0906\u092a\u0915\u093e \u0938\u092d\u0940 \u0921\u0947\u091f\u093e \u0938\u094d\u0925\u093e\u092f\u0940 \u0930\u0942\u092a \u0938\u0947 \u0939\u091f\u093e \u0926\u0947\u0917\u093e\u0964 \u092f\u0939 \u0915\u094d\u0930\u093f\u092f\u093e \u0935\u093e\u092a\u0938 \u0928\u0939\u0940\u0902 \u0915\u0940 \u091c\u093e \u0938\u0915\u0924\u0940\u0964</string>
+    <string name="profile">प्रोफ़ाइल</string>
+    <string name="linked_accounts">लिंक किए गए खाते</string>
+    <string name="preferences">प्राथमिकताएं</string>
+    <string name="podcast_language">पॉडकास्ट भाषा</string>
+    <string name="briefing_time">सारांश का समय</string>
+    <string name="topics">विषय</string>
+    <string name="voice_preference">आवाज़ प्राथमिकता</string>
+    <string name="hidden_topics">छिपे हुए विषय</string>
+    <string name="about">जानकारी</string>
+    <string name="version">संस्करण</string>
+    <string name="terms_of_service">सेवा शर्तें</string>
+    <string name="privacy_policy">गोपनीयता नीति</string>
+    <string name="analytics_title">गुमनाम उपयोग आंकड़े साझा करें</string>
+    <string name="analytics_subtitle">कौन-से विषय और भाषाएं इस्तेमाल होती हैं और कितनी देर तक। इस डिवाइस पर एक रैंडम आईडी, कोई नाम, ईमेल या IP पता नहीं। इसे बंद करने पर यह आईडी हटा दी जाती है।</string>
+    <string name="premium">Premium</string>
+    <string name="go_ad_free">विज्ञापन-मुक्त बनें</string>
+    <string name="ad_free">विज्ञापन-मुक्त</string>
+    <string name="active_subscription">सक्रिय सदस्यता</string>
+    <string name="remove_all_ads">सभी विज्ञापन हटाएं</string>
+    <string name="email_accounts">ईमेल खाते</string>
+    <string name="app_theme">ऐप थीम</string>
+    <string name="voice_settings">आवाज़ सेटिंग्स</string>
+    <string name="choose_podcast_voices">पॉडकास्ट आवाज़ें चुनें</string>
+    <string name="hidden_count">%d छिपे हुए</string>
+    <string name="notifications">सूचनाएं</string>
+    <string name="daily_brief_reminders">दैनिक सारांश रिमाइंडर</string>
+    <string name="sign_out_confirm">क्या आप वाकई में साइन आउट करना चाहते हैं?</string>
+    <string name="delete_account_confirm">क्या आप वाकई में अपना खाता हटाना चाहते हैं? यह पॉडकास्ट, प्राथमिकताएं और लिंक किए गए खातों सहित आपका सभी डेटा स्थायी रूप से हटा देगा। इसे पूर्ववत नहीं किया जा सकता।</string>
     <string name="delete_account_signin_again">आपका साइन-इन समाप्त हो गया है, इसलिए आपका खाता नहीं हटाया गया और कुछ भी नहीं मिटाया गया। साइन आउट करें, फिर से साइन इन करें और खाता हटाने का दोबारा प्रयास करें।</string>
     <string name="delete_account_failed">हम आपका खाता हटाने का काम पूरा नहीं कर पाए। कृपया अपना कनेक्शन जांचें और फिर से प्रयास करें।</string>
 
     <!-- Player -->
-    <string name="playing">\u091a\u0932 \u0930\u0939\u093e \u0939\u0948</string>
-    <string name="paused">\u0930\u0941\u0915\u093e \u0939\u0941\u0906</string>
-    <string name="play">\u091a\u0932\u093e\u090f\u0902</string>
-    <string name="pause">\u0930\u094b\u0915\u0947\u0902</string>
-    <string name="loading">\u0932\u094b\u0921 \u0939\u094b \u0930\u0939\u093e \u0939\u0948\u2026</string>
-    <string name="generating">\u092c\u0928\u093e\u092f\u093e \u091c\u093e \u0930\u0939\u093e \u0939\u0948\u2026</string>
-    <string name="generating_progress">\u092c\u0928\u093e\u092f\u093e \u091c\u093e \u0930\u0939\u093e \u0939\u0948\u2026 %d%%</string>
-    <string name="generate_episode">\u090f\u092a\u093f\u0938\u094b\u0921 \u092c\u0928\u093e\u090f\u0902</string>
-    <string name="regenerate">\u092b\u093f\u0930 \u0938\u0947 \u092c\u0928\u093e\u090f\u0902</string>
-    <string name="episode_history">\u090f\u092a\u093f\u0938\u094b\u0921 \u0907\u0924\u093f\u0939\u093e\u0938</string>
-    <string name="skip_back">15 \u0938\u0947\u0915\u0902\u0921 \u092a\u0940\u091b\u0947</string>
-    <string name="skip_forward">15 \u0938\u0947\u0915\u0902\u0921 \u0906\u0917\u0947</string>
-    <string name="skip_back_mini">\u092a\u0940\u091b\u0947</string>
-    <string name="skip_forward_mini">\u0906\u0917\u0947</string>
-    <string name="buffering">\u092c\u092b\u0930\u093f\u0902\u0917\u2026</string>
-    <string name="sleep_timer">\u0938\u094d\u0932\u0940\u092a \u091f\u093e\u0907\u092e\u0930</string>
-    <string name="timer">\u091f\u093e\u0907\u092e\u0930</string>
-    <string name="sleep_timer_5_min">5 \u092e\u093f\u0928\u091f</string>
-    <string name="sleep_timer_10_min">10 \u092e\u093f\u0928\u091f</string>
-    <string name="sleep_timer_15_min">15 \u092e\u093f\u0928\u091f</string>
-    <string name="sleep_timer_30_min">30 \u092e\u093f\u0928\u091f</string>
-    <string name="sleep_timer_1_hour">1 \u0918\u0902\u091f\u093e</string>
-    <string name="min_format">%d \u092e\u093f\u0928\u091f</string>
-    <string name="today">\u0906\u091c</string>
-    <string name="bookmark">\u092c\u0941\u0915\u092e\u093e\u0930\u094d\u0915</string>
-    <string name="more">\u0914\u0930</string>
-    <string name="hide_topic">\u0935\u093f\u0937\u092f \u091b\u093f\u092a\u093e\u090f\u0902</string>
-    <string name="hide">\u091b\u093f\u092a\u093e\u090f\u0902</string>
+    <string name="playing">चल रहा है</string>
+    <string name="paused">रुका हुआ</string>
+    <string name="play">चलाएं</string>
+    <string name="pause">रोकें</string>
+    <string name="loading">लोड हो रहा है…</string>
+    <string name="generating">बनाया जा रहा है…</string>
+    <string name="generating_progress">बनाया जा रहा है… %d%%</string>
+    <string name="generate_episode">एपिसोड बनाएं</string>
+    <string name="regenerate">फिर से बनाएं</string>
+    <string name="episode_history">एपिसोड इतिहास</string>
+    <string name="skip_back">15 सेकंड पीछे</string>
+    <string name="skip_forward">15 सेकंड आगे</string>
+    <string name="skip_back_mini">पीछे</string>
+    <string name="skip_forward_mini">आगे</string>
+    <string name="buffering">बफरिंग…</string>
+    <string name="playback_error_stream">रेडियो से कनेक्ट नहीं हो पा रहा। अपना कनेक्शन जांचें और फिर से प्रयास करें।</string>
+    <string name="playback_error_episode">यह ऑडियो लोड नहीं हो पा रहा। अपना कनेक्शन जांचें और फिर से प्रयास करें।</string>
+    <string name="sleep_timer">स्लीप टाइमर</string>
+    <string name="timer">टाइमर</string>
+    <string name="sleep_timer_5_min">5 मिनट</string>
+    <string name="sleep_timer_10_min">10 मिनट</string>
+    <string name="sleep_timer_15_min">15 मिनट</string>
+    <string name="sleep_timer_30_min">30 मिनट</string>
+    <string name="sleep_timer_1_hour">1 घंटा</string>
+    <string name="min_format">%d मिनट</string>
+    <string name="today">आज</string>
+    <string name="bookmark">बुकमार्क</string>
+    <string name="more">और</string>
+    <string name="hide_topic">विषय छिपाएं</string>
+    <string name="hide">छिपाएं</string>
 
     <!-- Errors -->
-    <string name="error_generic">\u0915\u0941\u091b \u0917\u0932\u0924 \u0939\u094b \u0917\u092f\u093e</string>
-    <string name="error_network">\u0928\u0947\u091f\u0935\u0930\u094d\u0915 \u0924\u094d\u0930\u0941\u091f\u093f\u0964 \u0905\u092a\u0928\u093e \u0915\u0928\u0947\u0915\u094d\u0936\u0928 \u091c\u093e\u0902\u091a\u0947\u0902\u0964</string>
-    <string name="error_auth">\u092a\u094d\u0930\u092e\u093e\u0923\u0940\u0915\u0930\u0923 \u0935\u093f\u092b\u0932</string>
-    <string name="error_no_internet">\u0907\u0902\u091f\u0930\u0928\u0947\u091f \u0915\u0928\u0947\u0915\u094d\u0936\u0928 \u0928\u0939\u0940\u0902 \u0939\u0948\u0964 \u0905\u092a\u0928\u093e \u0928\u0947\u091f\u0935\u0930\u094d\u0915 \u091c\u093e\u0902\u091a\u0947\u0902 \u0914\u0930 \u092a\u0941\u0928\u0903 \u092a\u094d\u0930\u092f\u093e\u0938 \u0915\u0930\u0947\u0902\u0964</string>
-    <string name="generation_failed">\u0928\u093f\u0930\u094d\u092e\u093e\u0923 \u0935\u093f\u092b\u0932</string>
+    <string name="error_generic">कुछ गलत हो गया</string>
+    <string name="error_network">नेटवर्क त्रुटि। अपना कनेक्शन जांचें।</string>
+    <string name="error_auth">प्रमाणीकरण विफल</string>
+    <string name="error_no_internet">इंटरनेट कनेक्शन नहीं है। अपना नेटवर्क जांचें और पुनः प्रयास करें।</string>
+    <string name="generation_failed">बनाने में विफल</string>
 
     <!-- Misc -->
-    <string name="min_daily">\u092a\u094d\u0930\u0924\u093f\u0926\u093f\u0928 %d \u092e\u093f\u0928\u091f</string>
-    <string name="connected">\u091c\u0941\u0921\u093c\u093e \u0939\u0941\u0906</string>
-    <string name="not_connected">\u091c\u0941\u0921\u093c\u093e \u0928\u0939\u0940\u0902</string>
-    <string name="not_connected_lower">\u091c\u0941\u0921\u093c\u093e \u0928\u0939\u0940\u0902</string>
-    <string name="coming_soon">\u091c\u0932\u094d\u0926 \u0906 \u0930\u0939\u093e \u0939\u0948</string>
-    <string name="microsoft_coming_soon">Microsoft \u090f\u0915\u0940\u0915\u0930\u0923 \u091c\u0932\u094d\u0926 \u0906 \u0930\u0939\u093e \u0939\u0948\u0964 \u092c\u0928\u0947 \u0930\u0939\u0947\u0902!</string>
+    <string name="min_daily">प्रतिदिन %d मिनट</string>
+    <string name="connected">जुड़ा हुआ</string>
+    <string name="not_connected">जुड़ा नहीं</string>
+    <string name="not_connected_lower">जुड़ा नहीं</string>
+    <string name="coming_soon">जल्द आ रहा है</string>
+    <string name="microsoft_coming_soon">Microsoft खाते का एकीकरण जल्द आ रहा है। बने रहें!</string>
 
     <!-- Onboarding -->
-    <string name="welcome_to_audexa">Audexa \u092e\u0947\u0902 \u0906\u092a\u0915\u093e \u0938\u094d\u0935\u093e\u0917\u0924 \u0939\u0948</string>
-    <string name="welcome_description">\u0906\u092a\u0915\u093e \u0935\u094d\u092f\u0915\u094d\u0924\u093f\u0917\u0924 AI \u0930\u0947\u0921\u093f\u092f\u094b \u091c\u094b \u0928\u0935\u0940\u0928\u0924\u092e \u0938\u092e\u093e\u091a\u093e\u0930, \u0924\u0915\u0928\u0940\u0915 \u0914\u0930 \u0935\u093f\u0937\u092f\u094b\u0902 \u0915\u094b \u0906\u0915\u0930\u094d\u0937\u0915 \u092a\u0949\u0921\u0915\u093e\u0938\u094d\u091f \u0936\u0948\u0932\u0940 \u0915\u0947 \u0938\u093e\u0930\u093e\u0902\u0936 \u092e\u0947\u0902 \u092c\u0926\u0932\u0924\u093e \u0939\u0948\u0964</string>
-    <string name="get_started">\u0936\u0941\u0930\u0942 \u0915\u0930\u0947\u0902</string>
-    <string name="connect_your_account">\u0905\u092a\u0928\u093e \u0916\u093e\u0924\u093e \u091c\u094b\u0921\u093c\u0947\u0902</string>
-    <string name="connect_account_description">\u0905\u092a\u0928\u0947 \u0908\u092e\u0947\u0932 \u0914\u0930 \u0915\u0948\u0932\u0947\u0902\u0921\u0930 \u0938\u0947 \u0935\u094d\u092f\u0915\u094d\u0924\u093f\u0917\u0924 \u0926\u0948\u0928\u093f\u0915 \u0938\u093e\u0930\u093e\u0902\u0936 \u092a\u094d\u0930\u093e\u092a\u094d\u0924 \u0915\u0930\u0928\u0947 \u0915\u0947 \u0932\u093f\u090f \u0905\u092a\u0928\u093e Google \u0916\u093e\u0924\u093e \u0932\u093f\u0902\u0915 \u0915\u0930\u0947\u0902\u0964</string>
+    <string name="welcome_to_audexa">Audexa में आपका स्वागत है</string>
+    <string name="welcome_description">आपका व्यक्तिगत AI रेडियो जो नवीनतम समाचार, तकनीक और विषयों को आकर्षक पॉडकास्ट शैली के सारांश में बदलता है।</string>
+    <string name="get_started">शुरू करें</string>
+    <string name="connect_your_account">अपना खाता जोड़ें</string>
+    <string name="connect_account_description">अपने ईमेल और कैलेंडर से व्यक्तिगत दैनिक सारांश प्राप्त करने के लिए अपना Google खाता लिंक करें।</string>
     <string name="gmail">Gmail</string>
-    <string name="calendar">\u0915\u0948\u0932\u0947\u0902\u0921\u0930</string>
-    <string name="include_email_highlights">\u0905\u092a\u0928\u0947 \u0938\u093e\u0930\u093e\u0902\u0936 \u092e\u0947\u0902 \u0908\u092e\u0947\u0932 \u0939\u093e\u0907\u0932\u093e\u0907\u091f\u094d\u0938 \u0936\u093e\u092e\u093f\u0932 \u0915\u0930\u0947\u0902</string>
-    <string name="include_calendar_events">\u0905\u092a\u0928\u0947 \u0938\u093e\u0930\u093e\u0902\u0936 \u092e\u0947\u0902 \u0906\u0917\u093e\u092e\u0940 \u0915\u093e\u0930\u094d\u092f\u0915\u094d\u0930\u092e \u0936\u093e\u092e\u093f\u0932 \u0915\u0930\u0947\u0902</string>
-    <string name="continue_button">\u091c\u093e\u0930\u0940 \u0930\u0916\u0947\u0902</string>
-    <string name="skip_for_now">\u0905\u092d\u0940 \u0915\u0947 \u0932\u093f\u090f \u091b\u094b\u0921\u093c\u0947\u0902</string>
-    <string name="connect_later_hint">\u0906\u092a \u092c\u093e\u0926 \u092e\u0947\u0902 \u0938\u0947\u091f\u093f\u0902\u0917\u094d\u0938 \u092e\u0947\u0902 \u0915\u092d\u0940 \u092d\u0940 \u091c\u094b\u0921\u093c \u0938\u0915\u0924\u0947 \u0939\u0948\u0902</string>
-    <string name="connect">\u091c\u094b\u0921\u093c\u0947\u0902</string>
-    <string name="choose_your_interests">\u0905\u092a\u0928\u0940 \u0930\u0941\u091a\u093f\u092f\u093e\u0902 \u091a\u0941\u0928\u0947\u0902</string>
-    <string name="choose_interests_description">\u091c\u093f\u0928 \u0935\u093f\u0937\u092f\u094b\u0902 \u0915\u094b \u0906\u092a \u0938\u0941\u0928\u0928\u093e \u091a\u093e\u0939\u0924\u0947 \u0939\u0948\u0902 \u0909\u0928\u094d\u0939\u0947\u0902 \u091a\u0941\u0928\u0947\u0902\u0964 \u0939\u092e \u0938\u093f\u0930\u094d\u092b \u0906\u092a\u0915\u0947 \u0932\u093f\u090f \u0926\u0948\u0928\u093f\u0915 \u090f\u092a\u093f\u0938\u094b\u0921 \u092c\u0928\u093e\u090f\u0902\u0917\u0947\u0964</string>
-    <string name="topics_selected">%d \u0935\u093f\u0937\u092f%s \u091a\u0941\u0928\u0947 \u0917\u090f</string>
+    <string name="calendar">कैलेंडर</string>
+    <string name="include_email_highlights">अपने सारांश में ईमेल हाइलाइट्स शामिल करें</string>
+    <string name="include_calendar_events">अपने सारांश में आगामी कार्यक्रम शामिल करें</string>
+    <string name="continue_button">जारी रखें</string>
+    <string name="skip_for_now">अभी के लिए छोड़ें</string>
+    <string name="connect_later_hint">आप बाद में सेटिंग्स में कभी भी जोड़ सकते हैं</string>
+    <string name="connect">जोड़ें</string>
+    <string name="choose_your_interests">अपनी रुचियां चुनें</string>
+    <string name="choose_interests_description">जिन विषयों को आप सुनना चाहते हैं उन्हें चुनें। हम सिर्फ आपके लिए दैनिक एपिसोड बनाएंगे।</string>
+    <string name="topics_selected">%d विषय%s चुने गए</string>
     <string name="topics_selected_plural_suffix"></string>
-    <string name="complete_setup">\u0938\u0947\u091f\u0905\u092a \u092a\u0942\u0930\u093e \u0915\u0930\u0947\u0902</string>
+    <string name="complete_setup">सेटअप पूरा करें</string>
 
     <!-- Linked Accounts -->
-    <string name="enable_daily_brief">\u0926\u0948\u0928\u093f\u0915 \u0938\u093e\u0930\u093e\u0902\u0936 \u0938\u0915\u094d\u0930\u093f\u092f \u0915\u0930\u0947\u0902</string>
-    <string name="enable_daily_brief_description">\u0905\u092a\u0928\u0947 \u0908\u092e\u0947\u0932 \u0915\u0947 \u0906\u0927\u093e\u0930 \u092a\u0930 \u0935\u094d\u092f\u0915\u094d\u0924\u093f\u0917\u0924 \u0926\u0948\u0928\u093f\u0915 \u0938\u093e\u0930\u093e\u0902\u0936 \u092a\u094d\u0930\u093e\u092a\u094d\u0924 \u0915\u0930\u0928\u0947 \u0915\u0947 \u0932\u093f\u090f \u0905\u092a\u0928\u093e Gmail \u091c\u094b\u0921\u093c\u0947\u0902\u0964 \u0939\u092e \u092e\u0939\u0924\u094d\u0935\u092a\u0942\u0930\u094d\u0923 \u0905\u092a\u0921\u0947\u091f \u0915\u093e \u0938\u093e\u0930\u093e\u0902\u0936 \u0926\u0947\u0902\u0917\u0947 \u0924\u093e\u0915\u093f \u0906\u092a \u0938\u0942\u091a\u093f\u0924 \u0939\u094b\u0915\u0930 \u0905\u092a\u0928\u093e \u0926\u093f\u0928 \u0936\u0941\u0930\u0942 \u0915\u0930 \u0938\u0915\u0947\u0902\u0964</string>
-    <string name="google_calendar">Google \u0915\u0948\u0932\u0947\u0902\u0921\u0930</string>
+    <string name="enable_daily_brief">दैनिक सारांश सक्रिय करें</string>
+    <string name="enable_daily_brief_description">अपने ईमेल के आधार पर व्यक्तिगत दैनिक सारांश प्राप्त करने के लिए अपना Gmail जोड़ें। हम महत्वपूर्ण अपडेट का सारांश देंगे ताकि आप सूचित होकर अपना दिन शुरू कर सकें।</string>
+    <string name="google_calendar">Google कैलेंडर</string>
     <string name="outlook">Outlook</string>
-    <string name="daily_brief_sources">\u0926\u0948\u0928\u093f\u0915 \u0938\u093e\u0930\u093e\u0902\u0936 \u0938\u094d\u0930\u094b\u0924</string>
-    <string name="email_summaries">\u0908\u092e\u0947\u0932 \u0938\u093e\u0930\u093e\u0902\u0936</string>
-    <string name="include_email_in_brief">\u0926\u0948\u0928\u093f\u0915 \u0938\u093e\u0930\u093e\u0902\u0936 \u092e\u0947\u0902 \u0908\u092e\u0947\u0932 \u0938\u093e\u0930\u093e\u0902\u0936 \u0936\u093e\u092e\u093f\u0932 \u0915\u0930\u0947\u0902</string>
-    <string name="calendar_events">\u0915\u0948\u0932\u0947\u0902\u0921\u0930 \u0915\u093e\u0930\u094d\u092f\u0915\u094d\u0930\u092e</string>
-    <string name="include_calendar_in_brief">\u0926\u0948\u0928\u093f\u0915 \u0938\u093e\u0930\u093e\u0902\u0936 \u092e\u0947\u0902 \u0906\u0917\u093e\u092e\u0940 \u0915\u093e\u0930\u094d\u092f\u0915\u094d\u0930\u092e \u0936\u093e\u092e\u093f\u0932 \u0915\u0930\u0947\u0902</string>
-    <string name="unlink">\u0905\u0928\u0932\u093f\u0902\u0915 \u0915\u0930\u0947\u0902</string>
-    <string name="soon">\u091c\u0932\u094d\u0926</string>
-    <string name="your_privacy">\u0906\u092a\u0915\u0940 \u0917\u094b\u092a\u0928\u0940\u092f\u0924\u093e</string>
-    <string name="privacy_note">आपका सारांश बनाने के लिए हमारा सर्वर आपके हाल के Gmail संदेश और कैलेंडर इवेंट पढ़ता है। आपके मुख्य ईमेल के भेजने वाले का नाम, विषय और पहले 100 अक्षर, साथ ही इवेंट के शीर्षक, समय और स्थान, स्क्रिप्ट लिखने के लिए हमारे AI प्रदाता Anthropic को भेजे जाते हैं। हम आपके ईमेल का टेक्स्ट नहीं रखते, लेकिन तैयार सारांश ऑडियो आपके खाता हटाने तक रखा जाता है। अनलिंक करने से हमारे सर्वर पर सहेजा गया Google एक्सेस नहीं हटता; प्रोफ़ाइल में खाता हटाएँ ऐसा करता है।</string>
-    <string name="microsoft_outlook_coming_soon">Microsoft Outlook \u0932\u093f\u0902\u0915\u093f\u0902\u0917 \u092d\u0935\u093f\u0937\u094d\u092f \u0915\u0947 \u0905\u092a\u0921\u0947\u091f \u092e\u0947\u0902 \u0909\u092a\u0932\u092c\u094d\u0927 \u0939\u094b\u0917\u0940\u0964</string>
-    <string name="gmail_linking_cancelled">Gmail \u0932\u093f\u0902\u0915\u093f\u0902\u0917 \u0930\u0926\u094d\u0926 \u0915\u0930 \u0926\u0940 \u0917\u0908</string>
-    <string name="calendar_linking_cancelled">\u0915\u0948\u0932\u0947\u0902\u0921\u0930 \u0932\u093f\u0902\u0915\u093f\u0902\u0917 \u0930\u0926\u094d\u0926 \u0915\u0930 \u0926\u0940 \u0917\u0908</string>
-    <string name="reconnect">\u092b\u093f\u0930 \u0938\u0947 \u091c\u094b\u0921\u093c\u0947\u0902</string>
+    <string name="daily_brief_sources">दैनिक सारांश स्रोत</string>
+    <string name="email_summaries">ईमेल सारांश</string>
+    <string name="include_email_in_brief">दैनिक सारांश में ईमेल सारांश शामिल करें</string>
+    <string name="calendar_events">कैलेंडर कार्यक्रम</string>
+    <string name="include_calendar_in_brief">दैनिक सारांश में आगामी कार्यक्रम शामिल करें</string>
+    <string name="unlink">अनलिंक करें</string>
+    <string name="soon">जल्द</string>
+    <string name="your_privacy">आपकी गोपनीयता</string>
+    <string name="privacy_note">आपका सारांश बनाने के लिए हमारा सर्वर आपके हाल के Gmail संदेश और कैलेंडर कार्यक्रम पढ़ता है। आपके मुख्य ईमेल के भेजने वाले का नाम, विषय और पहले 100 अक्षर, साथ ही कार्यक्रमों के शीर्षक, समय और स्थान, स्क्रिप्ट लिखने के लिए हमारे AI प्रदाता Anthropic को भेजे जाते हैं। हम आपके ईमेल का टेक्स्ट नहीं रखते, लेकिन तैयार सारांश ऑडियो तब तक रखा जाता है जब तक आप अपना खाता नहीं हटाते। अनलिंक करने से हमारे सर्वर पर सहेजा गया Google एक्सेस नहीं हटता; प्रोफ़ाइल में खाता हटाएं ऐसा करता है।</string>
+    <string name="microsoft_outlook_coming_soon">Microsoft Outlook लिंकिंग भविष्य के अपडेट में उपलब्ध होगी।</string>
+    <string name="gmail_linking_cancelled">Gmail लिंकिंग रद्द कर दी गई</string>
+    <string name="calendar_linking_cancelled">कैलेंडर लिंकिंग रद्द कर दी गई</string>
+    <string name="reconnect">फिर से जोड़ें</string>
 
     <!-- Hidden Topics -->
-    <string name="no_hidden_topics">\u0915\u094b\u0908 \u091b\u093f\u092a\u0947 \u0939\u0941\u090f \u0935\u093f\u0937\u092f \u0928\u0939\u0940\u0902</string>
-    <string name="no_hidden_topics_description">\u0906\u092a\u0915\u0947 \u091b\u093f\u092a\u093e\u090f \u0917\u090f \u0935\u093f\u0937\u092f \u092f\u0939\u093e\u0902 \u0926\u093f\u0916\u093e\u0908 \u0926\u0947\u0902\u0917\u0947\u0964 \u0906\u092a \u0915\u092d\u0940 \u092d\u0940 \u0909\u0928\u094d\u0939\u0947\u0902 \u0926\u093f\u0916\u093e \u0938\u0915\u0924\u0947 \u0939\u0948\u0902\u0964</string>
-    <string name="unhide_hint">\u0935\u093f\u0937\u092f \u0915\u094b \u092b\u093f\u0930 \u0938\u0947 \u0926\u093f\u0916\u093e\u0928\u0947 \u0915\u0947 \u0932\u093f\u090f \u0906\u0902\u0916 \u0915\u0947 \u0906\u0907\u0915\u0928 \u092a\u0930 \u091f\u0948\u092a \u0915\u0930\u0947\u0902\u0964</string>
-    <string name="unhide">\u0926\u093f\u0916\u093e\u090f\u0902</string>
+    <string name="no_hidden_topics">कोई छिपे हुए विषय नहीं</string>
+    <string name="no_hidden_topics_description">आपके छिपाए गए विषय यहां दिखाई देंगे। आप कभी भी उन्हें दिखा सकते हैं।</string>
+    <string name="unhide_hint">विषय को फिर से दिखाने के लिए आंख के आइकन पर टैप करें।</string>
+    <string name="unhide">दिखाएं</string>
 
     <!-- Language Settings -->
-    <string name="language">\u092d\u093e\u0937\u093e</string>
-    <string name="language_description">\u092a\u0949\u0921\u0915\u093e\u0938\u094d\u091f \u090f\u092a\u093f\u0938\u094b\u0921 \u0915\u0947 \u0932\u093f\u090f \u0905\u092a\u0928\u0940 \u092a\u0938\u0902\u0926\u0940\u0926\u093e \u092d\u093e\u0937\u093e \u091a\u0941\u0928\u0947\u0902\u0964</string>
-    <string name="language_note">पॉडकास्ट अंग्रेज़ी, स्पेनिश, फ़्रेंच, जर्मन, पुर्तगाली और इतालवी में उपलब्ध हैं। नई भाषा का पहला एपिसोड तैयार होने में कुछ मिनट लगते हैं। रेडियो केवल अंग्रेज़ी में है। अन्य भाषाओं के लिए हम आपका नाम लिए बिना दर्ज करते हैं कि आपने कौन-सी भाषा चुनी, ताकि तय कर सकें कि आगे क्या जोड़ना है।</string>
-    <string name="selected">\u091a\u092f\u0928\u093f\u0924</string>
-
-    <!-- Voice Settings -->
-    <string name="loading_voices">\u0906\u0935\u093e\u091c\u0947\u0902 \u0932\u094b\u0921 \u0939\u094b \u0930\u0939\u0940 \u0939\u0948\u0902\u2026</string>
-    <string name="no_voice_pairs">\u0915\u094b\u0908 \u0906\u0935\u093e\u091c \u091c\u094b\u0921\u093c\u0940 \u0909\u092a\u0932\u092c\u094d\u0927 \u0928\u0939\u0940\u0902</string>
-    <string name="no_voices">\u0915\u094b\u0908 \u0906\u0935\u093e\u091c \u0909\u092a\u0932\u092c\u094d\u0927 \u0928\u0939\u0940\u0902</string>
-    <string name="voice_pairs_description">\u0905\u092a\u0928\u0947 \u092a\u0949\u0921\u0915\u093e\u0938\u094d\u091f \u0939\u094b\u0938\u094d\u091f \u0915\u0947 \u0932\u093f\u090f \u092a\u0942\u0930\u094d\u0935-\u0915\u0949\u0928\u094d\u092b\u093f\u0917\u0930 \u0906\u0935\u093e\u091c \u091c\u094b\u0921\u093c\u0940 \u091a\u0941\u0928\u0947\u0902\u0964</string>
-    <string name="host_1">\u0939\u094b\u0938\u094d\u091f 1</string>
-    <string name="host_2">\u0939\u094b\u0938\u094d\u091f 2</string>
-    <string name="host_1_voice">\u0939\u094b\u0938\u094d\u091f 1 \u0915\u0940 \u0906\u0935\u093e\u091c</string>
-    <string name="host_2_voice">\u0939\u094b\u0938\u094d\u091f 2 \u0915\u0940 \u0906\u0935\u093e\u091c</string>
-
-    <!-- Theme Settings -->
-    <string name="theme_system">\u0938\u093f\u0938\u094d\u091f\u092e</string>
-    <string name="theme_system_description">\u0921\u093f\u0935\u093e\u0907\u0938 \u0938\u0947\u091f\u093f\u0902\u0917\u094d\u0938 \u0915\u093e \u092a\u093e\u0932\u0928 \u0915\u0930\u0947\u0902</string>
-    <string name="theme_dark">\u0921\u093e\u0930\u094d\u0915</string>
-    <string name="theme_dark_description">\u0939\u092e\u0947\u0936\u093e \u0921\u093e\u0930\u094d\u0915 \u092e\u094b\u0921</string>
-    <string name="theme_light">\u0932\u093e\u0907\u091f</string>
-    <string name="theme_light_description">\u0939\u092e\u0947\u0936\u093e \u0932\u093e\u0907\u091f \u092e\u094b\u0921</string>
-
-    <!-- Notification Settings -->
-    <string name="permission">\u0905\u0928\u0941\u092e\u0924\u093f</string>
-    <string name="enabled">\u0938\u0915\u094d\u0930\u093f\u092f</string>
-    <string name="not_enabled">\u0928\u093f\u0937\u094d\u0915\u094d\u0930\u093f\u092f</string>
-    <string name="daily_brief_schedule">\u0926\u0948\u0928\u093f\u0915 \u0938\u093e\u0930\u093e\u0902\u0936 \u0936\u0947\u0921\u094d\u092f\u0942\u0932</string>
-    <string name="daily_brief_notifications">\u0926\u0948\u0928\u093f\u0915 \u0938\u093e\u0930\u093e\u0902\u0936 \u0938\u0942\u091a\u0928\u093e\u090f\u0902</string>
-    <string name="daily_brief_notify_hint">\u091c\u092c \u0906\u092a\u0915\u093e \u0938\u093e\u0930\u093e\u0902\u0936 \u0924\u0948\u092f\u093e\u0930 \u0939\u094b \u0924\u094b \u0938\u0942\u091a\u0928\u093e \u092a\u094d\u0930\u093e\u092a\u094d\u0924 \u0915\u0930\u0947\u0902</string>
-    <string name="daily_brief_content">\u0926\u0948\u0928\u093f\u0915 \u0938\u093e\u0930\u093e\u0902\u0936 \u0938\u093e\u092e\u0917\u094d\u0930\u0940</string>
-    <string name="include_topic_updates">\u0935\u093f\u0937\u092f \u0905\u092a\u0921\u0947\u091f \u0936\u093e\u092e\u093f\u0932 \u0915\u0930\u0947\u0902</string>
-    <string name="include_topic_updates_hint">\u0926\u0948\u0928\u093f\u0915 \u0938\u093e\u0930\u093e\u0902\u0936 \u092e\u0947\u0902 \u0905\u092a\u0928\u0947 \u0935\u093f\u0937\u092f\u094b\u0902 \u0915\u0940 \u0938\u0941\u0930\u094d\u0916\u093f\u092f\u093e\u0902 \u091c\u094b\u0921\u093c\u0947\u0902</string>
-    <string name="notification_info">\u0906\u092a\u0915\u093e \u0926\u0948\u0928\u093f\u0915 \u0938\u093e\u0930\u093e\u0902\u0936 \u0928\u093f\u0930\u094d\u0927\u093e\u0930\u093f\u0924 \u0938\u092e\u092f \u092a\u0930 \u0924\u0948\u092f\u093e\u0930 \u0939\u094b\u0917\u093e\u0964 \u091c\u092c \u092f\u0939 \u091a\u0932\u093e\u0928\u0947 \u0915\u0947 \u0932\u093f\u090f \u0924\u0948\u092f\u093e\u0930 \u0939\u094b\u0917\u093e \u0924\u094b \u0906\u092a\u0915\u094b \u0938\u0942\u091a\u0928\u093e \u092e\u093f\u0932\u0947\u0917\u0940\u0964</string>
-    <string name="select_time">\u0938\u092e\u092f \u091a\u0941\u0928\u0947\u0902</string>
-
-    <!-- Subscription / Paywall -->
-    <string name="enjoy_uninterrupted">\u092c\u093f\u0928\u093e \u0930\u0941\u0915\u093e\u0935\u091f \u0915\u0947 \u0938\u0941\u0928\u0928\u0947 \u0915\u093e \u0906\u0928\u0902\u0926 \u0932\u0947\u0902</string>
-    <string name="no_audio_ad_interruptions">\u0911\u0921\u093f\u092f\u094b \u0935\u093f\u091c\u094d\u091e\u093e\u092a\u0928 \u092e\u0947\u0902 \u0915\u094b\u0908 \u0930\u0941\u0915\u093e\u0935\u091f \u0928\u0939\u0940\u0902</string>
-    <string name="seamless_episode_playback">\u0928\u093f\u0930\u094d\u092c\u093e\u0927 \u090f\u092a\u093f\u0938\u094b\u0921 \u092a\u094d\u0932\u0947\u092c\u0948\u0915</string>
-    <string name="support_indie_development">\u0938\u094d\u0935\u0924\u0902\u0924\u094d\u0930 \u0935\u093f\u0915\u093e\u0938 \u0915\u093e \u0938\u092e\u0930\u094d\u0925\u0928 \u0915\u0930\u0947\u0902</string>
-    <string name="ad_free_subscriber">\u0906\u092a \u0935\u093f\u091c\u094d\u091e\u093e\u092a\u0928-\u092e\u0941\u0915\u094d\u0924 \u0938\u0926\u0938\u094d\u092f \u0939\u0948\u0902!</string>
-    <string name="yearly">\u0935\u093e\u0930\u094d\u0937\u093f\u0915</string>
-    <string name="save_percent">58%% \u092c\u091a\u093e\u090f\u0902</string>
-    <string name="monthly">\u092e\u093e\u0938\u093f\u0915</string>
-    <string name="subscribe">\u0938\u0926\u0938\u094d\u092f\u0924\u093e \u0932\u0947\u0902</string>
-    <string name="restore_purchases">\u0916\u0930\u0940\u0926\u093e\u0930\u0940 \u092a\u0941\u0928\u0930\u094d\u0938\u094d\u0925\u093e\u092a\u093f\u0924 \u0915\u0930\u0947\u0902</string>
-    <string name="payment_fine_print">\u092d\u0941\u0917\u0924\u093e\u0928 \u0906\u092a\u0915\u0947 Google Play \u0916\u093e\u0924\u0947 \u0938\u0947 \u0932\u093f\u092f\u093e \u091c\u093e\u090f\u0917\u093e\u0964 \u0935\u0930\u094d\u0924\u092e\u093e\u0928 \u0905\u0935\u0927\u093f \u0938\u092e\u093e\u092a\u094d\u0924 \u0939\u094b\u0928\u0947 \u0938\u0947 \u0915\u092e \u0938\u0947 \u0915\u092e 24 \u0918\u0902\u091f\u0947 \u092a\u0939\u0932\u0947 \u0930\u0926\u094d\u0926 \u0928 \u0915\u093f\u090f \u091c\u093e\u0928\u0947 \u092a\u0930 \u0938\u0926\u0938\u094d\u092f\u0924\u093e \u0938\u094d\u0935\u091a\u093e\u0932\u093f\u0924 \u0930\u0942\u092a \u0938\u0947 \u0928\u0935\u0940\u0928\u0940\u0915\u0943\u0924 \u0939\u094b\u0917\u0940\u0964</string>
-    <string name="per_year">/\u0935\u0930\u094d\u0937</string>
-    <string name="per_month">/\u092e\u093e\u0939</string>
-    <string name="per_week">/\u0938\u092a\u094d\u0924\u093e\u0939</string>
-
-    <!-- Ads -->
-    <string name="sponsored">\u092a\u094d\u0930\u093e\u092f\u094b\u091c\u093f\u0924</string>
-    <string name="skip">\u091b\u094b\u0921\u093c\u0947\u0902</string>
-    <string name="skip_ad">\u0935\u093f\u091c\u094d\u091e\u093e\u092a\u0928 \u091b\u094b\u0921\u093c\u0947\u0902</string>
-    <string name="ad_content_description">\u0935\u093f\u091c\u094d\u091e\u093e\u092a\u0928</string>
-
-    <!-- Splash Screen -->
-    <string name="splash_tagline">AI \u0938\u0902\u091a\u093e\u0932\u093f\u0924 \u0911\u0921\u093f\u092f\u094b \u0938\u093e\u0930\u093e\u0902\u0936</string>
-
-    <!-- Notifications (non-composable) -->
-    <string name="notification_good_morning">\u0938\u0941\u092a\u094d\u0930\u092d\u093e\u0924!</string>
-    <string name="notification_daily_brief_text">\u0906\u092a\u0915\u0947 \u0926\u0948\u0928\u093f\u0915 \u0938\u093e\u0930\u093e\u0902\u0936 \u0915\u093e \u0938\u092e\u092f \u0939\u0948\u0964 \u0908\u092e\u0947\u0932, \u0915\u0948\u0932\u0947\u0902\u0921\u0930 \u0914\u0930 \u0938\u092e\u093e\u091a\u093e\u0930 \u092a\u0930 \u0905\u092a\u0921\u0947\u091f \u092a\u093e\u0928\u0947 \u0915\u0947 \u0932\u093f\u090f \u091f\u0948\u092a \u0915\u0930\u0947\u0902\u0964</string>
-    <string name="daily_brief_channel_description">\u0926\u0948\u0928\u093f\u0915 \u0938\u093e\u0930\u093e\u0902\u0936 \u0930\u093f\u092e\u093e\u0907\u0902\u0921\u0930 \u0938\u0942\u091a\u0928\u093e\u090f\u0902</string>
-
-    <!-- Daily Brief Playback -->
-    <string name="daily_brief_title_format">\u0926\u0948\u0928\u093f\u0915 \u0938\u093e\u0930\u093e\u0902\u0936 - %s</string>
-    <string name="daily_brief_description">\u0906\u092a\u0915\u093e \u0935\u094d\u092f\u0915\u094d\u0924\u093f\u0917\u0924 \u0938\u0941\u092c\u0939 \u0915\u093e \u0938\u093e\u0930\u093e\u0902\u0936</string>
-    <string name="language_fallback_note">\u092a\u0949\u0921\u0915\u093e\u0938\u094d\u091f \u0905\u092d\u0940 %1$s \u092e\u0947\u0902 \u0909\u092a\u0932\u092c\u094d\u0927 \u0928\u0939\u0940\u0902 \u0939\u0948\u0902, \u0907\u0938\u0932\u093f\u090f \u0939\u092e\u0928\u0947 %2$s \u091a\u0941\u0928\u093e \u0939\u0948\u0964</string>
-
-    <!-- Language selection page -->
-    <string name="language_page_title">अपनी भाषा चुनें</string>
-    <string name="language_page_subtitle">पॉडकास्ट छह भाषाओं में उपलब्ध हैं। रेडियो केवल अंग्रेज़ी में है। आपकी पसंद से हमें तय करने में मदद मिलती है कि आगे क्या जोड़ें।</string>
+    <string name="language">भाषा</string>
     <string name="language_coming_soon">जल्द आ रहा है</string>
     <string name="language_coming_soon_toast">अभी उपलब्ध नहीं है। हमने आपकी रुचि दर्ज कर ली है।</string>
+    <string name="generating_language">आपका एपिसोड %1$s में तैयार हो रहा है। पहले एपिसोड में कुछ मिनट लग सकते हैं।</string>
+    <string name="language_fallback_note">पॉडकास्ट अभी %1$s में उपलब्ध नहीं हैं, इसलिए हमने %2$s चुना है।</string>
+    <string name="error_language_unavailable">यह भाषा अभी उपलब्ध नहीं है।</string>
+    <string name="error_daily_limit">नई भाषा के एपिसोड की आज की सीमा पूरी हो गई है। कल फिर कोशिश करें।</string>
+    <string name="language_page_title">अपनी भाषा चुनें</string>
+    <string name="language_page_subtitle">पॉडकास्ट छह भाषाओं में उपलब्ध हैं। रेडियो केवल अंग्रेज़ी में है। आपकी पसंद से हमें तय करने में मदद मिलती है कि आगे क्या जोड़ें।</string>
+    <string name="language_description">पॉडकास्ट एपिसोड के लिए अपनी पसंदीदा भाषा चुनें।</string>
+    <string name="language_note">पॉडकास्ट अंग्रेज़ी, स्पेनिश, फ़्रेंच, जर्मन, पुर्तगाली और इतालवी में उपलब्ध हैं। नई भाषा का पहला एपिसोड तैयार होने में कुछ मिनट लगते हैं। रेडियो केवल अंग्रेज़ी में है। अन्य भाषाओं के लिए हम आपका नाम लिए बिना दर्ज करते हैं कि आपने कौन-सी भाषा चुनी, ताकि तय कर सकें कि आगे क्या जोड़ना है।</string>
+    <string name="selected">चयनित</string>
+
+    <!-- App language (the language of menus and buttons; separate from the podcast language) -->
+    <string name="app_language">ऐप की भाषा</string>
+    <string name="app_language_follow_phone">फ़ोन के अनुसार</string>
+    <string name="app_language_description">मेनू और बटन की भाषा। पॉडकास्ट उसी भाषा में रहेंगे जो आपने ऊपर चुनी है।</string>
+    <string name="ui_lang_offer_title">ऐप को %1$s में भी दिखाएं?</string>
+    <string name="ui_lang_offer_body">सिर्फ मेनू और बटन बदलेंगे। आप इसे कभी भी अपनी प्रोफ़ाइल सेटिंग्स में बदल सकते हैं।</string>
+    <string name="ui_lang_offer_yes">हां, %1$s चुनें</string>
+    <string name="ui_lang_offer_no">नहीं, %1$s रखें</string>
+
+    <!-- Suggest a topic -->
+    <string name="suggest_topic">विषय सुझाएं</string>
+    <string name="suggest_topic_inline">आपका विषय नहीं दिखा? एक सुझाएं</string>
+    <string name="suggest_topic_description">बताएं कि आप क्या सुनना चाहेंगे, हम उसे जोड़ने पर विचार करेंगे।</string>
+    <string name="suggest_topic_name_label">विषय का नाम</string>
+    <string name="suggest_topic_name_hint">जैसे क्वांटम कंप्यूटिंग</string>
+    <string name="suggest_topic_details_label">विवरण (वैकल्पिक)</string>
+    <string name="suggest_topic_details_hint">इस विषय में क्या शामिल होना चाहिए?</string>
+    <string name="suggest_topic_thanks">धन्यवाद, हम सुझावों की समीक्षा करते हैं और अच्छे सुझाव जोड़ देते हैं।</string>
+    <string name="submit">भेजें</string>
+    <string name="submitting">भेजा जा रहा है…</string>
+    <string name="no_topics_title">अभी कोई विषय उपलब्ध नहीं है।</string>
+    <string name="no_topics_hint">सेटअप पूरा करने के लिए जारी रखें पर टैप करें — विषय आप बाद में होम स्क्रीन से चुन सकते हैं।</string>
+
+    <!-- Live radio -->
+    <string name="radio_languages">रेडियो भाषाएं</string>
+    <string name="radio_languages_note">चुने हुए स्टेशन आपकी होम स्क्रीन पर दिखेंगे। कम से कम एक भाषा चालू रहनी चाहिए।</string>
+    <string name="radio_home_tagline">AI-संचालित 24/7 समाचार · LIVE</string>
+    <string name="radio_tagline">AI-संचालित 24/7 समाचार और बातचीत</string>
+    <string name="share_whats_playing">जो चल रहा है उसे शेयर करें</string>
+    <string name="share_station">%1$s शेयर करें</string>
+    <string name="radio_up_next">इसके बाद</string>
+    <string name="radio_requests">अनुरोध</string>
+    <string name="radio_generating">बनाया जा रहा है</string>
+    <string name="radio_generating_badge">बन रहा है</string>
+    <string name="radio_request_hint">लाइव कतार के लिए विषय का अनुरोध करने हेतु माइक पर टैप करें</string>
+    <string name="radio_request_topic">विषय का अनुरोध</string>
+    <string name="radio_request_title">विषय का अनुरोध करें</string>
+    <string name="radio_request_description">Audexa रेडियो को बताएं कि आप क्या सुनना चाहेंगे। उसे लाइव कतार में जोड़ दिया जाएगा।</string>
+    <string name="radio_add_to_queue">लाइव कतार में जोड़ें</string>
+    <string name="radio_chat_hint">श्रोताओं से चैट करें...</string>
+    <string name="radio_chat">चैट</string>
+    <string name="radio_now_badge">अभी</string>
+    <string name="radio_music">संगीत</string>
+    <string name="send">भेजें</string>
+
+    <!-- Voice Settings -->
+    <string name="loading_voices">आवाज़ें लोड हो रही हैं…</string>
+    <string name="no_voice_pairs">कोई आवाज़ जोड़ी उपलब्ध नहीं</string>
+    <string name="no_voices">कोई आवाज़ उपलब्ध नहीं</string>
+    <string name="voice_pairs_description">अपने पॉडकास्ट होस्ट के लिए पूर्व-कॉन्फिगर आवाज़ जोड़ी चुनें।</string>
+    <string name="host_1">होस्ट 1</string>
+    <string name="host_2">होस्ट 2</string>
+    <string name="host_1_voice">होस्ट 1 की आवाज़</string>
+    <string name="host_2_voice">होस्ट 2 की आवाज़</string>
+
+    <!-- Theme Settings -->
+    <string name="theme_system">सिस्टम</string>
+    <string name="theme_system_description">डिवाइस सेटिंग्स का पालन करें</string>
+    <string name="theme_dark">डार्क</string>
+    <string name="theme_dark_description">हमेशा डार्क मोड</string>
+    <string name="theme_light">लाइट</string>
+    <string name="theme_light_description">हमेशा लाइट मोड</string>
+
+    <!-- Notification Settings -->
+    <string name="permission">अनुमति</string>
+    <string name="enabled">सक्रिय</string>
+    <string name="not_enabled">निष्क्रिय</string>
+    <string name="daily_brief_schedule">दैनिक सारांश शेड्यूल</string>
+    <string name="daily_brief_notifications">दैनिक सारांश सूचनाएं</string>
+    <string name="daily_brief_notify_hint">जब आपका सारांश तैयार हो तो सूचना प्राप्त करें</string>
+    <string name="daily_brief_content">दैनिक सारांश सामग्री</string>
+    <string name="include_topic_updates">विषय अपडेट शामिल करें</string>
+    <string name="include_topic_updates_hint">दैनिक सारांश में अपने विषयों की सुर्खियां जोड़ें</string>
+    <string name="notification_info">आपका दैनिक सारांश निर्धारित समय पर तैयार होगा। जब यह चलाने के लिए तैयार होगा तो आपको सूचना मिलेगी।</string>
+    <string name="select_time">समय चुनें</string>
+
+    <!-- Subscription / Paywall -->
+    <string name="enjoy_uninterrupted">बिना रुकावट के सुनने का आनंद लें</string>
+    <string name="no_audio_ad_interruptions">ऑडियो विज्ञापन में कोई रुकावट नहीं</string>
+    <string name="seamless_episode_playback">निर्बाध एपिसोड प्लेबैक</string>
+    <string name="support_indie_development">स्वतंत्र विकास का समर्थन करें</string>
+    <string name="ad_free_subscriber">आप विज्ञापन-मुक्त सदस्य हैं!</string>
+    <string name="yearly">वार्षिक</string>
+    <string name="save_percent">58%% बचाएं</string>
+    <string name="monthly">मासिक</string>
+    <string name="subscribe">सदस्यता लें</string>
+    <string name="restore_purchases">खरीदारी पुनर्स्थापित करें</string>
+    <string name="payment_fine_print">भुगतान आपके Google Play खाते से लिया जाएगा। वर्तमान अवधि समाप्त होने से कम से कम 24 घंटे पहले रद्द न किए जाने पर सदस्यता स्वचालित रूप से नवीनीकृत होगी।</string>
+    <string name="per_year">/वर्ष</string>
+    <string name="per_month">/माह</string>
+    <string name="per_week">/सप्ताह</string>
+
+    <!-- Ads -->
+    <string name="sponsored">प्रायोजित</string>
+    <string name="skip">छोड़ें</string>
+    <string name="skip_ad">विज्ञापन छोड़ें</string>
+    <string name="ad_content_description">विज्ञापन</string>
+
+    <!-- Radio Call-In -->
+    <string name="call_to_request">विषय के अनुरोध के लिए कॉल करें</string>
+    <string name="call_in_label">कॉल करें: (833) 398-1230</string>
+
+    <!-- Splash Screen -->
+    <string name="splash_tagline">AI-संचालित ऑडियो सारांश</string>
+
+    <!-- Notifications (non-composable) -->
+    <string name="notification_good_morning">सुप्रभात!</string>
+    <string name="notification_daily_brief_text">आपके दैनिक सारांश का समय है। ईमेल, कैलेंडर और समाचार पर अपडेट पाने के लिए टैप करें।</string>
+    <string name="daily_brief_channel_description">दैनिक सारांश रिमाइंडर सूचनाएं</string>
+    <string name="radio_topic_channel_name">रेडियो विषय रिमाइंडर</string>
+    <string name="radio_topic_channel_description">बुकमार्क किया हुआ कोई विषय Audexa रेडियो पर चलने पर सूचना पाएं</string>
+    <string name="radio_topic_notification_title">अभी Audexa रेडियो पर</string>
+    <string name="radio_topic_notification_body">%1$s लाइव चल रहा है। सुनने के लिए टैप करें।</string>
+
+    <!-- Daily Brief Playback -->
+    <string name="daily_brief_title_format">दैनिक सारांश - %s</string>
+    <string name="daily_brief_description">आपका व्यक्तिगत सुबह का सारांश</string>
+
+    <!-- Morning briefing: one local notification per day, opt-in after first play -->
+    <string name="briefing_notification_title">आज Audexa पर</string>
+    <string name="briefing_notification_body_fallback">Audexa रेडियो अभी चल रहा है। सुनने के लिए टैप करें।</string>
+    <plurals name="briefing_notification_body_topics">
+        <item quantity="one">%1$d नया विषय पॉडकास्ट: %2$s। सुनने के लिए टैप करें।</item>
+        <item quantity="other">%1$d नए विषय पॉडकास्ट: %2$s। सुनने के लिए टैप करें।</item>
+    </plurals>
+    <string name="briefing_names_with_more">%1$s और %2$d अन्य</string>
+    <string name="briefing_optin_title">नए विषय पॉडकास्ट तैयार होने पर याद दिलाएं?</string>
+    <string name="briefing_optin_accept">याद दिलाएं</string>
+    <string name="briefing_optin_decline">अभी नहीं</string>
+
+    <!-- Ask the hosts (English only for now) -->
+    <string name="ask_entry_title">होस्ट से पूछें</string>
+    <string name="ask_entry_subtitle">आज रात का मैच, कोई लॉन्च, कोई खबर: दो AI होस्ट उस पर बात करते हैं</string>
+    <string name="ask_title">होस्ट से पूछें</string>
+    <string name="ask_intro">किसी घटना या खबर के बारे में बताएं। होस्ट सिर्फ वही बताते हैं जो हाल की सुर्खियों में आया है, और कवरेज कम हो तो आपको बता देते हैं। एपिसोड AI से बनते हैं और एक-दो मिनट लेते हैं।</string>
+    <string name="ask_field_label">वे किस बारे में बात करें?</string>
+    <string name="ask_field_placeholder">जैसे आज रात Warriors का मैच कौन जीता?</string>
+    <string name="ask_counter">%1$d/%2$d</string>
+    <string name="ask_language_label">भाषा</string>
+    <string name="ask_submit">पूछें</string>
+    <string name="ask_sending">आपका अनुरोध भेजा जा रहा है...</string>
+    <string name="ask_stage_queued">खाली स्टूडियो का इंतज़ार...</string>
+    <string name="ask_stage_reviewing">आपके अनुरोध की जांच हो रही है...</string>
+    <string name="ask_stage_searching">ताज़ा सुर्खियां पढ़ी जा रही हैं...</string>
+    <string name="ask_stage_writing">होस्ट तैयारी कर रहे हैं...</string>
+    <string name="ask_stage_recording">एपिसोड रिकॉर्ड हो रहा है...</string>
+    <string name="ask_stage_working">काम चल रहा है...</string>
+    <string name="ask_progress_description">प्रगति: %1$d प्रतिशत</string>
+    <string name="ask_leave_hint">आप इस स्क्रीन से बाहर जा सकते हैं। वापस आने पर वही एपिसोड मिलेगा।</string>
+    <string name="ask_ai_note">हाल की समाचार सुर्खियों पर आधारित, दो AI होस्ट के बीच AI से बनी चर्चा।</string>
+    <string name="ask_length">अवधि %1$s</string>
+    <string name="ask_play">एपिसोड चलाएं</string>
+    <string name="ask_pause">रोकें</string>
+    <string name="ask_share">शेयर करें</string>
+    <string name="ask_share_chooser">यह एपिसोड शेयर करें</string>
+    <string name="ask_share_failed">शेयर शीट नहीं खुल सकी</string>
+    <string name="ask_sources_title">जिन सुर्खियों पर यह एपिसोड आधारित है</string>
+    <string name="ask_sources_note">होस्ट सिर्फ वही चर्चा करते हैं जो ये सुर्खियां बताती हैं। पूरी खबरों के लिए स्रोत देखें।</string>
+    <string name="ask_ask_another">एक और पूछें</string>
+    <string name="ask_edit_question">सवाल बदलें</string>
+    <string name="ask_check_again">फिर से जांचें</string>
+    <string name="ask_unavailable">होस्ट से पूछें अभी उपलब्ध नहीं है।</string>
+    <string name="ask_loading">उपलब्धता जांची जा रही है...</string>
+    <string name="ask_err_input">कृपया अपना सवाल जांचें और फिर से प्रयास करें।</string>
+    <string name="ask_err_limited">होस्ट से पूछें में अभी भीड़ है या इसकी सीमा पूरी हो गई है। कृपया बाद में फिर से प्रयास करें।</string>
+    <string name="ask_err_not_found">यह अनुरोध अब नहीं मिला। कृपया फिर से पूछें।</string>
+    <string name="ask_err_offline">कनेक्शन नहीं है। अपना इंटरनेट जांचें और फिर से प्रयास करें।</string>
+    <string name="ask_err_timeout">अपेक्षा से ज़्यादा समय लग रहा है। एपिसोड शायद अब भी आ रहा हो।</string>
+    <string name="ask_err_server">कुछ गलत हो गया। कृपया फिर से प्रयास करें।</string>
+    <string name="ask_err_refused">होस्ट इस बारे में एपिसोड नहीं बना सकते।</string>
+    <string name="ask_err_no_coverage">हमें इस बारे में हाल की पर्याप्त समाचार कवरेज नहीं मिली, इसलिए हमने एपिसोड नहीं बनाया।</string>
+    <string name="ask_err_failed">एपिसोड नहीं बन सका। कृपया फिर से प्रयास करें।</string>
 </resources>
+

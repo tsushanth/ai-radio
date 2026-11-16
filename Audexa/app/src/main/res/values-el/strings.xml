@@ -1,0 +1,360 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Audexa</string>
+    <string name="app_tagline">Το προσωπικό σου ραδιόφωνο AI</string>
+
+    <!-- Auth -->
+    <string name="sign_in_with_google">Σύνδεση με Google</string>
+    <string name="sign_out">Αποσύνδεση</string>
+    <string name="delete_account">Διαγραφή λογαριασμού</string>
+    <string name="auth_description">Άκου podcast που δημιουργεί το AI για θέματα που σε ενδιαφέρουν. Σύνδεσε το email σου στις ρυθμίσεις για να λαμβάνεις εξατομικευμένες ημερήσιες ενημερώσεις.</string>
+    <string name="auth_terms">Συνεχίζοντας, αποδέχεσαι τους Όρους Χρήσης και την Πολιτική Απορρήτου μας</string>
+    <string name="start">Ξεκίνα</string>
+
+    <!-- Navigation -->
+    <string name="nav_home">Αρχική</string>
+    <string name="nav_profile">Προφίλ</string>
+    <string name="back">Πίσω</string>
+    <string name="close">Κλείσιμο</string>
+    <string name="cancel">Άκυρο</string>
+    <string name="ok">OK</string>
+    <string name="delete">Διαγραφή</string>
+    <string name="retry">Επανάληψη</string>
+    <string name="enable">Ενεργοποίηση</string>
+
+    <!-- Tabs -->
+    <string name="tab_for_you">Για σένα</string>
+    <string name="tab_discover">Εξερεύνηση</string>
+
+    <!-- Home -->
+    <string name="good_morning">Καλημέρα</string>
+    <string name="good_afternoon">Καλό απόγευμα</string>
+    <string name="good_evening">Καλησπέρα</string>
+    <string name="daily_brief">Ημερήσια ενημέρωση</string>
+    <string name="daily_brief_subtitle">Ημερήσια ενημέρωση • %s</string>
+    <string name="keep_listening">Συνέχισε να ακούς</string>
+    <string name="your_topics">Τα θέματά σου</string>
+    <string name="topic_podcasts">Podcast θεμάτων</string>
+    <string name="recommended_for_you">Προτάσεις για σένα</string>
+    <string name="more_for_you">Περισσότερα για σένα</string>
+    <string name="all_topics">Όλα τα θέματα</string>
+    <string name="matching_topics">Θέματα που ταιριάζουν</string>
+    <string name="tap_to_explore">Πάτα για να εξερευνήσεις και να ακούσεις</string>
+    <string name="link_account_prompt">Σύνδεσε το email σου για εξατομικευμένες ενημερώσεις</string>
+    <string name="link_account">Σύνδεση λογαριασμού</string>
+    <string name="find_new_shows">Βρες νέες εκπομπές</string>
+    <string name="search">Αναζήτηση</string>
+    <string name="clear">Καθαρισμός</string>
+    <string name="no_results_for">Δεν βρέθηκαν αποτελέσματα για \"%s\"</string>
+
+    <!-- Profile -->
+    <string name="profile">Προφίλ</string>
+    <string name="linked_accounts">Συνδεδεμένοι λογαριασμοί</string>
+    <string name="preferences">Προτιμήσεις</string>
+    <string name="podcast_language">Γλώσσα podcast</string>
+    <string name="briefing_time">Ώρα ενημέρωσης</string>
+    <string name="topics">Θέματα</string>
+    <string name="voice_preference">Προτίμηση φωνής</string>
+    <string name="hidden_topics">Κρυφά θέματα</string>
+    <string name="about">Πληροφορίες</string>
+    <string name="version">Έκδοση</string>
+    <string name="terms_of_service">Όροι Χρήσης</string>
+    <string name="privacy_policy">Πολιτική Απορρήτου</string>
+    <string name="analytics_title">Κοινοποίηση ανώνυμων στατιστικών χρήσης</string>
+    <string name="analytics_subtitle">Ποια θέματα και γλώσσες χρησιμοποιούνται και για πόση ώρα. Ένα τυχαίο αναγνωριστικό σε αυτή τη συσκευή, χωρίς όνομα, email ή διεύθυνση IP. Αν το απενεργοποιήσεις, το αναγνωριστικό διαγράφεται.</string>
+    <string name="premium">Premium</string>
+    <string name="go_ad_free">Χωρίς διαφημίσεις</string>
+    <string name="ad_free">Χωρίς διαφημίσεις</string>
+    <string name="active_subscription">Ενεργή συνδρομή</string>
+    <string name="remove_all_ads">Αφαίρεση όλων των διαφημίσεων</string>
+    <string name="email_accounts">Λογαριασμοί email</string>
+    <string name="app_theme">Θέμα εφαρμογής</string>
+    <string name="voice_settings">Ρυθμίσεις φωνής</string>
+    <string name="choose_podcast_voices">Διάλεξε φωνές για τα podcast</string>
+    <string name="hidden_count">%d κρυφά</string>
+    <string name="notifications">Ειδοποιήσεις</string>
+    <string name="daily_brief_reminders">Υπενθυμίσεις ημερήσιας ενημέρωσης</string>
+    <string name="sign_out_confirm">Θέλεις σίγουρα να αποσυνδεθείς;</string>
+    <string name="delete_account_confirm">Θέλεις σίγουρα να διαγράψεις τον λογαριασμό σου; Θα διαγραφούν οριστικά όλα τα δεδομένα σου, συμπεριλαμβανομένων των podcast, των προτιμήσεων και των συνδεδεμένων λογαριασμών. Αυτή η ενέργεια δεν μπορεί να αναιρεθεί.</string>
+    <string name="delete_account_signin_again">Η σύνδεσή σου έχει λήξει, οπότε ο λογαριασμός σου δεν διαγράφηκε και δεν αφαιρέθηκε τίποτα. Αποσυνδέσου, συνδέσου ξανά και δοκίμασε ξανά τη Διαγραφή λογαριασμού.</string>
+    <string name="delete_account_failed">Δεν μπορέσαμε να ολοκληρώσουμε τη διαγραφή του λογαριασμού σου. Έλεγξε τη σύνδεσή σου και δοκίμασε ξανά.</string>
+
+    <!-- Player -->
+    <string name="playing">Αναπαραγωγή</string>
+    <string name="paused">Σε παύση</string>
+    <string name="play">Αναπαραγωγή</string>
+    <string name="pause">Παύση</string>
+    <string name="loading">Φόρτωση…</string>
+    <string name="generating">Δημιουργία…</string>
+    <string name="generating_progress">Δημιουργία… %d%%</string>
+    <string name="generate_episode">Δημιουργία επεισοδίου</string>
+    <string name="regenerate">Νέα δημιουργία</string>
+    <string name="episode_history">Ιστορικό επεισοδίων</string>
+    <string name="skip_back">Πίσω 15 δευτερόλεπτα</string>
+    <string name="skip_forward">Μπροστά 15 δευτερόλεπτα</string>
+    <string name="skip_back_mini">Πίσω</string>
+    <string name="skip_forward_mini">Μπροστά</string>
+    <string name="buffering">Προσωρινή αποθήκευση…</string>
+    <string name="playback_error_stream">Δεν είναι δυνατή η σύνδεση με το ραδιόφωνο. Έλεγξε τη σύνδεσή σου και δοκίμασε ξανά.</string>
+    <string name="playback_error_episode">Δεν είναι δυνατή η φόρτωση αυτού του ήχου. Έλεγξε τη σύνδεσή σου και δοκίμασε ξανά.</string>
+    <string name="sleep_timer">Χρονοδιακόπτης ύπνου</string>
+    <string name="timer">Χρονόμετρο</string>
+    <string name="sleep_timer_5_min">5 λεπτά</string>
+    <string name="sleep_timer_10_min">10 λεπτά</string>
+    <string name="sleep_timer_15_min">15 λεπτά</string>
+    <string name="sleep_timer_30_min">30 λεπτά</string>
+    <string name="sleep_timer_1_hour">1 ώρα</string>
+    <string name="min_format">%d λεπτά</string>
+    <string name="today">Σήμερα</string>
+    <string name="bookmark">Σελιδοδείκτης</string>
+    <string name="more">Περισσότερα</string>
+    <string name="hide_topic">Απόκρυψη θέματος</string>
+    <string name="hide">Απόκρυψη</string>
+
+    <!-- Errors -->
+    <string name="error_generic">Κάτι πήγε στραβά</string>
+    <string name="error_network">Σφάλμα δικτύου. Έλεγξε τη σύνδεσή σου.</string>
+    <string name="error_auth">Η ταυτοποίηση απέτυχε</string>
+    <string name="error_no_internet">Δεν υπάρχει σύνδεση στο διαδίκτυο. Έλεγξε το δίκτυό σου και δοκίμασε ξανά.</string>
+    <string name="generation_failed">Η δημιουργία απέτυχε</string>
+
+    <!-- Misc -->
+    <string name="min_daily">%d λεπτά ημερησίως</string>
+    <string name="connected">Συνδεδεμένος</string>
+    <string name="not_connected">Μη συνδεδεμένος</string>
+    <string name="not_connected_lower">Μη συνδεδεμένος</string>
+    <string name="coming_soon">Σύντομα κοντά σου</string>
+    <string name="microsoft_coming_soon">Η ενσωμάτωση λογαριασμού Microsoft έρχεται σύντομα. Μείνε συντονισμένος!</string>
+
+    <!-- Onboarding -->
+    <string name="welcome_to_audexa">Καλώς ήρθες στο Audexa</string>
+    <string name="welcome_description">Το εξατομικευμένο ραδιόφωνο AI που μετατρέπει τα τελευταία νέα, την τεχνολογία και τα θέματα που σε ενδιαφέρουν σε ενημερώσεις σε στιλ podcast.</string>
+    <string name="get_started">Ας ξεκινήσουμε</string>
+    <string name="connect_your_account">Σύνδεσε τον λογαριασμό σου</string>
+    <string name="connect_account_description">Σύνδεσε τον λογαριασμό σου Google για εξατομικευμένες ημερήσιες ενημερώσεις από το email και το ημερολόγιό σου.</string>
+    <string name="gmail">Gmail</string>
+    <string name="calendar">Ημερολόγιο</string>
+    <string name="include_email_highlights">Συμπερίλαβε τα σημαντικότερα email στην ενημέρωσή σου</string>
+    <string name="include_calendar_events">Συμπερίλαβε τα επερχόμενα συμβάντα στην ενημέρωσή σου</string>
+    <string name="continue_button">Συνέχεια</string>
+    <string name="skip_for_now">Παράλειψη προς το παρόν</string>
+    <string name="connect_later_hint">Μπορείς να συνδεθείς αργότερα από τις Ρυθμίσεις</string>
+    <string name="connect">Σύνδεση</string>
+    <string name="choose_your_interests">Διάλεξε τα ενδιαφέροντά σου</string>
+    <string name="choose_interests_description">Επίλεξε θέματα που θέλεις να ακούς. Θα δημιουργούμε ημερήσια επεισόδια ειδικά για σένα.</string>
+    <string name="topics_selected">Επιλεγμένα θέματα: %d</string>
+    <string name="topics_selected_plural_suffix"></string>
+    <string name="complete_setup">Ολοκλήρωση ρύθμισης</string>
+
+    <!-- Linked Accounts -->
+    <string name="enable_daily_brief">Ενεργοποίηση ημερήσιας ενημέρωσης</string>
+    <string name="enable_daily_brief_description">Σύνδεσε το Gmail σου για εξατομικευμένες ημερήσιες ενημερώσεις βάσει των email σου. Θα συνοψίζουμε τα σημαντικά νέα, ώστε να ξεκινάς τη μέρα σου ενημερωμένος.</string>
+    <string name="google_calendar">Google Calendar</string>
+    <string name="outlook">Outlook</string>
+    <string name="daily_brief_sources">Πηγές ημερήσιας ενημέρωσης</string>
+    <string name="email_summaries">Περιλήψεις email</string>
+    <string name="include_email_in_brief">Συμπερίλαβε περιλήψεις email στην ημερήσια ενημέρωση</string>
+    <string name="calendar_events">Συμβάντα ημερολογίου</string>
+    <string name="include_calendar_in_brief">Συμπερίλαβε επερχόμενα συμβάντα στην ημερήσια ενημέρωση</string>
+    <string name="unlink">Αποσύνδεση</string>
+    <string name="soon">Σύντομα</string>
+    <string name="your_privacy">Το απόρρητό σου</string>
+    <string name="privacy_note">Για να δημιουργήσει την ενημέρωσή σου, ο διακομιστής μας διαβάζει τα πρόσφατα μηνύματα Gmail και τα συμβάντα του ημερολογίου σου. Το όνομα του αποστολέα, το θέμα και οι πρώτοι 100 χαρακτήρες των σημαντικότερων email σου, μαζί με τους τίτλους, τις ώρες και τα μέρη των συμβάντων, στέλνονται στην Anthropic, τον πάροχο AI που χρησιμοποιούμε, για να γραφτεί το σενάριο. Δεν διατηρούμε το κείμενο των email σου, αλλά ο ήχος της ολοκληρωμένης ενημέρωσης φυλάσσεται μέχρι να διαγράψεις τον λογαριασμό σου. Η αποσύνδεση δεν αφαιρεί την πρόσβαση Google που είναι αποθηκευμένη στον διακομιστή μας· αυτό το κάνει η Διαγραφή λογαριασμού στο Προφίλ.</string>
+    <string name="microsoft_outlook_coming_soon">Η σύνδεση με το Microsoft Outlook θα είναι διαθέσιμη σε μελλοντική ενημέρωση.</string>
+    <string name="gmail_linking_cancelled">Η σύνδεση του Gmail ακυρώθηκε</string>
+    <string name="calendar_linking_cancelled">Η σύνδεση του ημερολογίου ακυρώθηκε</string>
+    <string name="reconnect">Επανασύνδεση</string>
+
+    <!-- Hidden Topics -->
+    <string name="no_hidden_topics">Κανένα κρυφό θέμα</string>
+    <string name="no_hidden_topics_description">Τα θέματα που κρύβεις θα εμφανίζονται εδώ. Μπορείς να τα εμφανίσεις ξανά όποτε θέλεις.</string>
+    <string name="unhide_hint">Πάτα το εικονίδιο με το μάτι για να εμφανίσεις ξανά ένα θέμα.</string>
+    <string name="unhide">Εμφάνιση</string>
+
+    <!-- Language Settings -->
+    <string name="language">Γλώσσα</string>
+    <string name="language_coming_soon">Σύντομα</string>
+    <string name="language_coming_soon_toast">Δεν είναι διαθέσιμη ακόμη. Σημειώσαμε το ενδιαφέρον σου.</string>
+    <string name="generating_language">Ετοιμάζουμε το επεισόδιό σου στη γλώσσα: %1$s. Το πρώτο μπορεί να πάρει μερικά λεπτά.</string>
+    <string name="language_fallback_note">Δεν υπάρχουν ακόμη podcast στη γλώσσα: %1$s, γι\' αυτό διαλέξαμε για σένα: %2$s.</string>
+    <string name="error_language_unavailable">Αυτή η γλώσσα δεν είναι διαθέσιμη ακόμη.</string>
+    <string name="error_daily_limit">Το σημερινό όριο για επεισόδια σε νέα γλώσσα έχει εξαντληθεί. Δοκίμασε ξανά αύριο.</string>
+    <string name="language_page_title">Διάλεξε τη γλώσσα σου</string>
+    <string name="language_page_subtitle">Τα podcast διατίθενται σε έξι γλώσσες. Το ραδιόφωνο είναι μόνο στα αγγλικά. Η επιλογή σου μας βοηθά να αποφασίσουμε τι θα προσθέσουμε.</string>
+    <string name="language_description">Διάλεξε την προτιμώμενη γλώσσα σου.</string>
+    <string name="language_note">Τα podcast διατίθενται στα αγγλικά, ισπανικά, γαλλικά, γερμανικά, πορτογαλικά και ιταλικά. Το πρώτο επεισόδιο σε μια νέα γλώσσα χρειάζεται μερικά λεπτά για να ετοιμαστεί. Το ραδιόφωνο είναι μόνο στα αγγλικά. Για τις υπόλοιπες γλώσσες, καταγράφουμε ποια διαλέγεις, χωρίς το όνομά σου, για να αποφασίσουμε τι θα προσθέσουμε στη συνέχεια.</string>
+    <string name="selected">Επιλέχθηκε</string>
+
+    <!-- App language (the language of menus and buttons; separate from the podcast language) -->
+    <string name="app_language">Γλώσσα εφαρμογής</string>
+    <string name="app_language_follow_phone">Όπως το κινητό</string>
+    <string name="app_language_description">Η γλώσσα των μενού και των κουμπιών. Τα podcast παραμένουν στη γλώσσα που διάλεξες παραπάνω.</string>
+    <string name="ui_lang_offer_title">Να εμφανίζεται η εφαρμογή και στη γλώσσα %1$s;</string>
+    <string name="ui_lang_offer_body">Αλλάζουν μόνο τα μενού και τα κουμπιά. Μπορείς να το αλλάξεις όποτε θέλεις από τις ρυθμίσεις του προφίλ σου.</string>
+    <string name="ui_lang_offer_yes">Ναι, χρήση: %1$s</string>
+    <string name="ui_lang_offer_no">Όχι, να μείνει: %1$s</string>
+
+    <!-- Suggest a topic -->
+    <string name="suggest_topic">Πρότεινε ένα θέμα</string>
+    <string name="suggest_topic_inline">Δεν βλέπεις το θέμα σου; Πρότεινε ένα</string>
+    <string name="suggest_topic_description">Πες μας τι θα ήθελες να ακούς και θα εξετάσουμε το ενδεχόμενο να το προσθέσουμε.</string>
+    <string name="suggest_topic_name_label">Όνομα θέματος</string>
+    <string name="suggest_topic_name_hint">π.χ. Κβαντικοί υπολογιστές</string>
+    <string name="suggest_topic_details_label">Περιγραφή (προαιρετικό)</string>
+    <string name="suggest_topic_details_hint">Τι θα πρέπει να καλύπτει αυτό το θέμα;</string>
+    <string name="suggest_topic_thanks">Ευχαριστούμε! Εξετάζουμε τις προτάσεις και προσθέτουμε τις καλύτερες.</string>
+    <string name="submit">Υποβολή</string>
+    <string name="submitting">Υποβολή…</string>
+    <string name="no_topics_title">Δεν υπάρχουν διαθέσιμα θέματα αυτή τη στιγμή.</string>
+    <string name="no_topics_hint">Πάτα Συνέχεια για να ολοκληρώσεις τη ρύθμιση — μπορείς να διαλέξεις θέματα αργότερα από την Αρχική οθόνη.</string>
+
+    <!-- Live radio -->
+    <string name="radio_languages">Γλώσσες ραδιοφώνου</string>
+    <string name="radio_languages_note">Οι σταθμοί που επιλέγεις θα εμφανίζονται στην αρχική οθόνη σου. Πρέπει να είναι ενεργοποιημένη τουλάχιστον μία γλώσσα.</string>
+    <string name="radio_home_tagline">Ειδήσεις AI 24/7 · ΖΩΝΤΑΝΑ</string>
+    <string name="radio_tagline">Ειδήσεις και συζητήσεις AI 24/7</string>
+    <string name="share_whats_playing">Μοιράσου ό,τι παίζει</string>
+    <string name="share_station">Κοινοποίηση: %1$s</string>
+    <string name="radio_up_next">Στη συνέχεια</string>
+    <string name="radio_requests">Αιτήματα</string>
+    <string name="radio_generating">Δημιουργία</string>
+    <string name="radio_generating_badge">δημιουργείται</string>
+    <string name="radio_request_hint">Πάτα το μικρόφωνο για να ζητήσεις ένα θέμα για την ουρά της ζωντανής μετάδοσης</string>
+    <string name="radio_request_topic">Ζήτησε θέμα</string>
+    <string name="radio_request_title">Ζήτησε ένα θέμα</string>
+    <string name="radio_request_description">Πες στο Audexa Radio τι θα ήθελες να ακούσεις. Θα προστεθεί στη ζωντανή ουρά.</string>
+    <string name="radio_add_to_queue">Προσθήκη στη ζωντανή ουρά</string>
+    <string name="radio_chat_hint">Συζήτησε με τους ακροατές...</string>
+    <string name="radio_chat">Συνομιλία</string>
+    <string name="radio_now_badge">ΤΩΡΑ</string>
+    <string name="radio_music">Μουσική</string>
+    <string name="send">Αποστολή</string>
+
+    <!-- Voice Settings -->
+    <string name="loading_voices">Φόρτωση φωνών…</string>
+    <string name="no_voice_pairs">Δεν υπάρχουν διαθέσιμα ζεύγη φωνών</string>
+    <string name="no_voices">Δεν υπάρχουν διαθέσιμες φωνές</string>
+    <string name="voice_pairs_description">Διάλεξε ένα έτοιμο ζεύγος φωνών για τους παρουσιαστές του podcast σου.</string>
+    <string name="host_1">Παρουσιαστής 1</string>
+    <string name="host_2">Παρουσιαστής 2</string>
+    <string name="host_1_voice">Φωνή παρουσιαστή 1</string>
+    <string name="host_2_voice">Φωνή παρουσιαστή 2</string>
+
+    <!-- Theme Settings -->
+    <string name="theme_system">Σύστημα</string>
+    <string name="theme_system_description">Σύμφωνα με τις ρυθμίσεις της συσκευής</string>
+    <string name="theme_dark">Σκούρο</string>
+    <string name="theme_dark_description">Πάντα σκούρα λειτουργία</string>
+    <string name="theme_light">Ανοιχτό</string>
+    <string name="theme_light_description">Πάντα φωτεινή λειτουργία</string>
+
+    <!-- Notification Settings -->
+    <string name="permission">Άδεια</string>
+    <string name="enabled">Ενεργό</string>
+    <string name="not_enabled">Ανενεργό</string>
+    <string name="daily_brief_schedule">Πρόγραμμα ημερήσιας ενημέρωσης</string>
+    <string name="daily_brief_notifications">Ειδοποιήσεις ημερήσιας ενημέρωσης</string>
+    <string name="daily_brief_notify_hint">Λάβε ειδοποίηση όταν η ενημέρωσή σου είναι έτοιμη</string>
+    <string name="daily_brief_content">Περιεχόμενο ημερήσιας ενημέρωσης</string>
+    <string name="include_topic_updates">Συμπερίληψη νέων θεμάτων</string>
+    <string name="include_topic_updates_hint">Πρόσθεσε επικεφαλίδες από τα θέματά σου στην ημερήσια ενημέρωση</string>
+    <string name="notification_info">Η ημερήσια ενημέρωσή σου θα δημιουργείται και θα είναι έτοιμη την προγραμματισμένη ώρα. Θα λάβεις ειδοποίηση όταν είναι έτοιμη για αναπαραγωγή.</string>
+    <string name="select_time">Επιλογή ώρας</string>
+
+    <!-- Subscription / Paywall -->
+    <string name="enjoy_uninterrupted">Άκου χωρίς διακοπές</string>
+    <string name="no_audio_ad_interruptions">Χωρίς ηχητικές διαφημίσεις</string>
+    <string name="seamless_episode_playback">Αδιάκοπη αναπαραγωγή επεισοδίων</string>
+    <string name="support_indie_development">Στήριξε την ανεξάρτητη ανάπτυξη</string>
+    <string name="ad_free_subscriber">Είσαι συνδρομητής χωρίς διαφημίσεις!</string>
+    <string name="yearly">Ετήσια</string>
+    <string name="save_percent">Έκπτωση 58%%</string>
+    <string name="monthly">Μηνιαία</string>
+    <string name="subscribe">Συνδρομή</string>
+    <string name="restore_purchases">Επαναφορά αγορών</string>
+    <string name="payment_fine_print">Η πληρωμή θα χρεωθεί στον λογαριασμό σου Google Play. Η συνδρομή ανανεώνεται αυτόματα, εκτός αν ακυρωθεί τουλάχιστον 24 ώρες πριν από τη λήξη της τρέχουσας περιόδου.</string>
+    <string name="per_year">/έτος</string>
+    <string name="per_month">/μήνα</string>
+    <string name="per_week">/εβδομάδα</string>
+
+    <!-- Ads -->
+    <string name="sponsored">ΧΟΡΗΓΙΑ</string>
+    <string name="skip">Παράλειψη</string>
+    <string name="skip_ad">Παράλειψη διαφήμισης</string>
+    <string name="ad_content_description">Διαφήμιση</string>
+
+    <!-- Radio Call-In -->
+    <string name="call_to_request">Κάλεσε για να ζητήσεις ένα θέμα</string>
+    <string name="call_in_label">Κάλεσε: (833) 398-1230</string>
+
+    <!-- Splash Screen -->
+    <string name="splash_tagline">Η ηχητική σου ενημέρωση από AI</string>
+
+    <!-- Notifications (non-composable) -->
+    <string name="notification_good_morning">Καλημέρα!</string>
+    <string name="notification_daily_brief_text">Ώρα για την ημερήσια ενημέρωσή σου. Πάτα για να μάθεις τα νέα σου από τα email, το ημερολόγιο και τις ειδήσεις.</string>
+    <string name="daily_brief_channel_description">Ειδοποιήσεις υπενθύμισης ημερήσιας ενημέρωσης</string>
+    <string name="radio_topic_channel_name">Υπενθυμίσεις θεμάτων ραδιοφώνου</string>
+    <string name="radio_topic_channel_description">Λάβε ειδοποίηση όταν ένα θέμα με σελιδοδείκτη παίζει στο Audexa Radio</string>
+    <string name="radio_topic_notification_title">Τώρα στο Audexa Radio</string>
+    <string name="radio_topic_notification_body">Παίζει ζωντανά: %1$s. Πάτα για να συντονιστείς.</string>
+
+    <!-- Daily Brief Playback -->
+    <string name="daily_brief_title_format">Ημερήσια ενημέρωση - %s</string>
+    <string name="daily_brief_description">Η εξατομικευμένη πρωινή ενημέρωσή σου</string>
+
+    <!-- Morning briefing: one local notification per day, opt-in after first play -->
+    <string name="briefing_notification_title">Σήμερα στο Audexa</string>
+    <string name="briefing_notification_body_fallback">Το Audexa Radio παίζει τώρα. Πάτα για να ακούσεις.</string>
+    <plurals name="briefing_notification_body_topics">
+        <item quantity="one">%1$d νέο podcast θέματος: %2$s. Πάτα για να ακούσεις.</item>
+        <item quantity="other">%1$d νέα podcast θεμάτων: %2$s. Πάτα για να ακούσεις.</item>
+    </plurals>
+    <string name="briefing_names_with_more">%1$s και %2$d ακόμη</string>
+    <string name="briefing_optin_title">Να σου υπενθυμίζουμε όταν είναι έτοιμα νέα podcast θεμάτων;</string>
+    <string name="briefing_optin_accept">Υπενθύμισέ μου</string>
+    <string name="briefing_optin_decline">Όχι τώρα</string>
+
+    <!-- Ask the hosts (English only for now) -->
+    <string name="ask_entry_title">Ρώτα τους παρουσιαστές</string>
+    <string name="ask_entry_subtitle">Ο αποψινός αγώνας, μια κυκλοφορία, μια είδηση: δύο παρουσιαστές AI τη συζητούν</string>
+    <string name="ask_title">Ρώτα τους παρουσιαστές</string>
+    <string name="ask_intro">Περίγραψε ένα γεγονός ή μια είδηση. Οι παρουσιαστές μιλούν μόνο για όσα αναφέρουν οι πρόσφατες επικεφαλίδες και σου λένε αν δεν υπάρχει αρκετή κάλυψη. Τα επεισόδια δημιουργούνται από AI και χρειάζονται ένα με δύο λεπτά.</string>
+    <string name="ask_field_label">Για τι να μιλήσουν;</string>
+    <string name="ask_field_placeholder">π.χ. Ποιος κέρδισε τον αποψινό αγώνα των Warriors;</string>
+    <string name="ask_counter">%1$d/%2$d</string>
+    <string name="ask_language_label">Γλώσσα</string>
+    <string name="ask_submit">Ρώτα</string>
+    <string name="ask_sending">Αποστολή του αιτήματός σου...</string>
+    <string name="ask_stage_queued">Αναμονή για ελεύθερο στούντιο...</string>
+    <string name="ask_stage_reviewing">Έλεγχος του αιτήματός σου...</string>
+    <string name="ask_stage_searching">Διαβάζουμε τις τελευταίες επικεφαλίδες...</string>
+    <string name="ask_stage_writing">Οι παρουσιαστές προετοιμάζονται...</string>
+    <string name="ask_stage_recording">Ηχογράφηση του επεισοδίου...</string>
+    <string name="ask_stage_working">Σε εξέλιξη...</string>
+    <string name="ask_progress_description">Πρόοδος: %1$d τοις εκατό</string>
+    <string name="ask_leave_hint">Μπορείς να φύγεις από αυτή την οθόνη. Όταν επιστρέψεις, θα βρεις το ίδιο επεισόδιο.</string>
+    <string name="ask_ai_note">Συζήτηση δύο παρουσιαστών AI, βασισμένη σε πρόσφατες επικεφαλίδες ειδήσεων.</string>
+    <string name="ask_length">Διάρκεια %1$s</string>
+    <string name="ask_play">Αναπαραγωγή επεισοδίου</string>
+    <string name="ask_pause">Παύση</string>
+    <string name="ask_share">Κοινοποίηση</string>
+    <string name="ask_share_chooser">Κοινοποίηση αυτού του επεισοδίου</string>
+    <string name="ask_share_failed">Δεν ήταν δυνατό το άνοιγμα της κοινοποίησης</string>
+    <string name="ask_sources_title">Επικεφαλίδες στις οποίες βασίζεται το επεισόδιο</string>
+    <string name="ask_sources_note">Οι παρουσιαστές συζητούν μόνο όσα αναφέρουν αυτές οι επικεφαλίδες. Δες τις πηγές για τα πλήρη θέματα.</string>
+    <string name="ask_ask_another">Ρώτα κάτι άλλο</string>
+    <string name="ask_edit_question">Επεξεργασία ερώτησης</string>
+    <string name="ask_check_again">Έλεγχος ξανά</string>
+    <string name="ask_unavailable">Η λειτουργία «Ρώτα τους παρουσιαστές» δεν είναι διαθέσιμη αυτή τη στιγμή.</string>
+    <string name="ask_loading">Έλεγχος διαθεσιμότητας...</string>
+    <string name="ask_err_input">Έλεγξε την ερώτησή σου και δοκίμασε ξανά.</string>
+    <string name="ask_err_limited">Η λειτουργία «Ρώτα τους παρουσιαστές» έχει φόρτο ή έχει φτάσει στο όριό της. Δοκίμασε ξανά αργότερα.</string>
+    <string name="ask_err_not_found">Δεν βρίσκουμε πια αυτό το αίτημα. Ρώτα ξανά.</string>
+    <string name="ask_err_offline">Δεν υπάρχει σύνδεση. Έλεγξε το διαδίκτυό σου και δοκίμασε ξανά.</string>
+    <string name="ask_err_timeout">Αργεί περισσότερο από το αναμενόμενο. Το επεισόδιο μπορεί να έρχεται ακόμη.</string>
+    <string name="ask_err_server">Κάτι πήγε στραβά. Δοκίμασε ξανά.</string>
+    <string name="ask_err_refused">Οι παρουσιαστές δεν μπορούν να φτιάξουν επεισόδιο γι\' αυτό.</string>
+    <string name="ask_err_no_coverage">Δεν βρήκαμε αρκετή πρόσφατη κάλυψη ειδήσεων γι\' αυτό το θέμα, οπότε δεν δημιουργήσαμε επεισόδιο.</string>
+    <string name="ask_err_failed">Το επεισόδιο δεν μπόρεσε να δημιουργηθεί. Δοκίμασε ξανά.</string>
+</resources>

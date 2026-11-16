@@ -599,7 +599,7 @@ private fun DiscoverTabContent(
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
-                    text = "Suggest a Topic",
+                    text = androidx.compose.ui.res.stringResource(com.kreativekoala.audexa.R.string.suggest_topic),
                     style = MaterialTheme.typography.bodyLarge,
                     fontWeight = FontWeight.Medium
                 )
@@ -816,7 +816,7 @@ private fun RadioBannerItem(
                     maxLines = 1
                 )
                 Text(
-                    text = "AI-powered 24/7 news · LIVE",
+                    text = androidx.compose.ui.res.stringResource(com.kreativekoala.audexa.R.string.radio_home_tagline),
                     style = MaterialTheme.typography.bodySmall,
                     color = Color(0xFFEF4444)
                 )
@@ -860,14 +860,14 @@ private fun SuggestTopicBottomSheet(
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             Text(
-                text = "Suggest a Topic",
+                text = androidx.compose.ui.res.stringResource(com.kreativekoala.audexa.R.string.suggest_topic),
                 style = MaterialTheme.typography.headlineSmall,
                 color = MaterialTheme.colorScheme.onSurface,
                 fontWeight = FontWeight.Bold
             )
 
             Text(
-                text = "Tell us what you'd like to listen to and we'll consider adding it.",
+                text = androidx.compose.ui.res.stringResource(com.kreativekoala.audexa.R.string.suggest_topic_description),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
@@ -875,8 +875,8 @@ private fun SuggestTopicBottomSheet(
             OutlinedTextField(
                 value = topicName,
                 onValueChange = { topicName = it },
-                label = { Text("Topic name") },
-                placeholder = { Text("e.g. Quantum Computing") },
+                label = { Text(androidx.compose.ui.res.stringResource(com.kreativekoala.audexa.R.string.suggest_topic_name_label)) },
+                placeholder = { Text(androidx.compose.ui.res.stringResource(com.kreativekoala.audexa.R.string.suggest_topic_name_hint)) },
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true,
                 shape = RoundedCornerShape(12.dp),
@@ -890,8 +890,8 @@ private fun SuggestTopicBottomSheet(
             OutlinedTextField(
                 value = description,
                 onValueChange = { description = it },
-                label = { Text("Description (optional)") },
-                placeholder = { Text("What should this topic cover?") },
+                label = { Text(androidx.compose.ui.res.stringResource(com.kreativekoala.audexa.R.string.suggest_topic_details_label)) },
+                placeholder = { Text(androidx.compose.ui.res.stringResource(com.kreativekoala.audexa.R.string.suggest_topic_details_hint)) },
                 modifier = Modifier.fillMaxWidth(),
                 minLines = 2,
                 maxLines = 4,
@@ -923,7 +923,7 @@ private fun SuggestTopicBottomSheet(
                     Spacer(modifier = Modifier.width(8.dp))
                 }
                 Text(
-                    text = if (isLoading) "Submitting..." else "Submit",
+                    text = if (isLoading) androidx.compose.ui.res.stringResource(com.kreativekoala.audexa.R.string.submitting) else androidx.compose.ui.res.stringResource(com.kreativekoala.audexa.R.string.submit),
                     style = MaterialTheme.typography.bodyLarge,
                     fontWeight = FontWeight.SemiBold,
                     modifier = Modifier.padding(vertical = 4.dp)

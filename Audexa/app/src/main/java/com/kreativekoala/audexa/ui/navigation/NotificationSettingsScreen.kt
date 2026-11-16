@@ -210,7 +210,7 @@ fun NotificationSettingsScreen(
                                     color = MaterialTheme.colorScheme.onSurface
                                 )
                                 Text(
-                                    text = formatTime(uiState.briefingHour, uiState.briefingMinute),
+                                    text = formatTime(LocalContext.current, uiState.briefingHour, uiState.briefingMinute),
                                     style = MaterialTheme.typography.bodySmall,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
@@ -351,12 +351,11 @@ private fun TimePickerDialog(
     )
 }
 
-private fun formatTime(hour: Int, minute: Int): String {
-    val amPm = if (hour < 12) "AM" else "PM"
-    val displayHour = when {
-        hour == 0 -> 12
-        hour > 12 -> hour - 12
-        else -> hour
+/** Follows the phone's 12/24-hour setting and locale (was a hard-coded English "AM"/"PM" string). */
+private fun formatTime(context: android.content.Context, hour: Int, minute: Int): String {
+    val cal = java.util.Calendar.getInstance().apply {
+        set(java.util.Calendar.HOUR_OF_DAY, hour)
+        set(java.util.Calendar.MINUTE, minute)
     }
-    return String.format("%d:%02d %s", displayHour, minute, amPm)
+    return android.text.format.DateFormat.getTimeFormat(context).format(cal.time)
 }

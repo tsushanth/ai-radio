@@ -90,7 +90,7 @@ class BriefingManager @Inject constructor(
         preferencesManager.setLastBriefingDate(localDateKey(now))
     }
 
-    private fun localDateKey(c: Calendar): String = "%04d-%02d-%02d".format(
+    private fun localDateKey(c: Calendar): String = "%04d-%02d-%02d".format(java.util.Locale.US,
         c.get(Calendar.YEAR), c.get(Calendar.MONTH) + 1, c.get(Calendar.DAY_OF_MONTH)
     )
 

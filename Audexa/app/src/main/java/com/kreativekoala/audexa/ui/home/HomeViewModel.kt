@@ -120,7 +120,7 @@ class HomeViewModel @Inject constructor(
 
     private val todayDateString: String
         get() {
-            val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+            val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.US)
             return dateFormat.format(Date())
         }
 

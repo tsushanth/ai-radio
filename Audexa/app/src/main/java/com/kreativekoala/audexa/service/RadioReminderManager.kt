@@ -186,7 +186,7 @@ class RadioReminderManager @Inject constructor(
 
     private fun todayKey(): String {
         val cal = java.util.Calendar.getInstance(java.util.TimeZone.getTimeZone("UTC"))
-        return "%04d-%02d-%02d".format(
+        return "%04d-%02d-%02d".format(java.util.Locale.US,
             cal.get(java.util.Calendar.YEAR),
             cal.get(java.util.Calendar.MONTH) + 1,
             cal.get(java.util.Calendar.DAY_OF_MONTH),

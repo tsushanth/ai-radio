@@ -43,8 +43,8 @@ Migration `supabase/migrations/015_language_flags.sql` (review, then apply by ha
 | Beta label | `language_flags.beta` | true |
 | per-language episodes a day | `language_flags.daily_cap` | 8 |
 | voices | `language_flags.voice` (host 1), `voice_host2` | aria / kai |
-| all languages together, episodes a day | env `LANG_GLOBAL_DAILY_CAP` | 35 |
-| TTS characters a day (counted per HTTP attempt, retries included) | env `LANG_TTS_DAILY_CHARS` | 150000 |
+| all languages together, episodes a day | env `LANG_GLOBAL_DAILY_CAP` | 35 in code, 30 in fly.toml |
+| TTS characters a day (counted per HTTP attempt, retries included) | env `LANG_TTS_DAILY_CHARS` | 150000 in code, 120000 in fly.toml |
 | kill switch | `language_breaker.global_pause` (CLI `pause` / `resume`) or env `NEW_LANGUAGES=off` | off |
 | flag cache | env `LANG_FLAGS_CACHE_SEC` | 30 |
 | speech format | env `LANG_TTS_FORMAT` `pcm` (default) or `mp3` | pcm |
@@ -66,6 +66,13 @@ If the tables are missing or Supabase is unreadable the backend FAILS CLOSED: ev
 `GET /api/config/languages` lists enabled languages only: `{code, name, nativeName, status: beta|on|paused, beta, wave}`.
 `GET /api/topics?lang=xx` is empty while the language is off, the 12 topics when on. `GET /topics/:id/episode(s)?lang=xx` is 400
 `language_unavailable` while off, normal while on (also while paused).
+
+## Worst-case monthly cost (with the fly.toml caps)
+
+Speech: 120000 characters a day x 30 days x 4 USD per million characters = 14.4 USD (the character breaker is exact: retries are counted).
+Script model: at most 30 episodes a day x about 0.004 USD (one call, larger model, about 5K tokens in and 3K out) x 30 = about 3.6 USD; the
+shared daily model budget (3 USD, 600 calls) stays on top of it. Total about 18 USD, under the 19 USD ceiling. The code defaults (35 and
+150000) would give about 21.6 USD, which is why fly.toml sets lower values.
 
 ## Operating it
 

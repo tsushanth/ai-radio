@@ -363,7 +363,7 @@ class NotificationService @Inject constructor(
         // Sync with backend
         val userId = preferencesManager.userEmail.first()
         if (!userId.isNullOrEmpty()) {
-            val briefingTime = String.format("%02d:%02d", hour, minute)
+            val briefingTime = String.format(java.util.Locale.US, "%02d:%02d", hour, minute)
             val token = preferencesManager.fcmToken.first()
             syncSettingsWithBackend(userId, briefingTime, timezone, enabled, token)
         }

@@ -54,7 +54,7 @@ class PodcastRepository @Inject constructor(
         userId: String,
         preferences: UserPreferences
     ): Result<GeneratePodcastResponse> = runCatching {
-        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.US)
         val today = dateFormat.format(Date())
 
         Log.d(TAG, "Generating podcast with language: ${preferences.language}")
@@ -87,7 +87,7 @@ class PodcastRepository @Inject constructor(
         userId: String,
         preferences: UserPreferences
     ): Flow<Pair<GenerationProgress, AsyncGenerationResult?>> = flow {
-        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.US)
         val today = dateFormat.format(Date())
 
         Log.d(TAG, "Starting async generation with language: ${preferences.language}")

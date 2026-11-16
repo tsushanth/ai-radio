@@ -144,6 +144,7 @@ class NotificationSettingsViewModel @Inject constructor(
         val userId = preferencesManager.userEmail.first()
         if (!userId.isNullOrEmpty()) {
             val briefingTime = String.format(
+                java.util.Locale.US,
                 "%02d:%02d",
                 _uiState.value.briefingHour,
                 _uiState.value.briefingMinute

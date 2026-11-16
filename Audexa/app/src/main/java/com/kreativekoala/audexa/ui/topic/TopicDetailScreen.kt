@@ -29,7 +29,11 @@ import coil.compose.AsyncImage
 import com.kreativekoala.audexa.R
 import com.kreativekoala.audexa.data.model.AdSegment
 import com.kreativekoala.audexa.data.model.Topic
+import com.kreativekoala.audexa.data.model.RemoteLanguages
 import com.kreativekoala.audexa.data.model.SupportedLanguage
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.collectAsState
 import com.kreativekoala.audexa.ui.components.NowPlayingIndicator
 import com.kreativekoala.audexa.ui.theme.*
 
@@ -360,9 +364,11 @@ private fun LanguageSelector(
             expanded = expanded,
             onDismissRequest = { expanded = false }
         ) {
-            SupportedLanguage.entries.forEach { language ->
+            val remoteVersion by RemoteLanguages.version.collectAsState()
+            remember(remoteVersion) { SupportedLanguage.pickerLanguages() }.forEach { language ->
                 DropdownMenuItem(
-                    text = { Text(if (language.podcastAvailable) language.displayWithFlag else "${language.displayWithFlag} · ${stringResource(R.string.language_coming_soon)}") },
+                    text = { Text(if (!language.podcastAvailable) "${language.displayWithFlag} · ${stringResource(R.string.language_coming_soon)}"
+                        else if (language.isBeta) "${language.displayWithFlag} · ${stringResource(R.string.language_beta)}" else language.displayWithFlag) },
                     onClick = {
                         onLanguageSelected(language)
                         expanded = false

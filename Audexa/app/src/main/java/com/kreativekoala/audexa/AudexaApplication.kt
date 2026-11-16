@@ -23,6 +23,7 @@ import javax.inject.Inject
 class AudexaApplication : Application() {
 
     @Inject lateinit var preferencesManager: PreferencesManager
+    @Inject lateinit var remoteLanguages: com.kreativekoala.audexa.data.repository.RemoteLanguagesRepository
 
     override fun onCreate() {
         super.onCreate()
@@ -37,6 +38,8 @@ class AudexaApplication : Application() {
         CoroutineScope(Dispatchers.IO).launch {
             runCatching { preferencesManager.migrateUnsupportedLanguage() }
             runCatching { Analytics.preferredLanguage = preferencesManager.preferredLanguage.first() }
+            // Which podcast languages the server has switched on (cs nl pl ...): the pickers read this list.
+            runCatching { remoteLanguages.refresh() }
         }
         ExperimentManager.init(this)
         PromoCodeManager.init(this)

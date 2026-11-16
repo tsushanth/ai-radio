@@ -174,6 +174,7 @@
     <!-- Language Settings -->
     <string name="language">Språk</string>
     <string name="language_coming_soon">Kommer snart</string>
+    <string name="language_beta">Beta</string>
     <string name="language_coming_soon_toast">Inte tillgängligt än. Vi har noterat ditt intresse.</string>
     <string name="generating_language">Förbereder ditt avsnitt på %1$s. Det första kan ta några minuter.</string>
     <string name="language_fallback_note">Poddar finns inte på %1$s ännu, så vi valde %2$s åt dig.</string>

@@ -122,7 +122,7 @@ class StringResourcesTest {
         "app_name", "gmail", "outlook", "premium", "google_calendar",
         "sleep_timer_5_min", "sleep_timer_10_min", "sleep_timer_15_min", "sleep_timer_30_min", "min_format", "per_week",
         "radio_chat", "timer", "version", "nav_home", "pause", "ask_pause", "theme_system", "calendar", "start", "notifications",
-        "buffering", "profile", "nav_profile", "sleep_timer", "bookmark", "host_1", "host_2", "sponsored"
+        "buffering", "language_beta", "profile", "nav_profile", "sleep_timer", "bookmark", "host_1", "host_2", "sponsored"
     )
 
     @Test fun translatedLocalesDoNotKeepEnglishText() {

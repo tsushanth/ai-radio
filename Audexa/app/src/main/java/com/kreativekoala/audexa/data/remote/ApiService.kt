@@ -133,6 +133,10 @@ interface ApiService {
     @GET("ask/config")
     suspend fun getAskConfig(): Response<ResponseBody>
 
+    // Podcast languages the server has switched on (Beta flag per language). Raw body: parsed by RemoteLanguages.parse.
+    @GET("config/languages")
+    suspend fun getPodcastLanguages(): Response<ResponseBody>
+
     @POST("ask")
     suspend fun submitAsk(@Body request: AskSubmitRequest): Response<ResponseBody>
 

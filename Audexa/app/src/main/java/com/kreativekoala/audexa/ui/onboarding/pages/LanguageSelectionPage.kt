@@ -19,7 +19,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.kreativekoala.audexa.data.model.RemoteLanguages
 import com.kreativekoala.audexa.data.model.SupportedLanguage
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.collectAsState
 import com.kreativekoala.audexa.ui.theme.AccentOrange
 
 @Composable
@@ -30,6 +34,8 @@ fun LanguageSelectionPage(
     onContinue: () -> Unit
 ) {
     val context = androidx.compose.ui.platform.LocalContext.current
+    val remoteVersion by RemoteLanguages.version.collectAsState()
+    val pickerLanguages = remember(remoteVersion) { SupportedLanguage.pickerLanguages() }
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -85,7 +91,7 @@ fun LanguageSelectionPage(
             verticalArrangement = Arrangement.spacedBy(12.dp),
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            items(SupportedLanguage.entries.toList()) { language ->
+            items(pickerLanguages) { language ->
                 val isSelected = language == selectedLanguage
                 // The second line is the language name in the phone's language ("Spanish" stays English on an English phone).
                 val shownName = if (java.util.Locale.getDefault().language == "en") language.displayName
@@ -129,7 +135,8 @@ fun LanguageSelectionPage(
                                 color = if (isSelected) AccentOrange else MaterialTheme.colorScheme.onSurface
                             )
                             Text(
-                                text = if (language.podcastAvailable) shownName else "$shownName · ${stringResource(com.kreativekoala.audexa.R.string.language_coming_soon)}",
+                                text = if (!language.podcastAvailable) "$shownName · ${stringResource(com.kreativekoala.audexa.R.string.language_coming_soon)}"
+                                else if (language.isBeta) "$shownName · ${stringResource(com.kreativekoala.audexa.R.string.language_beta)}" else shownName,
                                 style = MaterialTheme.typography.bodySmall,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )

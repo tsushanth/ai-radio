@@ -174,6 +174,7 @@
     <!-- Language Settings -->
     <string name="language">言語</string>
     <string name="language_coming_soon">近日対応</string>
+    <string name="language_beta">Beta</string>
     <string name="language_coming_soon_toast">まだ利用できません。ご関心を記録しました。</string>
     <string name="generating_language">%1$sでエピソードを準備しています。最初の1本は数分かかることがあります。</string>
     <string name="language_fallback_note">ポッドキャストはまだ%1$sに対応していないため、%2$sを選択しました。</string>

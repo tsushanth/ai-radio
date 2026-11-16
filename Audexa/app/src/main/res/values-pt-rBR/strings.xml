@@ -174,6 +174,7 @@
     <!-- Language Settings -->
     <string name="language">Idioma</string>
     <string name="language_coming_soon">Em breve</string>
+    <string name="language_beta">Beta</string>
     <string name="language_coming_soon_toast">Ainda não disponível. Registramos seu interesse.</string>
     <string name="generating_language">Preparando seu episódio em %1$s. O primeiro pode levar alguns minutos.</string>
     <string name="language_fallback_note">Os podcasts ainda não estão disponíveis em %1$s, então escolhemos %2$s para você.</string>

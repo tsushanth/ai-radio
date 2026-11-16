@@ -174,6 +174,7 @@
     <!-- Language Settings -->
     <string name="language">语言</string>
     <string name="language_coming_soon">即将推出</string>
+    <string name="language_beta">Beta</string>
     <string name="language_coming_soon_toast">暂未开放。我们已记录你的关注。</string>
     <string name="generating_language">正在为你准备%1$s节目。第一期可能需要几分钟。</string>
     <string name="language_fallback_note">播客暂不支持%1$s，已为你选择%2$s。</string>

@@ -8,8 +8,8 @@ package com.kreativekoala.audexa.data.model
  * fail with "not available yet". Everything that reads or writes the content language goes through [resolve].
  */
 object ContentLanguage {
-    /** Content languages the server can generate: en es fr de pt it. */
-    val SUPPORTED: Set<SupportedLanguage> get() = SupportedLanguage.PODCAST_LANGUAGES
+    /** Content languages the server can generate: en es fr de pt it, plus the ones the server lists as enabled (RemoteLanguages). */
+    val SUPPORTED: Set<SupportedLanguage> get() = SupportedLanguage.entries.filter { it.podcastAvailable }.toSet()
 
     /**
      * Unsupported languages that have a clearly closer supported one (the speakers read it): Catalan, Galician and Asturian ->

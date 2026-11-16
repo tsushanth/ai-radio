@@ -15,7 +15,7 @@ Personalizado Para Ti
 Selecciona tus intereses y Audexa selecciona contenido específicamente para ti. Marca tus temas favoritos, oculta lo que no quieras y descubre nuevos programas en la pestaña Explorar.
 
 Soporte Multi-Idioma
-Escucha podcasts en tu idioma preferido. Los podcasts de Audexa están disponibles en inglés, español, francés, alemán, portugués e italiano.
+Escucha podcasts en tu idioma preferido. Los podcasts de Audexa están disponibles en inglés, español, francés, alemán, portugués e italiano. Otros catorce idiomas están disponibles en beta: checo, neerlandés, polaco, rumano, ruso, sueco, ucraniano, húngaro, finés, turco, indonesio, griego, japonés e hindi.
 
 Temporizador y Controles de Reproducción
 Configura un temporizador de sueño, avanza o retrocede, y disfruta de reproducción continua con soporte de audio en segundo plano y controles en la pantalla de bloqueo.

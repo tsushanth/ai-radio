@@ -4,6 +4,8 @@
  */
 
 import { onDemandLanguages, DailyCap } from '../services/tts/piper-languages';
+import { isNewLanguage } from '../services/languages/registry';
+import { languageControls, type Denied } from '../services/languages/controls';
 import { Router, Request, Response } from 'express';
 import rateLimit from 'express-rate-limit';
 import { createClient } from '@supabase/supabase-js';
@@ -119,7 +121,7 @@ router.post('/suggest', suggestIpLimiter, async (req: Request, res: Response) =>
       res.status(400).json({ success: false, error: `description must be ${SUGGEST_DESC_MAX} characters or fewer` });
       return;
     }
-    const lang = typeof language === 'string' && /^[a-z]{2}/i.test(language) ? language.slice(0, 2).toLowerCase() : 'en';
+    const lang = typeof language === 'string' && /^[a-z]{2,3}(?![a-z])/i.test(language) ? language.match(/^[a-z]{2,3}/i)![0].toLowerCase() : 'en'; // fil must not become fi (Finnish)
     const bodyUserId = typeof req.body.userId === 'string' && req.body.userId.length > 0 && req.body.userId.length <= 128 ? req.body.userId : null;
 
     // Owner of the request. Android 12.10.1 sends no userId and no token, so its rows have no owner and account deletion cannot find
@@ -439,6 +441,12 @@ router.get('/:topicId/episode', async (req: Request, res: Response) => {
       return;
     }
 
+    // Additional languages are readable only while their flag is on (a generation pause never hides episodes that already exist).
+    if (isNewLanguage(language) && !(await languageControls.isEnabled(language))) {
+      res.status(400).json(deniedBody({ ok: false, http: 400, status: 'unavailable', error: 'language_unavailable', message: 'This language is not available yet.' }));
+      return;
+    }
+
     // Fetch-only: return existing episode, never trigger generation
     const today = new Date().toISOString().split('T')[0];
     const episode = await topicPodcastGenerator.getExistingEpisode(topicId, today, language);
@@ -549,6 +557,9 @@ export const generateGuard = new GenerateGuard();
 
 const DAILY_LIMIT_BODY = { success: false, error: 'daily_limit', message: 'Try again tomorrow.' };
 
+/** JSON for a refused request in one of the additional languages: error (code the app knows), status (unavailable | paused | daily_cap_reached), message. */
+const deniedBody = (d: Denied) => ({ success: false, error: d.error, status: d.status, ...(d.scope ? { scope: d.scope } : {}), message: d.message });
+
 router.post('/:topicId/generate', async (req: Request, res: Response) => {
   try {
     const { topicId } = req.params;
@@ -575,6 +586,21 @@ router.post('/:topicId/generate', async (req: Request, res: Response) => {
     const todayUtc = new Date().toISOString().split('T')[0];
     const haveToday = await topicPodcastGenerator.getExistingEpisode(topicId, todayUtc, language);
     const startsGeneration = forceRegenerate || !haveToday || haveToday.status === 'failed';
+
+    // Additional languages (flags in the database): an episode that already exists is served for free, even while generation is
+    // paused; anything that would START a generation must be admitted first (language on, topic offered, no pause / breaker).
+    let newLanguageBeta: boolean | undefined;
+    if (isNewLanguage(language)) {
+      const flag = await languageControls.enabledFlag(language);
+      if (!flag) return res.status(400).json(deniedBody({ ok: false, http: 400, status: 'unavailable', error: 'language_unavailable', message: 'This language is not available yet.' }));
+      newLanguageBeta = flag.beta;
+      const serveExisting = !!haveToday && (haveToday.status === 'completed' || haveToday.status === 'generating') && !forceRegenerate;
+      if (!serveExisting) {
+        const adm = await languageControls.admitGeneration(language, topicId);
+        if (adm.ok !== true) return res.status((adm as Denied).http).json(deniedBody(adm as Denied));
+      }
+    }
+
     if (startsGeneration) {
       // persisted daily LLM budget first (dollars / calls, shared by all machines), then the per-caller and global allowances
       if (await llmBudget.isCapped()) return res.status(429).json(DAILY_LIMIT_BODY);
@@ -591,15 +617,23 @@ router.post('/:topicId/generate', async (req: Request, res: Response) => {
     let nonEnglishReady = false;
     // Non-English episodes are generated on demand, only for languages that have a Piper voice, and capped per day
     // (each one costs an LLM script plus TTS). An episode that already exists is served without counting against the cap.
+    // The additional languages (isNewLanguage) have their own persisted caps in languageControls and never touch the in-memory cap.
     if (language !== 'en') {
-      if (!/^[a-z]{2}$/.test(language) || !onDemandLanguages().includes(language)) {
+      const piperLanguage = onDemandLanguages().includes(language);
+      if (!/^[a-z]{2}$/.test(language) || (!piperLanguage && !isNewLanguage(language))) {
         return res.status(400).json({ success: false, error: 'language_unavailable', message: 'This language is not available yet.' });
       }
       const today = new Date().toISOString().split('T')[0];
       const have = await topicPodcastGenerator.getExistingEpisode(topicId, today, language);
       nonEnglishReady = !!have && have.status === 'completed';
-      if (!(have && (have.status === 'completed' || have.status === 'generating')) && !nonEnglishDailyCap.tryTake()) {
-        return res.status(429).json({ success: false, error: 'daily_limit', message: 'Try again tomorrow.' });
+      const alreadyThere = !!(have && (have.status === 'completed' || have.status === 'generating'));
+      if (!alreadyThere || forceRegenerate) {
+        if (piperLanguage) {
+          if (!alreadyThere && !nonEnglishDailyCap.tryTake()) return res.status(429).json({ success: false, error: 'daily_limit', message: 'Try again tomorrow.' });
+        } else if (!alreadyThere) {
+          const slot = await languageControls.reserveEpisode(language);
+          if (slot.ok !== true) return res.status((slot as Denied).http).json(deniedBody(slot as Denied));
+        }
       }
     }
 
@@ -652,6 +686,7 @@ router.post('/:topicId/generate', async (req: Request, res: Response) => {
           },
           isNew: false,
           message: stubMessage,
+          ...(newLanguageBeta !== undefined ? { beta: newLanguageBeta } : {}),
         },
       });
       return;
@@ -669,7 +704,7 @@ router.post('/:topicId/generate', async (req: Request, res: Response) => {
 
     res.json({
       success: true,
-      data: result,
+      data: newLanguageBeta !== undefined ? { ...result, beta: newLanguageBeta } : result,
     });
   } catch (error) {
     if (isBudgetExceeded(error)) return res.status(429).json(DAILY_LIMIT_BODY);
@@ -700,6 +735,12 @@ router.get('/:topicId/episodes', async (req: Request, res: Response) => {
         success: false,
         error: 'Topic not found',
       });
+      return;
+    }
+
+    // Additional languages are readable only while their flag is on (a generation pause never hides episodes that already exist).
+    if (isNewLanguage(language) && !(await languageControls.isEnabled(language))) {
+      res.status(400).json(deniedBody({ ok: false, http: 400, status: 'unavailable', error: 'language_unavailable', message: 'This language is not available yet.' }));
       return;
     }
 

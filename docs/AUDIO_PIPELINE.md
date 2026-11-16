@@ -32,6 +32,13 @@ hook for equalising chunks before they are joined (used by the multilingual TTS 
 Container: the production image installs ffmpeg (`apk add ffmpeg`). Cost: about 1 to 3 seconds of CPU per episode on the 1-CPU Fly
 machine, one process at a time per episode.
 
+## Additional languages
+
+Episodes in the additional languages (`docs/LANGUAGES.md`) arrive as 24 kHz PCM pieces from the speech API. Each piece is brought to a
+common level with `normalizeWavRms`, the pieces are joined with short gaps, and the whole episode goes through the same single encode
+above (one lossy generation, loudness normalised across the whole episode). `LANG_TTS_FORMAT=mp3` instead stores the API's own MP3
+pieces joined (no ffmpeg, no level equalisation across pieces); use it only if the encoder is unavailable.
+
 ## Retention (not scheduled, not enabled)
 
 `ai-radio-backend/src/services/storage/retention.ts`, CLI `node dist/scripts/audio-retention.js`.

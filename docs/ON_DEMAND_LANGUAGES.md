@@ -1,6 +1,6 @@
 # On-demand languages (proposal)
 
-Status: proposal. Nothing here is built except the `language_picked` event.
+Status: proposal. The additional languages are now built behind flags: see `docs/LANGUAGES.md`.
 
 ## Why not a live stream per language
 A radio stream needs several rendered segments queued before it can air, so the first listener of a new

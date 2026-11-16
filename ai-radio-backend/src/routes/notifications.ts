@@ -326,8 +326,8 @@ router.post('/event', (req, res) => {
     install_id,
     hour: Number.isInteger(hour) && hour >= 0 && hour <= 23 ? hour : undefined,
     topic_count: Number.isInteger(topic_count) && topic_count >= 0 && topic_count <= 999 ? topic_count : undefined,
-    // language_picked: which language the user chose (two letters only), to size demand for non-English content
-    lang: typeof lang === 'string' && /^[a-z]{2}$/.test(lang) ? lang : undefined,
+    // language_picked: which language the user chose (two or three letters: fil is a language code), to size demand for non-English content
+    lang: typeof lang === 'string' && /^[a-z]{2,3}$/.test(lang) ? lang : undefined,
   }));
 
   res.status(204).end();

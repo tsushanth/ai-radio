@@ -8,6 +8,7 @@ import { generateText, readProvider } from '../../lib/llmText';
 import { llmBudget } from '../../lib/llmBudget';
 import { openaiTTS, type VoiceConfig } from '../tts/openai.tts';
 import { concatenateBuffers } from '../tts/audio.utils';
+import { finalizeEpisodeAudio } from '../audio/episode-audio';
 import type { ModelCall } from '../scheduler/topic-suggest';
 import { onDemandLanguages } from '../tts/piper-languages';
 import {
@@ -148,7 +149,8 @@ export function getAskRuntime(): AskRuntime {
     },
     upload: async (audio, id) => {
       const path = `ask/${id}.mp3`; // same as topic episodes: the bucket only accepts audio/mpeg
-      const { error } = await db.storage.from(BUCKET).upload(path, audio, { contentType: 'audio/mpeg', cacheControl: '86400', upsert: true });
+      const final = await finalizeEpisodeAudio(audio); // real MP3 (loudness normalised); keeps the WAV if the encoder is unavailable
+      const { error } = await db.storage.from(BUCKET).upload(path, final.buffer, { contentType: final.contentType, cacheControl: '86400', upsert: true });
       if (error) throw new Error(`Upload failed: ${error.message}`);
       return db.storage.from(BUCKET).getPublicUrl(path).data.publicUrl;
     },

@@ -13,6 +13,7 @@ import { contentAggregator } from './aggregator.service';
 import { SOURCE_HANDLING_RULES, formatStoryLine, hasGroundedExcerpts, stripExcerpts } from './source-guardrails';
 import { openaiTTS, type VoiceConfig } from '../tts/openai.tts';
 import { concatenateBuffers } from '../tts/audio.utils';
+import { finalizeEpisodeAudio } from '../audio/episode-audio';
 import type {
   TopicDefinition,
   TopicEpisode,
@@ -446,15 +447,19 @@ Create an engaging ${topic.targetDurationMinutes}-minute podcast covering the mo
   /**
    * Upload audio to public bucket
    */
-  private async uploadAudio(buffer: Buffer, path: string): Promise<string> {
+  private async uploadAudio(wavOrMp3: Buffer, path: string): Promise<string> {
     if (!this.supabase) {
       throw new Error('Supabase not configured');
     }
 
+    // The TTS worker returns WAV. Store a real MP3 (loudness normalised) under the .mp3 name; the bucket only accepts audio/mpeg.
+    // If the encoder is unavailable the WAV is stored as before, so an episode is never lost to it.
+    const { buffer, contentType } = await finalizeEpisodeAudio(wavOrMp3);
+
     const { error } = await this.supabase.storage
       .from(this.BUCKET)
       .upload(path, buffer, {
-        contentType: 'audio/mpeg',
+        contentType,
         cacheControl: '86400', // 24 hour cache
         upsert: true,
       });
@@ -680,6 +685,7 @@ Create an engaging ${topic.targetDurationMinutes}-minute podcast covering the mo
       .eq('topic_id', topicId)
       .eq('status', 'completed')
       .eq('language', language)
+      .not('audio_url', 'is', null) // retention clears audio_url when old audio is deleted: do not list episodes that cannot play
       .order('date', { ascending: false })
       .limit(limit);
 

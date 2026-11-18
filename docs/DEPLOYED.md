@@ -2,6 +2,12 @@
 
 Newest first. Parity rule: whatever runs in production is on `main` (tree compared for the deployed paths).
 
+## 2026-11-17 Web (audexa.app, Fly `audexa-web`): install-referrer tags on Play links (#73)
+
+- Release v22, image `registry.fly.io/audexa-web:deployment-01M7P0BYS83EB98A5Q3S5Z7APH`, built from `origin/main` at `d0dea49` (merge of #73); `web-app/` tree identical to main. Previous release v21 (2026-11-13) matched the last `web-app/` commit before this one (`782d18b`).
+- `web-app/src/lib/playLinks.ts`: `referrer=utm_source=audexa_web&utm_medium=web&utm_campaign=<hero|cta|about|settings|llms>`. The `/live` share page keeps its own tagging (`share.ts`). Convention: growth-research/LINK-CONVENTION.md.
+- Verified live: `/about` and `llms.txt` carry the tag; the home page and settings links render client-side after sign-in, so they were checked by tests (`npm test` 122 pass), not by fetching HTML.
+
 ## 2026-11-16 Android 12.11.0 (50) on Google Play production, 20% staged
 
 - Play production track read back after commit: 12.11.0 (50) inProgress at userFraction 0.2, 12.10.3 (49) completed. Not raised above 20%.

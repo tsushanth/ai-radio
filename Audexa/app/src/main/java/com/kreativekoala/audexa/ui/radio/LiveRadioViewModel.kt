@@ -1,5 +1,9 @@
 package com.kreativekoala.audexa.ui.radio
 
+import dagger.hilt.android.qualifiers.ApplicationContext
+import com.kreativekoala.audexa.R
+import androidx.annotation.StringRes
+import android.content.Context
 import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -44,14 +48,19 @@ data class RadioQueueSegment(
     val topicName: String,
     val createdAt: String
 ) {
-    val segmentLabel: String
+    /** Known server segment types have a translated label; an unknown type falls back to [segmentLabelFallback]. */
+    @get:StringRes
+    val segmentLabelRes: Int?
         get() = when (segmentType) {
-            "headlines" -> "Headlines"
-            "deep_dive" -> "Deep Dive"
-            "listener_request" -> "Request"
-            else -> segmentType.replace("_", " ")
-                .replaceFirstChar { it.uppercase() }
+            "headlines" -> R.string.radio_segment_headlines
+            "deep_dive" -> R.string.radio_segment_deep_dive
+            "listener_request" -> R.string.radio_segment_request
+            else -> null
         }
+
+    val segmentLabelFallback: String
+        get() = segmentType.replace("_", " ")
+            .replaceFirstChar { it.uppercase() }
 
     val badgeColorType: String
         get() = segmentType // Used in composable for color mapping
@@ -69,6 +78,7 @@ data class NowPlayingInfo(
 
 @HiltViewModel
 class LiveRadioViewModel @Inject constructor(
+    @ApplicationContext private val appContext: Context,
     private val audioManager: AudioManager,
     private val billingManager: BillingManager,
     val supabase: SupabaseClient,
@@ -133,7 +143,7 @@ class LiveRadioViewModel @Inject constructor(
         audioManager.play(
             id = "audexa-radio-${streamUrl.hashCode()}",
             title = stationName,
-            description = "AI-powered 24/7 news and talk radio",
+            description = appContext.getString(R.string.radio_tagline),
             audioUrl = streamUrl
         )
     }

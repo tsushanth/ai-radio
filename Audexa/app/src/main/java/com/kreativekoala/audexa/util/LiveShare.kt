@@ -39,13 +39,19 @@ object LiveShare {
     fun cleanTopic(raw: String?): String? =
         raw?.replace(LANGUAGE_PREFIX, "")?.trim()?.takeIf { it.isNotEmpty() }
 
-    fun buildShareText(stationName: String, topicName: String?, url: String): String {
+    /**
+     * The sentence is built by the caller from translated templates ([withTopic] gets station, topic, link; [withoutTopic]
+     * gets station, link) so word order can follow the language. This only decides which one applies.
+     */
+    fun buildShareText(
+        stationName: String,
+        topicName: String?,
+        url: String,
+        withTopic: (station: String, topic: String, url: String) -> String,
+        withoutTopic: (station: String, url: String) -> String
+    ): String {
         val topic = cleanTopic(topicName)
-        return if (topic != null) {
-            "$stationName is on air right now with: $topic. It is an AI-generated news and talk station. Tune in live: $url"
-        } else {
-            "I'm listening to $stationName, an AI-generated news and talk station. Tune in live: $url"
-        }
+        return if (topic != null) withTopic(stationName, topic, url) else withoutTopic(stationName, url)
     }
 
     /**

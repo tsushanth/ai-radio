@@ -81,7 +81,7 @@ fun HomeScreen(
         when (suggestTopicResult) {
             is SuggestTopicResult.Success -> {
                 showSuggestTopicSheet = false
-                Toast.makeText(context, "Thanks, we review suggestions and add the good ones.", Toast.LENGTH_LONG).show()
+                Toast.makeText(context, context.getString(R.string.suggest_topic_thanks), Toast.LENGTH_LONG).show()
                 viewModel.resetSuggestTopicResult()
             }
             is SuggestTopicResult.Error -> {
@@ -826,7 +826,7 @@ private fun RadioBannerItem(
                 color = Color(0xFFEF4444)
             ) {
                 Text(
-                    text = "● LIVE",
+                    text = stringResource(R.string.live_badge),
                     modifier = Modifier.padding(horizontal = 8.dp, vertical = 3.dp),
                     color = Color.White,
                     style = MaterialTheme.typography.labelSmall,

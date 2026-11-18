@@ -164,7 +164,7 @@ fun CustomPaywallScreen(
                     )
                     Spacer(modifier = Modifier.height(12.dp))
                     Text(
-                        text = "Loading plans...",
+                        text = stringResource(R.string.paywall_loading_plans),
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -243,7 +243,7 @@ fun CustomPaywallScreen(
                     try { context.startActivity(intent) } catch (_: Exception) {}
                 }) {
                     Text(
-                        text = "Have an offer code?",
+                        text = stringResource(R.string.paywall_offer_code),
                         color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
                     )
                 }

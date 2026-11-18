@@ -1,5 +1,7 @@
 package com.kreativekoala.audexa.ui.theme
 
+import com.kreativekoala.audexa.R
+import androidx.annotation.StringRes
 import android.app.Activity
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
@@ -12,10 +14,10 @@ import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 
 // App Theme enum matching iOS
-enum class AppTheme(val value: String, val displayName: String) {
-    SYSTEM("system", "System"),
-    DARK("dark", "Dark"),
-    LIGHT("light", "Light");
+enum class AppTheme(val value: String, @StringRes val labelRes: Int) {
+    SYSTEM("system", R.string.theme_system),
+    DARK("dark", R.string.theme_dark),
+    LIGHT("light", R.string.theme_light);
 
     companion object {
         fun fromValue(value: String): AppTheme {

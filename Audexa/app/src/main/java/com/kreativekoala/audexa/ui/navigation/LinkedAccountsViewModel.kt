@@ -1,5 +1,8 @@
 package com.kreativekoala.audexa.ui.navigation
 
+import dagger.hilt.android.qualifiers.ApplicationContext
+import com.kreativekoala.audexa.R
+import android.content.Context
 import android.content.Intent
 import android.util.Log
 import androidx.lifecycle.ViewModel
@@ -35,6 +38,7 @@ data class LinkedAccountsUiState(
 
 @HiltViewModel
 class LinkedAccountsViewModel @Inject constructor(
+    @ApplicationContext private val context: Context,
     private val preferencesManager: PreferencesManager,
     private val authRepository: AuthRepository
 ) : ViewModel() {
@@ -135,14 +139,14 @@ class LinkedAccountsViewModel @Inject constructor(
                 .onSuccess {
                     _uiState.value = _uiState.value.copy(
                         isLinkingGoogle = false,
-                        successMessage = "Gmail connected successfully! Your Daily Brief will now include email summaries."
+                        successMessage = context.getString(R.string.linked_gmail_connected)
                     )
                 }
                 .onFailure { e ->
                     Log.e(TAG, "Failed to link Gmail", e)
                     _uiState.value = _uiState.value.copy(
                         isLinkingGoogle = false,
-                        error = e.message ?: "Failed to link Gmail account"
+                        error = e.message ?: context.getString(R.string.linked_gmail_link_failed)
                     )
                 }
         }
@@ -205,14 +209,14 @@ class LinkedAccountsViewModel @Inject constructor(
                     _uiState.value = _uiState.value.copy(
                         isLinkingCalendar = false,
                         hasLinkedCalendar = true,
-                        successMessage = "Calendar connected successfully! Your Daily Brief will now include upcoming events."
+                        successMessage = context.getString(R.string.linked_calendar_connected)
                     )
                 }
                 .onFailure { e ->
                     Log.e(TAG, "Failed to link Calendar", e)
                     _uiState.value = _uiState.value.copy(
                         isLinkingCalendar = false,
-                        error = e.message ?: "Failed to link Calendar"
+                        error = e.message ?: context.getString(R.string.linked_calendar_link_failed)
                     )
                 }
         }
@@ -225,12 +229,12 @@ class LinkedAccountsViewModel @Inject constructor(
                 _uiState.value = _uiState.value.copy(
                     hasLinkedCalendar = false,
                     calendarEnabled = false,
-                    successMessage = "Calendar disconnected"
+                    successMessage = context.getString(R.string.linked_calendar_disconnected)
                 )
             } catch (e: Exception) {
                 Log.e(TAG, "Failed to unlink Calendar", e)
                 _uiState.value = _uiState.value.copy(
-                    error = "Failed to disconnect calendar: ${e.message}"
+                    error = context.getString(R.string.linked_calendar_disconnect_failed, e.message.orEmpty())
                 )
             }
         }
@@ -247,12 +251,12 @@ class LinkedAccountsViewModel @Inject constructor(
                 _uiState.value = _uiState.value.copy(
                     hasLinkedGoogle = false,
                     linkedGoogleEmail = null,
-                    successMessage = "Gmail account unlinked"
+                    successMessage = context.getString(R.string.linked_gmail_unlinked)
                 )
             } catch (e: Exception) {
                 Log.e(TAG, "Failed to unlink Google", e)
                 _uiState.value = _uiState.value.copy(
-                    error = "Failed to unlink account: ${e.message}"
+                    error = context.getString(R.string.linked_unlink_failed, e.message.orEmpty())
                 )
             }
         }

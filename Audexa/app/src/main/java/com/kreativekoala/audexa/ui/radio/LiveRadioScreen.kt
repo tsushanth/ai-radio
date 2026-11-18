@@ -184,7 +184,7 @@ fun LiveRadioScreen(
                         color = Color(0xFFEF4444)
                     ) {
                         Text(
-                            text = "● LIVE",
+                            text = androidx.compose.ui.res.stringResource(com.kreativekoala.audexa.R.string.live_badge),
                             modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp),
                             color = Color.White,
                             fontWeight = FontWeight.Bold,
@@ -211,7 +211,15 @@ fun LiveRadioScreen(
                                 putExtra(Intent.EXTRA_SUBJECT, viewModel.stationName)
                                 putExtra(
                                     Intent.EXTRA_TEXT,
-                                    com.kreativekoala.audexa.util.LiveShare.buildShareText(viewModel.stationName, topic, url)
+                                    com.kreativekoala.audexa.util.LiveShare.buildShareText(
+                                        viewModel.stationName, topic, url,
+                                        withTopic = { station, name, link ->
+                                            context.getString(com.kreativekoala.audexa.R.string.radio_share_with_topic, station, name, link)
+                                        },
+                                        withoutTopic = { station, link ->
+                                            context.getString(com.kreativekoala.audexa.R.string.radio_share_no_topic, station, link)
+                                        }
+                                    )
                                 )
                             }
                             context.startActivity(Intent.createChooser(send, context.getString(com.kreativekoala.audexa.R.string.share_station, viewModel.stationName)))
@@ -593,21 +601,18 @@ fun LiveRadioScreen(
         if (showPremiumDialog) {
             AlertDialog(
                 onDismissRequest = { showPremiumDialog = false },
-                title = { Text("Premium feature") },
+                title = { Text(androidx.compose.ui.res.stringResource(com.kreativekoala.audexa.R.string.radio_premium_title)) },
                 text = {
-                    Text(
-                        "Topic requests are available to Audexa Premium subscribers. " +
-                                "Upgrade to submit requests and hear them on the live radio."
-                    )
+                    Text(androidx.compose.ui.res.stringResource(com.kreativekoala.audexa.R.string.radio_premium_body))
                 },
                 confirmButton = {
                     TextButton(onClick = { showPremiumDialog = false }) {
-                        Text("Learn more")
+                        Text(androidx.compose.ui.res.stringResource(com.kreativekoala.audexa.R.string.common_learn_more))
                     }
                 },
                 dismissButton = {
                     TextButton(onClick = { showPremiumDialog = false }) {
-                        Text("Not now")
+                        Text(androidx.compose.ui.res.stringResource(com.kreativekoala.audexa.R.string.common_not_now))
                     }
                 }
             )
@@ -851,7 +856,7 @@ private fun QueueSection(
                     color = segmentBadgeColor(segment.segmentType).copy(alpha = 0.5f)
                 ) {
                     Text(
-                        text = segment.segmentLabel,
+                        text = segment.segmentLabelRes?.let { androidx.compose.ui.res.stringResource(it) } ?: segment.segmentLabelFallback,
                         modifier = Modifier.padding(horizontal = 5.dp, vertical = 2.dp),
                         color = Color.White.copy(alpha = 0.9f),
                         fontSize = 9.sp,

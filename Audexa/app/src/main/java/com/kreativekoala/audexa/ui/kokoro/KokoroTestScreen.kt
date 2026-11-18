@@ -35,7 +35,7 @@ fun KokoroTestScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Kokoro on-device test", fontWeight = FontWeight.SemiBold) },
+                title = { Text("On-device voice test", fontWeight = FontWeight.SemiBold) },
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
                         Icon(Icons.Default.ArrowBack, contentDescription = "Back")

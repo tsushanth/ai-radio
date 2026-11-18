@@ -193,7 +193,7 @@ class KokoroDownloadWorker(
                     "On-device voice download",
                     NotificationManager.IMPORTANCE_LOW,
                 ).apply {
-                    description = "Progress for the on-device Kokoro voice download."
+                    description = "Progress for the on-device voice download."
                     setShowBadge(false)
                 }
                 nm.createNotificationChannel(channel)

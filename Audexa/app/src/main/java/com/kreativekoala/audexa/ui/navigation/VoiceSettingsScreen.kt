@@ -593,7 +593,7 @@ private fun OnDeviceVoiceSection(
                         color = PrimaryText
                     )
                     Text(
-                        text = "Play deep dives and daily briefs on your device using Kokoro. Downloads a ~82 MB model on first use.",
+                        text = "Play deep dives and daily briefs on your device using a built-in voice model. Downloads a ~82 MB model on first use.",
                         style = MaterialTheme.typography.bodySmall,
                         color = SecondaryText
                     )

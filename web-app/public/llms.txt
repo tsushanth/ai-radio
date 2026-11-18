@@ -23,7 +23,7 @@ Anyone who wants to listen to news or research on a topic instead of reading it 
 
 - Web app: https://audexa.app
 - iOS: https://apps.apple.com/us/app/audexa/id6756477258
-- Android: https://play.google.com/store/apps/details?id=com.kreativekoala.audexa
+- Android: https://play.google.com/store/apps/details?id=com.kreativekoala.audexa&referrer=utm_source%3Daudexa_web%26utm_medium%3Dweb%26utm_campaign%3Dllms
 
 ## Contact
 

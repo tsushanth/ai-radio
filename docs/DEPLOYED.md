@@ -2,6 +2,15 @@
 
 Newest first. Parity rule: whatever runs in production is on `main` (tree compared for the deployed paths).
 
+
+## 2026-11-18 Android 12.12.0 (51) on Google Play production, 20% staged
+
+- Play production track read back after commit: 12.12.0 (51) inProgress at userFraction 0.2, 12.11.0 (50) completed. Not raised above 20%.
+- Built from `main` `44786b9` (merge of #78 on top of #75 i18n sweep, #77 hard-coded-string guard, #76 model-name neutralisation); tag `play/12.12.0-51`. The built `Audexa/` tree equals `origin/main` (later commits, if any, touch docs only).
+- AAB sha256 `78fee152b68a632a69f790c22d251eb214445d3a2a33f63895d9573a45ea10d7`, signed with the upload key.
+- Checks run: `:app:testDebugUnitTest` (includes the #77 guard) and `:app:bundleRelease` exit 0 on the built tree. `lintDebug` on the PR #75 tree shows 12 pre-existing errors (10 UnsafeOptInUsageError, FlowOperatorInvokedInComposition, SpecifyForegroundServiceType); lint config has `abortOnError=false` and `checkReleaseBuilds=false`, so they do not block the release; owner approved merging with them. Device check (Pixel 9 Pro, dev/debug variant of the same code built with an `.dev` id suffix, 10 locales, 0 crash/ANR, no raw tokens, Arabic mirrors): WARN for cosmetic English leftovers only ("Guest", cross-promo block, voice tier labels).
+- Contents: 46 more UI strings moved into string resources (26 locales, machine translations needing native review); user-visible vendor/model names replaced by neutral wording. Changelog: "More of the app is now translated into your language."
+- Rollback: halt the rollout in Play Console (Production > Halt rollout), or re-upload 12.11.0 (50) as the current release with the same API pattern.
 ## 2026-11-17 Web (audexa.app, Fly `audexa-web`): install-referrer tags on Play links (#73)
 
 - Release v22, image `registry.fly.io/audexa-web:deployment-01M7P0BYS83EB98A5Q3S5Z7APH`, built from `origin/main` at `d0dea49` (merge of #73); `web-app/` tree identical to main. Previous release v21 (2026-11-13) matched the last `web-app/` commit before this one (`782d18b`).

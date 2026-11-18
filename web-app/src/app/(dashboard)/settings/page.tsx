@@ -4,6 +4,7 @@ import { useEffect, useState, useSyncExternalStore } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '@/components/auth/AuthProvider';
+import { playUrl } from '@/lib/playLinks';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { User, Mail, Bell, Trash2, Link2, Check, ExternalLink, Info, Smartphone, Clock, Calendar } from 'lucide-react';
@@ -515,7 +516,7 @@ export default function SettingsPage() {
             <ExternalLink className="w-4 h-4 text-gray-400" />
           </a>
           <a
-            href="https://play.google.com/store/apps/details?id=com.kreativekoala.audexa"
+            href={playUrl('settings')}
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center justify-between p-3 border rounded-lg hover:bg-gray-50 transition-colors"

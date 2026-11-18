@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/components/auth/AuthProvider';
+import { playUrl } from '@/lib/playLinks';
 import Link from 'next/link';
 import {
   Play,
@@ -22,7 +23,6 @@ import {
 } from 'lucide-react';
 
 const APP_STORE_URL = 'https://apps.apple.com/us/app/audexa/id6756477258';
-const PLAY_STORE_URL = 'https://play.google.com/store/apps/details?id=com.kreativekoala.audexa';
 
 export default function LandingPage() {
   const router = useRouter();
@@ -116,7 +116,7 @@ export default function LandingPage() {
                 iOS App
               </a>
               <a
-                href={PLAY_STORE_URL}
+                href={playUrl('hero')}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-2 px-6 py-4 bg-white/10 hover:bg-white/20 rounded-xl font-medium transition-colors"
@@ -266,7 +266,7 @@ export default function LandingPage() {
               icon={<Smartphone className="w-8 h-8" />}
               title="Android App"
               subtitle="Phone & Tablet"
-              href={PLAY_STORE_URL}
+              href={playUrl('cta')}
             />
           </div>
         </div>

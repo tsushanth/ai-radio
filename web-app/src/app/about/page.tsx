@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { playUrl } from '@/lib/playLinks';
 import { Radio, Smartphone, Mail, Calendar, Headphones, ArrowLeft } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -56,7 +57,7 @@ export default function AboutPage() {
                 </Button>
               </a>
               <a
-                href="https://play.google.com/store/apps/details?id=com.kreativekoala.audexa"
+                href={playUrl('about')}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex-1"

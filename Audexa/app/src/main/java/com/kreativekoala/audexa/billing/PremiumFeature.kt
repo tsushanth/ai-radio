@@ -30,7 +30,7 @@ enum class PremiumFeature(
     ),
     PREMIUM_VOICES(
         "Unlock Premium Voices",
-        "Ultra-realistic ElevenLabs voices",
+        "Ultra-realistic premium voices",
         Icons.Default.RecordVoiceOver
     ),
     UNLIMITED_REGENERATIONS(

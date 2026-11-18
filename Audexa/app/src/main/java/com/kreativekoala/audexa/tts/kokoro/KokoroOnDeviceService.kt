@@ -194,7 +194,7 @@ class KokoroOnDeviceService(private val context: Context) {
 
     private fun runInference(text: String, voiceId: String, speed: Float): ShortArray {
         val sess = ensureSession()
-            ?: throw IllegalStateException("Kokoro model not loaded — callers should check isInferenceReady()")
+            ?: throw IllegalStateException("On-device voice model not loaded — callers should check isInferenceReady()")
 
         // 1. Text → token IDs (G2P + tokenizer)
         val tokens = g2p.tokenize(text)

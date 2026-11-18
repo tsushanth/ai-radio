@@ -7,8 +7,8 @@ import kotlinx.serialization.Serializable
  * TTS Provider options
  */
 enum class TTSProvider(val value: String, val displayName: String, val description: String) {
-    OPENAI("openai", "OpenAI", "Fast, high-quality neural voices"),
-    ELEVENLABS("elevenlabs", "ElevenLabs", "Ultra-realistic with voice cloning");
+    OPENAI("openai", "Standard", "Fast, high-quality neural voices"),
+    ELEVENLABS("elevenlabs", "Premium", "Ultra-realistic with voice cloning");
 
     companion object {
         fun fromValue(value: String): TTSProvider? {

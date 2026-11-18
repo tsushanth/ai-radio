@@ -38,7 +38,7 @@ data class KokoroTestUiState(
 
     companion object {
         const val DEFAULT_SAMPLE_TEXT =
-            "On-device Kokoro is ready. Pick a voice and tap speak to hear me synthesize this sentence right on your phone."
+            "On-device voice is ready. Pick a voice and tap speak to hear me synthesize this sentence right on your phone."
     }
 }
 

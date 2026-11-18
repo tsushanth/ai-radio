@@ -83,7 +83,7 @@ class KokoroTtsEngine(private val context: Context) : TtsEngine {
                 // Load the ONNX session + warm G2P (lexicon parse can be slow).
                 val ready = service.isAvailable()
                 if (!ready) {
-                    _state.value = TtsState.Failed("Kokoro model file present but ONNX session failed to load")
+                    _state.value = TtsState.Failed("On-device voice model file present but failed to load")
                     return
                 }
                 prepared = true

@@ -1,5 +1,8 @@
 package com.kreativekoala.audexa.ui.onboarding
 
+import dagger.hilt.android.qualifiers.ApplicationContext
+import com.kreativekoala.audexa.R
+import android.content.Context
 import com.kreativekoala.audexa.service.BriefingManager
 import android.content.Intent
 import android.util.Log
@@ -46,6 +49,7 @@ data class OnboardingUiState(
 
 @HiltViewModel
 class OnboardingViewModel @Inject constructor(
+    @ApplicationContext private val appContext: Context,
     private val preferencesManager: PreferencesManager,
     private val authRepository: AuthRepository,
     private val topicRepository: TopicRepository,
@@ -114,7 +118,7 @@ class OnboardingViewModel @Inject constructor(
                     Log.e(TAG, "Failed to load topics: ${e.message}")
                     _uiState.value = _uiState.value.copy(
                         isLoadingTopics = false,
-                        error = "Couldn't load topics. You can continue and pick them later."
+                        error = appContext.getString(R.string.onboarding_topics_load_failed)
                     )
                 }
         }

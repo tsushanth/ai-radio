@@ -1,5 +1,8 @@
 package com.kreativekoala.audexa.ui.auth
 
+import dagger.hilt.android.qualifiers.ApplicationContext
+import com.kreativekoala.audexa.R
+import android.content.Context
 import android.content.Intent
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -21,6 +24,7 @@ data class AuthUiState(
 
 @HiltViewModel
 class AuthViewModel @Inject constructor(
+    @ApplicationContext private val appContext: Context,
     private val authRepository: AuthRepository,
     private val preferencesManager: PreferencesManager
 ) : ViewModel() {
@@ -59,7 +63,7 @@ class AuthViewModel @Inject constructor(
                 .onFailure { e ->
                     _uiState.value = _uiState.value.copy(
                         isLoading = false,
-                        error = e.message ?: "Sign in failed"
+                        error = e.message ?: appContext.getString(R.string.auth_err_sign_in_failed)
                     )
                 }
         }
@@ -94,7 +98,7 @@ class AuthViewModel @Inject constructor(
                 .onFailure { e ->
                     _uiState.value = _uiState.value.copy(
                         isLoading = false,
-                        error = e.message ?: "Failed to continue"
+                        error = e.message ?: appContext.getString(R.string.auth_err_continue_failed)
                     )
                 }
         }

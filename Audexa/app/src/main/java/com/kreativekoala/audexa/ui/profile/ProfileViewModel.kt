@@ -18,7 +18,7 @@ data class ProfileUiState(
     val userName: String = "",
     val userEmail: String = "",
     val hasLinkedGoogle: Boolean = false,
-    val appTheme: String = "System",
+    val appTheme: AppTheme = AppTheme.SYSTEM,
     val preferredLanguage: String = "English",
     val radioLanguagesSummary: String = "English",
     val hiddenTopicsCount: Int = 0,
@@ -61,10 +61,10 @@ class ProfileViewModel @Inject constructor(
                 val theme = values[5] as? String ?: "system"
 
                 ProfileUiState(
-                    userName = name ?: "User",
+                    userName = name ?: "",
                     userEmail = email ?: "",
                     hasLinkedGoogle = hasGoogle,
-                    appTheme = AppTheme.fromValue(theme).displayName,
+                    appTheme = AppTheme.fromValue(theme),
                     preferredLanguage = SupportedLanguage.fromCode(language).displayName,
                     hiddenTopicsCount = hidden.size
                 )

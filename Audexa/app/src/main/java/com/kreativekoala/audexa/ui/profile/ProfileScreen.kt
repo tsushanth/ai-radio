@@ -113,7 +113,7 @@ fun ProfileScreen(
         ) {
             // Profile Header
             ProfileHeader(
-                name = uiState.userName,
+                name = uiState.userName.ifBlank { stringResource(R.string.profile_default_user_name) },
                 email = uiState.userEmail
             )
 
@@ -139,7 +139,7 @@ fun ProfileScreen(
                 SettingsRow(
                     icon = Icons.Default.Palette,
                     title = stringResource(R.string.app_theme),
-                    subtitle = uiState.appTheme,
+                    subtitle = stringResource(uiState.appTheme.labelRes),
                     onClick = onNavigateToThemeSettings
                 )
                 HorizontalDivider(color = MaterialTheme.colorScheme.surfaceVariant)

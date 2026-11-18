@@ -32,6 +32,8 @@ fun LinkedAccountsScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
+    val context = androidx.compose.ui.platform.LocalContext.current
+
     // Gmail OAuth launcher
     val gmailLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartActivityForResult()
@@ -42,9 +44,9 @@ fun LinkedAccountsScreen(
             viewModel.handleGmailLinkResult(account)
         } catch (e: ApiException) {
             if (e.statusCode == 12501) {
-                viewModel.handleLinkError("Gmail linking cancelled")
+                viewModel.handleLinkError(context.getString(R.string.gmail_linking_cancelled))
             } else {
-                viewModel.handleLinkError("Gmail linking failed: ${e.statusCode} - ${e.message}")
+                viewModel.handleLinkError(context.getString(R.string.linked_gmail_link_error, e.statusCode, e.message.orEmpty()))
             }
         }
     }
@@ -59,9 +61,9 @@ fun LinkedAccountsScreen(
             viewModel.handleCalendarLinkResult(account)
         } catch (e: ApiException) {
             if (e.statusCode == 12501) {
-                viewModel.handleLinkError("Calendar linking cancelled")
+                viewModel.handleLinkError(context.getString(R.string.calendar_linking_cancelled))
             } else {
-                viewModel.handleLinkError("Calendar linking failed: ${e.statusCode} - ${e.message}")
+                viewModel.handleLinkError(context.getString(R.string.linked_calendar_link_error, e.statusCode, e.message.orEmpty()))
             }
         }
     }

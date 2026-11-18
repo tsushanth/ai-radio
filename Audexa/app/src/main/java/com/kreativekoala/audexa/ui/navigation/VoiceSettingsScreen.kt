@@ -225,7 +225,7 @@ private fun TabSelector(
                 modifier = Modifier.weight(1f)
             ) {
                 Text(
-                    text = tab.title,
+                    text = stringResource(tab.titleRes),
                     style = MaterialTheme.typography.bodyMedium,
                     color = if (selectedTab == tab) PrimaryText else SecondaryText,
                     fontWeight = if (selectedTab == tab) FontWeight.Bold else FontWeight.Normal,
@@ -587,13 +587,13 @@ private fun OnDeviceVoiceSection(
             ) {
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
-                        text = "On-device voice (beta)",
+                        text = stringResource(R.string.on_device_voice_title),
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.SemiBold,
                         color = PrimaryText
                     )
                     Text(
-                        text = "Play deep dives and daily briefs on your device using Kokoro. Downloads a ~82 MB model on first use.",
+                        text = stringResource(R.string.on_device_voice_description),
                         style = MaterialTheme.typography.bodySmall,
                         color = SecondaryText
                     )
@@ -615,7 +615,7 @@ private fun OnDeviceVoiceSection(
                             color = AccentOrange
                         )
                         Text(
-                            text = "Downloading model… ${s.downloadedMb}/${s.totalMb} MB (${s.percent}%)",
+                            text = stringResource(R.string.on_device_voice_downloading, s.downloadedMb, s.totalMb, s.percent),
                             style = MaterialTheme.typography.bodySmall,
                             color = SecondaryText,
                             modifier = Modifier.padding(top = 6.dp)
@@ -623,14 +623,14 @@ private fun OnDeviceVoiceSection(
                     }
                     is KokoroModelDownloader.State.WaitingForWifi -> {
                         Text(
-                            text = "Waiting for WiFi to download voice model…",
+                            text = stringResource(R.string.on_device_voice_waiting_wifi),
                             style = MaterialTheme.typography.bodySmall,
                             color = SecondaryText
                         )
                     }
                     is KokoroModelDownloader.State.Failed -> {
                         Text(
-                            text = "Download failed: ${s.message}. Toggle off and back on to retry.",
+                            text = stringResource(R.string.on_device_voice_failed, s.message),
                             style = MaterialTheme.typography.bodySmall,
                             color = Error
                         )
@@ -640,7 +640,7 @@ private fun OnDeviceVoiceSection(
 
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = "Voice",
+                    text = stringResource(R.string.voice_label),
                     style = MaterialTheme.typography.labelLarge,
                     color = SecondaryText,
                     modifier = Modifier.padding(bottom = 4.dp)
@@ -681,7 +681,7 @@ private fun OnDeviceVoiceSection(
                         ) {
                             Icon(
                                 imageVector = Icons.Filled.PlayArrow,
-                                contentDescription = "Preview ${voice.displayName}",
+                                contentDescription = stringResource(R.string.voice_preview_description, voice.displayName),
                                 tint = if (previewsReady) AccentOrange else SecondaryText
                             )
                         }

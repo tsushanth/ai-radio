@@ -45,18 +45,24 @@ class LiveShareTest {
         assertEquals("en", LiveShare.parseLiveLink("https://audexa.app/live?lang=zz"))
     }
 
+    private fun share(station: String, topic: String?, url: String) = LiveShare.buildShareText(
+        station, topic, url,
+        withTopic = { s, t, u -> "$s is on air right now with: $t. It is an AI-generated news and talk station. Tune in live: $u" },
+        withoutTopic = { s, u -> "I'm listening to $s, an AI-generated news and talk station. Tune in live: $u" }
+    )
+
     @Test fun shareTextNamesTopicOnlyWhenKnown() {
         val url = "https://audexa.app/live?lang=en"
-        val with = LiveShare.buildShareText("Audexa Radio", "[en] US Politics", url)
+        val with = share("Audexa Radio", "[en] US Politics", url)
         assertTrue(with.contains("US Politics"))
         assertFalse(with.contains("[en]"))
-        val without = LiveShare.buildShareText("Audexa Radio", null, url)
+        val without = share("Audexa Radio", null, url)
         assertFalse(without.contains("on air right now with"))
-        assertFalse(LiveShare.buildShareText("Audexa Radio", "  ", url).contains("with:"))
+        assertFalse(share("Audexa Radio", "  ", url).contains("with:"))
     }
 
     @Test fun shareTextMakesNoListenerClaims() {
-        val text = LiveShare.buildShareText("Audexa Radio", "World Update", "https://audexa.app/live")
+        val text = share("Audexa Radio", "World Update", "https://audexa.app/live")
         assertFalse(text.contains("listeners", ignoreCase = true))
         assertTrue(text.contains("AI-generated"))
     }

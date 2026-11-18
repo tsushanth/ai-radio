@@ -1,5 +1,6 @@
 package com.kreativekoala.audexa.data.repository
 
+import com.kreativekoala.audexa.R
 import android.content.Context
 import android.util.Log
 import com.google.android.gms.auth.GoogleAuthUtil
@@ -131,12 +132,12 @@ class AuthRepository @Inject constructor(
                 val userMessage = when {
                     e.message?.contains("NeedRemoteConsent", ignoreCase = true) == true ||
                     e.message?.contains("remote consent", ignoreCase = true) == true ->
-                        "Gmail access was not granted. Please tap Connect again and make sure to allow Gmail access when prompted."
+                        context.getString(R.string.auth_err_gmail_not_granted)
                     e.message?.contains("UserRecoverableAuthException", ignoreCase = true) == true ->
-                        "Additional permissions required. Please try again."
+                        context.getString(R.string.auth_err_more_permissions)
                     e.message?.contains("network", ignoreCase = true) == true ->
-                        "Network error. Please check your connection and try again."
-                    else -> "Failed to connect Gmail. Please try again."
+                        context.getString(R.string.error_network)
+                    else -> context.getString(R.string.auth_err_gmail_failed)
                 }
                 throw Exception(userMessage)
             }
@@ -209,12 +210,12 @@ class AuthRepository @Inject constructor(
                 val userMessage = when {
                     e.message?.contains("NeedRemoteConsent", ignoreCase = true) == true ||
                     e.message?.contains("remote consent", ignoreCase = true) == true ->
-                        "Calendar access was not granted. Please tap Connect again and make sure to allow Calendar access when prompted."
+                        context.getString(R.string.auth_err_calendar_not_granted)
                     e.message?.contains("UserRecoverableAuthException", ignoreCase = true) == true ->
-                        "Additional permissions required. Please try again."
+                        context.getString(R.string.auth_err_more_permissions)
                     e.message?.contains("network", ignoreCase = true) == true ->
-                        "Network error. Please check your connection and try again."
-                    else -> "Failed to connect Calendar. Please try again."
+                        context.getString(R.string.error_network)
+                    else -> context.getString(R.string.auth_err_calendar_failed)
                 }
                 throw Exception(userMessage)
             }

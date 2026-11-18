@@ -109,7 +109,7 @@ fun RadioLanguagesScreen(
 
                                     Icon(
                                         imageVector = if (isEnabled) Icons.Default.CheckCircle else Icons.Outlined.Circle,
-                                        contentDescription = if (isEnabled) "Enabled" else "Disabled",
+                                        contentDescription = androidx.compose.ui.res.stringResource(if (isEnabled) com.kreativekoala.audexa.R.string.enabled else com.kreativekoala.audexa.R.string.not_enabled),
                                         tint = if (isEnabled) AccentOrange else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f),
                                         modifier = Modifier.size(22.dp)
                                     )

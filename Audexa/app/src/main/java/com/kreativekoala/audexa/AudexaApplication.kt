@@ -68,10 +68,10 @@ class AudexaApplication : Application() {
             // Daily Brief Channel
             val dailyBriefChannel = NotificationChannel(
                 CHANNEL_ID_DAILY_BRIEF,
-                "Daily Brief",
+                getString(R.string.daily_brief),
                 NotificationManager.IMPORTANCE_HIGH
             ).apply {
-                description = "Daily brief reminder notifications"
+                description = getString(R.string.daily_brief_channel_description)
                 enableVibration(true)
                 setShowBadge(true)
             }

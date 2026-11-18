@@ -1,5 +1,7 @@
 package com.kreativekoala.audexa.ui.navigation
 
+import com.kreativekoala.audexa.R
+import androidx.annotation.StringRes
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -34,9 +36,9 @@ data class VoiceSettingsUiState(
     val kokoroDownloadState: KokoroModelDownloader.State = KokoroModelDownloader.State.Idle
 )
 
-enum class VoiceTab(val title: String) {
-    PAIRS("Pairs"),
-    INDIVIDUAL("Individual")
+enum class VoiceTab(@StringRes val titleRes: Int) {
+    PAIRS(R.string.voice_tab_pairs),
+    INDIVIDUAL(R.string.voice_tab_individual)
 }
 
 @HiltViewModel

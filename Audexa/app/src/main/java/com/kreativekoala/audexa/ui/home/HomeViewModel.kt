@@ -598,7 +598,7 @@ class HomeViewModel @Inject constructor(
                 _suggestTopicResult.value = SuggestTopicResult.Success
             }.onFailure { e ->
                 com.kreativekoala.audexa.analytics.Analytics.track("error_shown", mapOf("code" to "suggest_failed"))
-                _suggestTopicResult.value = SuggestTopicResult.Error(e.message ?: "Failed to suggest topic")
+                _suggestTopicResult.value = SuggestTopicResult.Error(e.message ?: context.getString(R.string.home_suggest_topic_failed))
             }
         }
     }

@@ -263,6 +263,13 @@ export class LanguageControls {
     this.invalidate();
     return row;
   }
+  /** Operator: creates the flag row of a registered language that has none (OFF). Same effect as the INSERT in the migration. */
+  async addFlag(language: string, row: Parameters<ControlStore['addFlag']>[1], by: string): Promise<boolean> {
+    if (!getLanguageSpec(language)) throw new Error(`unknown new language "${language}"`);
+    const made = await this.store.addFlag(language, row, by);
+    this.invalidate();
+    return made;
+  }
   async setGlobalPause(paused: boolean, reason: string | null) { await this.store.setGlobalPause(paused, reason); this.invalidate(); }
   async clearTtsBreaker() { await this.store.clearTts(); this.invalidate(); }
 

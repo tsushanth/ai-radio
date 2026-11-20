@@ -154,6 +154,8 @@ shared daily model budget (3 USD, 600 calls) stays on top of it. Total about 18 
 
 ```
 fly ssh console -a ai-radio-backend -C "node dist/scripts/language-flags.js status"
+fly ssh console -a ai-radio-backend -C "node dist/scripts/language-flags.js add ar --cap 2 --voice mira --voice2 remy"   # create the OFF row of a registered language (same as the migration INSERT)
+fly ssh console -a ai-radio-backend -C "node dist/scripts/language-gate.js vi"                  # enable gate (real episode + transcript checks), needs READALOUD_API_KEY and a script model key
 fly ssh console -a ai-radio-backend -C "node dist/scripts/language-flags.js enable cs"          # Beta stays on
 fly ssh console -a ai-radio-backend -C "node dist/scripts/language-flags.js set cs --cap 4"
 fly ssh console -a ai-radio-backend -C "node dist/scripts/language-flags.js disable cs"

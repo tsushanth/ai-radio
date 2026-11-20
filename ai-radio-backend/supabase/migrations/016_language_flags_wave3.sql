@@ -8,6 +8,9 @@
 -- is listed in any of these languages until an operator turns a row on (`language-flags.js enable <lang>`) after the enable gate
 -- (`language-gate.js <lang>`) passed. Danish (da) is NOT added: the speech API has no Danish voice.
 --
+-- Equivalent without SQL access: `node dist/scripts/language-flags.js add <lang> --cap 2 --voice mira --voice2 remy|mira` creates the same OFF row
+-- through the service role (existing rows are left untouched). Whichever route is used, record it in docs/DEPLOYED.md.
+--
 -- This migration only INSERTs 11 rows into language_flags (created by migration 015). It changes no table, function or grant.
 -- Verify afterwards:
 --   SELECT language, enabled, beta, daily_cap, voice, voice_host2 FROM public.language_flags ORDER BY language;   -- 25 rows

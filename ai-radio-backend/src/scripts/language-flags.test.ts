@@ -44,3 +44,14 @@ test('bad input is refused: unknown language (including de), no patch, bad cap, 
   await assert.rejects(runCommand(['set', 'cs', '--cap', '-3'], c), /dailyCap/);
   await assert.rejects(runCommand(['nope'], c), /usage/);
 });
+
+test('add creates the OFF flag row of a registered language with its voices, never touches an existing row, refuses unknown languages', async () => {
+  const store = new MemoryControlStore(['cs']); const c = new LanguageControls({ store, env: {}, log: () => {} });
+  assert.match(await runCommand(['add', 'ms', '--cap', '2', '--voice', 'mira', '--voice2', 'mira'], c), /flag row created \(OFF, beta\)/);
+  assert.deepEqual([store.flags.get('ms')!.enabled, store.flags.get('ms')!.dailyCap, store.flags.get('ms')!.voice, store.flags.get('ms')!.voiceHost2], [false, 2, 'mira', 'mira']);
+  await runCommand(['set', 'ms', '--cap', '5'], c);
+  assert.match(await runCommand(['add', 'ms', '--cap', '2'], c), /already exists/);
+  assert.equal(store.flags.get('ms')!.dailyCap, 5);
+  assert.match(await runCommand(['add', 'cs'], c), /already exists/);
+  await assert.rejects(() => runCommand(['add', 'da'], c), /unknown language/);
+});

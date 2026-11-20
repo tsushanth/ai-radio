@@ -10,6 +10,10 @@
  *   - at most 2 requests in flight; at most 5000 characters per request (413 above): we send sentence-sized pieces (170 characters,
  *     90 for Japanese), which also makes a retry cheap;
  *   - roughly 0.25x real time (an 80 s piece takes about 20 s): per-request timeout 150 s, up to 3 retries (3 s, 9 s, 21 s) on 502 / 503 / 429 / network error;
+ *   - Studio voices (ar ca hr ms no sk sl sr th vi zh, voices mira / remy) run on a GPU that scales to zero: the first call after about
+ *     3 minutes idle takes about 44 s to start. That fits inside the 150 s timeout, so a cold start is ONE slow attempt, not a failure and
+ *     not a retry (a retry would count the characters again). A 503 answered while the container starts is retried and its Retry-After
+ *     header (seconds, at most 45) replaces the fixed wait when it is longer, so the retries span the cold start;
  *   - HTTP 402 = the account is out of credits: never retried; generation is paused (onOutOfCredits) and the episode fails with
  *     TtsUnavailableError so the request path answers "paused";
  *   - a missing key fails closed before any text is sent;
@@ -33,6 +37,15 @@ export const READALOUD_MAX_CHARS = 5000;
 /** Up to 4 attempts per piece, waiting 3 s, 9 s, 21 s: the API answered 503 for single pieces under load on the first live run (2 of 17 pieces with one retry). */
 const MAX_ATTEMPTS = 4;
 const RETRY_BACKOFF = [1, 3, 7];
+/** Longest wait taken from a Retry-After header (seconds): a cold studio container needs about 44 s. */
+const MAX_RETRY_AFTER_S = 45;
+
+/** Seconds from a Retry-After header (integer seconds form only), clamped to 0..45; undefined when absent or not a number. */
+export function retryAfterSeconds(r: Pick<Response, 'headers'> | undefined): number | undefined {
+  const v = r?.headers?.get?.('retry-after');
+  if (!v || !/^\d{1,4}$/.test(v.trim())) return undefined;
+  return Math.min(MAX_RETRY_AFTER_S, Number(v.trim()));
+}
 export const DEFAULT_BASE_URL = 'https://api.readaloudai.org';
 
 export type TtsUnavailableReason = 'no_key' | 'out_of_credits' | 'failed';
@@ -108,6 +121,7 @@ export class ReadAloudClient {
       if (this.creditsGone) throw new TtsUnavailableError('out_of_credits');
       if (this.o.onChars) await this.o.onChars(req.text.length); // count what is actually sent
       let retryable = false;
+      let waitHintMs = 0;
       try {
         const r = await this.post(req, key);
         if (r.ok) {
@@ -124,13 +138,14 @@ export class ReadAloudClient {
         if (r.status === 401 || r.status === 403) throw new TtsUnavailableError('failed', `Speech API refused the key (HTTP ${r.status})`);
         retryable = r.status === 502 || r.status === 503 || r.status === 429;
         if (!retryable) throw new Error(`Speech API error ${last}`);
+        waitHintMs = (retryAfterSeconds(r) ?? 0) * 1000;
       } catch (e) {
         if (e instanceof TtsUnavailableError) throw e;
         if (e instanceof Error && /^Speech API error|^empty audio/.test(e.message)) throw e;
         last = e instanceof Error ? e.name : 'error'; // timeout / network: one retry
         retryable = true;
       }
-      if (retryable && attempt < MAX_ATTEMPTS - 1) { await sleep((this.o.retryDelayMs ?? 3000) * RETRY_BACKOFF[attempt]); continue; }
+      if (retryable && attempt < MAX_ATTEMPTS - 1) { await sleep(Math.max((this.o.retryDelayMs ?? 3000) * RETRY_BACKOFF[attempt], this.o.retryDelayMs === undefined ? waitHintMs : 0)); continue; }
       break;
     }
     throw new Error(`Speech API failed: ${last}`);
@@ -165,21 +180,41 @@ export function normalizeFor(spec: LanguageSpec, text: string): 'numbers' | unde
   return undefined;
 }
 
+/** Languages written without spaces between words: a forced cut must fall on a word boundary (Intl.Segmenter), never inside a word. */
+const NO_SPACE_LANGUAGES = new Set(['th', 'ja', 'zh']);
+
+/** The last word boundary at or before `limit` (and after 0), or `limit` when no segmenter is available. */
+export function wordBoundaryCut(s: string, limit: number, locale: string): number {
+  try {
+    const seg = new Intl.Segmenter(locale, { granularity: 'word' });
+    let cut = 0;
+    for (const { index, segment } of seg.segment(s)) {
+      const end = index + segment.length;
+      if (end > limit) break;
+      cut = end;
+    }
+    if (cut > 0) return cut;
+  } catch { /* no ICU data for this locale: fall through to the hard cut */ }
+  return limit;
+}
+
 /**
- * Splits spoken text into pieces of at most `limit` characters at sentence ends (. ! ? ... and the CJK / Devanagari marks), packing
- * short sentences together. A sentence longer than the limit is cut at the last space (or the limit itself when there are no spaces).
+ * Splits spoken text into pieces of at most `limit` characters at sentence ends (. ! ? ... and the CJK / Arabic / Devanagari marks),
+ * packing short sentences together. A sentence longer than the limit is cut at the last space; when there is no usable space
+ * (Thai, Japanese, Chinese: `locale` th / ja / zh) at the last word boundary found by Intl.Segmenter, so a word is never cut in two.
+ * Without a locale (or a segmenter) the old hard cut at the limit remains.
  */
-export function splitSpeech(text: string, limit: number): string[] {
+export function splitSpeech(text: string, limit: number, locale?: string): string[] {
   const t = text.replace(/\s+/g, ' ').trim();
   if (!t) return [];
-  const sentences = t.match(/[^.!?…。！？।]+(?:[.!?…。！？।]+["'”’)\]»」』]*|$)\s*/g) ?? [t];
+  const sentences = t.match(/[^.!?…。！？।؟]+(?:[.!?…。！？।؟]+["'”’)\]»」』]*|$)\s*/g) ?? [t];
   const out: string[] = [];
   let cur = '';
   const push = () => { if (cur.trim()) out.push(cur.trim()); cur = ''; };
   for (let s of sentences.map((x) => x.trim()).filter(Boolean)) {
     while (s.length > limit) {
       let cut = s.lastIndexOf(' ', limit);
-      if (cut <= limit * 0.4) cut = limit; // no usable space (Japanese): hard cut
+      if (cut <= limit * 0.4) cut = locale && NO_SPACE_LANGUAGES.has(locale) ? wordBoundaryCut(s, limit, locale) : limit; // no usable space: word boundary, else hard cut
       push();
       out.push(s.slice(0, cut).trim());
       s = s.slice(cut).trim();
@@ -232,7 +267,7 @@ export async function synthesizeScript(script: PodcastScript, o: ScriptSynthOpti
   const jobs: Job[] = [];
   script.segments.forEach((seg, seq) => {
     const voice = seg.speaker === 'host1' ? o.flag.voice : o.flag.voiceHost2;
-    for (const text of splitSpeech(seg.text, spec.sentenceCap)) jobs.push({ seg, seq, text, voice });
+    for (const text of splitSpeech(seg.text, spec.sentenceCap, spec.code)) jobs.push({ seg, seq, text, voice });
   });
   if (jobs.length === 0) throw new Error('script has no speakable text');
 

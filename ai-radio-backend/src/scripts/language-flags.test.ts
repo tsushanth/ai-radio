@@ -7,10 +7,10 @@ import { NEW_LANGUAGES } from '../services/languages/registry.ts';
 
 const make = () => { const store = new MemoryControlStore(NEW_LANGUAGES.map((l) => l.code)); return { store, c: new LanguageControls({ store, env: {}, log: () => {} }) }; };
 
-test('status lists all 14 languages, all off, with caps and today usage', async () => {
+test('status lists all 25 languages, all off, with caps and today usage', async () => {
   const { c } = make();
   const out = await runCommand(['status'], c);
-  assert.equal(out.split('\n').filter((l) => /^[a-z]{2}  /.test(l)).length, 14);
+  assert.equal(out.split('\n').filter((l) => /^[a-z]{2}  /.test(l)).length, 25);
   assert.match(out, /cs  off  beta  cap 8  voices aria\/kai/);
   assert.match(out, /Global cap 35 episodes, TTS 150000 characters/);
 });
@@ -43,4 +43,15 @@ test('bad input is refused: unknown language (including de), no patch, bad cap, 
   await assert.rejects(runCommand(['set', 'cs'], c), /nothing to set/);
   await assert.rejects(runCommand(['set', 'cs', '--cap', '-3'], c), /dailyCap/);
   await assert.rejects(runCommand(['nope'], c), /usage/);
+});
+
+test('add creates the OFF flag row of a registered language with its voices, never touches an existing row, refuses unknown languages', async () => {
+  const store = new MemoryControlStore(['cs']); const c = new LanguageControls({ store, env: {}, log: () => {} });
+  assert.match(await runCommand(['add', 'ms', '--cap', '2', '--voice', 'mira', '--voice2', 'mira'], c), /flag row created \(OFF, beta\)/);
+  assert.deepEqual([store.flags.get('ms')!.enabled, store.flags.get('ms')!.dailyCap, store.flags.get('ms')!.voice, store.flags.get('ms')!.voiceHost2], [false, 2, 'mira', 'mira']);
+  await runCommand(['set', 'ms', '--cap', '5'], c);
+  assert.match(await runCommand(['add', 'ms', '--cap', '2'], c), /already exists/);
+  assert.equal(store.flags.get('ms')!.dailyCap, 5);
+  assert.match(await runCommand(['add', 'cs'], c), /already exists/);
+  await assert.rejects(() => runCommand(['add', 'da'], c), /unknown language/);
 });

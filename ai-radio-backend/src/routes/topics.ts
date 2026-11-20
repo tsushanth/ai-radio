@@ -498,6 +498,7 @@ router.get('/:topicId/episode', async (req: Request, res: Response) => {
             ? 'Episode is currently being generated. Please check back in 30-60 seconds.'
             : `Generation failed: ${episode.error || 'Unknown error'}. Tap regenerate to try again.`,
         ads,
+        ...(episode.status === 'generating' ? generatingHint(language, 'generating') : {}),
       },
     });
   } catch (error) {
@@ -554,6 +555,16 @@ router.post('/:topicId/regenerate-audio', async (req: Request, res: Response) =>
 const inFlight = new Set<string>();
 const nonEnglishDailyCap = new DailyCap(Number(process.env.ON_DEMAND_DAILY_LIMIT) || 30);
 export const generateGuard = new GenerateGuard();
+
+/**
+ * How long a client should wait before polling GET /topics/:id/episode again while an additional-language episode is being built
+ * (sources, script, then speech; a studio voice that was idle also needs about 45 s to start). Additive fields: old clients ignore them.
+ */
+export const GENERATING_RETRY_AFTER_SECONDS = 45;
+export const generatingHint = (language: string, status: string | undefined) =>
+  isNewLanguage(language) && (status === 'generating' || status === undefined)
+    ? { status: 'generating' as const, retryAfterSeconds: GENERATING_RETRY_AFTER_SECONDS, generatingMessage: 'Your episode is being prepared. The first one of the day in a language can take a few minutes. Please check again shortly.' }
+    : {};
 
 const DAILY_LIMIT_BODY = { success: false, error: 'daily_limit', message: 'Try again tomorrow.' };
 
@@ -687,6 +698,7 @@ router.post('/:topicId/generate', async (req: Request, res: Response) => {
           isNew: false,
           message: stubMessage,
           ...(newLanguageBeta !== undefined ? { beta: newLanguageBeta } : {}),
+          ...(existing?.status === 'completed' ? {} : generatingHint(language, existing?.status)),
         },
       });
       return;

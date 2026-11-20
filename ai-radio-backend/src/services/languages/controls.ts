@@ -3,7 +3,7 @@
  * TTS character breaker and the kill switch. All of it is data in Supabase (migration 015), so nothing needs a deploy to change.
  *
  *   kill switch   NEW_LANGUAGES=off (env, hard off) or language_breaker.global_pause (database, flipped by the CLI)
- *   per language  language_flags.enabled / beta / daily_cap          default OFF, beta, 8 episodes a day
+ *   per language  language_flags.enabled / beta / daily_cap          default OFF, beta, 8 episodes a day (2 for the wave 3 rows, migration 016)
  *   global cap    LANG_GLOBAL_DAILY_CAP                              default 35 new-language episodes a day (all languages together)
  *   TTS breaker   LANG_TTS_DAILY_CHARS                               default 150000 characters a day; trips for the rest of the UTC day
  *
@@ -43,7 +43,20 @@ export class TtsBreakerTripped extends Error {
 }
 export const isBreakerTripped = (e: unknown): e is TtsBreakerTripped => e instanceof TtsBreakerTripped || (e as { code?: string } | null)?.code === 'language_paused';
 
-export interface PublicLanguage { code: string; name: string; nativeName: string; status: 'on' | 'beta' | 'paused'; beta: boolean; wave: 1 | 2 }
+/**
+ * One entry of GET /api/config/languages. code, name, nativeName, status, beta and wave are the original contract (unchanged); flag, dir,
+ * podcast and uiTag are additive (old clients ignore unknown keys).
+ */
+export interface PublicLanguage {
+  code: string; name: string; nativeName: string; status: 'on' | 'beta' | 'paused'; beta: boolean; wave: 1 | 2 | 3;
+  /** Flag emoji, or null when the language has no single-country flag. */
+  flag: string | null;
+  dir: 'ltr' | 'rtl';
+  /** Always true: the language has on-demand podcast episodes. */
+  podcast: true;
+  /** Tag of the app's matching interface language, only when the app has one. */
+  uiTag?: string;
+}
 
 export interface ControlsConfig { globalDailyCap: number; ttsDailyChars: number; flagsCacheMs: number; killSwitch: boolean }
 
@@ -234,7 +247,10 @@ export class LanguageControls {
     for (const spec of NEW_LANGUAGES) {
       const f = flags.get(spec.code);
       if (!f?.enabled) continue;
-      out.push({ code: spec.code, name: spec.name, nativeName: spec.nativeName, status: paused ? 'paused' : f.beta ? 'beta' : 'on', beta: f.beta, wave: spec.wave });
+      out.push({
+        code: spec.code, name: spec.name, nativeName: spec.nativeName, status: paused ? 'paused' : f.beta ? 'beta' : 'on', beta: f.beta, wave: spec.wave,
+        flag: spec.flag, dir: spec.dir, podcast: true, ...(spec.uiTag ? { uiTag: spec.uiTag } : {}),
+      });
     }
     return out;
   }
@@ -246,6 +262,13 @@ export class LanguageControls {
     const row = await this.store.setFlag(language, patch, by);
     this.invalidate();
     return row;
+  }
+  /** Operator: creates the flag row of a registered language that has none (OFF). Same effect as the INSERT in the migration. */
+  async addFlag(language: string, row: Parameters<ControlStore['addFlag']>[1], by: string): Promise<boolean> {
+    if (!getLanguageSpec(language)) throw new Error(`unknown new language "${language}"`);
+    const made = await this.store.addFlag(language, row, by);
+    this.invalidate();
+    return made;
   }
   async setGlobalPause(paused: boolean, reason: string | null) { await this.store.setGlobalPause(paused, reason); this.invalidate(); }
   async clearTtsBreaker() { await this.store.clearTts(); this.invalidate(); }

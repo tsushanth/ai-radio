@@ -106,3 +106,40 @@ test('Hindi (engine normalises Devanagari digits) is still told to use words and
   assert.equal(hi.ttsNormalize, 'numbers_devanagari');
   assert.ok(findDigitViolations([{ text: 'साल २०२६' }], hi).length === 1);
 });
+
+test('Arabic digits: Arabic-Indic and Eastern Arabic-Indic digits, Latin digits and the symbols are all violations for wave 3 languages', () => {
+  const ar = requireLanguageSpec('ar');
+  for (const text of ['في عام ٢٠٢٦ ارتفع', 'سعر ۱۲۳ ريال', 'ارتفع الربح 12 في المئة', 'ارتفع 5%']) {
+    assert.equal(findDigitViolations([{ text }], ar).length, 1, text);
+  }
+  assert.deepEqual(findDigitViolations([{ text: 'في عام ألفين وستة وعشرين ارتفع الربح' }], ar), []);
+  for (const code of ['ar', 'th', 'zh', 'vi', 'ms', 'ca', 'hr', 'no', 'sk', 'sl', 'sr']) {
+    assert.equal(findDigitViolations([{ text: 'ok' }, { text: '٣' }, { text: '๓' }, { text: '３' }], requireLanguageSpec(code)).length, 3, code); // Arabic-Indic, Thai and fullwidth digits
+  }
+});
+
+test('wave 3 scripts: an Arabic script with digits is sent back once and the rewrite is accepted; digits after it fail the episode', async () => {
+  const arLong = 'هذه جملة طويلة بما يكفي وكلها مكتوبة بالكلمات دون أي أرقام. '.repeat(3);
+  const clean = lines([arLong, arLong, arLong, arLong, arLong, arLong]);
+  const dirty = lines([arLong, 'ارتفع الربح بنسبة ١٢ في المئة.', arLong, arLong, arLong, arLong]);
+  const ok = fakeGen([dirty, clean]);
+  const out = await generateNewLanguageScript(input('ar'), { generate: ok.generate, log: () => {} });
+  assert.equal(out.rewrote, true); assert.equal(ok.calls.length, 2);
+  const bad = fakeGen([dirty, dirty]);
+  await assert.rejects(generateNewLanguageScript(input('ar'), { generate: bad.generate, log: () => {} }), ScriptRuleError);
+});
+
+test('wave 3 prompts: Serbian is written in the Latin script, Chinese is Simplified, Norwegian is Bokmal; transliteration for non-Latin scripts', () => {
+  assert.match(buildSystemPrompt(topic, requireLanguageSpec('sr'), 'native', 'x'), /Serbian \(Latin script\)/);
+  assert.match(buildSystemPrompt(topic, requireLanguageSpec('zh'), 'native', 'x'), /Simplified/);
+  assert.match(buildSystemPrompt(topic, requireLanguageSpec('no'), 'native', 'x'), /Bokmål/);
+  for (const c of ['ar', 'th', 'zh']) assert.match(buildSystemPrompt(topic, requireLanguageSpec(c), 'native', 'x'), /own writing system/, c);
+});
+
+test('wave 3 dates: Gregorian calendar, native month names (Thai is not the Buddhist year, Arabic is not Hijri)', () => {
+  assert.match(formatDateFor(requireLanguageSpec('th'), '2026-11-15'), /พฤศจิกายน/);
+  assert.doesNotMatch(formatDateFor(requireLanguageSpec('th'), '2026-11-15'), /2569|๒๕๖๙/);
+  assert.match(formatDateFor(requireLanguageSpec('ar'), '2026-11-15'), /نوفمبر/);
+  assert.match(formatDateFor(requireLanguageSpec('hr'), '2026-11-15'), /studenoga/);
+  assert.match(formatDateFor(requireLanguageSpec('zh'), '2026-11-15'), /11月15日/);
+});

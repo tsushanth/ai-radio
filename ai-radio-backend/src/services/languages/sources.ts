@@ -33,12 +33,20 @@ export const PUBLISHER_FEEDS: Record<string, PublisherFeed[]> = {
   ru: [{ name: 'BBC Russian', url: 'https://feeds.bbci.co.uk/russian/rss.xml' }, { name: 'DW Russian', url: 'https://rss.dw.com/rdf/rss-ru-all' }],
   sv: [{ name: 'SVT', url: 'https://www.svt.se/nyheter/rss.xml' }, { name: 'Sveriges Radio', url: 'https://api.sr.se/api/rss/program/83?format=145' }],
   tr: [{ name: 'BBC Turkce', url: 'https://feeds.bbci.co.uk/turkce/rss.xml' }, { name: 'TRT Haber', url: 'https://www.trthaber.com/manset_articles.rss' }],
+  // Wave 3 (checked live 2026-11-20). ca, ms, sk, th: Google News only (no publisher feed that was up and fresh and clean).
+  ar: [{ name: 'BBC Arabic', url: 'https://feeds.bbci.co.uk/arabic/rss.xml' }],
+  hr: [{ name: 'Index.hr', url: 'https://www.index.hr/rss' }, { name: 'N1 Hrvatska', url: 'https://n1info.hr/feed/' }, { name: 'Jutarnji list', url: 'https://www.jutarnji.hr/feed' }],
+  no: [{ name: 'NRK', url: 'https://www.nrk.no/toppsaker.rss' }],
+  sl: [{ name: 'RTV Slovenija', url: 'https://img.rtvslo.si/feeds/00.xml' }],
+  sr: [{ name: 'BBC na srpskom', url: 'https://feeds.bbci.co.uk/serbian/lat/rss.xml' }],
+  vi: [{ name: 'VnExpress', url: 'https://vnexpress.net/rss/tin-moi-nhat.rss' }, { name: 'BBC Vietnamese', url: 'https://feeds.bbci.co.uk/vietnamese/rss.xml' }],
   uk: [{ name: 'Ukrainska Pravda', url: 'https://www.pravda.com.ua/rss/' }, { name: 'BBC Ukrainian', url: 'https://feeds.bbci.co.uk/ukrainian/rss.xml' }, { name: 'Ukrinform', url: 'https://www.ukrinform.ua/rss/block-lastnews' }],
 };
 
 export const GOOGLE_NEWS_SECTIONS = ['WORLD', 'NATION', 'BUSINESS', 'TECHNOLOGY', 'SCIENCE', 'HEALTH', 'ENTERTAINMENT', 'SPORTS'] as const;
 
 export function googleNewsSectionUrl(spec: Pick<LanguageSpec, 'edition'>, section: string): string {
+  if (!spec.edition) throw new Error('this language has no Google News edition');
   return `https://news.google.com/rss/headlines/section/topic/${section}?${spec.edition}`;
 }
 
@@ -120,8 +128,10 @@ export async function fetchLanguageStories(topic: TopicDefinition, spec: Languag
 
   const urls: Array<{ url: string; name: string; google: boolean }> = [];
   if (lt.publisherFirst) for (const f of PUBLISHER_FEEDS[spec.code] ?? []) urls.push({ url: f.url, name: f.name, google: false });
-  for (const section of lt.sections ?? []) urls.push({ url: googleNewsSectionUrl(spec, section), name: 'Google News', google: true });
+  // A language with an empty edition (hr) has no Google News edition: only its publisher feeds, else the English sources are retold.
+  for (const section of spec.edition ? (lt.sections ?? []) : []) urls.push({ url: googleNewsSectionUrl(spec, section), name: 'Google News', google: true });
 
+  if (urls.length === 0) return english('english-fallback');
   const results = await Promise.allSettled(urls.map((u) => readFeed(u.url, u.name, u.google, deps)));
   const stories: AggregatedStory[] = [];
   let ok = 0;

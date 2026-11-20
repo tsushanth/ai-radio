@@ -2,6 +2,7 @@
  * Operator CLI for the additional podcast languages (flags, caps, voices, pause, usage). Talks to Supabase with the service key.
  *
  *   node dist/scripts/language-flags.js status
+ *   node dist/scripts/language-flags.js add ar --cap 2 --voice mira --voice2 remy   create the OFF flag row of a registered language (same as the migration INSERT; existing rows untouched)
  *   node dist/scripts/language-flags.js enable cs             turn a language on (Beta label stays on)
  *   node dist/scripts/language-flags.js enable cs --no-beta   turn on without the Beta label
  *   node dist/scripts/language-flags.js disable cs
@@ -16,7 +17,7 @@ import { LanguageControls, languageControls } from '../services/languages/contro
 import { getLanguageSpec } from '../services/languages/registry';
 import type { FlagPatch } from '../services/languages/controls.store';
 
-const USAGE = 'usage: language-flags status | enable <lang> [--no-beta] | disable <lang> | set <lang> [--cap N] [--voice ID] [--voice2 ID] [--beta|--no-beta] | pause [reason] | resume | clear-breaker';
+const USAGE = 'usage: language-flags status | add <lang> [--cap N] [--voice ID] [--voice2 ID] | enable <lang> [--no-beta] | disable <lang> | set <lang> [--cap N] [--voice ID] [--voice2 ID] [--beta|--no-beta] | pause [reason] | resume | clear-breaker';
 
 function opt(args: string[], name: string): string | undefined {
   const i = args.indexOf(name);
@@ -41,6 +42,15 @@ export async function runCommand(argv: string[], controls: LanguageControls, by 
         lines.push(`${f.language}  ${f.enabled ? 'ON ' : 'off'}  ${f.beta ? 'beta' : 'stable'}  cap ${f.dailyCap}  voices ${f.voice}/${f.voiceHost2}  today ${u?.episodes ?? 0} episodes ${u?.ttsChars ?? 0} chars ${u?.capHits ?? 0} cap hits`);
       }
       return lines.join('\n');
+    }
+    case 'add': {
+      const l = needLang();
+      const row: Parameters<LanguageControls['addFlag']>[1] = {};
+      const cap = opt(rest, '--cap'); if (cap !== undefined) row.dailyCap = Number(cap);
+      const v1 = opt(rest, '--voice'); if (v1 !== undefined) row.voice = v1;
+      const v2 = opt(rest, '--voice2'); if (v2 !== undefined) row.voiceHost2 = v2;
+      const made = await controls.addFlag(l, row, by);
+      return made ? `${l}: flag row created (OFF, beta). Turn it on with: enable ${l}` : `${l}: a flag row already exists, nothing changed.`;
     }
     case 'enable': {
       const patch: FlagPatch = { enabled: true, ...(rest.includes('--no-beta') ? { beta: false } : {}) };

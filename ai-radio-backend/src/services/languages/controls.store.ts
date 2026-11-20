@@ -41,6 +41,8 @@ export interface BreakerState {
 export interface ControlStore {
   listFlags(): Promise<FlagRow[]>;
   setFlag(language: string, patch: FlagPatch, updatedBy: string): Promise<FlagRow>;
+  /** Inserts a flag row for a language that has none (OFF, Beta by default). An existing row is left untouched. Returns true when a row was created. */
+  addFlag(language: string, row: Partial<Omit<FlagRow, 'language' | 'enabled'>>, createdBy: string): Promise<boolean>;
   reserve(day: string, language: string, languageCap: number, globalCap: number): Promise<ReserveResult>;
   release(day: string, language: string): Promise<void>;
   /** Adds characters and returns the day's total across languages. */
@@ -72,6 +74,12 @@ export class MemoryControlStore implements ControlStore {
   }
   private check() { if (this.failing) throw new Error('store unavailable'); }
   async listFlags() { this.check(); return [...this.flags.values()].map((f) => ({ ...f })); }
+  async addFlag(language: string, row: Partial<Omit<FlagRow, 'language' | 'enabled'>>, createdBy: string) {
+    this.check(); validatePatch(row);
+    if (this.flags.has(language)) return false;
+    this.flags.set(language, { language, ...DEFAULT_FLAG, ...Object.fromEntries(Object.entries(row).filter(([, v]) => v !== undefined)), enabled: false, updatedBy: createdBy, updatedAt: new Date().toISOString() } as FlagRow);
+    return true;
+  }
   async setFlag(language: string, patch: FlagPatch, updatedBy: string) {
     this.check(); validatePatch(patch);
     const cur = this.flags.get(language);
@@ -127,6 +135,17 @@ export class SupabaseControlStore implements ControlStore {
     const { data, error } = await this.db.from('language_flags').select('*').order('language');
     if (error) throw new Error(`language_flags read failed: ${error.message}`);
     return (data ?? []).map(rowToFlag);
+  }
+  async addFlag(language: string, row: Partial<Omit<FlagRow, 'language' | 'enabled'>>, createdBy: string): Promise<boolean> {
+    validatePatch(row);
+    const body: Row = { language, enabled: false, updated_by: createdBy };
+    if (row.beta !== undefined) body.beta = row.beta;
+    if (row.dailyCap !== undefined) body.daily_cap = row.dailyCap;
+    if (row.voice !== undefined) body.voice = row.voice;
+    if (row.voiceHost2 !== undefined) body.voice_host2 = row.voiceHost2;
+    const { data, error } = await this.db.from('language_flags').upsert(body, { onConflict: 'language', ignoreDuplicates: true }).select('language');
+    if (error) throw new Error(`language_flags insert failed: ${error.message}`);
+    return (data ?? []).length > 0;
   }
   async setFlag(language: string, patch: FlagPatch, updatedBy: string): Promise<FlagRow> {
     validatePatch(patch);

@@ -25,3 +25,12 @@ test('with Piper only English is generated: locale-only topics are skipped, mixe
 test('the input list is not modified', () => {
   const input = ['es', 'en']; languagesForTopic(input, 'piper'); assert.deepEqual(input, ['es', 'en']);
 });
+
+test('demand-driven guardrail: the daily batch (production runs TTS_BACKEND=piper) never generates any of the 25 additional languages', async () => {
+  const { NEW_LANGUAGES } = await import('../languages/registry.ts');
+  for (const l of NEW_LANGUAGES) {
+    assert.deepEqual(languagesForTopic(['all'], 'piper'), ['en'], l.code);
+    assert.deepEqual(languagesForTopic(['en', l.code], 'piper'), ['en'], l.code);
+    assert.deepEqual(languagesForTopic([l.code], 'piper'), [], `${l.code}-only topics are skipped by the batch`);
+  }
+});

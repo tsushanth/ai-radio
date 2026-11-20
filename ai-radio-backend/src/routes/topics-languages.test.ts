@@ -201,3 +201,120 @@ test('notifications /event accepts a two or three letter lang (fil), drops anyth
   const langs = logs.filter((l) => l.startsWith('[BriefingEvent]')).map((l) => JSON.parse(l.replace('[BriefingEvent] ', '')).lang);
   assert.deepEqual(langs, ['fil', 'cs', undefined, undefined, undefined, undefined]);
 });
+
+
+// ---------------------------------------------------------------------------------------------------------------------
+// Wave 3: additive language list, stations, generating hint, old clients
+
+const WAVE3 = ['ar', 'ca', 'hr', 'ms', 'no', 'sk', 'sl', 'sr', 'th', 'vi', 'zh'];
+
+test('GET /config/languages: original keys unchanged, additive flag / dir / podcast / uiTag; old clients that read code, status, beta are unaffected', async () => {
+  await on('cs'); await on('ca'); await on('ar');
+  await withServer(async (call) => {
+    const r = await call('GET', '/config/languages');
+    assert.equal(r.status, 200); assert.equal(r.json.success, true);
+    const by = Object.fromEntries(r.json.data.languages.map((l: any) => [l.code, l]));
+    assert.deepEqual(by.cs, { code: 'cs', name: 'Czech', nativeName: 'Čeština', status: 'beta', beta: true, wave: 1, flag: '🇨🇿', dir: 'ltr', podcast: true, uiTag: 'cs' });
+    assert.deepEqual(by.ca, { code: 'ca', name: 'Catalan', nativeName: 'Català', status: 'beta', beta: true, wave: 3, flag: null, dir: 'ltr', podcast: true });
+    assert.equal(by.ar.dir, 'rtl');
+    // what the shipped Android parser reads (RemoteLanguages: code, status, beta): present and of the same type for every entry
+    for (const l of r.json.data.languages) { assert.equal(typeof l.code, 'string'); assert.ok(['on', 'beta', 'paused'].includes(l.status)); assert.equal(typeof l.beta, 'boolean'); }
+  });
+});
+
+test('GET /config/languages: all 11 wave 3 languages are absent while their flags are off (14 + enabled only)', async () => {
+  await on('cs');
+  await withServer(async (call) => {
+    const codes = (await call('GET', '/config/languages')).json.data.languages.map((l: any) => l.code);
+    assert.deepEqual(codes, ['cs']);
+    for (const l of WAVE3) assert.ok(!codes.includes(l), l);
+  });
+});
+
+test('GET /config/stations: flags off or controls unreadable -> English live station only, with the existing mount URLs', async () => {
+  const { stationOverrides } = await import('../services/languages/stations');
+  stationOverrides.countPlayable = async () => { throw new Error('should not be asked'); };
+  process.env.RADIO_STREAM_BASE_URL = 'https://radio.audexa.app';
+  const radioEnv = (await import('../config/environment')).env as any; radioEnv.RADIO_STREAM_BASE_URL = 'https://radio.audexa.app';
+  const { resetStationsCache } = await import('./config');
+  resetStationsCache();
+  await withServer(async (call) => {
+    const r = await call('GET', '/config/stations');
+    assert.equal(r.status, 200);
+    assert.deepEqual(r.json.data.stations, [{ code: 'en', name: 'English', nativeName: 'English', kind: 'live', streamUrl: 'https://radio.audexa.app/stream', statusUrl: 'https://radio.audexa.app/api/status', enabled: true, dir: 'ltr' }]);
+    store.failing = true; controls.invalidate(); resetStationsCache();
+    const bad = await call('GET', '/config/stations');
+    assert.equal(bad.status, 200); assert.deepEqual(bad.json.data.stations.map((s: any) => s.code), ['en']);
+    store.failing = false;
+  });
+  delete (stationOverrides as any).countPlayable;
+});
+
+test('GET /config/stations: an enabled language is a playlist station only when it has playable audio; database errors degrade to English', async () => {
+  const { stationOverrides } = await import('../services/languages/stations');
+  const { resetStationsCache } = await import('./config');
+  await on('ca'); await on('vi'); await on('sr'); await on('zh', {});
+  let asked: string[][] = [];
+  stationOverrides.countPlayable = async (l) => { asked.push(l); return { ca: 3, sr: 1, zh: 5, vi: 0 }; };
+  resetStationsCache();
+  await withServer(async (call) => {
+    const r = await call('GET', '/config/stations');
+    const st = r.json.data.stations;
+    assert.deepEqual(st.map((s: any) => s.code), ['en', 'ca', 'sr', 'zh']); // vi is enabled but has zero audio: not a station
+    assert.deepEqual(st[1], { code: 'ca', name: 'Catalan', nativeName: 'Català', kind: 'playlist', playlistUrl: '/api/config/stations/ca/playlist', enabled: true, dir: 'ltr' });
+    assert.ok(!('streamUrl' in st[1]) && !('statusUrl' in st[1]));
+    assert.deepEqual([...asked[0]].sort(), ['ca', 'sr', 'vi', 'zh']);
+    // cached for 60 s: a second call does not ask again
+    await call('GET', '/config/stations'); assert.equal(asked.length, 1);
+    // database failure -> English only
+    resetStationsCache(); stationOverrides.countPlayable = async () => { throw new Error('db down'); };
+    assert.deepEqual((await call('GET', '/config/stations')).json.data.stations.map((s: any) => s.code), ['en']);
+  });
+  delete (stationOverrides as any).countPlayable;
+});
+
+test('GET /config/stations/:code/playlist: 404 for a language that is off or unknown; the episodes for an enabled one', async () => {
+  const { stationOverrides } = await import('../services/languages/stations');
+  await on('ca'); await on('zh');
+  stationOverrides.listPlayable = async (l) => [{ episodeId: `world-update-d-${l}`, topicId: 'world-update', title: 't', audioUrl: 'https://x.test/a.mp3', durationSeconds: 120, date: today() }];
+  await withServer(async (call) => {
+    assert.equal((await call('GET', '/config/stations/vi/playlist')).status, 404);
+    assert.equal((await call('GET', '/config/stations/xx/playlist')).status, 404);
+    const r = await call('GET', '/config/stations/ca/playlist');
+    assert.equal(r.status, 200); assert.equal(r.json.data.items[0].audioUrl, 'https://x.test/a.mp3'); assert.equal(r.json.data.code, 'ca');
+  });
+  delete (stationOverrides as any).listPlayable;
+});
+
+test('on-demand path for a wave 3 language: the generating answer carries status generating and a retry hint; an existing completed episode does not', async () => {
+  await on('sk');
+  await withServer(async (call) => {
+    const r = await call('POST', '/topics/world-update/generate', { language: 'sk' });
+    assert.equal(r.status, 200); assert.equal(r.json.data.status, 'generating'); assert.equal(r.json.data.retryAfterSeconds, 45);
+    assert.match(r.json.data.generatingMessage, /few minutes/);
+    gen.existing = { id: 'e', status: 'generating', language: 'sk' };
+    const poll = await call('GET', '/topics/world-update/episode?lang=sk');
+    assert.equal(poll.json.data.status, 'generating'); assert.equal(poll.json.data.retryAfterSeconds, 45);
+    gen.existing = { id: 'e', status: 'completed', language: 'sk' };
+    const done = await call('POST', '/topics/world-update/generate', { language: 'sk' });
+    assert.ok(!('retryAfterSeconds' in done.json.data));
+  });
+});
+
+test('old clients: English and the Piper languages get no generating-hint fields and no new keys', async () => {
+  await withServer(async (call) => {
+    const r = await call('POST', '/topics/world-update/generate', { language: 'es' });
+    assert.ok(!('retryAfterSeconds' in r.json.data) && !('status' in r.json.data));
+  });
+});
+
+test('a wave 3 language that is off cannot be reached on any route: generate, episode and episodes are all language_unavailable', async () => {
+  await withServer(async (call) => {
+    for (const l of WAVE3) {
+      assert.equal((await call('POST', '/topics/world-update/generate', { language: l })).json.error, 'language_unavailable', l);
+      assert.equal((await call('GET', `/topics/world-update/episode?lang=${l}`)).status, 400, l);
+      assert.equal((await call('GET', `/topics?lang=${l}`)).json.data.topics.length, 0, l);
+    }
+  });
+  assert.equal(gen.calls.length, 0);
+});

@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
-  ReadAloudClient, TtsUnavailableError, splitSpeech, normalizeFor, hasDevanagariDigits, stripId3, synthesizeScript, READALOUD_MAX_CHARS,
+  ReadAloudClient, TtsUnavailableError, splitSpeech, normalizeFor, hasDevanagariDigits, stripId3, synthesizeScript, READALOUD_MAX_CHARS, retryAfterSeconds, wordBoundaryCut,
 } from './tts.ts';
 import { requireLanguageSpec } from './registry.ts';
 import { readWavInfo } from '../audio/episode-audio.ts';
@@ -202,4 +202,103 @@ test('script synthesis in mp3 mode joins the pieces without ID3 headers and esti
   assert.equal(out[0].buffer.length, 16000);
   assert.equal(out[0].buffer.subarray(0, 3).toString(), 'UUU');
   assert.ok(Math.abs(out[0].duration_seconds - 1) < 0.01);
+});
+
+// ---- wave 3: Thai splitting, Arabic marks, identical hosts, studio cold start ----
+
+// Thai has no spaces between words and no sentence punctuation: the cut must fall on a word boundary.
+const THAI = 'ประธานาธิบดีสหรัฐเดินทางถึงกรุงปักกิ่งเมื่อวานนี้เพื่อหารือกับผู้นำจีนเรื่องการค้าและความมั่นคงในภูมิภาคเอเชียตะวันออกเฉียงใต้';
+
+test('Thai (no spaces, no sentence marks): pieces stay under the cap and no word is cut in two', () => {
+  const text = THAI.repeat(6);
+  const parts = splitSpeech(text, 100, 'th');
+  assert.ok(parts.length > 1 && parts.every((p) => p.length <= 100), `lengths ${parts.map((p) => p.length)}`);
+  assert.equal(parts.join(''), text, 'nothing lost or added');
+  const seg = new Intl.Segmenter('th', { granularity: 'word' });
+  const words = new Set([...seg.segment(text)].map((x) => x.segment));
+  // every piece boundary is a word boundary of the whole text
+  let pos = 0; const boundaries = new Set<number>(); for (const x of seg.segment(text)) { boundaries.add(x.index); }
+  for (const p of parts) { assert.ok(boundaries.has(pos), `piece starts mid-word at ${pos}`); pos += p.length; }
+  assert.ok(words.size > 10);
+  // the old behaviour (no locale) is a hard cut at the limit
+  assert.deepEqual(splitSpeech('あ'.repeat(200), 90).map((p) => p.length), [90, 90, 20]);
+});
+
+test('Thai with spaces between clauses is cut at the spaces first', () => {
+  const clause = 'ประธานาธิบดีสหรัฐเดินทางถึงกรุงปักกิ่งเมื่อวานนี้';
+  const text = Array.from({ length: 8 }, () => clause).join(' ');
+  const parts = splitSpeech(text, 100, 'th');
+  assert.ok(parts.every((p) => p.length <= 100));
+  assert.ok(parts.every((p) => p.split(' ').every((c) => c === clause)), 'only whole clauses');
+});
+
+test('Japanese and Chinese also cut at word boundaries when a locale is given; Chinese sentence marks still split first', () => {
+  const zh = '美国总统昨天抵达北京与中国领导人讨论贸易问题'.repeat(8);
+  const parts = splitSpeech(zh, 90, 'zh');
+  assert.ok(parts.every((p) => p.length <= 90) && parts.join('') === zh);
+  assert.deepEqual(splitSpeech('第一句话。第二句话。第三句话。', 8, 'zh'), ['第一句话。', '第二句话。', '第三句话。']);
+  assert.equal(wordBoundaryCut('abc def ghi', 5, 'th') <= 5, true);
+});
+
+test('Arabic: the Arabic question mark ends a sentence; Arabic-Indic digits are not touched by the splitter', () => {
+  const ar = 'هل وصل الرئيس إلى العاصمة؟ نعم وصل أمس. سيلتقي القادة غدا.';
+  assert.deepEqual(splitSpeech(ar, 30), ['هل وصل الرئيس إلى العاصمة؟', 'نعم وصل أمس.', 'سيلتقي القادة غدا.']);
+  assert.equal(splitSpeech('السنة ٢٠٢٦ مهمة.', 100)[0], 'السنة ٢٠٢٦ مهمة.');
+});
+
+test('wave 3 caps: Thai 100, Chinese 90, Arabic 140, the rest 170 characters per speech request', async () => {
+  const caps = Object.fromEntries(['ar', 'ca', 'hr', 'ms', 'no', 'sk', 'sl', 'sr', 'th', 'vi', 'zh'].map((c) => [c, requireLanguageSpec(c).sentenceCap]));
+  assert.deepEqual(caps, { ar: 140, ca: 170, hr: 170, ms: 170, no: 170, sk: 170, sl: 170, sr: 170, th: 100, vi: 170, zh: 90 });
+  const api = fakeApi();
+  await synthesizeScript(script([['host1', THAI.repeat(6)]]), { client: client(api), spec: requireLanguageSpec('th'), flag: { voice: 'mira', voiceHost2: 'remy' }, log: () => {} });
+  assert.ok(api.calls.length >= 6 && api.calls.every((c) => c.body.text.length <= 100 && c.body.language_code === 'th'));
+});
+
+test('identical host voices (ms and sl: mira for both) are handled: both hosts are spoken, with the same voice and the right language_code', async () => {
+  const api = fakeApi();
+  const out = await synthesizeScript(script([['host1', 'Selamat pagi.'], ['host2', 'Selamat pagi juga.']]), { client: client(api), spec: requireLanguageSpec('ms'), flag: { voice: 'mira', voiceHost2: 'mira' }, log: () => {} });
+  assert.deepEqual(out.map((o) => o.speaker), ['host1', 'host2']);
+  assert.ok(api.calls.every((c) => c.body.voice === 'mira' && c.body.language_code === 'ms'));
+  const api2 = fakeApi();
+  await synthesizeScript(script([['host1', 'Dober dan.'], ['host2', 'Dober dan tudi vam.']]), { client: client(api2), spec: requireLanguageSpec('sl'), flag: { voice: 'mira', voiceHost2: 'mira' }, log: () => {} });
+  assert.ok(api2.calls.every((c) => c.body.voice === 'mira' && c.body.language_code === 'sl'));
+});
+
+test('studio cold start: one slow answer (about 44 s, simulated) is one attempt: characters are counted once, no retry, breaker untouched', async () => {
+  let counted = 0; let calls = 0;
+  const slow = (async () => { calls++; await new Promise((r) => setTimeout(r, 30)); return new Response(pcm(0.5), { status: 200 }); }) as unknown as typeof fetch;
+  const c = new ReadAloudClient({ baseUrl: 'https://api.example.test', apiKey: () => 'k', fetchImpl: slow, sleep: async () => {}, onChars: async (n) => { counted += n; } });
+  await c.synthesize({ text: 'Dobrý den.', voice: 'mira', language: 'sk' });
+  assert.equal(calls, 1); assert.equal(counted, 'Dobrý den.'.length);
+});
+
+test('studio cold start: the per-request timeout is long enough for a 44 s start (default 150 s) and a 503 with Retry-After waits that long (at most 45 s)', async () => {
+  assert.equal(retryAfterSeconds({ headers: new Headers({ 'retry-after': '40' }) }), 40);
+  assert.equal(retryAfterSeconds({ headers: new Headers({ 'retry-after': '600' }) }), 45);
+  assert.equal(retryAfterSeconds({ headers: new Headers({ 'retry-after': 'Wed, 21 Oct 2026 07:28:00 GMT' }) }), undefined);
+  assert.equal(retryAfterSeconds({ headers: new Headers() }), undefined);
+  const waits: number[] = []; let n = 0;
+  const fetchImpl = (async () => (n++ === 0 ? new Response('starting', { status: 503, headers: { 'Retry-After': '40' } }) : new Response(pcm(0.5), { status: 200 }))) as unknown as typeof fetch;
+  const c = new ReadAloudClient({ baseUrl: 'https://api.example.test', apiKey: () => 'k', fetchImpl, sleep: async (ms) => { waits.push(ms); } });
+  const r = await c.synthesize({ text: 'Dobrý den.', voice: 'mira', language: 'vi' });
+  assert.ok(r.audio.length > 0); assert.deepEqual(waits, [40_000]); // the header (40 s) beats the 3 s default
+});
+
+test('a 401 / 403 from the speech API (a key not allowed to use studio voices) stops at once with no retry', async () => {
+  for (const status of [401, 403]) {
+    const api = fakeApi([status]);
+    await assert.rejects(client(api).synthesize({ text: 'Dobrý den.', voice: 'mira', language: 'ca' }), (e: any) => e instanceof TtsUnavailableError && e.reason === 'failed');
+    assert.equal(api.calls.length, 1);
+  }
+});
+
+test('non-ASCII text reaches the API byte for byte (UTF-8 JSON, no escaping or mangling) for every wave 3 script', async () => {
+  const samples: Record<string, string> = { ar: 'مرحبا بالعالم', ca: 'Bon dia, què tal? L\'accés', hr: 'Čačak đak šuma žaba ćevap', ms: 'Selamat pagi', no: 'Blåbærsyltetøy på Ørland', sk: 'Ďakujeme, ľudia čakajú', sl: 'Čas je zlato, šola', sr: 'Đorđe žuri u školu', th: 'สวัสดีครับ', vi: 'Tiếng Việt: Nguyễn Thị Ánh', zh: '你好，世界。' };
+  for (const [lang, text] of Object.entries(samples)) {
+    let raw = '';
+    const fetchImpl = (async (_u: string, init: RequestInit) => { raw = Buffer.from(String(init.body), 'utf8').toString('utf8'); return new Response(pcm(0.2), { status: 200 }); }) as unknown as typeof fetch;
+    await new ReadAloudClient({ baseUrl: 'https://api.example.test', apiKey: () => 'k', fetchImpl, sleep: async () => {} }).synthesize({ text, voice: 'mira', language: lang });
+    assert.equal(JSON.parse(raw).text, text, lang);
+    assert.ok(raw.includes(text.replace(/\\/g, '')) || raw.includes(JSON.stringify(text).slice(1, -1)), `${lang}: text appears unescaped in the body`);
+  }
 });

@@ -33,7 +33,7 @@ test('an enabled language is admitted for a launch topic, labelled Beta, with th
   await c.setFlag('cs', { enabled: true }, 't');
   const a = await c.admitGeneration('cs', 'world-update');
   assert.equal(a.ok, true); assert.equal((a as any).beta, true); assert.equal((a as any).flag.dailyCap, 8);
-  assert.deepEqual(await c.publicList(), [{ code: 'cs', name: 'Czech', nativeName: 'Čeština', status: 'beta', beta: true, wave: 1 }]);
+  assert.deepEqual(await c.publicList(), [{ code: 'cs', name: 'Czech', nativeName: 'Čeština', status: 'beta', beta: true, wave: 1, flag: '🇨🇿', dir: 'ltr', podcast: true, uiTag: 'cs' }]);
   await c.setFlag('cs', { beta: false }, 't');
   assert.equal((await c.publicList())[0].status, 'on');
   assert.equal(store.flags.get('cs')!.updatedBy, 't');
@@ -156,4 +156,53 @@ test('flag patches are validated (cap range, voice id characters)', async () => 
   await assert.rejects(c.setFlag('cs', { voice: 'Bad Voice!' }, 't'), /voice/);
   const f = await c.setFlag('cs', { voice: 'cora', voiceHost2: 'hugo' }, 't');
   assert.equal(f.voice, 'cora'); assert.equal(f.voiceHost2, 'hugo');
+});
+
+test('public list: the original keys keep their exact values, the new keys are additive (flag, dir, podcast, uiTag only when the app has one)', async () => {
+  const { c } = make();
+  for (const l of ['ca', 'sr', 'ar']) await c.setFlag(l, { enabled: true }, 't');
+  const list = await c.publicList();
+  const by = Object.fromEntries(list.map((e) => [e.code, e]));
+  assert.deepEqual(Object.keys(by).sort(), ['ar', 'ca', 'sr']);
+  for (const e of list) {
+    // old clients read only these six: names, types and the status/beta/wave semantics are unchanged
+    assert.equal(typeof e.name, 'string'); assert.equal(typeof e.nativeName, 'string'); assert.equal(e.status, 'beta'); assert.equal(e.beta, true); assert.equal(e.wave, 3);
+    assert.equal(e.podcast, true);
+  }
+  assert.equal(by.ar.dir, 'rtl'); assert.equal(by.ar.uiTag, 'ar'); assert.equal(by.ar.flag, null);
+  assert.equal(by.ca.dir, 'ltr'); assert.equal(by.ca.flag, null); assert.ok(!('uiTag' in by.ca));
+  assert.equal(by.sr.flag, '🇷🇸'); assert.equal(by.sr.nativeName, 'Srpski');
+});
+
+test('wave 3: 11 languages registered, da is not a language', () => {
+  const w3 = NEW_LANGUAGES.filter((l) => l.wave === 3).map((l) => l.code).sort();
+  assert.deepEqual(w3, ['ar', 'ca', 'hr', 'ms', 'no', 'sk', 'sl', 'sr', 'th', 'vi', 'zh']);
+  assert.ok(!CODES.includes('da'));
+});
+
+test('flags off fail closed for every wave 3 language: not listed, not admitted, not readable', async () => {
+  const { c } = make();
+  for (const l of NEW_LANGUAGES.filter((x) => x.wave === 3)) {
+    assert.equal(await c.isEnabled(l.code), false, l.code);
+    assert.equal(denied(await c.admitGeneration(l.code, 'world-update')).error, 'language_unavailable', l.code);
+  }
+  assert.deepEqual(await c.publicList(), []);
+});
+
+test('flags unreadable: nothing is listed and nothing is admitted (fail closed)', async () => {
+  const { c, store } = make();
+  await c.setFlag('vi', { enabled: true }, 't');
+  c.invalidate(); store.failing = true;
+  assert.deepEqual(await c.publicList(), []);
+  assert.equal(denied(await c.admitGeneration('vi', 'world-update')).status, 'unavailable');
+});
+
+test('per-language cap 2 (wave 3 rows): the third request of the day is refused, other languages are not affected by it', async () => {
+  const { c, store } = make();
+  for (const l of ['ca', 'vi']) { await c.setFlag(l, { enabled: true, dailyCap: 2 }, 't'); }
+  assert.equal((await c.reserveEpisode('ca')).ok, true); assert.equal((await c.reserveEpisode('ca')).ok, true);
+  const third = denied(await c.reserveEpisode('ca'));
+  assert.equal(third.status, 'daily_cap_reached'); assert.equal(third.scope, 'language');
+  assert.equal((await c.reserveEpisode('vi')).ok, true);
+  assert.equal(store.usage.get('2026-11-15|ca')!.episodes, 2);
 });

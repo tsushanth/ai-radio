@@ -24,11 +24,16 @@ test('Google News section URL uses the language edition (hl, gl, ceid)', () => {
   assert.match(googleNewsSectionUrl(requireLanguageSpec('hi'), 'SCIENCE'), /hl=hi&gl=IN&ceid=IN:hi/);
 });
 
-test('registry: 14 languages, 12 launch topics, every native topic has a section, every edition is well formed', () => {
-  assert.equal(NEW_LANGUAGES.length, 14); assert.equal(LAUNCH_TOPICS.length, 12);
+test('registry: 25 languages, 12 launch topics, every native topic has a section, every edition is well formed', () => {
+  assert.equal(NEW_LANGUAGES.length, 25); assert.equal(LAUNCH_TOPICS.length, 12);
   assert.deepEqual(NEW_LANGUAGES.filter((l) => l.wave === 1).map((l) => l.code).sort(), ['cs', 'hu', 'nl', 'pl', 'ro', 'ru', 'sv', 'uk']);
   for (const t of LAUNCH_TOPICS) assert.ok(t.mode === 'translate' || (t.sections && t.sections.length > 0), t.id);
-  for (const l of NEW_LANGUAGES) assert.match(l.edition, /^hl=[a-z]{2}&gl=[A-Z]{2}&ceid=[A-Z]{2}:[a-z]{2}$/, l.code);
+  for (const l of NEW_LANGUAGES) {
+    if (l.code === 'hr') { assert.equal(l.edition, '', 'Google News has no Croatian edition (hl=hr answers the US English edition)'); continue; }
+    assert.match(l.edition, /^hl=[a-z]{2}(-[A-Z]{2})?&gl=[A-Z]{2}&ceid=[A-Z]{2}:[a-z]{2}(-Hans)?$/, l.code);
+  }
+  for (const l of NEW_LANGUAGES) { assert.ok(['ltr', 'rtl'].includes(l.dir), l.code); assert.ok(l.flag === null || /^\p{RI}\p{RI}$/u.test(l.flag), l.code); }
+  assert.deepEqual(NEW_LANGUAGES.filter((l) => l.dir === 'rtl').map((l) => l.code), ['ar']);
   assert.ok(!Object.values(PUBLISHER_FEEDS).flat().some((f) => /meduza/i.test(f.url)), 'Meduza is not a default source');
 });
 
@@ -83,4 +88,22 @@ test('format topics (gaming, eli5, simulate-this) go straight to the English sou
     const r = await fetchLanguageStories(topic(id), requireLanguageSpec('ro'), d);
     assert.equal(r.via, 'english-translate'); assert.equal(d.fetched.length, 0);
   }
+});
+
+test('wave 3 editions: the exact Google News parameters verified live on 2026-11-20', () => {
+  const e = (c: string) => requireLanguageSpec(c).edition;
+  assert.equal(e('no'), 'hl=no&gl=NO&ceid=NO:no'); // Norwegian is "no" (Bokmal), not "nb"
+  assert.equal(e('zh'), 'hl=zh-CN&gl=CN&ceid=CN:zh-Hans'); // Simplified
+  assert.equal(e('sr'), 'hl=sr&gl=RS&ceid=RS:sr');
+  assert.equal(googleNewsSectionUrl(requireLanguageSpec('ca'), 'WORLD'), 'https://news.google.com/rss/headlines/section/topic/WORLD?hl=ca&gl=ES&ceid=ES:ca');
+});
+
+test('hr has no Google News edition: only publisher feeds are read, and topics without publisher feeds retell the English sources', async () => {
+  const d = deps({ 'index.hr': rss([{ title: 'Prva vijest', date: fresh }, { title: 'Druga vijest', date: fresh }, { title: 'Treća vijest', date: fresh }]) });
+  const world = await fetchLanguageStories(topic('world-update'), requireLanguageSpec('hr'), d);
+  assert.equal(world.sourceLanguage, 'native'); assert.ok(d.fetched.length > 0 && d.fetched.every((u) => !u.includes('news.google.com')));
+  const d2 = deps({}, [{ title: 'English story', source: 'X', sourceType: 'rss' }, { title: 'Another', source: 'Y', sourceType: 'rss' }, { title: 'Third', source: 'Z', sourceType: 'rss' }]);
+  const tech = await fetchLanguageStories(topic('tech-news'), requireLanguageSpec('hr'), d2);
+  assert.equal(tech.sourceLanguage, 'english'); assert.equal(d2.fetched.length, 0);
+  assert.throws(() => googleNewsSectionUrl(requireLanguageSpec('hr'), 'WORLD'), /no Google News edition/);
 });

@@ -7,10 +7,10 @@ import { NEW_LANGUAGES } from '../services/languages/registry.ts';
 
 const make = () => { const store = new MemoryControlStore(NEW_LANGUAGES.map((l) => l.code)); return { store, c: new LanguageControls({ store, env: {}, log: () => {} }) }; };
 
-test('status lists all 14 languages, all off, with caps and today usage', async () => {
+test('status lists all 25 languages, all off, with caps and today usage', async () => {
   const { c } = make();
   const out = await runCommand(['status'], c);
-  assert.equal(out.split('\n').filter((l) => /^[a-z]{2}  /.test(l)).length, 14);
+  assert.equal(out.split('\n').filter((l) => /^[a-z]{2}  /.test(l)).length, 25);
   assert.match(out, /cs  off  beta  cap 8  voices aria\/kai/);
   assert.match(out, /Global cap 35 episodes, TTS 150000 characters/);
 });

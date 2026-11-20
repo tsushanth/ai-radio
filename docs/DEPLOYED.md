@@ -3,6 +3,16 @@
 Newest first. Parity rule: whatever runs in production is on `main` (tree compared for the deployed paths).
 
 
+## 2026-11-20 backend v51 (ai-radio-backend on Fly): 11 more podcast languages (wave 3), stations API
+
+- Release: Fly v51, image `registry.fly.io/ai-radio-backend:deployment-01M7XF6JA9QQEQFVAY8R6Y219T`, deployed from a clean worktree at `origin/main` `fac2389` (merge of #80); `ai-radio-backend/` tree `36da0fc` equals `origin/main`. No episode was generating at deploy time.
+- Contains: registry rows for ar ca hr ms no sk sl sr th vi zh (da skipped: no speech voice, no Danish news edition), additive `GET /api/config/languages` keys (`flag`, `dir`, `podcast`, `uiTag`), `GET /api/config/stations` (+ `/stations/:code/playlist`), `generating` state with retry hint, word-boundary speech splitting, `language-flags.js add`, `language-gate.js`. Contract: `docs/LANGUAGES.md`.
+- Database: migration `016_language_flags_wave3.sql` was NOT run in SQL (no SQL editor or Supabase MCP sign-in available in the session). The same 11 rows were created through the backend's service role with `language-flags.js add` (OFF, beta, cap 2), then voices corrected with `set` (first run passed the voices wrongly because of a shell word-splitting slip; rows were still OFF and were fixed before enabling; the CLI does not reject a value that looks like an option, a known footgun). Final rows: voices `mira`/`remy`, except `ms` and `sl` `mira`/`mira` (remy does not speak them). Migration 017 (topic names) is NOT applied: apply by hand, machine-written, needs native review.
+- Enable gate (`language-gate.js`: a real world-update episode through the production speech route with the backend's key, voices mira/remy, then speaking rate, transcript error rate, transcript length, repetition): PASS ca hr ms no sk sl sr vi (CER 0.001 to 0.135, 12.9 to 15.7 characters a second, no repeated token). ar th zh: the public speech route refuses them (HTTP 400 "language_code is not supported for this voice", the catalog lists studio languages en ca hr ms no sk sl sr vi only), so they stay OFF; not worked around.
+- Languages ON (Beta) now: the 14 earlier ones plus ca hr ms no sk sl sr vi (22). OFF: ar th zh.
+- Production check after enabling: one world-update episode per new language generated through `POST /api/topics/world-update/generate`, all completed (124 to 163 s), transcripts matched the scripts (CER 0.002 to 0.052). Stations list: en live, ja and the 8 new languages as playlist.
+- Rollback: `fly deploy -a ai-radio-backend --image registry.fly.io/ai-radio-backend:deployment-01M7JYSWY3KVPSPW8N382HYTTK` (v50); one language: `language-flags.js disable <lang>`; all: `language-flags.js pause "reason"`.
+
 ## 2026-11-18 Android 12.12.0 (51) on Google Play production, 20% staged
 
 - Play production track read back after commit: 12.12.0 (51) inProgress at userFraction 0.2, 12.11.0 (50) completed. Not raised above 20%.

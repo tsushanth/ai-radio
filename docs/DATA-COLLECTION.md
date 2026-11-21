@@ -59,6 +59,10 @@ Ask id and the stored question text before the Android build that contains the A
   collecting immediately and deletes the install id, the unsent queue and the first-play flag; turning it on later creates a new,
   unrelated id.
 * Web only: nothing is collected when the browser sends Do Not Track or Global Privacy Control, or on localhost.
+* Public landing page only (`audexa.app/`): a separate visit counter, Gaugemint (our own analytics, `guagemint.com`), counts page
+  views of the landing page and of any page the visitor then opens in the same tab without reloading (for example the sign-in
+  page), and how far they scrolled and for how long. It sets no cookies and does not store the IP address. It is not part of the
+  usage statistics above: the Settings switch and the Do Not Track / Global Privacy Control check do not apply to it yet.
 * Server kill switch: `ANALYTICS_ENABLED`. Default off. While off, `POST /api/events` answers `202 {"disabled":true}`, reads nothing
   and stores nothing, and clients drop their queues.
 * Limits: at most 25 events and 8 KB per request; per install 30 requests and 300 events per hour; per IP 120 requests per hour;
@@ -109,7 +113,8 @@ Notes:
 > identifier created on your device or in your browser, not to your name, email or account, and we do not store your IP address
 > with them. We keep them for up to 180 days and do not share them with anyone. You can turn this off at any time in Profile
 > (Android) or Settings (web); turning it off deletes the identifier. The web app also honours Do Not Track and Global Privacy
-> Control.
+> Control for these usage statistics. The public landing page also has a cookieless visit counter of our own that does not store
+> your IP address.
 
 ## Operating it
 

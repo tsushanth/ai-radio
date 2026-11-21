@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/components/auth/AuthProvider';
 import { playUrl } from '@/lib/playLinks';
 import Link from 'next/link';
+import Script from 'next/script';
 import {
   Play,
   Headphones,
@@ -46,6 +47,12 @@ export default function LandingPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-900 via-gray-900 to-black text-white">
+      {/* Gaugemint (our own cookieless visit counter). Public landing page only: never put this in the root layout, which also serves
+          signed-in and share-link routes. It must stay a classic script (it reads document.currentScript for data-domain). Skipped for
+          signed-in users, who are redirected to /episodes. */}
+      {!isLoading && !user && (
+        <Script id="gaugemint" defer data-domain="audexa.app" src="https://guagemint.com/js/script.js" strategy="afterInteractive" />
+      )}
       {/* Navigation */}
       <nav className="fixed top-0 left-0 right-0 z-50 bg-gray-900/80 backdrop-blur-lg border-b border-white/10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

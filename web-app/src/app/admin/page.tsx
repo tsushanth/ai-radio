@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { Session } from '@supabase/supabase-js';
 import { supabase } from '@/lib/supabase';
+import GaugemintPanel from '@/components/admin/GaugemintPanel';
 import {
   type Level,
   THRESHOLDS,
@@ -335,10 +336,17 @@ export default function AdminPage() {
             </p>
           </Card>
 
-          <p className="adm-sub">
-            {loadedAt ? `Updated ${loadedAt.toLocaleTimeString()}` : ''} · refreshes every 30s
-          </p>
         </>
+      )}
+
+      {/* Own card, own fetch (/api/admin/gaugemint): shown whenever someone is signed in and not denied, also while the radio overview is
+          loading or has failed, and a Gaugemint failure never touches the radio cards above. Sits right after "App events". */}
+      {ready && session && !denied && <GaugemintPanel token={session.access_token} />}
+
+      {ready && session && !denied && data && (
+        <p className="adm-sub">
+          {loadedAt ? `Updated ${loadedAt.toLocaleTimeString()}` : ''} · radio cards refresh every 30s
+        </p>
       )}
     </main>
   );
@@ -375,4 +383,25 @@ max-width:960px;margin:0 auto;padding:16px;color:var(--ink);min-height:100vh;bac
 .adm button{font:inherit;font-size:.9rem;padding:8px 12px;border-radius:8px;border:1px solid var(--accent);background:var(--accent);color:#fff;cursor:pointer}
 .adm button.adm-ghost{background:transparent;color:var(--ink);border-color:var(--line)}
 .adm button:disabled{opacity:.5;cursor:not-allowed}
+.adm-gm-select{font:inherit;font-size:.85rem;padding:4px 8px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink)}
+.adm-gm-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:12px}
+.adm-gm-stats .adm-big{font-size:1.4rem}
+.adm-gm-box{border:1px solid var(--line);border-radius:8px;padding:10px 12px}
+.adm-gm-box h3{font-size:.85rem;font-weight:600;margin:0 0 6px}
+.adm-gm-head{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.adm-gm-head h3{margin:0}
+.adm-gm-bars{display:flex;align-items:flex-end;gap:2px;height:80px;margin:8px 0 2px}
+.adm-gm-bars>div{flex:1;background:var(--accent);border-radius:2px}
+.adm-gm-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin-top:12px}
+.adm-gm-table{width:100%;border-collapse:collapse;font-size:.85rem}
+.adm-gm-table th{text-align:right;font-weight:400;color:var(--ink2);font-size:.75rem}
+.adm-gm-table th:first-child{text-align:left}
+.adm-gm-table td{text-align:right;border-top:1px solid var(--line);padding:5px 0 5px 8px;font-variant-numeric:tabular-nums}
+.adm-gm-table td:first-child{text-align:left;padding-left:0}
+.adm-gm-name{word-break:break-all}
+.adm-gm-rank{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.adm-gm-rankrow{display:flex;justify-content:space-between;gap:8px;font-size:.85rem}
+.adm-gm-n{font-variant-numeric:tabular-nums;color:var(--ink2)}
+.adm-gm-meter{height:4px;background:var(--line);border-radius:2px;margin-top:2px}
+.adm-gm-meter>span{display:block;height:100%;background:var(--accent);border-radius:2px}
 `;

@@ -339,7 +339,7 @@ export default function AdminPage() {
         </>
       )}
 
-      {/* Own card, own fetch (/api/admin/gaugemint): shown whenever someone is signed in and not denied, also while the radio overview is
+      {/* Own card with its own fetch (inside the panel): shown whenever someone is signed in and not denied, also while the radio overview is
           loading or has failed, and a Gaugemint failure never touches the radio cards above. Sits right after "App events". */}
       {ready && session && !denied && <GaugemintPanel token={session.access_token} />}
 

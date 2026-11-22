@@ -3,6 +3,13 @@
 Newest first. Parity rule: whatever runs in production is on `main` (tree compared for the deployed paths).
 
 
+## 2026-11-21 web v24 (audexa-web on Fly, audexa.app): admin card with Gaugemint website visits (#84)
+
+- Release: Fly v24, image `registry.fly.io/audexa-web:deployment-01M80NPXX4YAYH7SAHBJRWWDXQ` (sha256:3c0d7b032921...), `flyctl deploy --remote-only` from `web-app/` of a clean detached worktree at `origin/main` `ce2070a` (squash merge of #84); `web-app/` tree `514d5c91fddfe2764af38392762e8e152db2427c` equals `origin/main`.
+- Adds a "Website visits (Gaugemint)" card to /admin: server-side read-only key, new Fly secret `GAUGEMINT_READ_KEY` (copy in Keychain `GAUGEMINT_READ_KEY_audexa.app`), admin-gated route `/api/admin/gaugemint` separate from the overview route, shown even when the radio overview fails. Landing-page visits only (the tag is on the home page). Existing secrets (`ADMIN_EMAILS`, `NEXT_PUBLIC_API_URL`) were not touched.
+- Verified live: home 200, `/api/admin/gaugemint` answers 401 without a bearer token. NOT verified: the card rendering for the admin account (needs a login); check once and note it here.
+- Tests before merge: 154 pass, 0 fail, `tsc` and `next build` clean.
+
 ## 2026-11-20 backend v51 (ai-radio-backend on Fly): 11 more podcast languages (wave 3), stations API
 
 - Release: Fly v51, image `registry.fly.io/ai-radio-backend:deployment-01M7XF6JA9QQEQFVAY8R6Y219T`, deployed from a clean worktree at `origin/main` `fac2389` (merge of #80); `ai-radio-backend/` tree `36da0fc` equals `origin/main`. No episode was generating at deploy time.

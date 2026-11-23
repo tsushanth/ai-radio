@@ -359,4 +359,30 @@
     <string name="ask_err_refused">Prezentatorii nu pot face un episod despre asta.</string>
     <string name="ask_err_no_coverage">Nu am găsit suficientă acoperire recentă în știri despre acest subiect, așa că nu am făcut un episod.</string>
     <string name="ask_err_failed">Episodul nu a putut fi creat. Încearcă din nou.</string>
+    <!-- Localized server errors, category names, radio chat and on-device voice messages (code-to-text mapping for job error codes) -->
+    <string name="job_error_relink">Conexiunea contului tău de e-mail trebuie reînnoită. Te rugăm să-ți reconectezi contul.</string>
+    <string name="job_error_no_content">Momentan nu există destul conținut pentru a crea un podcast. Încearcă din nou mai târziu, când ai mai multe e-mailuri.</string>
+    <string name="job_error_retry">Am întâmpinat probleme la crearea podcastului tău. Încearcă din nou.</string>
+    <string name="job_error_unknown">Ceva nu a mers bine. Încearcă din nou sau contactează asistența dacă problema persistă.</string>
+    <string name="category_news">Știri</string>
+    <string name="category_technology">Tehnologie</string>
+    <string name="category_business">Afaceri</string>
+    <string name="category_science">Știință</string>
+    <string name="category_lifestyle">Stil de viață</string>
+    <string name="category_entertainment">Divertisment</string>
+    <string name="category_sports">Sport</string>
+    <string name="radio_topic_placeholder">ex. schimbări climatice, știri despre Lakers, bârfe de la Hollywood…</string>
+    <string name="chat_you">Tu</string>
+    <string name="chat_listener">Ascultător</string>
+    <string name="chat_blocked_language">Mesaj blocat: limbaj nepotrivit</string>
+    <string name="chat_blocked_phone">Mesaj blocat: te rugăm să nu distribui numere de telefon</string>
+    <string name="chat_blocked_email">Mesaj blocat: te rugăm să nu distribui adrese de e-mail</string>
+    <string name="chat_blocked_id">Mesaj blocat: te rugăm să nu distribui numere de identificare personală</string>
+    <string name="chat_blocked_card">Mesaj blocat: te rugăm să nu distribui numere de card</string>
+    <string name="radio_request_queued">🎙️ Cerere pusă în coadă: „%1$s” — poziția nr. %2$d, ~%3$d min de așteptare</string>
+    <string name="voice_on_device_button">Pe dispozitiv</string>
+    <string name="kokoro_err_checksum">Descărcarea nu a putut fi verificată</string>
+    <string name="kokoro_err_rename">Fișierul descărcat nu a putut fi salvat</string>
+    <string name="kokoro_err_unknown">Eroare necunoscută</string>
+    <string name="kokoro_err_download">Descărcarea a eșuat</string>
 </resources>

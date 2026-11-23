@@ -358,4 +358,30 @@
     <string name="ask_err_refused">De presentatoren kunnen daar geen aflevering over maken.</string>
     <string name="ask_err_no_coverage">We konden niet genoeg recente berichtgeving hierover vinden, dus we hebben geen aflevering gemaakt.</string>
     <string name="ask_err_failed">De aflevering kon niet worden gemaakt. Probeer het opnieuw.</string>
+    <!-- Localized server errors, category names, radio chat and on-device voice messages (code-to-text mapping for job error codes) -->
+    <string name="job_error_relink">De verbinding met je e-mailaccount moet worden vernieuwd. Verbind je account opnieuw.</string>
+    <string name="job_error_no_content">Er is op dit moment niet genoeg inhoud om een podcast te maken. Probeer het later opnieuw als je meer e-mails hebt.</string>
+    <string name="job_error_retry">We konden je podcast niet maken. Probeer het opnieuw.</string>
+    <string name="job_error_unknown">Er ging iets mis. Probeer het opnieuw of neem contact op met support als het probleem blijft bestaan.</string>
+    <string name="category_news">Nieuws</string>
+    <string name="category_technology">Technologie</string>
+    <string name="category_business">Zakelijk</string>
+    <string name="category_science">Wetenschap</string>
+    <string name="category_lifestyle">Levensstijl</string>
+    <string name="category_entertainment">Vermaak</string>
+    <string name="category_sports">Sport</string>
+    <string name="radio_topic_placeholder">bijv. klimaatverandering, Lakers-nieuws, Hollywoodroddels…</string>
+    <string name="chat_you">Jij</string>
+    <string name="chat_listener">Luisteraar</string>
+    <string name="chat_blocked_language">Bericht geblokkeerd: ongepast taalgebruik</string>
+    <string name="chat_blocked_phone">Bericht geblokkeerd: deel geen telefoonnummers</string>
+    <string name="chat_blocked_email">Bericht geblokkeerd: deel geen e-mailadressen</string>
+    <string name="chat_blocked_id">Bericht geblokkeerd: deel geen persoonlijke identiteitsnummers</string>
+    <string name="chat_blocked_card">Bericht geblokkeerd: deel geen kaartnummers</string>
+    <string name="radio_request_queued">🎙️ Verzoek in de wachtrij: ‘%1$s’ — positie %2$d, ca. %3$d min wachttijd</string>
+    <string name="voice_on_device_button">Op het apparaat</string>
+    <string name="kokoro_err_checksum">De download kon niet worden geverifieerd</string>
+    <string name="kokoro_err_rename">Het gedownloade bestand kon niet worden opgeslagen</string>
+    <string name="kokoro_err_unknown">Onbekende fout</string>
+    <string name="kokoro_err_download">Download mislukt</string>
 </resources>

@@ -4,6 +4,8 @@ import android.content.Context
 import android.util.Log
 import com.kreativekoala.audexa.data.model.*
 import com.kreativekoala.audexa.data.remote.*
+// Both packages declare a TopicCategory (an enum in data.model, the API category in data.remote): the API one is meant here.
+import com.kreativekoala.audexa.data.remote.TopicCategory
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -20,6 +22,7 @@ class TopicRepository @Inject constructor(
         private const val PREFS_NAME = "topic_cache"
         private const val KEY_CACHED_TOPICS = "cached_topics"
         private const val KEY_CACHE_TIMESTAMP = "cache_timestamp"
+        private const val KEY_CACHED_CATEGORIES = "cached_category_names"
     }
 
     private val json = Json { ignoreUnknownKeys = true }
@@ -28,6 +31,10 @@ class TopicRepository @Inject constructor(
     // In-memory cache for instant access
     @Volatile
     private var cachedTopics: List<Topic>? = null
+
+    /** Category id -> name from the last GET /topics, in the language that was asked for. */
+    @Volatile
+    private var cachedCategoryNames: Map<String, String> = emptyMap()
 
     init {
         // Load cached topics into memory immediately
@@ -42,6 +49,9 @@ class TopicRepository @Inject constructor(
             if (cached != null) {
                 cachedTopics = json.decodeFromString<List<Topic>>(cached)
                 Log.d(TAG, "📦 Loaded ${cachedTopics?.size ?: 0} cached topics into memory")
+            }
+            prefs.getString(KEY_CACHED_CATEGORIES, null)?.let {
+                cachedCategoryNames = json.decodeFromString<Map<String, String>>(it)
             }
         } catch (e: Exception) {
             Log.e(TAG, "Failed to load cached topics: ${e.message}")
@@ -62,6 +72,19 @@ class TopicRepository @Inject constructor(
         }
     }
 
+    private fun cacheCategories(categories: List<TopicCategory>) {
+        try {
+            val names = categories.associate { it.id to it.name }
+            cachedCategoryNames = names
+            prefs.edit().putString(KEY_CACHED_CATEGORIES, json.encodeToString(names)).apply()
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to cache category names: ${e.message}")
+        }
+    }
+
+    /** Category names from the last successful topics response (empty before the first one). */
+    fun getCachedCategoryNames(): Map<String, String> = cachedCategoryNames
+
     /**
      * Get cached topics immediately (synchronous, from memory)
      */
@@ -77,6 +100,7 @@ class TopicRepository @Inject constructor(
             val response = apiService.getTopics(language)
             // Cache the fresh data (server takes precedence)
             response.data?.topics?.let { cacheTopics(it) }
+            response.data?.categories?.takeIf { it.isNotEmpty() }?.let { cacheCategories(it) }
             response
         } catch (e: Exception) {
             // If network fails and we have cache, return cached response
@@ -85,7 +109,11 @@ class TopicRepository @Inject constructor(
                 Log.w(TAG, "⚠️ Network failed, using cached topics: ${e.message}")
                 TopicsResponse(
                     success = true,
-                    data = TopicsData(topics = cached)
+                    data = TopicsData(
+                        topics = cached,
+                        categories = cachedCategoryNames.map { (id, name) -> TopicCategory(id = id, name = name, count = 0) }
+                            .takeIf { it.isNotEmpty() }
+                    )
                 )
             } else {
                 throw e

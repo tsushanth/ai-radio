@@ -358,4 +358,30 @@
     <string name="ask_err_refused">A műsorvezetők nem tudnak epizódot készíteni erről.</string>
     <string name="ask_err_no_coverage">Nem találtunk elég friss tudósítást erről, ezért nem készítettünk epizódot.</string>
     <string name="ask_err_failed">Az epizódot nem sikerült elkészíteni. Próbáld újra.</string>
+    <!-- Localized server errors, category names, radio chat and on-device voice messages (code-to-text mapping for job error codes) -->
+    <string name="job_error_relink">Az e-mail-fiókod kapcsolatát meg kell újítani. Kérjük, kapcsold újra a fiókot.</string>
+    <string name="job_error_no_content">Jelenleg nincs elég tartalom podcast létrehozásához. Próbáld újra később, ha több e-mailed lesz.</string>
+    <string name="job_error_retry">Nem sikerült létrehozni a podcastot. Kérjük, próbáld újra.</string>
+    <string name="job_error_unknown">Hiba történt. Kérjük, próbáld újra, vagy fordulj az ügyfélszolgálathoz, ha a gond továbbra is fennáll.</string>
+    <string name="category_news">Hírek</string>
+    <string name="category_technology">Technológia</string>
+    <string name="category_business">Üzlet</string>
+    <string name="category_science">Tudomány</string>
+    <string name="category_lifestyle">Életmód</string>
+    <string name="category_entertainment">Szórakozás</string>
+    <string name="category_sports">Sport</string>
+    <string name="radio_topic_placeholder">pl. klímaváltozás, Lakers-hírek, hollywoodi pletykák…</string>
+    <string name="chat_you">Te</string>
+    <string name="chat_listener">Hallgató</string>
+    <string name="chat_blocked_language">Üzenet letiltva: nem megfelelő nyelvezet</string>
+    <string name="chat_blocked_phone">Üzenet letiltva: kérjük, ne ossz meg telefonszámokat</string>
+    <string name="chat_blocked_email">Üzenet letiltva: kérjük, ne ossz meg e-mail-címeket</string>
+    <string name="chat_blocked_id">Üzenet letiltva: kérjük, ne ossz meg személyi azonosító számokat</string>
+    <string name="chat_blocked_card">Üzenet letiltva: kérjük, ne ossz meg kártyaszámokat</string>
+    <string name="radio_request_queued">🎙️ Kérés sorba állítva: „%1$s” — %2$d. hely, kb. %3$d perc várakozás</string>
+    <string name="voice_on_device_button">Az eszközön</string>
+    <string name="kokoro_err_checksum">A letöltést nem sikerült ellenőrizni</string>
+    <string name="kokoro_err_rename">A letöltött fájlt nem sikerült menteni</string>
+    <string name="kokoro_err_unknown">Ismeretlen hiba</string>
+    <string name="kokoro_err_download">A letöltés sikertelen</string>
 </resources>

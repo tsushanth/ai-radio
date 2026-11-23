@@ -8,6 +8,7 @@ import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
+import com.kreativekoala.audexa.R
 import com.kreativekoala.audexa.tts.kokoro.KokoroPreferences
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -136,7 +137,7 @@ class KokoroModelDownloader private constructor(
                 }
                 WorkInfo.State.FAILED -> {
                     val msg = info.outputData.getString(KokoroDownloadWorker.KEY_ERROR)
-                        ?: "Download failed"
+                        ?: context.getString(R.string.kokoro_err_download)
                     _state.value = State.Failed(msg)
                 }
                 WorkInfo.State.CANCELLED -> {

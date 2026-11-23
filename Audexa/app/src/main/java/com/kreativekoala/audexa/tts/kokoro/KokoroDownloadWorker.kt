@@ -132,14 +132,14 @@ class KokoroDownloadWorker(
                     Log.e(TAG, "doWork: checksum mismatch — deleting partial")
                     partial.delete()
                     return@withContext Result.failure(
-                        workDataOf(KEY_ERROR to "Checksum mismatch")
+                        workDataOf(KEY_ERROR to applicationContext.getString(R.string.kokoro_err_checksum))
                     )
                 }
             }
 
             if (!partial.renameTo(target)) {
                 return@withContext Result.failure(
-                    workDataOf(KEY_ERROR to "Rename failed")
+                    workDataOf(KEY_ERROR to applicationContext.getString(R.string.kokoro_err_rename))
                 )
             }
 
@@ -152,7 +152,7 @@ class KokoroDownloadWorker(
             Result.retry()
         } catch (e: Exception) {
             Log.e(TAG, "doWork: unexpected error", e)
-            Result.failure(workDataOf(KEY_ERROR to (e.message ?: "Unknown error")))
+            Result.failure(workDataOf(KEY_ERROR to (e.message ?: applicationContext.getString(R.string.kokoro_err_unknown))))
         }
     }
 

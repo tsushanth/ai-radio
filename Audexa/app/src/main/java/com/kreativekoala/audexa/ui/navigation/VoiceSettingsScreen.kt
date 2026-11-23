@@ -63,7 +63,7 @@ fun VoiceSettingsScreen(
                     // session + synth + playback before wiring it into deep
                     // dives / topic podcasts.
                     TextButton(onClick = onOpenKokoroTest) {
-                        Text("On-device", color = PrimaryText)
+                        Text(stringResource(R.string.voice_on_device_button), color = PrimaryText)
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(

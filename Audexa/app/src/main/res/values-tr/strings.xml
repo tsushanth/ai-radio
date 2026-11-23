@@ -358,4 +358,30 @@
     <string name="ask_err_refused">Sunucular bu konuda bir bölüm yapamaz.</string>
     <string name="ask_err_no_coverage">Bu konuda yeterli güncel haber kapsamı bulamadık, bu yüzden bölüm oluşturmadık.</string>
     <string name="ask_err_failed">Bölüm oluşturulamadı. Lütfen tekrar deneyin.</string>
+    <!-- Localized server errors, category names, radio chat and on-device voice messages (code-to-text mapping for job error codes) -->
+    <string name="job_error_relink">E-posta hesabı bağlantını yenilemen gerekiyor. Lütfen hesabını yeniden bağla.</string>
+    <string name="job_error_no_content">Şu anda podcast oluşturmak için yeterli içerik yok. Daha fazla e-postan olduğunda tekrar dene.</string>
+    <string name="job_error_retry">Podcast\'ini oluştururken sorun yaşadık. Lütfen tekrar dene.</string>
+    <string name="job_error_unknown">Bir şeyler ters gitti. Lütfen tekrar dene; sorun sürerse destekle iletişime geç.</string>
+    <string name="category_news">Haberler</string>
+    <string name="category_technology">Teknoloji</string>
+    <string name="category_business">İş Dünyası</string>
+    <string name="category_science">Bilim</string>
+    <string name="category_lifestyle">Yaşam</string>
+    <string name="category_entertainment">Eğlence</string>
+    <string name="category_sports">Spor</string>
+    <string name="radio_topic_placeholder">örn. iklim değişikliği, Lakers haberleri, Hollywood dedikoduları…</string>
+    <string name="chat_you">Sen</string>
+    <string name="chat_listener">Dinleyici</string>
+    <string name="chat_blocked_language">Mesaj engellendi: uygunsuz dil</string>
+    <string name="chat_blocked_phone">Mesaj engellendi: lütfen telefon numarası paylaşma</string>
+    <string name="chat_blocked_email">Mesaj engellendi: lütfen e-posta adresi paylaşma</string>
+    <string name="chat_blocked_id">Mesaj engellendi: lütfen kimlik numarası paylaşma</string>
+    <string name="chat_blocked_card">Mesaj engellendi: lütfen kart numarası paylaşma</string>
+    <string name="radio_request_queued">🎙️ İstek sıraya alındı: “%1$s” — sıra no. %2$d, yaklaşık %3$d dk bekleme</string>
+    <string name="voice_on_device_button">Cihazda</string>
+    <string name="kokoro_err_checksum">İndirme doğrulanamadı</string>
+    <string name="kokoro_err_rename">İndirilen dosya kaydedilemedi</string>
+    <string name="kokoro_err_unknown">Bilinmeyen hata</string>
+    <string name="kokoro_err_download">İndirme başarısız</string>
 </resources>

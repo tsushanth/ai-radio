@@ -357,4 +357,30 @@
     <string name="ask_err_refused">Para pembawa acara tidak dapat membuat episode tentang itu.</string>
     <string name="ask_err_no_coverage">Kami tidak menemukan cukup liputan berita terbaru tentang ini, jadi kami tidak membuat episode.</string>
     <string name="ask_err_failed">Episode tidak dapat dibuat. Coba lagi.</string>
+    <!-- Localized server errors, category names, radio chat and on-device voice messages (code-to-text mapping for job error codes) -->
+    <string name="job_error_relink">Koneksi akun email Anda perlu diperbarui. Silakan hubungkan akun Anda kembali.</string>
+    <string name="job_error_no_content">Konten belum cukup untuk membuat podcast saat ini. Coba lagi nanti saat Anda punya lebih banyak email.</string>
+    <string name="job_error_retry">Kami kesulitan membuat podcast Anda. Silakan coba lagi.</string>
+    <string name="job_error_unknown">Terjadi kesalahan. Silakan coba lagi atau hubungi dukungan jika masalah berlanjut.</string>
+    <string name="category_news">Berita</string>
+    <string name="category_technology">Teknologi</string>
+    <string name="category_business">Bisnis</string>
+    <string name="category_science">Sains</string>
+    <string name="category_lifestyle">Gaya Hidup</string>
+    <string name="category_entertainment">Hiburan</string>
+    <string name="category_sports">Olahraga</string>
+    <string name="radio_topic_placeholder">mis. perubahan iklim, berita Lakers, gosip Hollywood…</string>
+    <string name="chat_you">Anda</string>
+    <string name="chat_listener">Pendengar</string>
+    <string name="chat_blocked_language">Pesan diblokir: bahasa tidak pantas</string>
+    <string name="chat_blocked_phone">Pesan diblokir: jangan bagikan nomor telepon</string>
+    <string name="chat_blocked_email">Pesan diblokir: jangan bagikan alamat email</string>
+    <string name="chat_blocked_id">Pesan diblokir: jangan bagikan nomor identitas pribadi</string>
+    <string name="chat_blocked_card">Pesan diblokir: jangan bagikan nomor kartu</string>
+    <string name="radio_request_queued">🎙️ Permintaan masuk antrean: \"%1$s\" — urutan #%2$d, ~%3$d menit menunggu</string>
+    <string name="voice_on_device_button">Di perangkat</string>
+    <string name="kokoro_err_checksum">Unduhan tidak dapat diverifikasi</string>
+    <string name="kokoro_err_rename">Tidak dapat menyimpan file yang diunduh</string>
+    <string name="kokoro_err_unknown">Kesalahan tidak dikenal</string>
+    <string name="kokoro_err_download">Unduhan gagal</string>
 </resources>

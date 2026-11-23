@@ -7,6 +7,7 @@ import express from 'express';
 import { createClient } from '@supabase/supabase-js';
 import { env } from '../config/environment';
 import { dailyBriefScheduler } from '../services/scheduler/daily-brief.scheduler';
+import { languageFromBody, withLanguage } from '../services/languages/localized';
 
 const router = express.Router();
 
@@ -22,6 +23,7 @@ const supabase = env.SUPABASE_URL && env.SUPABASE_SERVICE_KEY
 router.post('/register', async (req, res) => {
   try {
     const { user_id, device_token, platform } = req.body;
+    const language = languageFromBody(req.body.language);
 
     if (!user_id || !device_token || !platform) {
       return res.status(400).json({
@@ -47,7 +49,7 @@ router.post('/register', async (req, res) => {
     // Get existing tokens for user
     const { data: existing } = await supabase
       .from('user_settings')
-      .select('device_tokens')
+      .select('device_tokens, preferences')
       .eq('user_id', user_id)
       .single();
 
@@ -64,6 +66,7 @@ router.post('/register', async (req, res) => {
       .upsert({
         user_id,
         device_tokens: deviceTokens,
+        ...(language ? { preferences: withLanguage(existing?.preferences, language) } : {}),
         updated_at: new Date().toISOString(),
       }, { onConflict: 'user_id' });
 
@@ -157,6 +160,7 @@ router.post('/settings', async (req, res) => {
       timezone,         // e.g., "America/Los_Angeles"
       notifications_enabled,
     } = req.body;
+    const language = languageFromBody(req.body.language);
 
     if (!user_id) {
       return res.status(400).json({
@@ -180,6 +184,14 @@ router.post('/settings', async (req, res) => {
     if (timezone) updates.timezone = timezone;
     if (typeof notifications_enabled === 'boolean') {
       updates.notifications_enabled = notifications_enabled;
+    }
+    if (language) {
+      const { data: current } = await supabase
+        .from('user_settings')
+        .select('preferences')
+        .eq('user_id', user_id)
+        .single();
+      updates.preferences = withLanguage(current?.preferences, language);
     }
 
     const { error } = await supabase

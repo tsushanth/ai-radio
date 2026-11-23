@@ -94,6 +94,8 @@ class LiveRadioViewModel @Inject constructor(
         private const val TAG = "LiveRadioVM"
         private const val DEFAULT_STREAM_URL = "https://radio.audexa.app/stream"
         private const val DEFAULT_STATION_NAME = "Audexa Radio"
+        /** What every client sends as the chat name of an anonymous listener; receivers translate it for display. */
+        private const val WIRE_ANONYMOUS_NAME = "Listener"
         private const val STATUS_URL = "https://radio.audexa.app/api/status"
         private const val REQUEST_TOPIC_URL = "https://radio.audexa.app/api/request-topic"
         private const val MAX_CHAT_MESSAGES = 50
@@ -170,7 +172,9 @@ class LiveRadioViewModel @Inject constructor(
                     channel.broadcastFlow<JsonObject>(event = "chat")
                         .collect { payload ->
                             val text = payload["text"]?.jsonPrimitive?.content ?: return@collect
-                            val username = payload["username"]?.jsonPrimitive?.content ?: "Listener"
+                            // "Listener" is the name every client sends for an anonymous listener (wire value); each device shows it in its own language.
+                            val sentName = payload["username"]?.jsonPrimitive?.content
+                            val username = if (sentName == null || sentName == WIRE_ANONYMOUS_NAME) appContext.getString(R.string.chat_listener) else sentName
                             if (text.isBlank()) return@collect
 
                             val isRequest = text.contains("@audexa", ignoreCase = true)
@@ -215,7 +219,7 @@ class LiveRadioViewModel @Inject constructor(
 
         // Add own message locally immediately (Supabase broadcast doesn't echo to sender)
         val ownMsg = ChatMessage(
-            username = "You",
+            username = appContext.getString(R.string.chat_you),
             text = trimmed,
             isRequest = trimmed.contains("@audexa", ignoreCase = true)
         )
@@ -227,7 +231,7 @@ class LiveRadioViewModel @Inject constructor(
                     event = "chat",
                     message = buildJsonObject {
                         put("text", JsonPrimitive(trimmed))
-                        put("username", JsonPrimitive("Listener"))
+                        put("username", JsonPrimitive(WIRE_ANONYMOUS_NAME))
                     }
                 )
                 Log.d(TAG, "Chat sent: $trimmed")
@@ -255,28 +259,28 @@ class LiveRadioViewModel @Inject constructor(
         // Profanity check
         for (word in blockedWords) {
             if (lower.contains(word)) {
-                return "Message blocked: inappropriate language"
+                return appContext.getString(R.string.chat_blocked_language)
             }
         }
 
         // Phone number (7+ consecutive digits)
         if (Regex("""\b\d[\d\s\-()]{6,}\d\b""").containsMatchIn(lower)) {
-            return "Message blocked: please don't share phone numbers"
+            return appContext.getString(R.string.chat_blocked_phone)
         }
 
         // Email address
         if (Regex("""[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}""").containsMatchIn(lower)) {
-            return "Message blocked: please don't share email addresses"
+            return appContext.getString(R.string.chat_blocked_email)
         }
 
         // SSN
         if (Regex("""\b\d{3}-\d{2}-\d{4}\b""").containsMatchIn(lower)) {
-            return "Message blocked: please don't share personal ID numbers"
+            return appContext.getString(R.string.chat_blocked_id)
         }
 
         // Credit card (16 digits)
         if (Regex("""\b\d{4}[\s\-]?\d{4}[\s\-]?\d{4}[\s\-]?\d{4}\b""").containsMatchIn(lower)) {
-            return "Message blocked: please don't share card numbers"
+            return appContext.getString(R.string.chat_blocked_card)
         }
 
         return null
@@ -324,7 +328,7 @@ class LiveRadioViewModel @Inject constructor(
                         channel.broadcast(
                             event = "chat",
                             message = buildJsonObject {
-                                put("text", JsonPrimitive("🎙️ Request queued: \"$topic\" — position #$position, ~${waitMinutes.toInt()} min wait"))
+                                put("text", JsonPrimitive(appContext.getString(R.string.radio_request_queued, topic, position, waitMinutes.toInt())))
                                 put("username", JsonPrimitive("Audexa Radio"))
                             }
                         )

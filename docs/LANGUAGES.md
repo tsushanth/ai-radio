@@ -191,11 +191,30 @@ speech-to-text round trip), then watch `status` for the day's characters, cap hi
   world and daily news and retells the English sources for the other topics.
 - The earlier "Not done" items below still apply to wave 3.
 
-- Topic names and descriptions are not translated: an episode title in these languages is the English topic name plus the date in the
-  language. A `localized_names` data migration is the follow-up.
+- Topic names and descriptions: now translated in code (`config/i18n/topic-names.ts`, machine-written, not native-reviewed) for the
+  14 catalog topics, so an episode title is the topic name in the listener's language plus the date in that language. A database row's
+  own `localized_names` still wins. Topics that exist only in the database and are not in that table (for example future-shock,
+  crypto-blockchain) still show their English name until a `localized_names` migration adds them.
 - Ask the hosts is not offered in these languages (its language list is the Piper languages).
 - No judge-model pass on scripts and no human listening: ship as Beta; quality of Ukrainian vs Russian, Finnish/Hungarian/Czech/Polish
   case endings, Japanese readings and Hindi code-mixing is unmeasured over a full episode.
 - Per-language speech speed and long-form stability were not measured by the engine owner.
 - Google News RSS terms are not a commercial licence (same practice as the English path today); outlet is named, no quotes.
 - Android: the app needs the server-driven language list, the Beta tag and the picker changes (separate work).
+
+## Localized server text (all languages, not only the additional ones)
+
+One module, `services/languages/localized.ts`, owns every server-written string that reaches a listener, and each lookup falls back to
+English as a whole (a row of category chips is never half Spanish, half English):
+
+| Text | Where | Language source |
+|---|---|---|
+| Episode-title date | `formatEpisodeDate` (topic episodes, Daily Briefing title) | request `lang` / `language`, locale via `dateLocaleFor` |
+| Category names | `GET /topics?lang=` `categories[].name`, table `config/i18n/category-names.ts` (33 languages) | `lang` |
+| Topic name and description | `localizeTopic`: database `localized_names`, then `config/i18n/topic-names.ts`, then the English base text | `lang` |
+| Daily Brief push title and body | `dailyBriefPush`, table `config/i18n/push-copy.ts` | `user_settings.preferences.language`, set by `POST /notifications/register` and `/notifications/settings` (`language` field) |
+| Job errors | `error.code` (stable) next to the English `error.message`; the Android app maps the code to its own string resources | the app's UI language |
+
+Add a language by adding it to the three tables (`category-names.ts`, `push-copy.ts`, and `topic-names.ts` for the topics it offers);
+`localized.test.ts` fails if a supported language is missing from the first two.
+

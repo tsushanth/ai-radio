@@ -22,6 +22,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.kreativekoala.audexa.R
+import com.kreativekoala.audexa.util.JobErrorMessages
 import com.kreativekoala.audexa.ui.theme.*
 
 sealed class DailyBriefState {
@@ -30,8 +31,9 @@ sealed class DailyBriefState {
     data class Generating(val progress: Int) : DailyBriefState()
     data class Completed(val audioUrl: String) : DailyBriefState()
     data class Playing(val audioUrl: String) : DailyBriefState()
-    data class Error(val message: String) : DailyBriefState()
-    data class NeedsRelink(val message: String) : DailyBriefState()
+    /** [code] is the backend's stable error code; the text shown is the localized string for it, else [message]. */
+    data class Error(val message: String, val code: String? = null) : DailyBriefState()
+    data class NeedsRelink(val message: String, val code: String? = null) : DailyBriefState()
 }
 
 @Composable
@@ -157,13 +159,13 @@ fun GradientHeader(
                 }
                 is DailyBriefState.Error -> {
                     ErrorBanner(
-                        message = briefState.message,
+                        message = JobErrorMessages.resFor(briefState.code)?.let { stringResource(it) } ?: briefState.message,
                         onRetry = onRetryTapped
                     )
                 }
                 is DailyBriefState.NeedsRelink -> {
                     RelinkBanner(
-                        message = briefState.message,
+                        message = JobErrorMessages.resFor(briefState.code)?.let { stringResource(it) } ?: briefState.message,
                         onRelink = onRelinkTapped
                     )
                 }

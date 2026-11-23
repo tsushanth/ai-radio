@@ -357,4 +357,30 @@
     <string name="ask_err_refused">Người dẫn không thể làm tập về chủ đề đó.</string>
     <string name="ask_err_no_coverage">Chúng tôi không tìm thấy đủ tin tức gần đây về chủ đề này nên chưa tạo tập.</string>
     <string name="ask_err_failed">Không thể tạo tập. Vui lòng thử lại.</string>
+    <!-- Localized server errors, category names, radio chat and on-device voice messages (code-to-text mapping for job error codes) -->
+    <string name="job_error_relink">Cần làm mới kết nối tài khoản email của bạn. Vui lòng kết nối lại tài khoản.</string>
+    <string name="job_error_no_content">Hiện chưa đủ nội dung để tạo podcast. Hãy thử lại sau khi bạn có thêm email.</string>
+    <string name="job_error_retry">Chúng tôi gặp sự cố khi tạo podcast của bạn. Vui lòng thử lại.</string>
+    <string name="job_error_unknown">Đã xảy ra lỗi. Vui lòng thử lại hoặc liên hệ bộ phận hỗ trợ nếu sự cố vẫn tiếp diễn.</string>
+    <string name="category_news">Tin tức</string>
+    <string name="category_technology">Công nghệ</string>
+    <string name="category_business">Kinh doanh</string>
+    <string name="category_science">Khoa học</string>
+    <string name="category_lifestyle">Phong cách sống</string>
+    <string name="category_entertainment">Giải trí</string>
+    <string name="category_sports">Thể thao</string>
+    <string name="radio_topic_placeholder">vd: biến đổi khí hậu, tin Lakers, chuyện phiếm Hollywood…</string>
+    <string name="chat_you">Bạn</string>
+    <string name="chat_listener">Thính giả</string>
+    <string name="chat_blocked_language">Tin nhắn bị chặn: ngôn từ không phù hợp</string>
+    <string name="chat_blocked_phone">Tin nhắn bị chặn: vui lòng không chia sẻ số điện thoại</string>
+    <string name="chat_blocked_email">Tin nhắn bị chặn: vui lòng không chia sẻ địa chỉ email</string>
+    <string name="chat_blocked_id">Tin nhắn bị chặn: vui lòng không chia sẻ số giấy tờ tùy thân</string>
+    <string name="chat_blocked_card">Tin nhắn bị chặn: vui lòng không chia sẻ số thẻ</string>
+    <string name="radio_request_queued">🎙️ Yêu cầu đã vào hàng đợi: \"%1$s\" — vị trí #%2$d, chờ khoảng %3$d phút</string>
+    <string name="voice_on_device_button">Trên thiết bị</string>
+    <string name="kokoro_err_checksum">Không thể xác minh bản tải xuống</string>
+    <string name="kokoro_err_rename">Không thể lưu tệp đã tải xuống</string>
+    <string name="kokoro_err_unknown">Lỗi không xác định</string>
+    <string name="kokoro_err_download">Tải xuống thất bại</string>
 </resources>

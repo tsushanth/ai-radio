@@ -10,6 +10,7 @@
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { env } from '../../config/environment';
 import { topicsService } from '../supabase/topics.service';
+import { localizeTopic } from '../languages/localized';
 
 export interface BriefingSummary {
   date: string | null; // YYYY-MM-DD of the newest completed batch, null when none is fresh
@@ -66,7 +67,7 @@ export class BriefingService {
     rows.sort((a, b) => ((b.play_count as number) || 0) - ((a.play_count as number) || 0));
 
     const topics = await topicsService.getTopics(language);
-    const nameById = new Map(topics.map(t => [t.id, t.name]));
+    const nameById = new Map(topics.map(t => [t.id, localizeTopic(t, language).name]));
 
     const headlines: BriefingSummary['headlines'] = [];
     for (const r of rows) {

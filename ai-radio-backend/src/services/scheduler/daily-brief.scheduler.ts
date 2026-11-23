@@ -9,6 +9,7 @@ import { env } from '../../config/environment';
 import { withFeature } from '../../lib/llm';
 import { podcastGenerator } from '../podcast/podcast.generator';
 import { pushNotificationService } from '../notifications/push.service';
+import { dailyBriefPush } from '../languages/localized';
 import type { UserPreferences } from '../../types/database';
 
 interface ScheduledUser {
@@ -311,10 +312,11 @@ export class DailyBriefScheduler {
    */
   private async sendReadyNotification(user: ScheduledUser, durationSeconds: number): Promise<void> {
     const minutes = Math.round(durationSeconds / 60);
+    const copy = dailyBriefPush(user.preferences?.language, minutes);
 
     await pushNotificationService.sendToUser(user.device_tokens, {
-      title: '☀️ Your Daily Brief is Ready',
-      body: `Your ${minutes}-minute personalized briefing is ready to play.`,
+      title: copy.readyTitle,
+      body: copy.readyBody,
       data: {
         type: 'daily_brief_ready',
         action: 'open_player',
@@ -328,9 +330,10 @@ export class DailyBriefScheduler {
    * Send push notification on generation failure
    */
   private async sendFailureNotification(user: ScheduledUser): Promise<void> {
+    const copy = dailyBriefPush(user.preferences?.language);
     await pushNotificationService.sendToUser(user.device_tokens, {
-      title: 'Daily Brief Update',
-      body: 'We couldn\'t generate your brief today. Tap to try manually.',
+      title: copy.failTitle,
+      body: copy.failBody,
       data: {
         type: 'daily_brief_failed',
         action: 'open_home',

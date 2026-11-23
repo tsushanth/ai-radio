@@ -1,33 +1,24 @@
 {
   "_note": "Per-file count of hard-coded user-visible English literals in src/main. NoHardcodedUiStringsTest fails if a count rises or a new file adds any. Lower counts are fine. Regenerate deliberately with scripts/update-hardcoded-baseline.sh; see docs/hardcoded-ui-strings-guard.md.",
-  "total": 130,
+  "total": 81,
   "files": {
-    "src/main/java/com/kreativekoala/audexa/AudexaApplication.kt": {"count": 2, "h": ["c07460e7", "fae85b73"]},
     "src/main/java/com/kreativekoala/audexa/billing/PremiumFeature.kt": {"count": 5, "h": ["0ac5dfe6", "2ece3060", "5b82504d", "c96479f5", "e4dc32bf"]},
     "src/main/java/com/kreativekoala/audexa/data/local/PreferencesManager.kt": {"count": 1, "h": ["b5a9ea94"]},
     "src/main/java/com/kreativekoala/audexa/data/model/Language.kt": {"count": 12, "h": ["1d4f702c", "20ea9ab1", "24f34fc1", "599b5224", "67ace756", "6d677088", "79d06fb0", "7b7b9a5c", "93da3b7f", "e4665eb9", "f41b4384", "fab5da16"]},
     "src/main/java/com/kreativekoala/audexa/data/model/Topic.kt": {"count": 7, "h": ["0024fef3", "12b9612c", "4d6caf68", "664c8c15", "9400b39f", "bf7f23e0", "d58c3244"]},
-    "src/main/java/com/kreativekoala/audexa/data/repository/AuthRepository.kt": {"count": 8, "h": ["080e2a3f", "573904e1", "6ea56a3f", "756ed2c3", "756ed2c3", "be7f8657", "be7f8657", "bfadd331"]},
     "src/main/java/com/kreativekoala/audexa/data/repository/PodcastRepository.kt": {"count": 2, "h": ["3f746a4a", "f5a9141a"]},
     "src/main/java/com/kreativekoala/audexa/service/AudioManager.kt": {"count": 1, "h": ["f2a3dea2"]},
     "src/main/java/com/kreativekoala/audexa/tts/KokoroTtsEngine.kt": {"count": 9, "h": ["000047f0", "263b0b64", "361f7600", "39e439a5", "5620651f", "69e30826", "6a150897", "7ed6174d", "dd6eed0f"]},
     "src/main/java/com/kreativekoala/audexa/tts/ReadAloudSheet.kt": {"count": 7, "h": ["002097a2", "0026cdb6", "00277c22", "016e13e8", "2e4051fa", "54795d9a", "ff290029"]},
     "src/main/java/com/kreativekoala/audexa/tts/SystemTtsEngine.kt": {"count": 7, "h": ["7f3d4169", "7f3d4169", "8705820a", "95a374d7", "9acb1cb7", "de290a44", "ee0b2d67"]},
-    "src/main/java/com/kreativekoala/audexa/tts/kokoro/KokoroDownloadWorker.kt": {"count": 4, "h": ["7e57a630", "8ac34c7c", "c6e8b803", "f3eab172"]},
     "src/main/java/com/kreativekoala/audexa/tts/kokoro/KokoroG2P.kt": {"count": 1, "h": ["6f3ddbb9"]},
-    "src/main/java/com/kreativekoala/audexa/ui/home/HomeScreen.kt": {"count": 3, "h": ["34952919", "8670bc9d", "fdbcdbb0"]},
+    "src/main/java/com/kreativekoala/audexa/ui/home/HomeScreen.kt": {"count": 1, "h": ["fdbcdbb0"]},
     "src/main/java/com/kreativekoala/audexa/ui/kokoro/KokoroTestScreen.kt": {"count": 20, "h": ["001f7907", "0022b3f4", "00277c22", "04710b09", "04b2e983", "04b2e983", "04c60fb2", "04eff112", "0f246b36", "1aeb4b12", "375da547", "3b2d483d", "691461c3", "78486cdf", "7c63327c", "8e11854e", "94e500ed", "94e500ed", "9c8041a1", "cf035ab4"]},
-    "src/main/java/com/kreativekoala/audexa/ui/navigation/LinkedAccountsScreen.kt": {"count": 6, "h": ["03dd41c8", "0e315097", "384af3b7", "8569a6a8", "8569a6a8", "e33ff2a8"]},
-    "src/main/java/com/kreativekoala/audexa/ui/navigation/LinkedAccountsViewModel.kt": {"count": 6, "h": ["3d38973c", "46b387bd", "47b8ae23", "4b566bde", "754ed7e7", "b6c3f386"]},
-    "src/main/java/com/kreativekoala/audexa/ui/navigation/VoiceSettingsScreen.kt": {"count": 8, "h": ["04eff112", "3c79799f", "605e0752", "60c311e4", "6beeef7e", "6e7f9c7b", "bf2a7018", "c277ed7b"]},
-    "src/main/java/com/kreativekoala/audexa/ui/navigation/VoiceSettingsViewModel.kt": {"count": 3, "h": ["04456056", "049508b9", "740f7eb9"]},
-    "src/main/java/com/kreativekoala/audexa/ui/onboarding/OnboardingViewModel.kt": {"count": 1, "h": ["2b7b472e"]},
+    "src/main/java/com/kreativekoala/audexa/ui/navigation/LinkedAccountsScreen.kt": {"count": 2, "h": ["8569a6a8", "8569a6a8"]},
+    "src/main/java/com/kreativekoala/audexa/ui/navigation/VoiceSettingsViewModel.kt": {"count": 1, "h": ["04456056"]},
     "src/main/java/com/kreativekoala/audexa/ui/onboarding/pages/LanguageSelectionPage.kt": {"count": 1, "h": ["5083746c"]},
     "src/main/java/com/kreativekoala/audexa/ui/onboarding/pages/LinkAccountPage.kt": {"count": 2, "h": ["3f68b8b7", "e74477a9"]},
     "src/main/java/com/kreativekoala/audexa/ui/profile/ProfileScreen.kt": {"count": 1, "h": ["e1c885d9"]},
-    "src/main/java/com/kreativekoala/audexa/ui/profile/ProfileViewModel.kt": {"count": 1, "h": ["03a13250"]},
-    "src/main/java/com/kreativekoala/audexa/ui/radio/LiveRadioScreen.kt": {"count": 6, "h": ["43cc4ee9", "8670bc9d", "a3f3560d", "a7bb79ce", "ad5103d1", "e202d7e9"]},
-    "src/main/java/com/kreativekoala/audexa/ui/radio/LiveRadioViewModel.kt": {"count": 4, "h": ["6259da28", "6b1a4cff", "a4878a6f", "fddbc8a8"]},
-    "src/main/java/com/kreativekoala/audexa/ui/subscription/PaywallScreen.kt": {"count": 2, "h": ["1152ae48", "81533753"]}
+    "src/main/java/com/kreativekoala/audexa/ui/profile/ProfileViewModel.kt": {"count": 1, "h": ["03a13250"]}
   }
 }

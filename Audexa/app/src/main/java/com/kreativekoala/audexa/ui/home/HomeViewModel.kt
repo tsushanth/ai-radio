@@ -24,6 +24,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import com.kreativekoala.audexa.util.CategoryTitles
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
@@ -118,11 +119,25 @@ class HomeViewModel @Inject constructor(
             return dateFormat.format(Date())
         }
 
+    /**
+     * True when [title] is the Daily Brief's player title. The title is built from daily_brief_title_format ("Daily Brief - %s",
+     * "Tagesbriefing - %s", ...), so it is matched on the localized prefix; the old English check never matched in other languages.
+     */
+    private fun isDailyBriefTitle(title: String?): Boolean {
+        if (title == null) return false
+        val prefix = context.getString(R.string.daily_brief_title_format, "").trim().trimEnd('-', ' ')
+        return (prefix.isNotEmpty() && title.startsWith(prefix)) || title.startsWith("Daily Brief")
+    }
+
     private val todayDateString: String
         get() {
             val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.US)
             return dateFormat.format(Date())
         }
+
+    // Declared before init: init reads it through categoryTitle().
+    /** Category id -> name from the server, in the listening language (see TopicRepository.getCachedCategoryNames). */
+    private var categoryNames: Map<String, String> = topicRepository.getCachedCategoryNames()
 
     init {
         // Load cached topics immediately for instant UI display
@@ -147,13 +162,22 @@ class HomeViewModel @Inject constructor(
     }
 
     /**
+     * Title of a Discover section: the server's name (same language as the topic names in the row), else the app's own string for
+     * the known category ids, else the id with a capital letter. It used to be only the last, so every title was English.
+     */
+    private fun categoryTitle(categoryId: String): String =
+        categoryNames[categoryId]?.takeIf { it.isNotBlank() }
+            ?: CategoryTitles.resFor(categoryId)?.let { context.getString(it) }
+            ?: categoryId.replaceFirstChar { it.uppercase() }
+
+    /**
      * Update discover categories from topics
      */
     private fun updateDiscoverCategories(topics: List<Topic>) {
         val grouped = topics.groupBy { it.category }
         _discoverCategories.value = grouped.map { (category, categoryTopics) ->
             DiscoverCategory(
-                title = category.replaceFirstChar { it.uppercase() },
+                title = categoryTitle(category),
                 shows = categoryTopics.map { topic ->
                     Show(
                         id = topic.id,
@@ -259,7 +283,7 @@ class HomeViewModel @Inject constructor(
                 val audioUrl = dailyBriefAudioUrl
 
                 // Only update if we have a Daily Brief loaded and it's the current playing item
-                if (audioUrl != null && currentTitle?.startsWith("Daily Brief") == true) {
+                if (audioUrl != null && isDailyBriefTitle(currentTitle)) {
                     when {
                         isPlaying && currentState !is DailyBriefState.Playing -> {
                             _dailyBriefState.value = DailyBriefState.Playing(audioUrl)
@@ -328,11 +352,16 @@ class HomeViewModel @Inject constructor(
                 .onSuccess { response ->
                     val serverTopics = response.data?.topics ?: emptyList()
                     Log.d(TAG, "Server returned ${serverTopics.size} topics: ${serverTopics.map { it.id }}")
-                    val currentTopicIds = _topics.value.map { it.id }.toSet()
-                    val newTopicIds = serverTopics.map { it.id }.toSet()
+                    val newCategoryNames = response.data?.categories?.associate { it.id to it.name }.orEmpty()
+                    val categoryNamesChanged = newCategoryNames.isNotEmpty() && newCategoryNames != categoryNames
+                    if (newCategoryNames.isNotEmpty()) categoryNames = newCategoryNames
+                    // Same ids can come back with different text when the listening language changed (cs -> sv offer the same
+                    // 12 topics), so compare names and descriptions too, not only the ids.
+                    val currentTopicIds = _topics.value.map { Triple(it.id, it.name, it.description) }.toSet()
+                    val newTopicIds = serverTopics.map { Triple(it.id, it.name, it.description) }.toSet()
 
                     // Only update UI if topics changed (server takes precedence)
-                    if (newTopicIds != currentTopicIds || _topics.value.isEmpty()) {
+                    if (newTopicIds != currentTopicIds || categoryNamesChanged || _topics.value.isEmpty()) {
                         _topics.value = serverTopics
                         updateDiscoverCategories(serverTopics)
                         Log.d(TAG, "✅ Updated topics from server: ${serverTopics.size} topics")
@@ -524,10 +553,10 @@ class HomeViewModel @Inject constructor(
                         provider = null
                     )
                 }
-                _dailyBriefState.value = DailyBriefState.NeedsRelink(error.message)
+                _dailyBriefState.value = DailyBriefState.NeedsRelink(error.message, error.code)
             }
             else -> {
-                _dailyBriefState.value = DailyBriefState.Error(error.message)
+                _dailyBriefState.value = DailyBriefState.Error(error.message, error.code)
             }
         }
     }
@@ -535,7 +564,7 @@ class HomeViewModel @Inject constructor(
     fun pauseDailyBrief() {
         // Only pause if Daily Brief is actually the content currently playing
         val currentTitle = audioManager.currentEpisodeTitle.value
-        if (currentTitle?.startsWith("Daily Brief") == true) {
+        if (isDailyBriefTitle(currentTitle)) {
             audioManager.pause()
             val currentState = _dailyBriefState.value
             if (currentState is DailyBriefState.Playing) {

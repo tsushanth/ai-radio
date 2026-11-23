@@ -357,4 +357,30 @@
     <string name="ask_err_refused">พิธีกรไม่สามารถทำตอนเกี่ยวกับเรื่องนั้นได้</string>
     <string name="ask_err_no_coverage">เราไม่พบข่าวล่าสุดเกี่ยวกับเรื่องนี้มากพอ จึงไม่ได้สร้างตอน</string>
     <string name="ask_err_failed">ไม่สามารถสร้างตอนได้ โปรดลองอีกครั้ง</string>
+    <!-- Localized server errors, category names, radio chat and on-device voice messages (code-to-text mapping for job error codes) -->
+    <string name="job_error_relink">ต้องต่ออายุการเชื่อมต่อบัญชีอีเมลของคุณ โปรดเชื่อมต่อบัญชีอีกครั้ง</string>
+    <string name="job_error_no_content">ตอนนี้ยังมีเนื้อหาไม่พอที่จะสร้างพอดแคสต์ ลองใหม่ภายหลังเมื่อคุณมีอีเมลมากขึ้น</string>
+    <string name="job_error_retry">เกิดปัญหาในการสร้างพอดแคสต์ของคุณ โปรดลองอีกครั้ง</string>
+    <string name="job_error_unknown">เกิดข้อผิดพลาดบางอย่าง โปรดลองอีกครั้ง หากยังเป็นอยู่โปรดติดต่อฝ่ายสนับสนุน</string>
+    <string name="category_news">ข่าว</string>
+    <string name="category_technology">เทคโนโลยี</string>
+    <string name="category_business">ธุรกิจ</string>
+    <string name="category_science">วิทยาศาสตร์</string>
+    <string name="category_lifestyle">ไลฟ์สไตล์</string>
+    <string name="category_entertainment">บันเทิง</string>
+    <string name="category_sports">กีฬา</string>
+    <string name="radio_topic_placeholder">เช่น การเปลี่ยนแปลงสภาพภูมิอากาศ ข่าวเลเกอร์ส ข่าวซุบซิบฮอลลีวูด…</string>
+    <string name="chat_you">คุณ</string>
+    <string name="chat_listener">ผู้ฟัง</string>
+    <string name="chat_blocked_language">ข้อความถูกบล็อก: ภาษาไม่เหมาะสม</string>
+    <string name="chat_blocked_phone">ข้อความถูกบล็อก: โปรดอย่าแชร์หมายเลขโทรศัพท์</string>
+    <string name="chat_blocked_email">ข้อความถูกบล็อก: โปรดอย่าแชร์ที่อยู่อีเมล</string>
+    <string name="chat_blocked_id">ข้อความถูกบล็อก: โปรดอย่าแชร์หมายเลขบัตรประจำตัว</string>
+    <string name="chat_blocked_card">ข้อความถูกบล็อก: โปรดอย่าแชร์หมายเลขบัตร</string>
+    <string name="radio_request_queued">🎙️ เพิ่มคำขอเข้าคิวแล้ว: “%1$s” — ลำดับที่ %2$d รอประมาณ %3$d นาที</string>
+    <string name="voice_on_device_button">ในอุปกรณ์</string>
+    <string name="kokoro_err_checksum">ไม่สามารถตรวจสอบการดาวน์โหลดได้</string>
+    <string name="kokoro_err_rename">ไม่สามารถบันทึกไฟล์ที่ดาวน์โหลดได้</string>
+    <string name="kokoro_err_unknown">ข้อผิดพลาดที่ไม่ทราบสาเหตุ</string>
+    <string name="kokoro_err_download">ดาวน์โหลดไม่สำเร็จ</string>
 </resources>

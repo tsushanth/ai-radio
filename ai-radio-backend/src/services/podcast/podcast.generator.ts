@@ -9,6 +9,7 @@ import { scriptGenerator } from '../ai/script.generator';
 import { openaiTTS } from '../tts/openai.tts';
 import { storageService } from '../storage/storage.service';
 import { musicService, type PodcastMusicConfig } from '../audio/music.service';
+import { formatEpisodeDate } from '../languages/localized';
 import { topicPreviewService, type TopicPreviewCollection } from '../content/topic.preview';
 import type {
   PodcastGenerationInput,
@@ -220,7 +221,8 @@ export class PodcastGeneratorService {
         script,
         audioUrl,
         stats.audio_duration_seconds || 0,
-        options
+        options,
+        preferences.language
       );
 
       await this.reportProgress(options.onProgress, {
@@ -571,28 +573,13 @@ export class PodcastGeneratorService {
     script: PodcastScript,
     audioUrl: string,
     duration: number,
-    options: GenerationOptions
+    options: GenerationOptions,
+    language?: string
   ): Promise<string> {
     // Generate title and description using client date if provided
-    let dateForTitle: string;
-    if (options.date) {
-      // Parse YYYY-MM-DD and format as readable date
-      const [year, month, day] = options.date.split('-').map(Number);
-      const dateObj = new Date(year, month - 1, day);
-      dateForTitle = dateObj.toLocaleDateString('en-US', {
-        weekday: 'long',
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-      });
-    } else {
-      dateForTitle = new Date().toLocaleDateString('en-US', {
-        weekday: 'long',
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-      });
-    }
+    // The date part follows the user's language (the server's English locale used to be hard-coded here).
+    const day = options.date ?? new Date().toISOString().split('T')[0];
+    const dateForTitle = formatEpisodeDate(day, language, true);
     const title = `Daily Briefing - ${dateForTitle}`;
     const description = this.generateDescription(script);
 

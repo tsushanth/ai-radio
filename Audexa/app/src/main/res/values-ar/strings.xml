@@ -362,4 +362,30 @@
     <string name="ask_err_refused">لا يستطيع المقدّمان إنشاء حلقة حول هذا الموضوع.</string>
     <string name="ask_err_no_coverage">لم نجد تغطية إخبارية حديثة كافية حول هذا الموضوع، لذلك لم ننشئ حلقة.</string>
     <string name="ask_err_failed">تعذّر إنشاء الحلقة. يرجى المحاولة مرة أخرى.</string>
+    <!-- Localized server errors, category names, radio chat and on-device voice messages (code-to-text mapping for job error codes) -->
+    <string name="job_error_relink">يجب تجديد اتصال حساب بريدك الإلكتروني. يُرجى إعادة ربط حسابك.</string>
+    <string name="job_error_no_content">لا يوجد محتوى كافٍ لإنشاء بودكاست الآن. حاول لاحقًا عندما يكون لديك المزيد من الرسائل.</string>
+    <string name="job_error_retry">واجهنا مشكلة في إنشاء البودكاست الخاص بك. يُرجى المحاولة مرة أخرى.</string>
+    <string name="job_error_unknown">حدث خطأ ما. يُرجى المحاولة مرة أخرى أو التواصل مع الدعم إذا استمرت المشكلة.</string>
+    <string name="category_news">الأخبار</string>
+    <string name="category_technology">التقنية</string>
+    <string name="category_business">الأعمال</string>
+    <string name="category_science">العلوم</string>
+    <string name="category_lifestyle">نمط الحياة</string>
+    <string name="category_entertainment">الترفيه</string>
+    <string name="category_sports">الرياضة</string>
+    <string name="radio_topic_placeholder">مثال: تغيّر المناخ، أخبار ليكرز، شائعات هوليوود…</string>
+    <string name="chat_you">أنت</string>
+    <string name="chat_listener">مستمع</string>
+    <string name="chat_blocked_language">تم حظر الرسالة: لغة غير لائقة</string>
+    <string name="chat_blocked_phone">تم حظر الرسالة: يُرجى عدم مشاركة أرقام الهواتف</string>
+    <string name="chat_blocked_email">تم حظر الرسالة: يُرجى عدم مشاركة عناوين البريد الإلكتروني</string>
+    <string name="chat_blocked_id">تم حظر الرسالة: يُرجى عدم مشاركة أرقام الهوية الشخصية</string>
+    <string name="chat_blocked_card">تم حظر الرسالة: يُرجى عدم مشاركة أرقام البطاقات</string>
+    <string name="radio_request_queued">🎙️ تمت إضافة الطلب إلى القائمة: «%1$s» — الترتيب %2$d، انتظار نحو %3$d دقيقة</string>
+    <string name="voice_on_device_button">على الجهاز</string>
+    <string name="kokoro_err_checksum">تعذّر التحقق من التنزيل</string>
+    <string name="kokoro_err_rename">تعذّر حفظ الملف الذي تم تنزيله</string>
+    <string name="kokoro_err_unknown">خطأ غير معروف</string>
+    <string name="kokoro_err_download">فشل التنزيل</string>
 </resources>

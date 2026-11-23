@@ -360,4 +360,30 @@
     <string name="ask_err_refused">Moderátoři o tomhle epizodu vytvořit nemohou.</string>
     <string name="ask_err_no_coverage">K tomuto tématu jsme nenašli dost nedávného zpravodajství, a proto jsme epizodu nevytvořili.</string>
     <string name="ask_err_failed">Epizodu se nepodařilo vytvořit. Zkus to prosím znovu.</string>
+    <!-- Localized server errors, category names, radio chat and on-device voice messages (code-to-text mapping for job error codes) -->
+    <string name="job_error_relink">Připojení vašeho e-mailového účtu je potřeba obnovit. Připojte účet prosím znovu.</string>
+    <string name="job_error_no_content">Teď není dost obsahu na vytvoření podcastu. Zkuste to později, až budete mít víc e-mailů.</string>
+    <string name="job_error_retry">Při vytváření podcastu nastal problém. Zkuste to prosím znovu.</string>
+    <string name="job_error_unknown">Něco se pokazilo. Zkuste to prosím znovu, nebo kontaktujte podporu, pokud problém přetrvává.</string>
+    <string name="category_news">Zprávy</string>
+    <string name="category_technology">Technologie</string>
+    <string name="category_business">Byznys</string>
+    <string name="category_science">Věda</string>
+    <string name="category_lifestyle">Životní styl</string>
+    <string name="category_entertainment">Zábava</string>
+    <string name="category_sports">Sport</string>
+    <string name="radio_topic_placeholder">např. změna klimatu, novinky o Lakers, hollywoodské drby…</string>
+    <string name="chat_you">Vy</string>
+    <string name="chat_listener">Posluchač</string>
+    <string name="chat_blocked_language">Zpráva zablokována: nevhodný jazyk</string>
+    <string name="chat_blocked_phone">Zpráva zablokována: nesdílejte prosím telefonní čísla</string>
+    <string name="chat_blocked_email">Zpráva zablokována: nesdílejte prosím e-mailové adresy</string>
+    <string name="chat_blocked_id">Zpráva zablokována: nesdílejte prosím čísla osobních dokladů</string>
+    <string name="chat_blocked_card">Zpráva zablokována: nesdílejte prosím čísla karet</string>
+    <string name="radio_request_queued">🎙️ Požadavek zařazen do fronty: „%1$s“ — pozice č. %2$d, čekání asi %3$d min</string>
+    <string name="voice_on_device_button">V zařízení</string>
+    <string name="kokoro_err_checksum">Stažení se nepodařilo ověřit</string>
+    <string name="kokoro_err_rename">Staženou položku se nepodařilo uložit</string>
+    <string name="kokoro_err_unknown">Neznámá chyba</string>
+    <string name="kokoro_err_download">Stažení se nezdařilo</string>
 </resources>

@@ -360,4 +360,30 @@
     <string name="ask_err_refused">The hosts cannot make an episode about that.</string>
     <string name="ask_err_no_coverage">We could not find enough recent news coverage about this, so we did not make an episode.</string>
     <string name="ask_err_failed">The episode could not be made. Please try again.</string>
+    <!-- Localized server errors, category names, radio chat and on-device voice messages (code-to-text mapping for job error codes) -->
+    <string name="job_error_relink">Your email account connection needs to be renewed. Please reconnect your account.</string>
+    <string name="job_error_no_content">Not enough content to create a podcast right now. Try again later when you have more emails.</string>
+    <string name="job_error_retry">We had trouble creating your podcast. Please try again.</string>
+    <string name="job_error_unknown">Something went wrong. Please try again or contact support if the issue persists.</string>
+    <string name="category_news">News</string>
+    <string name="category_technology">Technology</string>
+    <string name="category_business">Business</string>
+    <string name="category_science">Science</string>
+    <string name="category_lifestyle">Lifestyle</string>
+    <string name="category_entertainment">Entertainment</string>
+    <string name="category_sports">Sports</string>
+    <string name="radio_topic_placeholder">e.g. climate change, Lakers news, Hollywood gossip…</string>
+    <string name="chat_you">You</string>
+    <string name="chat_listener">Listener</string>
+    <string name="chat_blocked_language">Message blocked: inappropriate language</string>
+    <string name="chat_blocked_phone">Message blocked: please don\'t share phone numbers</string>
+    <string name="chat_blocked_email">Message blocked: please don\'t share email addresses</string>
+    <string name="chat_blocked_id">Message blocked: please don\'t share personal ID numbers</string>
+    <string name="chat_blocked_card">Message blocked: please don\'t share card numbers</string>
+    <string name="radio_request_queued">🎙️ Request queued: \"%1$s\" — position #%2$d, ~%3$d min wait</string>
+    <string name="voice_on_device_button">On-device</string>
+    <string name="kokoro_err_checksum">Download could not be verified</string>
+    <string name="kokoro_err_rename">Could not save the downloaded file</string>
+    <string name="kokoro_err_unknown">Unknown error</string>
+    <string name="kokoro_err_download">Download failed</string>
 </resources>

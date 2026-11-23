@@ -189,3 +189,13 @@ test('job errors carry a stable code next to the English message, for every code
     assert.match(code, /^[A-Z_]+$/);
   }
 });
+
+test('topic names: a language like __proto__ or constructor (straight from a query string) falls back to English text', () => {
+  const t = topic('daily-news');
+  for (const lang of ['__proto__', 'constructor', 'toString', 'hasOwnProperty']) {
+    const r = localizeTopic(t, lang);
+    assert.equal(typeof r.name, 'string');
+    assert.equal(typeof r.description, 'string');
+    assert.equal(r.name, 'Daily News Brief');
+  }
+});

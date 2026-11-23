@@ -52,6 +52,16 @@ export function categoryName(category: TopicCategory, language: string | undefin
   return CATEGORY_NAMES_I18N[category][lang];
 }
 
+/** Own property only: the language can come straight from a query string, and "__proto__" or "constructor" must not match. */
+function ownValue<T>(obj: Record<string, T> | undefined, key: string): T | undefined {
+  return obj && Object.prototype.hasOwnProperty.call(obj, key) ? obj[key] : undefined;
+}
+
+function ownText(obj: Record<string, string> | undefined, key: string): string | undefined {
+  const v = ownValue(obj, key);
+  return typeof v === 'string' && v ? v : undefined;
+}
+
 /**
  * Name and description of a topic for a language. Order: the row's own localizedNames / localizedDescriptions (database or catalog),
  * then the built-in translation table, then the topic's base text.
@@ -59,10 +69,10 @@ export function categoryName(category: TopicCategory, language: string | undefin
 export function localizeTopic(topic: TopicDefinition, language: string | undefined | null): { name: string; description: string } {
   const lang = normalizeLanguage(language);
   const raw = typeof language === 'string' ? language : lang;
-  const table = TOPIC_I18N[topic.id]?.[lang];
+  const table = ownValue(TOPIC_I18N, topic.id) ? ownValue(TOPIC_I18N[topic.id], lang) : undefined;
   return {
-    name: topic.localizedNames?.[raw] || topic.localizedNames?.[lang] || table?.[0] || topic.name,
-    description: topic.localizedDescriptions?.[raw] || topic.localizedDescriptions?.[lang] || table?.[1] || topic.description,
+    name: ownText(topic.localizedNames, raw) || ownText(topic.localizedNames, lang) || table?.[0] || topic.name,
+    description: ownText(topic.localizedDescriptions, raw) || ownText(topic.localizedDescriptions, lang) || table?.[1] || topic.description,
   };
 }
 

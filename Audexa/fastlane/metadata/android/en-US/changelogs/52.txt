@@ -1,0 +1,1 @@
+Category names, topic names, dates and notifications now appear in your language.

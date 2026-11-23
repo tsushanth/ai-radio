@@ -3,6 +3,14 @@
 Newest first. Parity rule: whatever runs in production is on `main` (tree compared for the deployed paths).
 
 
+## 2026-11-23 backend v52 (ai-radio-backend on Fly): localized server text (#86)
+
+- Release: Fly v52, image `registry.fly.io/ai-radio-backend:deployment-01M853983BNSNXZJJGSGCC83AY`, `flyctl deploy --remote-only` from a clean detached worktree at `origin/main` `f2cf984` (squash merge of #86); `ai-radio-backend/` of the deployed tree is `origin/main`. No episode generation was running (invariant sweep clean, no generation in the previous hour); the radio stream runs on Hetzner and is not touched by this deploy. No secret was set or changed; no new env var.
+- Contains: episode-title dates in the listener's language (Intl, English fallback), category names for 33 languages and topic names for the 14 catalog topics in `GET /api/topics?lang=` (same response shape; old clients unchanged), `language` accepted by `/notifications/register` and `/settings`, Daily Brief push text in 33 languages. Review fix before merge: the language is looked up as an own property only (`?lang=__proto__` used to be able to return an object as the topic name).
+- Verified live: `/health` healthy; `lang=es` gives Noticias/Tecnologia/Negocios/Ciencia/Estilo de vida/Entretenimiento/Deportes, `lang=fr` French, no `lang` and `lang=__proto__` English with normal topic names; `/topics/daily-news?lang=es` Spanish; `/topics/briefing?lang=fil` 200.
+- Rollback: `flyctl deploy -a ai-radio-backend --image registry.fly.io/ai-radio-backend:deployment-01M7XF6JA9QQEQFVAY8R6Y219T` (v51).
+
+
 ## 2026-11-21 web v24 (audexa-web on Fly, audexa.app): admin card with Gaugemint website visits (#84)
 
 - Release: Fly v24, image `registry.fly.io/audexa-web:deployment-01M80NPXX4YAYH7SAHBJRWWDXQ` (sha256:3c0d7b032921...), `flyctl deploy --remote-only` from `web-app/` of a clean detached worktree at `origin/main` `ce2070a` (squash merge of #84); `web-app/` tree `514d5c91fddfe2764af38392762e8e152db2427c` equals `origin/main`.

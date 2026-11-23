@@ -11,10 +11,10 @@ import {
   getActiveTopics as getHardcodedActiveTopics,
   getTopicById as getHardcodedTopicById,
   getCategoriesWithCounts as getHardcodedCategoriesWithCounts,
-  CATEGORY_NAMES,
 } from '../../config/topics';
 import type { TopicDefinition, TopicCategory, TopicListResponse } from '../../types/topics';
 import { disabledReason } from '../content/source-policy';
+import { categoryName, localizeTopic } from '../languages/localized';
 
 interface CacheEntry {
   topics: TopicDefinition[];
@@ -68,11 +68,10 @@ class TopicsService {
   async getTopicsList(language: string = 'en'): Promise<TopicListResponse> {
     const activeTopics = await this.getTopics(language);
 
-    // Apply localized names/descriptions
+    // Apply localized names/descriptions (row value, then the built-in translation table, then the English base text)
     const localizedTopics = activeTopics.map(topic => ({
       ...topic,
-      name: topic.localizedNames?.[language] || topic.name,
-      description: topic.localizedDescriptions?.[language] || topic.description,
+      ...localizeTopic(topic, language),
     }));
 
     // Build category counts from the filtered topics
@@ -82,7 +81,7 @@ class TopicsService {
 
     const categories = categoryOrder.map(cat => ({
       id: cat,
-      name: CATEGORY_NAMES[cat],
+      name: categoryName(cat, language), // whole row in one language, English fallback
       count: localizedTopics.filter(t => t.category === cat).length,
     })).filter(cat => cat.count > 0);
 

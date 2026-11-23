@@ -14,10 +14,10 @@ import { SOURCE_HANDLING_RULES, formatStoryLine, hasGroundedExcerpts, stripExcer
 import { openaiTTS, type VoiceConfig } from '../tts/openai.tts';
 import { concatenateBuffers } from '../tts/audio.utils';
 import { finalizeEpisodeAudio } from '../audio/episode-audio';
-import { getLanguageSpec, isNewLanguage, isLaunchTopic } from '../languages/registry';
+import { isNewLanguage, isLaunchTopic } from '../languages/registry';
 import { languageControls } from '../languages/controls';
 import { buildNewLanguageEpisode, speakExistingScript } from '../languages/pipeline';
-import { formatDateFor } from '../languages/script';
+import { formatEpisodeDate, localizeTopic } from '../languages/localized';
 import type {
   TopicDefinition,
   TopicEpisode,
@@ -125,9 +125,7 @@ export class TopicPodcastGenerator {
     // this, topics whose primary `name` is non-EN (e.g. cricket-updates has
     // a Hindi primary name with `localizedNames.en = "Cricket Updates"`)
     // surfaced their Hindi title even on the EN episode.
-    const localizedName = topic.localizedNames?.[language] || topic.name;
-    const localizedDescription =
-      topic.localizedDescriptions?.[language] || topic.description;
+    const { name: localizedName, description: localizedDescription } = localizeTopic(topic, language);
     console.log(`🎙️ Generating new episode for ${localizedName} (${today}, lang: ${language})`);
 
     // Create placeholder episode - include language in ID for uniqueness
@@ -394,7 +392,7 @@ CRITICAL FOR TTS QUALITY:
     // non-EN (e.g. `cricket-updates` has Hindi primary + en localization)
     // would prompt Claude with the Hindi name even when language='en',
     // pulling the script toward Hindi tone or transliterated output.
-    const displayName = topic.localizedNames?.[language] || topic.name;
+    const displayName = localizeTopic(topic, language).name;
 
     return `You are a professional podcast script writer creating a short daily briefing about ${displayName}.
 
@@ -433,7 +431,7 @@ VALID TYPES: intro, news, outro (use "news" for all content segments)${groundedI
       ? ` Write the ENTIRE script in ${this.getLanguageName(language)}.`
       : '';
 
-    return `Create today's ${topic.name} podcast for ${this.formatDate(content.date)}.${languageInstruction}
+    return `Create today's ${topic.name} podcast for ${formatEpisodeDate(content.date, language)}.${languageInstruction}
 
 TOP STORIES:
 ${storySummaries}
@@ -760,22 +758,9 @@ Create an engaging ${topic.targetDurationMinutes}-minute podcast covering the mo
     return new Date().toISOString().split('T')[0];
   }
 
-  /** Episode-title date: English for the existing languages (unchanged), the language's own format for the additional ones. */
+  /** Episode-title date in the listener's language (English for en and for any language without a locale). */
   private displayDate(dateStr: string, language: string): string {
-    const spec = getLanguageSpec(language);
-    return spec ? formatDateFor(spec, dateStr) : this.formatDate(dateStr);
-  }
-
-  /**
-   * Format date for display
-   */
-  private formatDate(dateStr: string): string {
-    const date = new Date(dateStr);
-    return date.toLocaleDateString('en-US', {
-      weekday: 'long',
-      month: 'long',
-      day: 'numeric',
-    });
+    return formatEpisodeDate(dateStr, language);
   }
 }
 

@@ -28,10 +28,12 @@ test('topic list in a new language: empty while off; only the 12 launch topics w
   assert.equal((await topicPodcastGenerator.getTopicsList('de')).topics.length, all.length);
 });
 
-test('episode title date uses the language locale for new languages and stays English for the rest', async () => {
+test('episode title date follows the language locale for every language (English only for en)', async () => {
   const { TopicPodcastGenerator } = await import('./topic.generator');
   const g = new TopicPodcastGenerator() as any;
   assert.match(g.displayDate('2026-11-15', 'cs'), /neděle/);
-  assert.equal(g.displayDate('2026-11-15', 'en'), g.formatDate('2026-11-15'));
-  assert.equal(g.displayDate('2026-11-15', 'de'), g.formatDate('2026-11-15')); // unchanged behaviour for the Piper languages
+  assert.equal(g.displayDate('2026-11-15', 'en'), 'Sunday, November 15');
+  assert.match(g.displayDate('2026-11-15', 'de'), /Sonntag/); // was English before the localized-content fix
+  assert.match(g.displayDate('2026-11-15', 'es'), /domingo/);
+  assert.match(g.displayDate('2026-11-15', 'fr'), /dimanche/);
 });

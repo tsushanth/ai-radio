@@ -5,6 +5,7 @@
 
 import { onDemandLanguages, DailyCap } from '../services/tts/piper-languages';
 import { isNewLanguage } from '../services/languages/registry';
+import { localizeTopic } from '../services/languages/localized';
 import { languageControls, type Denied } from '../services/languages/controls';
 import { Router, Request, Response } from 'express';
 import rateLimit from 'express-rate-limit';
@@ -353,7 +354,7 @@ router.post('/suggest/:requestId/fail', requireOperatorSecret(), async (req: Req
  */
 router.get('/briefing', async (req: Request, res: Response) => {
   try {
-    const language = typeof req.query.lang === 'string' && /^[a-z]{2}$/.test(req.query.lang)
+    const language = typeof req.query.lang === 'string' && /^[a-z]{2,3}$/.test(req.query.lang)
       ? req.query.lang
       : 'en';
     const summary = await briefingService.getSummary(language);
@@ -407,10 +408,13 @@ router.get('/:topicId', async (req: Request, res: Response) => {
     // Get recent episodes for this topic
     const recentEpisodes = await topicPodcastGenerator.getRecentEpisodes(topicId, 7);
 
+    // Optional ?lang=: name and description in the listener's language (English fallback), same rule as the topic list.
+    const lang = typeof req.query.lang === 'string' ? req.query.lang : undefined;
+
     res.json({
       success: true,
       data: {
-        topic,
+        topic: lang ? { ...topic, ...localizeTopic(topic, lang) } : topic,
         recentEpisodes,
       },
     });

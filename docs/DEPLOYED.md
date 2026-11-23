@@ -3,6 +3,17 @@
 Newest first. Parity rule: whatever runs in production is on `main` (tree compared for the deployed paths).
 
 
+## 2026-11-23 Android 12.13.0 (52) on Google Play production, 20% staged
+
+- Play production track read back after commit: 12.13.0 (52) inProgress at userFraction 0.2, 12.12.0 (51) completed. Not raised above 20%. Deployed after backend v52 (below), as required.
+- Built from `main` `926e60a` (merge of #87 on top of #86); tag `play/12.13.0-52`. The built `Audexa/` tree equals `origin/main`.
+- AAB sha256 `081de5af541b539258944dfcbb9105fee862bfe6f01a0ee02fc2ad28e37ddfa1`, signed with the upload key (jarsigner verified; manifest versionCode 52, versionName 12.13.0).
+- Checks run: `:app:testDebugUnitTest` forced rerun (171 tests, 0 failures, includes the hard-coded-string guard and the new ServerContentLocalizationTest), `:app:bundleRelease` exit 0. Device check (Pixel 9 Pro, debug build with a `.dev` id suffix, fresh data, per-app locale es then fr, podcast language es then fr): radio screen and Home in Spanish/French, Discover section titles from the server (Ciencia, Deportes, Tecnologia; Sport, Style de vie, Technologie), no FATAL or ANR in logcat. Not tested on device: the Daily Brief player-title match and the push language path (no token reaches the server, see #86 notes). Radio "up next" topic names come from the radio server and stay English.
+- Known limit: the queued-request chat line is broadcast in the sender's language to all listeners.
+- Contents: category names, topic names, dates in titles and Daily Brief push text follow the listener's language; hard-coded radio chat/error strings moved to resources (machine translations, no native review). Changelog: "Category names, topic names, dates and notifications now appear in your language."
+- Rollback: halt the rollout in Play Console (Production > Halt rollout), or re-upload 12.12.0 (51) as the current release; backend v52 is additive and compatible with 12.12.0.
+
+
 ## 2026-11-23 backend v52 (ai-radio-backend on Fly): localized server text (#86)
 
 - Release: Fly v52, image `registry.fly.io/ai-radio-backend:deployment-01M853983BNSNXZJJGSGCC83AY`, `flyctl deploy --remote-only` from a clean detached worktree at `origin/main` `f2cf984` (squash merge of #86); `ai-radio-backend/` of the deployed tree is `origin/main`. No episode generation was running (invariant sweep clean, no generation in the previous hour); the radio stream runs on Hetzner and is not touched by this deploy. No secret was set or changed; no new env var.

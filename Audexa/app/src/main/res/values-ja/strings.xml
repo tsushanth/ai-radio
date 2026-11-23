@@ -357,4 +357,30 @@
     <string name="ask_err_refused">ホストはそのテーマのエピソードを作成できません。</string>
     <string name="ask_err_no_coverage">これについて最近のニュース報道が十分に見つからなかったため、エピソードは作成しませんでした。</string>
     <string name="ask_err_failed">エピソードを作成できませんでした。もう一度お試しください。</string>
+    <!-- Localized server errors, category names, radio chat and on-device voice messages (code-to-text mapping for job error codes) -->
+    <string name="job_error_relink">メールアカウントの接続を更新する必要があります。アカウントを再接続してください。</string>
+    <string name="job_error_no_content">現在、ポッドキャストを作成するには内容が足りません。メールが増えたころにもう一度お試しください。</string>
+    <string name="job_error_retry">ポッドキャストを作成できませんでした。もう一度お試しください。</string>
+    <string name="job_error_unknown">問題が発生しました。もう一度お試しください。解決しない場合はサポートにお問い合わせください。</string>
+    <string name="category_news">ニュース</string>
+    <string name="category_technology">テクノロジー</string>
+    <string name="category_business">ビジネス</string>
+    <string name="category_science">サイエンス</string>
+    <string name="category_lifestyle">ライフスタイル</string>
+    <string name="category_entertainment">エンタメ</string>
+    <string name="category_sports">スポーツ</string>
+    <string name="radio_topic_placeholder">例：気候変動、レイカーズのニュース、ハリウッドのゴシップ…</string>
+    <string name="chat_you">あなた</string>
+    <string name="chat_listener">リスナー</string>
+    <string name="chat_blocked_language">メッセージをブロックしました：不適切な表現</string>
+    <string name="chat_blocked_phone">メッセージをブロックしました：電話番号は共有しないでください</string>
+    <string name="chat_blocked_email">メッセージをブロックしました：メールアドレスは共有しないでください</string>
+    <string name="chat_blocked_id">メッセージをブロックしました：個人の身分証番号は共有しないでください</string>
+    <string name="chat_blocked_card">メッセージをブロックしました：カード番号は共有しないでください</string>
+    <string name="radio_request_queued">🎙️ リクエストを受け付けました：「%1$s」— %2$d番目、約%3$d分待ち</string>
+    <string name="voice_on_device_button">デバイス上</string>
+    <string name="kokoro_err_checksum">ダウンロードを確認できませんでした</string>
+    <string name="kokoro_err_rename">ダウンロードしたファイルを保存できませんでした</string>
+    <string name="kokoro_err_unknown">不明なエラー</string>
+    <string name="kokoro_err_download">ダウンロードに失敗しました</string>
 </resources>

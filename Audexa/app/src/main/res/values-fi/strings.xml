@@ -358,4 +358,30 @@
     <string name="ask_err_refused">Juontajat eivät voi tehdä jaksoa tästä aiheesta.</string>
     <string name="ask_err_no_coverage">Emme löytäneet aiheesta tarpeeksi tuoretta uutisointia, joten emme tehneet jaksoa.</string>
     <string name="ask_err_failed">Jaksoa ei voitu tehdä. Yritä uudelleen.</string>
+    <!-- Localized server errors, category names, radio chat and on-device voice messages (code-to-text mapping for job error codes) -->
+    <string name="job_error_relink">Sähköpostitilisi yhteys on uusittava. Yhdistä tili uudelleen.</string>
+    <string name="job_error_no_content">Podcastin luomiseen ei nyt ole tarpeeksi sisältöä. Yritä myöhemmin uudelleen, kun sinulla on enemmän sähköposteja.</string>
+    <string name="job_error_retry">Podcastin luominen ei onnistunut. Yritä uudelleen.</string>
+    <string name="job_error_unknown">Jokin meni pieleen. Yritä uudelleen tai ota yhteyttä tukeen, jos ongelma jatkuu.</string>
+    <string name="category_news">Uutiset</string>
+    <string name="category_technology">Teknologia</string>
+    <string name="category_business">Liiketoiminta</string>
+    <string name="category_science">Tiede</string>
+    <string name="category_lifestyle">Elämäntapa</string>
+    <string name="category_entertainment">Viihde</string>
+    <string name="category_sports">Urheilu</string>
+    <string name="radio_topic_placeholder">esim. ilmastonmuutos, Lakers-uutiset, Hollywood-juorut…</string>
+    <string name="chat_you">Sinä</string>
+    <string name="chat_listener">Kuuntelija</string>
+    <string name="chat_blocked_language">Viesti estetty: sopimaton kieli</string>
+    <string name="chat_blocked_phone">Viesti estetty: älä jaa puhelinnumeroita</string>
+    <string name="chat_blocked_email">Viesti estetty: älä jaa sähköpostiosoitteita</string>
+    <string name="chat_blocked_id">Viesti estetty: älä jaa henkilötunnuksia</string>
+    <string name="chat_blocked_card">Viesti estetty: älä jaa korttinumeroita</string>
+    <string name="radio_request_queued">🎙️ Pyyntö jonossa: ”%1$s” — sija %2$d, odotus noin %3$d min</string>
+    <string name="voice_on_device_button">Laitteella</string>
+    <string name="kokoro_err_checksum">Latausta ei voitu vahvistaa</string>
+    <string name="kokoro_err_rename">Ladattua tiedostoa ei voitu tallentaa</string>
+    <string name="kokoro_err_unknown">Tuntematon virhe</string>
+    <string name="kokoro_err_download">Lataus epäonnistui</string>
 </resources>

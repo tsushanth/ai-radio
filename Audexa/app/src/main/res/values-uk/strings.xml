@@ -360,4 +360,30 @@
     <string name="ask_err_refused">Ведучі не можуть зробити епізод на цю тему.</string>
     <string name="ask_err_no_coverage">Ми не знайшли достатньо свіжих новинних матеріалів на цю тему, тому епізод не створено.</string>
     <string name="ask_err_failed">Не вдалося створити епізод. Спробуй ще раз.</string>
+    <!-- Localized server errors, category names, radio chat and on-device voice messages (code-to-text mapping for job error codes) -->
+    <string name="job_error_relink">З\'єднання з вашою електронною поштою потрібно оновити. Будь ласка, підключіть обліковий запис знову.</string>
+    <string name="job_error_no_content">Зараз замало матеріалу для подкасту. Спробуйте пізніше, коли листів стане більше.</string>
+    <string name="job_error_retry">Не вдалося створити подкаст. Будь ласка, спробуйте ще раз.</string>
+    <string name="job_error_unknown">Щось пішло не так. Спробуйте ще раз або зверніться до підтримки, якщо проблема не зникне.</string>
+    <string name="category_news">Новини</string>
+    <string name="category_technology">Технології</string>
+    <string name="category_business">Бізнес</string>
+    <string name="category_science">Наука</string>
+    <string name="category_lifestyle">Стиль життя</string>
+    <string name="category_entertainment">Розваги</string>
+    <string name="category_sports">Спорт</string>
+    <string name="radio_topic_placeholder">напр.: зміна клімату, новини «Лейкерс», голлівудські плітки…</string>
+    <string name="chat_you">Ви</string>
+    <string name="chat_listener">Слухач</string>
+    <string name="chat_blocked_language">Повідомлення заблоковано: недоречна лексика</string>
+    <string name="chat_blocked_phone">Повідомлення заблоковано: не діліться номерами телефонів</string>
+    <string name="chat_blocked_email">Повідомлення заблоковано: не діліться адресами електронної пошти</string>
+    <string name="chat_blocked_id">Повідомлення заблоковано: не діліться номерами документів</string>
+    <string name="chat_blocked_card">Повідомлення заблоковано: не діліться номерами карток</string>
+    <string name="radio_request_queued">🎙️ Запит додано до черги: «%1$s» — місце №%2$d, очікування близько %3$d хв</string>
+    <string name="voice_on_device_button">На пристрої</string>
+    <string name="kokoro_err_checksum">Не вдалося перевірити завантаження</string>
+    <string name="kokoro_err_rename">Не вдалося зберегти завантажений файл</string>
+    <string name="kokoro_err_unknown">Невідома помилка</string>
+    <string name="kokoro_err_download">Не вдалося завантажити</string>
 </resources>

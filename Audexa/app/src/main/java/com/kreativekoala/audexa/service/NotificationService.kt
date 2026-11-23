@@ -268,11 +268,14 @@ class NotificationService @Inject constructor(
         deviceToken: String? = null
     ) = withContext(Dispatchers.IO) {
         try {
+            val language = preferencesManager.preferredLanguage.first()
             val json = JSONObject().apply {
                 put("user_id", userId)
                 put("briefing_time", briefingTime)
                 put("timezone", timezone)
                 put("notifications_enabled", enabled)
+                // Server-written push text (Daily Brief ready / failed) follows this language
+                put("language", language)
                 if (deviceToken != null) {
                     put("device_token", deviceToken)
                     put("platform", "android")
@@ -301,10 +304,13 @@ class NotificationService @Inject constructor(
      */
     suspend fun registerTokenWithBackend(userId: String, token: String) = withContext(Dispatchers.IO) {
         try {
+            val language = preferencesManager.preferredLanguage.first()
             val json = JSONObject().apply {
                 put("user_id", userId)
                 put("device_token", token)
                 put("platform", "android")
+                // Server-written push text (Daily Brief ready / failed) follows this language
+                put("language", language)
             }
 
             val request = Request.Builder()
@@ -343,6 +349,26 @@ class NotificationService @Inject constructor(
 
         scheduleDailyNotification(settings.hour, settings.minute, settings.timezone)
         Log.d(TAG, "Restored daily notification schedule")
+        syncLanguageIfChanged(settings.hour, settings.minute, settings.timezone)
+    }
+
+    /** The language the backend last got in this process; null until the first sync. */
+    @Volatile
+    private var lastSyncedLanguage: String? = null
+
+    /**
+     * Tell the backend the current listening language, so the server-written Daily Brief push is in it. Runs from the launch-time
+     * restore, so a language change in Settings reaches the server on the next launch without a new settings screen. Skipped when
+     * nobody is signed in or the language was already sent by this process.
+     */
+    private suspend fun syncLanguageIfChanged(hour: Int, minute: Int, timezone: String) {
+        val language = preferencesManager.preferredLanguage.first()
+        if (language == lastSyncedLanguage) return
+        val userId = preferencesManager.userEmail.first()
+        if (userId.isNullOrEmpty()) return
+        lastSyncedLanguage = language
+        val briefingTime = String.format(java.util.Locale.US, "%02d:%02d", hour, minute)
+        syncSettingsWithBackend(userId, briefingTime, timezone, true, preferencesManager.fcmToken.first())
     }
 
     /**

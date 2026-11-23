@@ -358,4 +358,30 @@
     <string name="ask_err_refused">Värdarna kan inte göra ett avsnitt om det.</string>
     <string name="ask_err_no_coverage">Vi hittade inte tillräckligt med nyhetsbevakning om det här, så vi gjorde inget avsnitt.</string>
     <string name="ask_err_failed">Avsnittet kunde inte skapas. Försök igen.</string>
+    <!-- Localized server errors, category names, radio chat and on-device voice messages (code-to-text mapping for job error codes) -->
+    <string name="job_error_relink">Anslutningen till ditt e-postkonto behöver förnyas. Anslut kontot igen.</string>
+    <string name="job_error_no_content">Det finns inte tillräckligt med innehåll för att skapa en podd just nu. Försök igen senare när du har fler e-postmeddelanden.</string>
+    <string name="job_error_retry">Vi hade problem med att skapa din podd. Försök igen.</string>
+    <string name="job_error_unknown">Något gick fel. Försök igen eller kontakta supporten om problemet kvarstår.</string>
+    <string name="category_news">Nyheter</string>
+    <string name="category_technology">Teknik</string>
+    <string name="category_business">Affärer</string>
+    <string name="category_science">Vetenskap</string>
+    <string name="category_lifestyle">Livsstil</string>
+    <string name="category_entertainment">Underhållning</string>
+    <string name="category_sports">Sport</string>
+    <string name="radio_topic_placeholder">t.ex. klimatförändringar, Lakers-nyheter, Hollywood-skvaller…</string>
+    <string name="chat_you">Du</string>
+    <string name="chat_listener">Lyssnare</string>
+    <string name="chat_blocked_language">Meddelandet blockerades: olämpligt språk</string>
+    <string name="chat_blocked_phone">Meddelandet blockerades: dela inte telefonnummer</string>
+    <string name="chat_blocked_email">Meddelandet blockerades: dela inte e-postadresser</string>
+    <string name="chat_blocked_id">Meddelandet blockerades: dela inte personnummer</string>
+    <string name="chat_blocked_card">Meddelandet blockerades: dela inte kortnummer</string>
+    <string name="radio_request_queued">🎙️ Önskemål köat: ”%1$s” — plats %2$d, ca %3$d min väntan</string>
+    <string name="voice_on_device_button">På enheten</string>
+    <string name="kokoro_err_checksum">Nedladdningen kunde inte verifieras</string>
+    <string name="kokoro_err_rename">Den nedladdade filen kunde inte sparas</string>
+    <string name="kokoro_err_unknown">Okänt fel</string>
+    <string name="kokoro_err_download">Nedladdningen misslyckades</string>
 </resources>

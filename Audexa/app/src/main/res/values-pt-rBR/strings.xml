@@ -359,4 +359,30 @@
     <string name="ask_err_refused">Os apresentadores não podem fazer um episódio sobre isso.</string>
     <string name="ask_err_no_coverage">Não encontramos cobertura recente suficiente sobre isso, então não criamos um episódio.</string>
     <string name="ask_err_failed">Não foi possível criar o episódio. Tente novamente.</string>
+    <!-- Localized server errors, category names, radio chat and on-device voice messages (code-to-text mapping for job error codes) -->
+    <string name="job_error_relink">A conexão da sua conta de e-mail precisa ser renovada. Reconecte sua conta.</string>
+    <string name="job_error_no_content">Não há conteúdo suficiente para criar um podcast agora. Tente novamente mais tarde, quando tiver mais e-mails.</string>
+    <string name="job_error_retry">Tivemos problemas para criar seu podcast. Tente novamente.</string>
+    <string name="job_error_unknown">Algo deu errado. Tente novamente ou entre em contato com o suporte se o problema continuar.</string>
+    <string name="category_news">Notícias</string>
+    <string name="category_technology">Tecnologia</string>
+    <string name="category_business">Negócios</string>
+    <string name="category_science">Ciência</string>
+    <string name="category_lifestyle">Estilo de vida</string>
+    <string name="category_entertainment">Entretenimento</string>
+    <string name="category_sports">Esportes</string>
+    <string name="radio_topic_placeholder">ex.: mudança climática, notícias dos Lakers, fofocas de Hollywood…</string>
+    <string name="chat_you">Você</string>
+    <string name="chat_listener">Ouvinte</string>
+    <string name="chat_blocked_language">Mensagem bloqueada: linguagem inadequada</string>
+    <string name="chat_blocked_phone">Mensagem bloqueada: não compartilhe números de telefone</string>
+    <string name="chat_blocked_email">Mensagem bloqueada: não compartilhe endereços de e-mail</string>
+    <string name="chat_blocked_id">Mensagem bloqueada: não compartilhe números de documentos</string>
+    <string name="chat_blocked_card">Mensagem bloqueada: não compartilhe números de cartão</string>
+    <string name="radio_request_queued">🎙️ Pedido na fila: “%1$s” — posição nº %2$d, ~%3$d min de espera</string>
+    <string name="voice_on_device_button">No dispositivo</string>
+    <string name="kokoro_err_checksum">Não foi possível verificar o download</string>
+    <string name="kokoro_err_rename">Não foi possível salvar o arquivo baixado</string>
+    <string name="kokoro_err_unknown">Erro desconhecido</string>
+    <string name="kokoro_err_download">Falha no download</string>
 </resources>

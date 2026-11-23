@@ -358,4 +358,30 @@
     <string name="ask_err_refused">Die Moderatoren können dazu keine Episode machen.</string>
     <string name="ask_err_no_coverage">Wir haben dazu nicht genug aktuelle Berichterstattung gefunden, deshalb haben wir keine Episode erstellt.</string>
     <string name="ask_err_failed">Die Episode konnte nicht erstellt werden. Bitte versuche es erneut.</string>
+    <!-- Localized server errors, category names, radio chat and on-device voice messages (code-to-text mapping for job error codes) -->
+    <string name="job_error_relink">Die Verbindung deines E-Mail-Kontos muss erneuert werden. Bitte verbinde dein Konto erneut.</string>
+    <string name="job_error_no_content">Aktuell gibt es nicht genug Inhalt für einen Podcast. Versuche es später erneut, wenn du mehr E-Mails hast.</string>
+    <string name="job_error_retry">Dein Podcast konnte nicht erstellt werden. Bitte versuche es erneut.</string>
+    <string name="job_error_unknown">Etwas ist schiefgelaufen. Bitte versuche es erneut oder wende dich an den Support, falls das Problem bestehen bleibt.</string>
+    <string name="category_news">Nachrichten</string>
+    <string name="category_technology">Technologie</string>
+    <string name="category_business">Wirtschaft</string>
+    <string name="category_science">Wissenschaft</string>
+    <string name="category_lifestyle">Lebensstil</string>
+    <string name="category_entertainment">Unterhaltung</string>
+    <string name="category_sports">Sport</string>
+    <string name="radio_topic_placeholder">z. B. Klimawandel, Lakers-News, Hollywood-Klatsch…</string>
+    <string name="chat_you">Du</string>
+    <string name="chat_listener">Hörer</string>
+    <string name="chat_blocked_language">Nachricht blockiert: unangemessene Sprache</string>
+    <string name="chat_blocked_phone">Nachricht blockiert: Bitte keine Telefonnummern teilen</string>
+    <string name="chat_blocked_email">Nachricht blockiert: Bitte keine E-Mail-Adressen teilen</string>
+    <string name="chat_blocked_id">Nachricht blockiert: Bitte keine Ausweisnummern teilen</string>
+    <string name="chat_blocked_card">Nachricht blockiert: Bitte keine Kartennummern teilen</string>
+    <string name="radio_request_queued">🎙️ Anfrage eingereiht: „%1$s“ — Position %2$d, ca. %3$d Min. Wartezeit</string>
+    <string name="voice_on_device_button">Auf dem Gerät</string>
+    <string name="kokoro_err_checksum">Der Download konnte nicht überprüft werden</string>
+    <string name="kokoro_err_rename">Die heruntergeladene Datei konnte nicht gespeichert werden</string>
+    <string name="kokoro_err_unknown">Unbekannter Fehler</string>
+    <string name="kokoro_err_download">Download fehlgeschlagen</string>
 </resources>

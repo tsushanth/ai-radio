@@ -358,4 +358,30 @@
     <string name="ask_err_refused">Hindi makakagawa ang mga host ng episode tungkol diyan.</string>
     <string name="ask_err_no_coverage">Wala kaming nakitang sapat na kamakailang coverage ng balita tungkol dito, kaya hindi kami gumawa ng episode.</string>
     <string name="ask_err_failed">Hindi nagawa ang episode. Pakisubukan ulit.</string>
+    <!-- Localized server errors, category names, radio chat and on-device voice messages (code-to-text mapping for job error codes) -->
+    <string name="job_error_relink">Kailangang i-renew ang koneksyon ng iyong email account. Pakikonekta muli ang iyong account.</string>
+    <string name="job_error_no_content">Kulang pa ang nilalaman para makagawa ng podcast ngayon. Subukan ulit mamaya kapag mas marami ka nang email.</string>
+    <string name="job_error_retry">Nagkaproblema kami sa paggawa ng iyong podcast. Pakisubukan ulit.</string>
+    <string name="job_error_unknown">May nangyaring mali. Pakisubukan ulit o makipag-ugnayan sa suporta kung magpapatuloy ang problema.</string>
+    <string name="category_news">Balita</string>
+    <string name="category_technology">Teknolohiya</string>
+    <string name="category_business">Negosyo</string>
+    <string name="category_science">Agham</string>
+    <string name="category_lifestyle">Pamumuhay</string>
+    <string name="category_entertainment">Libangan</string>
+    <string name="category_sports">Palakasan</string>
+    <string name="radio_topic_placeholder">hal. pagbabago ng klima, balita tungkol sa Lakers, tsismis sa Hollywood…</string>
+    <string name="chat_you">Ikaw</string>
+    <string name="chat_listener">Tagapakinig</string>
+    <string name="chat_blocked_language">Na-block ang mensahe: hindi angkop na wika</string>
+    <string name="chat_blocked_phone">Na-block ang mensahe: huwag magbahagi ng mga numero ng telepono</string>
+    <string name="chat_blocked_email">Na-block ang mensahe: huwag magbahagi ng mga email address</string>
+    <string name="chat_blocked_id">Na-block ang mensahe: huwag magbahagi ng mga personal na ID number</string>
+    <string name="chat_blocked_card">Na-block ang mensahe: huwag magbahagi ng mga numero ng card</string>
+    <string name="radio_request_queued">🎙️ Nasa pila na ang request: \"%1$s\" — pwesto #%2$d, ~%3$d min na paghihintay</string>
+    <string name="voice_on_device_button">Nasa device</string>
+    <string name="kokoro_err_checksum">Hindi ma-verify ang download</string>
+    <string name="kokoro_err_rename">Hindi ma-save ang na-download na file</string>
+    <string name="kokoro_err_unknown">Hindi kilalang error</string>
+    <string name="kokoro_err_download">Nabigo ang pag-download</string>
 </resources>

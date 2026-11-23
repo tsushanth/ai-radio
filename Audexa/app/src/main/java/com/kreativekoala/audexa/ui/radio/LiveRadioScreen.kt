@@ -282,7 +282,7 @@ fun LiveRadioScreen(
                         IconButton(onClick = { viewModel.togglePlayback() }) {
                             Icon(
                                 imageVector = if (isPlaying) Icons.Default.Pause else Icons.Default.PlayArrow,
-                                contentDescription = if (isPlaying) "Pause" else "Play",
+                                contentDescription = androidx.compose.ui.res.stringResource(if (isPlaying) com.kreativekoala.audexa.R.string.pause else com.kreativekoala.audexa.R.string.play),
                                 tint = Color.White,
                                 modifier = Modifier.size(32.dp)
                             )
@@ -666,7 +666,7 @@ private fun RequestTopicSheet(
                 modifier = Modifier.fillMaxWidth(),
                 placeholder = {
                     Text(
-                        "e.g. climate change, Lakers news, Hollywood gossip…",
+                        androidx.compose.ui.res.stringResource(com.kreativekoala.audexa.R.string.radio_topic_placeholder),
                         color = Color.White.copy(alpha = 0.4f),
                         fontSize = 14.sp
                     )

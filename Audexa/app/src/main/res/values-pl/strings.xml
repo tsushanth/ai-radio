@@ -360,4 +360,30 @@
     <string name="ask_err_refused">Prowadzący nie mogą przygotować odcinka na ten temat.</string>
     <string name="ask_err_no_coverage">Nie znaleźliśmy wystarczającej liczby aktualnych wiadomości na ten temat, więc nie przygotowaliśmy odcinka.</string>
     <string name="ask_err_failed">Nie udało się przygotować odcinka. Spróbuj ponownie.</string>
+    <!-- Localized server errors, category names, radio chat and on-device voice messages (code-to-text mapping for job error codes) -->
+    <string name="job_error_relink">Połączenie z Twoim kontem e-mail trzeba odnowić. Połącz konto ponownie.</string>
+    <string name="job_error_no_content">Obecnie za mało treści, aby utworzyć podcast. Spróbuj później, gdy będziesz mieć więcej e-maili.</string>
+    <string name="job_error_retry">Nie udało się utworzyć podcastu. Spróbuj ponownie.</string>
+    <string name="job_error_unknown">Coś poszło nie tak. Spróbuj ponownie lub skontaktuj się z pomocą, jeśli problem nie ustąpi.</string>
+    <string name="category_news">Wiadomości</string>
+    <string name="category_technology">Technologia</string>
+    <string name="category_business">Biznes</string>
+    <string name="category_science">Nauka</string>
+    <string name="category_lifestyle">Styl życia</string>
+    <string name="category_entertainment">Rozrywka</string>
+    <string name="category_sports">Sport</string>
+    <string name="radio_topic_placeholder">np. zmiany klimatu, wieści o Lakers, plotki z Hollywood…</string>
+    <string name="chat_you">Ty</string>
+    <string name="chat_listener">Słuchacz</string>
+    <string name="chat_blocked_language">Wiadomość zablokowana: nieodpowiedni język</string>
+    <string name="chat_blocked_phone">Wiadomość zablokowana: nie udostępniaj numerów telefonów</string>
+    <string name="chat_blocked_email">Wiadomość zablokowana: nie udostępniaj adresów e-mail</string>
+    <string name="chat_blocked_id">Wiadomość zablokowana: nie udostępniaj numerów dokumentów tożsamości</string>
+    <string name="chat_blocked_card">Wiadomość zablokowana: nie udostępniaj numerów kart</string>
+    <string name="radio_request_queued">🎙️ Prośba w kolejce: „%1$s” — miejsce nr %2$d, ok. %3$d min oczekiwania</string>
+    <string name="voice_on_device_button">Na urządzeniu</string>
+    <string name="kokoro_err_checksum">Nie udało się zweryfikować pobrania</string>
+    <string name="kokoro_err_rename">Nie udało się zapisać pobranego pliku</string>
+    <string name="kokoro_err_unknown">Nieznany błąd</string>
+    <string name="kokoro_err_download">Pobieranie nie powiodło się</string>
 </resources>

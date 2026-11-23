@@ -358,4 +358,30 @@
     <string name="ask_err_refused">Οι παρουσιαστές δεν μπορούν να φτιάξουν επεισόδιο γι\' αυτό.</string>
     <string name="ask_err_no_coverage">Δεν βρήκαμε αρκετή πρόσφατη κάλυψη ειδήσεων γι\' αυτό το θέμα, οπότε δεν δημιουργήσαμε επεισόδιο.</string>
     <string name="ask_err_failed">Το επεισόδιο δεν μπόρεσε να δημιουργηθεί. Δοκίμασε ξανά.</string>
+    <!-- Localized server errors, category names, radio chat and on-device voice messages (code-to-text mapping for job error codes) -->
+    <string name="job_error_relink">Η σύνδεση του λογαριασμού email σου πρέπει να ανανεωθεί. Συνδέστε ξανά τον λογαριασμό σου.</string>
+    <string name="job_error_no_content">Δεν υπάρχει αρκετό περιεχόμενο για να δημιουργηθεί podcast αυτή τη στιγμή. Δοκίμασε ξανά αργότερα, όταν έχεις περισσότερα email.</string>
+    <string name="job_error_retry">Αντιμετωπίσαμε πρόβλημα στη δημιουργία του podcast σου. Δοκίμασε ξανά.</string>
+    <string name="job_error_unknown">Κάτι πήγε στραβά. Δοκίμασε ξανά ή επικοινώνησε με την υποστήριξη αν το πρόβλημα συνεχιστεί.</string>
+    <string name="category_news">Ειδήσεις</string>
+    <string name="category_technology">Τεχνολογία</string>
+    <string name="category_business">Επιχειρήσεις</string>
+    <string name="category_science">Επιστήμη</string>
+    <string name="category_lifestyle">Τρόπος ζωής</string>
+    <string name="category_entertainment">Ψυχαγωγία</string>
+    <string name="category_sports">Αθλητισμός</string>
+    <string name="radio_topic_placeholder">π.χ. κλιματική αλλαγή, νέα των Lakers, κουτσομπολιά του Χόλιγουντ…</string>
+    <string name="chat_you">Εσύ</string>
+    <string name="chat_listener">Ακροατής</string>
+    <string name="chat_blocked_language">Το μήνυμα αποκλείστηκε: ακατάλληλη γλώσσα</string>
+    <string name="chat_blocked_phone">Το μήνυμα αποκλείστηκε: μην μοιράζεσαι αριθμούς τηλεφώνου</string>
+    <string name="chat_blocked_email">Το μήνυμα αποκλείστηκε: μην μοιράζεσαι διευθύνσεις email</string>
+    <string name="chat_blocked_id">Το μήνυμα αποκλείστηκε: μην μοιράζεσαι προσωπικούς αριθμούς ταυτότητας</string>
+    <string name="chat_blocked_card">Το μήνυμα αποκλείστηκε: μην μοιράζεσαι αριθμούς καρτών</string>
+    <string name="radio_request_queued">🎙️ Το αίτημα μπήκε στην ουρά: «%1$s» — θέση #%2$d, αναμονή ~%3$d λεπτά</string>
+    <string name="voice_on_device_button">Στη συσκευή</string>
+    <string name="kokoro_err_checksum">Η λήψη δεν μπόρεσε να επαληθευτεί</string>
+    <string name="kokoro_err_rename">Δεν ήταν δυνατή η αποθήκευση του αρχείου που λήφθηκε</string>
+    <string name="kokoro_err_unknown">Άγνωστο σφάλμα</string>
+    <string name="kokoro_err_download">Η λήψη απέτυχε</string>
 </resources>

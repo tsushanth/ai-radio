@@ -360,4 +360,30 @@
     <string name="ask_err_refused">Ведущие не могут сделать выпуск на эту тему.</string>
     <string name="ask_err_no_coverage">Мы не нашли достаточно свежих новостей по этой теме, поэтому выпуск не создан.</string>
     <string name="ask_err_failed">Не удалось создать выпуск. Попробуйте ещё раз.</string>
+    <!-- Localized server errors, category names, radio chat and on-device voice messages (code-to-text mapping for job error codes) -->
+    <string name="job_error_relink">Подключение вашей почты нужно обновить. Пожалуйста, подключите аккаунт заново.</string>
+    <string name="job_error_no_content">Сейчас недостаточно материала для подкаста. Попробуйте позже, когда писем станет больше.</string>
+    <string name="job_error_retry">Не удалось создать подкаст. Пожалуйста, попробуйте ещё раз.</string>
+    <string name="job_error_unknown">Что-то пошло не так. Попробуйте ещё раз или обратитесь в поддержку, если проблема не исчезнет.</string>
+    <string name="category_news">Новости</string>
+    <string name="category_technology">Технологии</string>
+    <string name="category_business">Бизнес</string>
+    <string name="category_science">Наука</string>
+    <string name="category_lifestyle">Образ жизни</string>
+    <string name="category_entertainment">Развлечения</string>
+    <string name="category_sports">Спорт</string>
+    <string name="radio_topic_placeholder">напр.: изменение климата, новости «Лейкерс», голливудские сплетни…</string>
+    <string name="chat_you">Вы</string>
+    <string name="chat_listener">Слушатель</string>
+    <string name="chat_blocked_language">Сообщение заблокировано: недопустимые выражения</string>
+    <string name="chat_blocked_phone">Сообщение заблокировано: не делитесь номерами телефонов</string>
+    <string name="chat_blocked_email">Сообщение заблокировано: не делитесь адресами электронной почты</string>
+    <string name="chat_blocked_id">Сообщение заблокировано: не делитесь номерами документов</string>
+    <string name="chat_blocked_card">Сообщение заблокировано: не делитесь номерами карт</string>
+    <string name="radio_request_queued">🎙️ Запрос поставлен в очередь: «%1$s» — место №%2$d, ожидание около %3$d мин</string>
+    <string name="voice_on_device_button">На устройстве</string>
+    <string name="kokoro_err_checksum">Не удалось проверить загрузку</string>
+    <string name="kokoro_err_rename">Не удалось сохранить загруженный файл</string>
+    <string name="kokoro_err_unknown">Неизвестная ошибка</string>
+    <string name="kokoro_err_download">Не удалось загрузить</string>
 </resources>

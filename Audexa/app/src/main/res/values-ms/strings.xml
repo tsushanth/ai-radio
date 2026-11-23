@@ -357,4 +357,30 @@
     <string name="ask_err_refused">Hos tidak dapat membuat episod tentang itu.</string>
     <string name="ask_err_no_coverage">Kami tidak menemui liputan berita terkini yang mencukupi tentang ini, jadi kami tidak membuat episod.</string>
     <string name="ask_err_failed">Episod tidak dapat dibuat. Sila cuba lagi.</string>
+    <!-- Localized server errors, category names, radio chat and on-device voice messages (code-to-text mapping for job error codes) -->
+    <string name="job_error_relink">Sambungan akaun e-mel anda perlu diperbaharui. Sila sambung semula akaun anda.</string>
+    <string name="job_error_no_content">Tiada kandungan yang mencukupi untuk mencipta podcast sekarang. Cuba lagi kemudian apabila anda ada lebih banyak e-mel.</string>
+    <string name="job_error_retry">Kami menghadapi masalah semasa mencipta podcast anda. Sila cuba lagi.</string>
+    <string name="job_error_unknown">Sesuatu tidak kena. Sila cuba lagi atau hubungi sokongan jika masalah berterusan.</string>
+    <string name="category_news">Berita</string>
+    <string name="category_technology">Teknologi</string>
+    <string name="category_business">Perniagaan</string>
+    <string name="category_science">Sains</string>
+    <string name="category_lifestyle">Gaya Hidup</string>
+    <string name="category_entertainment">Hiburan</string>
+    <string name="category_sports">Sukan</string>
+    <string name="radio_topic_placeholder">cth. perubahan iklim, berita Lakers, gosip Hollywood…</string>
+    <string name="chat_you">Anda</string>
+    <string name="chat_listener">Pendengar</string>
+    <string name="chat_blocked_language">Mesej disekat: bahasa tidak sesuai</string>
+    <string name="chat_blocked_phone">Mesej disekat: sila jangan kongsi nombor telefon</string>
+    <string name="chat_blocked_email">Mesej disekat: sila jangan kongsi alamat e-mel</string>
+    <string name="chat_blocked_id">Mesej disekat: sila jangan kongsi nombor pengenalan diri</string>
+    <string name="chat_blocked_card">Mesej disekat: sila jangan kongsi nombor kad</string>
+    <string name="radio_request_queued">🎙️ Permintaan dalam giliran: \"%1$s\" — kedudukan #%2$d, ~%3$d minit menunggu</string>
+    <string name="voice_on_device_button">Pada peranti</string>
+    <string name="kokoro_err_checksum">Muat turun tidak dapat disahkan</string>
+    <string name="kokoro_err_rename">Fail yang dimuat turun tidak dapat disimpan</string>
+    <string name="kokoro_err_unknown">Ralat tidak diketahui</string>
+    <string name="kokoro_err_download">Muat turun gagal</string>
 </resources>

@@ -357,4 +357,30 @@
     <string name="ask_err_refused">主持人无法制作关于这个话题的节目。</string>
     <string name="ask_err_no_coverage">我们没有找到足够的近期新闻报道，所以没有制作节目。</string>
     <string name="ask_err_failed">无法制作节目。请重试。</string>
+    <!-- Localized server errors, category names, radio chat and on-device voice messages (code-to-text mapping for job error codes) -->
+    <string name="job_error_relink">你的邮箱账号连接需要更新，请重新连接账号。</string>
+    <string name="job_error_no_content">目前内容不足，无法生成播客。等邮件多一些后再试。</string>
+    <string name="job_error_retry">生成播客时遇到问题，请重试。</string>
+    <string name="job_error_unknown">出了点问题。请重试；如果问题仍然存在，请联系客服。</string>
+    <string name="category_news">新闻</string>
+    <string name="category_technology">科技</string>
+    <string name="category_business">商业</string>
+    <string name="category_science">科学</string>
+    <string name="category_lifestyle">生活方式</string>
+    <string name="category_entertainment">娱乐</string>
+    <string name="category_sports">体育</string>
+    <string name="radio_topic_placeholder">例如：气候变化、湖人队新闻、好莱坞八卦…</string>
+    <string name="chat_you">你</string>
+    <string name="chat_listener">听众</string>
+    <string name="chat_blocked_language">消息已被拦截：用语不当</string>
+    <string name="chat_blocked_phone">消息已被拦截：请勿分享电话号码</string>
+    <string name="chat_blocked_email">消息已被拦截：请勿分享邮箱地址</string>
+    <string name="chat_blocked_id">消息已被拦截：请勿分享身份证件号码</string>
+    <string name="chat_blocked_card">消息已被拦截：请勿分享银行卡号</string>
+    <string name="radio_request_queued">🎙️ 点播已排队：“%1$s” — 第 %2$d 位，约等待 %3$d 分钟</string>
+    <string name="voice_on_device_button">本机</string>
+    <string name="kokoro_err_checksum">无法验证下载内容</string>
+    <string name="kokoro_err_rename">无法保存已下载的文件</string>
+    <string name="kokoro_err_unknown">未知错误</string>
+    <string name="kokoro_err_download">下载失败</string>
 </resources>

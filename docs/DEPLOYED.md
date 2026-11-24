@@ -3,6 +3,15 @@
 Newest first. Parity rule: whatever runs in production is on `main` (tree compared for the deployed paths).
 
 
+## 2026-11-24 backend v53 (ai-radio-backend on Fly): Traditional Chinese server text (#89, #90)
+
+- Release: Fly v53 (previous v52, image `registry.fly.io/ai-radio-backend:deployment-01M853983BNSNXZJJGSGCC83AY`), image `registry.fly.io/ai-radio-backend:deployment-01M85HM2DJ09Y0RQBKJV79DE0C`, `flyctl deploy --remote-only` from a clean detached worktree at `origin/main` `5e0af90` (#89 and #90); the `ai-radio-backend/` tree `a62f929` equals `origin/main`. No episode generation was running (last job finished 01:01 UTC, deploy 01:10 UTC; invariant sweep clean). The radio stream runs on Hetzner and was not touched. No secret was set or changed; no new env var.
+- Contains: zh-TW / zh-HK category, topic and push-copy tables (Taiwan wording sweep in #90), Traditional entry for `zhongguo-xinwen`, `normalizeLanguage` keeps the Chinese script, `formatEpisodeDate` zh-TW / zh-HK locales, `/api/topics/briefing` accepts zh-TW / zh-HK, own-property language-name maps (`constructor` / `__proto__` safe).
+- Verified live: `/health` 200; `GET /api/topics/world-update?lang=zh-TW` gives 世界動態, `lang=zh-HK` 世界動態, `lang=zh` 世界动态 (Simplified unchanged); markets-finance and space-nasa Traditional for zh-TW / zh-HK; `lang=constructor`, `__proto__`, `toString` return the English name with 200 on `/api/topics`, `/api/topics/:id` and `/api/topics/briefing` (never 500); no-lang requests unchanged (35 topics). Briefing is a read-only Supabase read (no LLM); zh-TW / zh-HK return 200 with an empty list, as `fil` does, because no Chinese episodes exist.
+- Behaviour to know: `GET /api/topics?lang=zh-TW` and `lang=zh-HK` now return an empty list, the same as `lang=zh`, because they follow the `zh` language gate and `zh` is not switched on (`/api/config/languages` does not list it). Before this deploy they bypassed the gate and returned the full list in Simplified names. The app sends `zh-TW` only when Chinese is the podcast language, which cannot be picked while `zh` is off. The Traditional category and topic list therefore becomes visible when `zh` is enabled with `language-flags.js enable zh`; that was not done here (it starts paid generation).
+- Rollback: `flyctl releases rollback 52 -a ai-radio-backend` (or `flyctl deploy -a ai-radio-backend --image registry.fly.io/ai-radio-backend:deployment-01M853983BNSNXZJJGSGCC83AY`). v53 is additive; the Android app does not depend on it.
+
+
 ## 2026-11-23 Android 12.13.0 (52) on Google Play production, 20% staged
 
 - Play production track read back after commit: 12.13.0 (52) inProgress at userFraction 0.2, 12.12.0 (51) completed. Not raised above 20%. Deployed after backend v52 (below), as required.

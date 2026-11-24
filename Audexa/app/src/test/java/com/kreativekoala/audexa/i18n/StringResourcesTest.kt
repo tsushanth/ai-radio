@@ -23,9 +23,35 @@ class StringResourcesTest {
         if (problems.isNotEmpty()) fail("$title (${problems.size}):\n" + problems.take(60).joinToString("\n"))
     }
 
-    @Test fun thereAreTwentySixTranslatedLocalesAndEveryOneIsAnInterfaceLanguage() {
-        assertEquals(UiLanguages.ALL.filter { it.resFolder != "values" }.map { it.resFolder }.sorted(), locales)
-        assertEquals(26, locales.size)
+    /** Script fallback for Traditional Chinese regions without their own folder (Macau): same text as values-zh-rTW, not an interface language. */
+    private val scriptFallbackFolders = listOf("values-b+zh+Hant")
+
+    @Test fun thereAreTwentyEightTranslatedLocalesAndEveryOneIsAnInterfaceLanguage() {
+        assertEquals((UiLanguages.ALL.filter { it.resFolder != "values" }.map { it.resFolder } + scriptFallbackFolders).sorted(), locales)
+        assertEquals(28 + scriptFallbackFolders.size, locales.size)
+    }
+
+    @Test fun theTraditionalChineseScriptFallbackIsTheTaiwanText() {
+        assertEquals(StringResources.load("values-zh-rTW").strings, StringResources.load("values-b+zh+Hant").strings)
+        assertEquals(StringResources.load("values-zh-rTW").plurals, StringResources.load("values-b+zh+Hant").plurals)
+    }
+
+    @Test fun traditionalChineseIsNotSimplifiedAndHongKongUsesItsOwnWording() {
+        val cn = StringResources.load("values-zh-rCN").strings
+        val tw = StringResources.load("values-zh-rTW").strings
+        val hk = StringResources.load("values-zh-rHK").strings
+        assertEquals(cn.keys, tw.keys)
+        assertEquals(cn.keys, hk.keys)
+        // Characters that only exist in Simplified must not survive in either Traditional folder.
+        val simplifiedOnly = Regex("[们这个来说时发网务设计员户级动态闻术简报艺乐体]")
+        assertNone("Simplified-only characters in a Traditional folder", listOf("tw" to tw, "hk" to hk).flatMap { (n, m) ->
+            m.filterValues { simplifiedOnly.containsMatchIn(it) }.map { "$n ${it.key}: ${it.value.take(50)}" }
+        })
+        // Taiwan and Hong Kong differ in wording somewhere (software: 軟體 vs 軟件).
+        assertTrue(tw.values.any { "軟體" in it || "網路" in it })
+        assertTrue(hk.values.any { "軟件" in it || "網絡" in it } || hk != tw)
+        // The language is told apart from Simplified in the picker.
+        assertTrue(cn != tw)
     }
 
     @Test fun everyLocaleHasEveryKeyOfTheDefaultFile() {
@@ -79,7 +105,8 @@ class StringResourcesTest {
 
     @Test fun pluralsCarryTheCategoriesTheLanguageNeeds() {
         assertNone("plural categories", failures { l ->
-            val lang = l.folder.removePrefix("values-").substringBefore('-')
+            val qualifier = l.folder.removePrefix("values-")
+            val lang = if (qualifier.startsWith("b+")) qualifier.removePrefix("b+").substringBefore('+') else qualifier.substringBefore('-')
             val need = requiredPlurals[lang] ?: setOf("one", "other")
             en.plurals.keys.flatMap { k ->
                 val have = l.plurals[k]?.keys.orEmpty()
@@ -202,6 +229,7 @@ class StringResourcesTest {
         val xml = File(StringResources.resDir, "xml/locales_config.xml").readText()
         val listed = Regex("android:name=\"([^\"]+)\"").findAll(xml).map { it.groupValues[1] }.toSet()
         assertEquals(UiLanguages.ALL.map { it.tag }.toSet(), listed)
+        assertTrue("zh-TW and zh-HK are listed next to zh-CN", listed.containsAll(listOf("zh-CN", "zh-TW", "zh-HK")))
     }
 
     @Test fun thePromptAndSettingStringsExistInEveryLocale() {

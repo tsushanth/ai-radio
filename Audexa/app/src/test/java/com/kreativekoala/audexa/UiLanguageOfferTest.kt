@@ -68,7 +68,14 @@ class UiLanguageOfferTest {
         assertEquals("cs", offer("cs", only = setOf("cs")))
     }
 
-    @Test fun traditionalChinesePhoneIsOfferedSimplifiedChineseBecauseItSeesEnglishToday() {
-        assertEquals("zh-CN", offer("zh", device = "zh-Hant-TW"))
+    @Test fun aTraditionalChinesePhoneAlreadySeesTraditionalChineseSoNothingIsOffered() {
+        assertNull(offer("zh", device = "zh-Hant-TW"))
+        assertNull(offer("zh", device = "zh-HK"))
+        assertNull(offer("zh", device = "zh-Hant-MO"))
+    }
+
+    @Test fun anEnglishPhoneThatPicksChineseIsOfferedSimplifiedChinese() {
+        assertEquals("zh-CN", offer("zh", device = "en-US"))
+        assertEquals("zh-CN", offer("zh", device = "en-US", override = "zh-TW")) // already Traditional in the app: not the same tag, offered
     }
 }

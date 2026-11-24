@@ -21,6 +21,8 @@ const TUPLES: Record<string, [string, string, string, string, string, string, st
   it: N('Notizie', 'Tecnologia', 'Economia', 'Scienza', 'Stile di vita', 'Intrattenimento', 'Sport'),
   ja: N('ニュース', 'テクノロジー', 'ビジネス', 'サイエンス', 'ライフスタイル', 'エンタメ', 'スポーツ'),
   zh: N('新闻', '科技', '商业', '科学', '生活方式', '娱乐', '体育'),
+  'zh-TW': N('新聞', '科技', '商業', '科學', '生活方式', '娛樂', '體育'),
+  'zh-HK': N('新聞', '科技', '商業', '科學', '生活方式', '娛樂', '體育'),
   hi: N('समाचार', 'प्रौद्योगिकी', 'व्यापार', 'विज्ञान', 'जीवनशैली', 'मनोरंजन', 'खेल'),
   ko: N('뉴스', '기술', '비즈니스', '과학', '라이프스타일', '엔터테인먼트', '스포츠'),
   fil: N('Balita', 'Teknolohiya', 'Negosyo', 'Agham', 'Pamumuhay', 'Libangan', 'Palakasan'),

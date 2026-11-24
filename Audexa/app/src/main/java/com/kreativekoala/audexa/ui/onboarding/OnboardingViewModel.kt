@@ -99,7 +99,7 @@ class OnboardingViewModel @Inject constructor(
 
             // Fetch fresh with selected language (skip cache during onboarding
             // since cached topics may be from a different language)
-            topicRepository.getTopics(_uiState.value.selectedLanguage.code)
+            topicRepository.getTopics(com.kreativekoala.audexa.util.TextLanguageSource.forRequest(_uiState.value.selectedLanguage.code))
                 .onSuccess { response ->
                     val activeTopics = response.data?.topics
                         ?.filter { it.isActive }

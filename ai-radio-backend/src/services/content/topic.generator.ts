@@ -17,7 +17,7 @@ import { finalizeEpisodeAudio } from '../audio/episode-audio';
 import { isNewLanguage, isLaunchTopic } from '../languages/registry';
 import { languageControls } from '../languages/controls';
 import { buildNewLanguageEpisode, speakExistingScript } from '../languages/pipeline';
-import { formatEpisodeDate, localizeTopic } from '../languages/localized';
+import { contentLanguage, formatEpisodeDate, localizeTopic } from '../languages/localized';
 import type {
   TopicDefinition,
   TopicEpisode,
@@ -335,7 +335,7 @@ export class TopicPodcastGenerator {
     // Spanish/French/Italian/Portuguese/German ARE Latin script — running the
     // stripper on them nukes the whole episode (every word vanishes, leaving
     // just punctuation and accented stray chars).
-    const NON_LATIN_SCRIPTS = new Set(['ja', 'zh', 'ko', 'hi']);
+    const NON_LATIN_SCRIPTS = new Set(['ja', 'zh', 'zh-tw', 'zh-hk', 'ko', 'hi']);
     const lang = (language || 'en').toLowerCase();
     if (!NON_LATIN_SCRIPTS.has(lang)) {
       return text;
@@ -367,8 +367,8 @@ export class TopicPodcastGenerator {
     // katakana; Chinese: hanzi; Korean: hangul; Hindi: devanagari) or
     // omit the foreign tokens entirely. Numbers/dates should also be
     // expressed natively in the target language's writing system.
-    const NON_LATIN_SCRIPTS = new Set(['ja', 'zh', 'ko', 'hi']);
-    const needsScriptStripping = NON_LATIN_SCRIPTS.has(language);
+    const NON_LATIN_SCRIPTS = new Set(['ja', 'zh', 'zh-tw', 'zh-hk', 'ko', 'hi']);
+    const needsScriptStripping = NON_LATIN_SCRIPTS.has((language || 'en').toLowerCase());
 
     let languageInstruction = '';
     if (language !== 'en') {
@@ -380,7 +380,7 @@ export class TopicPodcastGenerator {
 CRITICAL FOR TTS QUALITY:
 - Do NOT include any Latin / English characters in the dialogue text — not for proper nouns, brand names, dates, abbreviations, or anything else. The TTS engine mispronounces mixed scripts.
 - Transliterate ALL foreign names into the target language's writing system:
-  ${language === 'ja' ? '- Japanese: use katakana (e.g. クランチロール not Crunchyroll, ニンジャスクロール not Ninja Scroll)' : ''}${language === 'zh' ? '- Chinese: use hanzi (e.g. 优兔 not YouTube)' : ''}${language === 'ko' ? '- Korean: use hangul (e.g. 크런치롤 not Crunchyroll)' : ''}${language === 'hi' ? '- Hindi: use devanagari (e.g. यूट्यूब not YouTube)' : ''}
+  ${language === 'ja' ? '- Japanese: use katakana (e.g. クランチロール not Crunchyroll, ニンジャスクロール not Ninja Scroll)' : ''}${language === 'zh' ? '- Chinese: use hanzi (e.g. 优兔 not YouTube)' : ''}${language === 'zh-TW' || language === 'zh-HK' ? '- Chinese: use Traditional hanzi (e.g. 優兔 not YouTube), never Simplified characters' : ''}${language === 'ko' ? '- Korean: use hangul (e.g. 크런치롤 not Crunchyroll)' : ''}${language === 'hi' ? '- Hindi: use devanagari (e.g. यूट्यूब not YouTube)' : ''}
 - Numbers and dates: write them out in words in the target language (e.g. Japanese: 二千二十五年六月十一日, not 2025年6月11日).
 - Acronyms (4K, AI, NHL): spell out as full words or transliterate.
 - Keep each sentence short (under 60 characters in the target language) to fit Kokoro's phoneme limit.`;
@@ -450,12 +450,14 @@ Create an engaging ${topic.targetDurationMinutes}-minute podcast covering the mo
       de: 'German',
       pt: 'Portuguese',
       ja: 'Japanese',
-      zh: 'Chinese (Mandarin)',
+      zh: 'Simplified Chinese (Mandarin)',
+      'zh-TW': 'Traditional Chinese (Taiwan, Mandarin)',
+      'zh-HK': 'Traditional Chinese (Hong Kong)',
       hi: 'Hindi',
       ko: 'Korean',
       it: 'Italian',
     };
-    return languages[code] || 'English';
+    return Object.prototype.hasOwnProperty.call(languages, code) ? languages[code] : 'English';
   }
 
   /**
@@ -679,9 +681,11 @@ Create an engaging ${topic.targetDurationMinutes}-minute podcast covering the mo
    * Get all topics list (delegates to Supabase topics service)
    */
   async getTopicsList(language: string = 'en'): Promise<TopicListResponse> {
-    if (isNewLanguage(language)) {
+    // "zh-TW" / "zh-HK" ask for the Chinese list written in Traditional script: the same gate and topics as "zh".
+    const podcastLanguage = /^zh[-_]/i.test(language) ? contentLanguage(language) : language;
+    if (isNewLanguage(podcastLanguage)) {
       // Additional languages: nothing is listed while the language is off, and only the 12 launch topics when it is on.
-      if (!(await languageControls.isEnabled(language))) return { topics: [], categories: [] };
+      if (!(await languageControls.isEnabled(podcastLanguage))) return { topics: [], categories: [] };
       const full = await topicsService.getTopicsList(language);
       const topics = full.topics.filter(t => isLaunchTopic(t.id));
       const categories = full.categories

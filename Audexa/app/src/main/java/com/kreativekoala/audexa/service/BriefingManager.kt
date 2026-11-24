@@ -97,7 +97,7 @@ class BriefingManager @Inject constructor(
     /** Returns null on any failure so the caller falls back to the static copy. */
     suspend fun fetchSummary(): Summary? = withContext(Dispatchers.IO) {
         try {
-            val lang = preferencesManager.preferredLanguage.first()
+            val lang = com.kreativekoala.audexa.util.TextLanguageSource.forRequest(preferencesManager.preferredLanguage.first())
             val request = Request.Builder()
                 .url("${BuildConfig.API_BASE_URL}/topics/briefing?lang=$lang")
                 .build()

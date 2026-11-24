@@ -58,6 +58,20 @@ class LocaleResourcesTest {
         }
     }
 
+    /** Chinese has three interface translations picked by script and region; Macau and bare Hant fall to the Taiwan text, mainland to Simplified. */
+    @Test fun chineseTagsReachTheRightScript() {
+        val cn = ctx("zh-CN").getString(R.string.nav_profile)
+        val tw = ctx("zh-TW").getString(R.string.tab_discover)
+        for (tag in listOf("zh-TW", "zh-Hant-TW", "zh-Hant", "zh-Hant-MO")) {
+            assertEquals(tag, StringResources.load("values-zh-rTW").strings.getValue("tab_discover"), ctx(tag).getString(R.string.tab_discover))
+        }
+        assertEquals(StringResources.load("values-zh-rHK").strings.getValue("tab_discover"), ctx("zh-HK").getString(R.string.tab_discover))
+        assertEquals(StringResources.load("values-zh-rCN").strings.getValue("tab_discover"), ctx("zh-CN").getString(R.string.tab_discover))
+        assertEquals(StringResources.load("values-zh-rCN").strings.getValue("tab_discover"), ctx("zh-Hans-CN").getString(R.string.tab_discover))
+        assertNotEquals(ctx("en").getString(R.string.tab_discover), tw)
+        assertTrue(cn.isNotBlank())
+    }
+
     @Test fun anUntranslatedPhoneLanguageFallsBackToEnglishNotToABrokenString() {
         val sw = ctx("sw")
         assertEquals(ctx("en").getString(R.string.nav_home), sw.getString(R.string.nav_home))

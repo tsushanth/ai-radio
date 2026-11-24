@@ -1,0 +1,386 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Audexa</string>
+    <string name="app_tagline">你的個人 AI 電臺</string>
+
+    <!-- Auth -->
+    <string name="sign_in_with_google">使用 Google 登入</string>
+    <string name="sign_out">退出登入</string>
+    <string name="delete_account">刪除帳戶</string>
+    <string name="auth_description">收聽關於你感興趣主題的 AI 生成播客。在設定中關聯你的郵箱，獲取個性化每日簡報。</string>
+    <string name="auth_terms">繼續即表示你同意我們的服務條款和隱私政策</string>
+    <string name="start">開始</string>
+
+    <!-- Navigation -->
+    <string name="nav_home">首頁</string>
+    <string name="nav_profile">個人資料</string>
+    <string name="back">返回</string>
+    <string name="close">關閉</string>
+    <string name="cancel">取消</string>
+    <string name="ok">確定</string>
+    <string name="delete">刪除</string>
+    <string name="retry">重試</string>
+    <string name="enable">啟用</string>
+
+    <!-- Tabs -->
+    <string name="tab_for_you">為你推薦</string>
+    <string name="tab_discover">發現</string>
+
+    <!-- Home -->
+    <string name="good_morning">早上好</string>
+    <string name="good_afternoon">下午好</string>
+    <string name="good_evening">晚上好</string>
+    <string name="daily_brief">每日簡報</string>
+    <string name="daily_brief_subtitle">每日簡報 • %s</string>
+    <string name="keep_listening">繼續收聽</string>
+    <string name="your_topics">你的主題</string>
+    <string name="topic_podcasts">主題播客</string>
+    <string name="recommended_for_you">為你推薦</string>
+    <string name="more_for_you">更多推薦</string>
+    <string name="all_topics">所有主題</string>
+    <string name="matching_topics">匹配的主題</string>
+    <string name="tap_to_explore">點選探索和播放</string>
+    <string name="link_account_prompt">關聯你的郵箱以生成個性化簡報</string>
+    <string name="link_account">關聯帳戶</string>
+    <string name="find_new_shows">發現新節目</string>
+    <string name="search">搜尋</string>
+    <string name="clear">清除</string>
+    <string name="no_results_for">未找到“%s”的結果</string>
+
+    <!-- Profile -->
+    <string name="profile">個人資料</string>
+    <string name="linked_accounts">關聯帳戶</string>
+    <string name="preferences">偏好設定</string>
+    <string name="podcast_language">播客語言</string>
+    <string name="briefing_time">簡報時間</string>
+    <string name="topics">主題</string>
+    <string name="voice_preference">語音偏好</string>
+    <string name="hidden_topics">隱藏的主題</string>
+    <string name="about">關於</string>
+    <string name="version">版本</string>
+    <string name="terms_of_service">服務條款</string>
+    <string name="privacy_policy">隱私政策</string>
+    <string name="analytics_title">分享匿名使用統計</string>
+    <string name="analytics_subtitle">使用了哪些主題和語言，以及使用時長。僅在此裝置上生成一個隨機 ID，不含姓名、郵箱或 IP 地址。關閉後該 ID 會被刪除。</string>
+    <string name="premium">Premium</string>
+    <string name="go_ad_free">去除廣告</string>
+    <string name="ad_free">無廣告</string>
+    <string name="active_subscription">活躍訂閱</string>
+    <string name="remove_all_ads">移除所有廣告</string>
+    <string name="email_accounts">郵箱帳戶</string>
+    <string name="app_theme">應用主題</string>
+    <string name="voice_settings">語音設定</string>
+    <string name="choose_podcast_voices">選擇播客語音</string>
+    <string name="hidden_count">%d 個已隱藏</string>
+    <string name="notifications">通知</string>
+    <string name="daily_brief_reminders">每日簡報提醒</string>
+    <string name="sign_out_confirm">確定要退出登入嗎？</string>
+    <string name="delete_account_confirm">確定要刪除帳戶嗎？這將永久刪除你的所有資料，包括播客、偏好設定和關聯帳戶。此操作無法撤銷。</string>
+    <string name="delete_account_signin_again">你的登入已過期，因此帳戶沒有被刪除，也沒有任何內容被移除。請退出登入，重新登入後再次嘗試刪除帳戶。</string>
+    <string name="delete_account_failed">我們未能完成帳戶刪除。請檢查網路連線後重試。</string>
+
+    <!-- Player -->
+    <string name="playing">播放中</string>
+    <string name="paused">已暫停</string>
+    <string name="play">播放</string>
+    <string name="pause">暫停</string>
+    <string name="loading">載入中…</string>
+    <string name="generating">生成中…</string>
+    <string name="generating_progress">生成中… %d%%</string>
+    <string name="generate_episode">生成節目</string>
+    <string name="regenerate">重新生成</string>
+    <string name="episode_history">往期節目</string>
+    <string name="skip_back">後退 15 秒</string>
+    <string name="skip_forward">前進 15 秒</string>
+    <string name="skip_back_mini">後退</string>
+    <string name="skip_forward_mini">前進</string>
+    <string name="buffering">緩衝中…</string>
+    <string name="playback_error_stream">無法連線電臺。請檢查網路連線後重試。</string>
+    <string name="playback_error_episode">無法載入此音訊。請檢查網路連線後重試。</string>
+    <string name="sleep_timer">睡眠定時器</string>
+    <string name="timer">定時器</string>
+    <string name="sleep_timer_5_min">5 分鐘</string>
+    <string name="sleep_timer_10_min">10 分鐘</string>
+    <string name="sleep_timer_15_min">15 分鐘</string>
+    <string name="sleep_timer_30_min">30 分鐘</string>
+    <string name="sleep_timer_1_hour">1 小時</string>
+    <string name="min_format">%d 分鐘</string>
+    <string name="today">今天</string>
+    <string name="bookmark">收藏</string>
+    <string name="more">更多</string>
+    <string name="hide_topic">隱藏主題</string>
+    <string name="hide">隱藏</string>
+
+    <!-- Errors -->
+    <string name="error_generic">出了點問題</string>
+    <string name="error_network">網路錯誤。請檢查你的連線。</string>
+    <string name="error_auth">身份驗證失敗</string>
+    <string name="error_no_internet">無網路連線。請檢查你的網路並重試。</string>
+    <string name="generation_failed">生成失敗</string>
+
+    <!-- Misc -->
+    <string name="min_daily">每日 %d 分鐘</string>
+    <string name="connected">已連線</string>
+    <string name="not_connected">未連線</string>
+    <string name="not_connected_lower">未連線</string>
+    <string name="coming_soon">即將推出</string>
+    <string name="microsoft_coming_soon">微軟帳戶整合即將推出。敬請期待！</string>
+
+    <!-- Onboarding -->
+    <string name="welcome_to_audexa">歡迎使用 Audexa</string>
+    <string name="welcome_description">你的個性化 AI 電臺，將最新新聞、科技和主題轉化為引人入勝的播客式簡報。</string>
+    <string name="get_started">開始使用</string>
+    <string name="connect_your_account">連線你的帳戶</string>
+    <string name="connect_account_description">關聯你的 Google 帳戶，從郵件和日曆中獲取個性化每日簡報。</string>
+    <string name="gmail">Gmail</string>
+    <string name="calendar">日曆</string>
+    <string name="include_email_highlights">在簡報中包含郵件要點</string>
+    <string name="include_calendar_events">在簡報中包含即將到來的事件</string>
+    <string name="continue_button">繼續</string>
+    <string name="skip_for_now">暫時跳過</string>
+    <string name="connect_later_hint">你可以稍後在設定中連線</string>
+    <string name="connect">連線</string>
+    <string name="choose_your_interests">選擇你的興趣</string>
+    <string name="choose_interests_description">選擇你想收聽的主題。我們將專為你生成每日節目。</string>
+    <string name="topics_selected">已選擇 %d 個主題%s</string>
+    <string name="topics_selected_plural_suffix"></string>
+    <string name="complete_setup">完成設定</string>
+
+    <!-- Linked Accounts -->
+    <string name="enable_daily_brief">啟用每日簡報</string>
+    <string name="enable_daily_brief_description">連線你的 Gmail，根據郵件獲取個性化每日簡報。我們會概括重要更新，讓你在瞭解最新動態的情況下開始新的一天。</string>
+    <string name="google_calendar">Google 日曆</string>
+    <string name="outlook">Outlook</string>
+    <string name="daily_brief_sources">每日簡報來源</string>
+    <string name="email_summaries">郵件摘要</string>
+    <string name="include_email_in_brief">在每日簡報中包含郵件摘要</string>
+    <string name="calendar_events">日曆事件</string>
+    <string name="include_calendar_in_brief">在每日簡報中包含即將到來的事件</string>
+    <string name="unlink">取消關聯</string>
+    <string name="soon">即將</string>
+    <string name="your_privacy">你的隱私</string>
+    <string name="privacy_note">為了生成你的簡報，我們的伺服器會讀取你最近的 Gmail 郵件和日曆事件。重要郵件的發件人姓名、主題和前 100 個字元，以及事件的標題、時間和地點，會傳送給我們的 AI 提供商 Anthropic 以撰寫指令碼。我們不會儲存你的郵件文字，但生成的簡報音訊會保留到你刪除帳戶為止。取消關聯不會移除儲存在我們伺服器上的 Google 訪問許可權；在“個人資料”中選擇“刪除帳戶”才會移除。</string>
+    <string name="microsoft_outlook_coming_soon">微軟 Outlook 關聯將在未來的更新中提供。</string>
+    <string name="gmail_linking_cancelled">Gmail 關聯已取消</string>
+    <string name="calendar_linking_cancelled">日曆關聯已取消</string>
+    <string name="reconnect">重新連線</string>
+
+    <!-- Hidden Topics -->
+    <string name="no_hidden_topics">沒有隱藏的主題</string>
+    <string name="no_hidden_topics_description">你隱藏的主題將顯示在這裡。你可以隨時取消隱藏。</string>
+    <string name="unhide_hint">點選眼睛圖示重新顯示主題。</string>
+    <string name="unhide">取消隱藏</string>
+
+    <!-- Language Settings -->
+    <string name="language">語言</string>
+    <string name="language_coming_soon">即將推出</string>
+    <string name="language_beta">Beta</string>
+    <string name="language_coming_soon_toast">暫未開放。我們已記錄你的關注。</string>
+    <string name="generating_language">正在為你準備%1$s節目。第一期可能需要幾分鐘。</string>
+    <string name="language_fallback_note">播客暫不支援%1$s，已為你選擇%2$s。</string>
+    <string name="error_language_unavailable">該語言暫未開放。</string>
+    <string name="error_daily_limit">今天新語言節目的生成次數已達上限。請明天再試。</string>
+    <string name="language_page_title">選擇你的語言</string>
+    <string name="language_page_subtitle">播客提供六種語言。電臺僅提供英語。你的選擇將幫助我們決定接下來新增哪些語言。</string>
+    <string name="language_description">選擇你喜歡的播客語言。</string>
+    <string name="language_note">播客提供英語、西班牙語、法語、德語、葡萄牙語和義大利語版本。新語言的首期節目需要幾分鐘準備。電臺僅提供英語。對於其他語言，我們會在不記錄你姓名的情況下記錄你選擇的語言，以決定接下來新增什麼。</string>
+    <string name="selected">已選擇</string>
+
+    <!-- App language (the language of menus and buttons; separate from the podcast language) -->
+    <string name="app_language">應用語言</string>
+    <string name="app_language_follow_phone">跟隨手機</string>
+    <string name="app_language_description">選單和按鈕使用的語言。播客仍使用你在上方選擇的語言。</string>
+    <string name="ui_lang_offer_title">也用%1$s顯示應用嗎？</string>
+    <string name="ui_lang_offer_body">只有選單和按鈕會改變。你可以隨時在個人資料設定中更改。</string>
+    <string name="ui_lang_offer_yes">是，使用%1$s</string>
+    <string name="ui_lang_offer_no">否，保持%1$s</string>
+
+    <!-- Suggest a topic -->
+    <string name="suggest_topic">建議主題</string>
+    <string name="suggest_topic_inline">沒找到想要的主題？提個建議</string>
+    <string name="suggest_topic_description">告訴我們你想聽什麼，我們會考慮新增。</string>
+    <string name="suggest_topic_name_label">主題名稱</string>
+    <string name="suggest_topic_name_hint">例如：量子計算</string>
+    <string name="suggest_topic_details_label">描述（選填）</string>
+    <string name="suggest_topic_details_hint">這個主題應該涵蓋什麼？</string>
+    <string name="suggest_topic_thanks">謝謝，我們會稽核建議，並新增合適的主題。</string>
+    <string name="submit">提交</string>
+    <string name="submitting">提交中…</string>
+    <string name="no_topics_title">目前沒有可用的主題。</string>
+    <string name="no_topics_hint">點選“繼續”完成設定——你可以稍後在首頁選擇主題。</string>
+
+    <!-- Live radio -->
+    <string name="radio_languages">電臺語言</string>
+    <string name="radio_languages_note">所選電臺將顯示在你的首頁。至少需要啟用一種語言。</string>
+    <string name="radio_home_tagline">AI 驅動的 24/7 新聞 · 直播</string>
+    <string name="radio_tagline">AI 驅動的 24/7 新聞與談話</string>
+    <string name="share_whats_playing">分享正在播放的內容</string>
+    <string name="share_station">分享%1$s</string>
+    <string name="radio_up_next">接下來播放</string>
+    <string name="radio_requests">點播</string>
+    <string name="radio_generating">生成中</string>
+    <string name="radio_generating_badge">生成中</string>
+    <string name="radio_request_hint">點選麥克風，為直播佇列點播主題</string>
+    <string name="radio_request_topic">點播主題</string>
+    <string name="radio_request_title">點播一個主題</string>
+    <string name="radio_request_description">告訴 Audexa 電臺你想聽什麼，它會被加入直播佇列。</string>
+    <string name="radio_add_to_queue">加入直播佇列</string>
+    <string name="radio_chat_hint">和聽眾聊天...</string>
+    <string name="radio_chat">聊天</string>
+    <string name="radio_now_badge">現在</string>
+    <string name="radio_music">音樂</string>
+    <string name="send">傳送</string>
+
+    <!-- Voice Settings -->
+    <string name="loading_voices">載入語音中…</string>
+    <string name="no_voice_pairs">沒有可用的語音組合</string>
+    <string name="no_voices">沒有可用的語音</string>
+    <string name="voice_pairs_description">為你的播客主持人選擇預配置的語音組合。</string>
+    <string name="host_1">主持人 1</string>
+    <string name="host_2">主持人 2</string>
+    <string name="host_1_voice">主持人 1 語音</string>
+    <string name="host_2_voice">主持人 2 語音</string>
+
+    <!-- Theme Settings -->
+    <string name="theme_system">系統</string>
+    <string name="theme_system_description">跟隨裝置設定</string>
+    <string name="theme_dark">深色</string>
+    <string name="theme_dark_description">始終深色模式</string>
+    <string name="theme_light">淺色</string>
+    <string name="theme_light_description">始終淺色模式</string>
+
+    <!-- Notification Settings -->
+    <string name="permission">許可權</string>
+    <string name="enabled">已啟用</string>
+    <string name="not_enabled">未啟用</string>
+    <string name="daily_brief_schedule">每日簡報時間表</string>
+    <string name="daily_brief_notifications">每日簡報通知</string>
+    <string name="daily_brief_notify_hint">簡報準備好時接收通知</string>
+    <string name="daily_brief_content">每日簡報內容</string>
+    <string name="include_topic_updates">包含主題更新</string>
+    <string name="include_topic_updates_hint">將主題標題新增到每日簡報</string>
+    <string name="notification_info">你的每日簡報將在預定時間生成並準備就緒。準備好播放時你將收到通知。</string>
+    <string name="select_time">選擇時間</string>
+
+    <!-- Subscription / Paywall -->
+    <string name="enjoy_uninterrupted">享受不間斷的收聽體驗</string>
+    <string name="no_audio_ad_interruptions">無音訊廣告中斷</string>
+    <string name="seamless_episode_playback">節目無縫播放</string>
+    <string name="support_indie_development">支援獨立開發</string>
+    <string name="ad_free_subscriber">你已是無廣告訂閱使用者！</string>
+    <string name="yearly">年付</string>
+    <string name="save_percent">節省 58%%</string>
+    <string name="monthly">月付</string>
+    <string name="subscribe">訂閱</string>
+    <string name="restore_purchases">恢復購買</string>
+    <string name="payment_fine_print">付款將從你的 Google Play 帳戶扣除。除非在當前期間結束前至少 24 小時取消，否則訂閱將自動續費。</string>
+    <string name="per_year">/年</string>
+    <string name="per_month">/月</string>
+    <string name="per_week">/周</string>
+
+    <!-- Ads -->
+    <string name="sponsored">贊助</string>
+    <string name="skip">跳過</string>
+    <string name="skip_ad">跳過廣告</string>
+    <string name="ad_content_description">廣告</string>
+
+    <!-- Radio Call-In -->
+    <string name="call_to_request">來電點播主題</string>
+    <string name="call_in_label">撥打電話：(833) 398-1230</string>
+
+    <!-- Splash Screen -->
+    <string name="splash_tagline">你的 AI 音訊簡報</string>
+
+    <!-- Notifications (non-composable) -->
+    <string name="notification_good_morning">早上好！</string>
+    <string name="notification_daily_brief_text">每日簡報時間到了。點選瞭解郵件、日曆和新聞的最新動態。</string>
+    <string name="daily_brief_channel_description">每日簡報提醒通知</string>
+    <string name="radio_topic_channel_name">電臺主題提醒</string>
+    <string name="radio_topic_channel_description">當收藏的主題在 Audexa 電臺播放時收到通知</string>
+    <string name="radio_topic_notification_title">Audexa 電臺正在播放</string>
+    <string name="radio_topic_notification_body">%1$s 正在直播。點選收聽。</string>
+
+    <!-- Daily Brief Playback -->
+    <string name="daily_brief_title_format">每日簡報 - %s</string>
+    <string name="daily_brief_description">你的個性化晨間簡報</string>
+
+    <!-- Morning briefing: one local notification per day, opt-in after first play -->
+    <string name="briefing_notification_title">今日 Audexa</string>
+    <string name="briefing_notification_body_fallback">Audexa 電臺正在播放。點選收聽。</string>
+    <plurals name="briefing_notification_body_topics">
+        <item quantity="other">%1$d 個新的主題播客：%2$s。點選收聽。</item>
+    </plurals>
+    <string name="briefing_names_with_more">%1$s 及另外 %2$d 個</string>
+    <string name="briefing_optin_title">新的主題播客準備好時提醒你嗎？</string>
+    <string name="briefing_optin_accept">提醒我</string>
+    <string name="briefing_optin_decline">暫不</string>
+
+    <!-- Ask the hosts (English only for now) -->
+    <string name="ask_entry_title">問問主持人</string>
+    <string name="ask_entry_subtitle">今晚的比賽、一場釋出會、一條新聞：由兩位 AI 主持人來聊</string>
+    <string name="ask_title">問問主持人</string>
+    <string name="ask_intro">描述一個事件或新聞。主持人只會談論近期頭條報道的內容，如果報道不足會告訴你。節目由 AI 生成，需要一兩分鐘。</string>
+    <string name="ask_field_label">想讓他們聊什麼？</string>
+    <string name="ask_field_placeholder">例如：今晚勇士隊的比賽誰贏了？</string>
+    <string name="ask_counter">%1$d/%2$d</string>
+    <string name="ask_language_label">語言</string>
+    <string name="ask_submit">提問</string>
+    <string name="ask_sending">正在傳送你的請求...</string>
+    <string name="ask_stage_queued">正在等待空閒的錄音室...</string>
+    <string name="ask_stage_reviewing">正在檢查你的請求...</string>
+    <string name="ask_stage_searching">正在閱讀最新頭條...</string>
+    <string name="ask_stage_writing">主持人正在準備...</string>
+    <string name="ask_stage_recording">正在錄製節目...</string>
+    <string name="ask_stage_working">處理中...</string>
+    <string name="ask_progress_description">進度：百分之 %1$d</string>
+    <string name="ask_leave_hint">你可以離開此頁面。回來後會接著顯示同一期節目。</string>
+    <string name="ask_ai_note">基於近期新聞頭條，由兩位 AI 主持人進行的 AI 生成討論。</string>
+    <string name="ask_length">時長 %1$s</string>
+    <string name="ask_play">播放節目</string>
+    <string name="ask_pause">暫停</string>
+    <string name="ask_share">分享</string>
+    <string name="ask_share_chooser">分享這期節目</string>
+    <string name="ask_share_failed">無法開啟分享面板</string>
+    <string name="ask_sources_title">本期節目所依據的頭條</string>
+    <string name="ask_sources_note">主持人只討論這些頭條所報道的內容。完整報道請檢視來源。</string>
+    <string name="ask_ask_another">再問一個</string>
+    <string name="ask_edit_question">修改問題</string>
+    <string name="ask_check_again">再檢查一次</string>
+    <string name="ask_unavailable">“問問主持人”暫時不可用。</string>
+    <string name="ask_loading">正在檢查是否可用...</string>
+    <string name="ask_err_input">請檢查你的問題後重試。</string>
+    <string name="ask_err_limited">“問問主持人”正忙或已達上限。請稍後再試。</string>
+    <string name="ask_err_not_found">找不到這條請求了。請重新提問。</string>
+    <string name="ask_err_offline">沒有網路連線。請檢查網路後重試。</string>
+    <string name="ask_err_timeout">耗時比預期更長，節目可能仍在生成中。</string>
+    <string name="ask_err_server">出了點問題。請重試。</string>
+    <string name="ask_err_refused">主持人無法制作關於這個話題的節目。</string>
+    <string name="ask_err_no_coverage">我們沒有找到足夠的近期新聞報道，所以沒有製作節目。</string>
+    <string name="ask_err_failed">無法制作節目。請重試。</string>
+    <!-- Localized server errors, category names, radio chat and on-device voice messages (code-to-text mapping for job error codes) -->
+    <string name="job_error_relink">你的郵箱帳號連線需要更新，請重新連線帳號。</string>
+    <string name="job_error_no_content">目前內容不足，無法生成播客。等郵件多一些後再試。</string>
+    <string name="job_error_retry">生成播客時遇到問題，請重試。</string>
+    <string name="job_error_unknown">出了點問題。請重試；如果問題仍然存在，請聯絡客服。</string>
+    <string name="category_news">新聞</string>
+    <string name="category_technology">科技</string>
+    <string name="category_business">商業</string>
+    <string name="category_science">科學</string>
+    <string name="category_lifestyle">生活方式</string>
+    <string name="category_entertainment">娛樂</string>
+    <string name="category_sports">體育</string>
+    <string name="radio_topic_placeholder">例如：氣候變化、湖人隊新聞、好萊塢八卦…</string>
+    <string name="chat_you">你</string>
+    <string name="chat_listener">聽眾</string>
+    <string name="chat_blocked_language">訊息已被攔截：用語不當</string>
+    <string name="chat_blocked_phone">訊息已被攔截：請勿分享電話號碼</string>
+    <string name="chat_blocked_email">訊息已被攔截：請勿分享郵箱地址</string>
+    <string name="chat_blocked_id">訊息已被攔截：請勿分享身份證件號碼</string>
+    <string name="chat_blocked_card">訊息已被攔截：請勿分享銀行卡號</string>
+    <string name="radio_request_queued">🎙️ 點播已排隊：“%1$s” — 第 %2$d 位，約等待 %3$d 分鐘</string>
+    <string name="voice_on_device_button">本機</string>
+    <string name="kokoro_err_checksum">無法驗證下載內容</string>
+    <string name="kokoro_err_rename">無法儲存已下載的檔案</string>
+    <string name="kokoro_err_unknown">未知錯誤</string>
+    <string name="kokoro_err_download">下載失敗</string>
+</resources>

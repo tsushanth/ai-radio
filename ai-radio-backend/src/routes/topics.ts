@@ -354,7 +354,8 @@ router.post('/suggest/:requestId/fail', requireOperatorSecret(), async (req: Req
  */
 router.get('/briefing', async (req: Request, res: Response) => {
   try {
-    const language = typeof req.query.lang === 'string' && /^[a-z]{2,3}$/.test(req.query.lang)
+    // zh-TW / zh-HK: Traditional Chinese wording (localized text only; everything else is the language-only code)
+    const language = typeof req.query.lang === 'string' && /^([a-z]{2,3}|zh-(TW|HK))$/.test(req.query.lang)
       ? req.query.lang
       : 'en';
     const summary = await briefingService.getSummary(language);

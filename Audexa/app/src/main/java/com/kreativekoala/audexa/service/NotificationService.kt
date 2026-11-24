@@ -268,7 +268,7 @@ class NotificationService @Inject constructor(
         deviceToken: String? = null
     ) = withContext(Dispatchers.IO) {
         try {
-            val language = preferencesManager.preferredLanguage.first()
+            val language = com.kreativekoala.audexa.util.TextLanguageSource.forRequest(preferencesManager.preferredLanguage.first())
             val json = JSONObject().apply {
                 put("user_id", userId)
                 put("briefing_time", briefingTime)
@@ -304,7 +304,7 @@ class NotificationService @Inject constructor(
      */
     suspend fun registerTokenWithBackend(userId: String, token: String) = withContext(Dispatchers.IO) {
         try {
-            val language = preferencesManager.preferredLanguage.first()
+            val language = com.kreativekoala.audexa.util.TextLanguageSource.forRequest(preferencesManager.preferredLanguage.first())
             val json = JSONObject().apply {
                 put("user_id", userId)
                 put("device_token", token)
@@ -362,7 +362,7 @@ class NotificationService @Inject constructor(
      * nobody is signed in or the language was already sent by this process.
      */
     private suspend fun syncLanguageIfChanged(hour: Int, minute: Int, timezone: String) {
-        val language = preferencesManager.preferredLanguage.first()
+        val language = com.kreativekoala.audexa.util.TextLanguageSource.forRequest(preferencesManager.preferredLanguage.first())
         if (language == lastSyncedLanguage) return
         val userId = preferencesManager.userEmail.first()
         if (userId.isNullOrEmpty()) return

@@ -14,7 +14,7 @@ import {
 } from '../../config/topics';
 import type { TopicDefinition, TopicCategory, TopicListResponse } from '../../types/topics';
 import { disabledReason } from '../content/source-policy';
-import { categoryName, localizeTopic } from '../languages/localized';
+import { categoryName, contentLanguage, localizeTopic } from '../languages/localized';
 
 interface CacheEntry {
   topics: TopicDefinition[];
@@ -46,9 +46,11 @@ class TopicsService {
       return allTopics;
     }
 
+    // zh-TW / zh-HK change the wording only: topic availability is keyed by the podcast language "zh".
+    const available = /^zh[-_]/i.test(language) ? contentLanguage(language) : language;
     return allTopics.filter(topic => {
       const langs = topic.languages;
-      return langs.includes('all') || langs.includes(language);
+      return langs.includes('all') || langs.includes(available);
     });
   }
 

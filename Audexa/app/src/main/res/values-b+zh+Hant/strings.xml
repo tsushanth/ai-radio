@@ -7,7 +7,7 @@
     <string name="sign_in_with_google">使用 Google 登入</string>
     <string name="sign_out">退出登入</string>
     <string name="delete_account">刪除帳戶</string>
-    <string name="auth_description">收聽關於你感興趣主題的 AI 生成播客。在設定中關聯你的郵箱，獲取個性化每日簡報。</string>
+    <string name="auth_description">收聽關於你感興趣主題的 AI 生成播客。在設定中關聯你的信箱，獲取個性化每日簡報。</string>
     <string name="auth_terms">繼續即表示你同意我們的服務條款和隱私政策</string>
     <string name="start">開始</string>
 
@@ -40,7 +40,7 @@
     <string name="all_topics">所有主題</string>
     <string name="matching_topics">匹配的主題</string>
     <string name="tap_to_explore">點選探索和播放</string>
-    <string name="link_account_prompt">關聯你的郵箱以生成個性化簡報</string>
+    <string name="link_account_prompt">關聯你的信箱以生成個性化簡報</string>
     <string name="link_account">關聯帳戶</string>
     <string name="find_new_shows">發現新節目</string>
     <string name="search">搜尋</string>
@@ -61,13 +61,13 @@
     <string name="terms_of_service">服務條款</string>
     <string name="privacy_policy">隱私政策</string>
     <string name="analytics_title">分享匿名使用統計</string>
-    <string name="analytics_subtitle">使用了哪些主題和語言，以及使用時長。僅在此裝置上生成一個隨機 ID，不含姓名、郵箱或 IP 地址。關閉後該 ID 會被刪除。</string>
+    <string name="analytics_subtitle">使用了哪些主題和語言，以及使用時長。僅在此裝置上生成一個隨機 ID，不含姓名、信箱或 IP 地址。關閉後該 ID 會被刪除。</string>
     <string name="premium">Premium</string>
     <string name="go_ad_free">去除廣告</string>
     <string name="ad_free">無廣告</string>
     <string name="active_subscription">活躍訂閱</string>
     <string name="remove_all_ads">移除所有廣告</string>
-    <string name="email_accounts">郵箱帳戶</string>
+    <string name="email_accounts">信箱帳戶</string>
     <string name="app_theme">應用主題</string>
     <string name="voice_settings">語音設定</string>
     <string name="choose_podcast_voices">選擇播客語音</string>
@@ -159,7 +159,7 @@
     <string name="unlink">取消關聯</string>
     <string name="soon">即將</string>
     <string name="your_privacy">你的隱私</string>
-    <string name="privacy_note">為了生成你的簡報，我們的伺服器會讀取你最近的 Gmail 郵件和日曆事件。重要郵件的發件人姓名、主題和前 100 個字元，以及事件的標題、時間和地點，會傳送給我們的 AI 提供商 Anthropic 以撰寫指令碼。我們不會儲存你的郵件文字，但生成的簡報音訊會保留到你刪除帳戶為止。取消關聯不會移除儲存在我們伺服器上的 Google 訪問許可權；在“個人資料”中選擇“刪除帳戶”才會移除。</string>
+    <string name="privacy_note">為了生成你的簡報，我們的伺服器會讀取你最近的 Gmail 郵件和日曆事件。重要郵件的發件人姓名、主題和前 100 個字元，以及事件的標題、時間和地點，會傳送給我們的 AI 提供商 Anthropic 以撰寫指令碼。我們不會儲存你的郵件文字，但生成的簡報音訊會保留到你刪除帳戶為止。取消關聯不會移除儲存在我們伺服器上的 Google 存取權限；在“個人資料”中選擇“刪除帳戶”才會移除。</string>
     <string name="microsoft_outlook_coming_soon">微軟 Outlook 關聯將在未來的更新中提供。</string>
     <string name="gmail_linking_cancelled">Gmail 關聯已取消</string>
     <string name="calendar_linking_cancelled">日曆關聯已取消</string>
@@ -250,7 +250,7 @@
     <string name="theme_light_description">始終淺色模式</string>
 
     <!-- Notification Settings -->
-    <string name="permission">許可權</string>
+    <string name="permission">權限</string>
     <string name="enabled">已啟用</string>
     <string name="not_enabled">未啟用</string>
     <string name="daily_brief_schedule">每日簡報時間表</string>
@@ -358,7 +358,7 @@
     <string name="ask_err_no_coverage">我們沒有找到足夠的近期新聞報道，所以沒有製作節目。</string>
     <string name="ask_err_failed">無法制作節目。請重試。</string>
     <!-- Localized server errors, category names, radio chat and on-device voice messages (code-to-text mapping for job error codes) -->
-    <string name="job_error_relink">你的郵箱帳號連線需要更新，請重新連線帳號。</string>
+    <string name="job_error_relink">你的信箱帳號連線需要更新，請重新連線帳號。</string>
     <string name="job_error_no_content">目前內容不足，無法生成播客。等郵件多一些後再試。</string>
     <string name="job_error_retry">生成播客時遇到問題，請重試。</string>
     <string name="job_error_unknown">出了點問題。請重試；如果問題仍然存在，請聯絡客服。</string>
@@ -374,7 +374,7 @@
     <string name="chat_listener">聽眾</string>
     <string name="chat_blocked_language">訊息已被攔截：用語不當</string>
     <string name="chat_blocked_phone">訊息已被攔截：請勿分享電話號碼</string>
-    <string name="chat_blocked_email">訊息已被攔截：請勿分享郵箱地址</string>
+    <string name="chat_blocked_email">訊息已被攔截：請勿分享信箱地址</string>
     <string name="chat_blocked_id">訊息已被攔截：請勿分享身份證件號碼</string>
     <string name="chat_blocked_card">訊息已被攔截：請勿分享銀行卡號</string>
     <string name="radio_request_queued">🎙️ 點播已排隊：“%1$s” — 第 %2$d 位，約等待 %3$d 分鐘</string>

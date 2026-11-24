@@ -42,6 +42,8 @@ export const TOPIC_I18N: Record<string, Record<string, [name: string, descriptio
     th: ["สรุปข่าวประจำวัน", "พาดหัวข่าวสำคัญจากทั่วโลก"],
     vi: ["Bản tin hằng ngày", "Các tin nổi bật từ khắp nơi trên thế giới"],
     zh: ["每日新闻简报", "来自世界各地的头条新闻"],
+    'zh-TW': ["每日新聞簡報", "來自世界各地的頭條新聞"],
+    'zh-HK': ["每日新聞簡報", "來自世界各地的頭條新聞"],
   },
   "world-update": {
     es: ["Actualidad mundial", "Noticias internacionales y asuntos globales"],
@@ -76,6 +78,8 @@ export const TOPIC_I18N: Record<string, Record<string, [name: string, descriptio
     th: ["ข่าวโลกอัปเดต", "ข่าวต่างประเทศและเหตุการณ์ระดับโลก"],
     vi: ["Thế giới hôm nay", "Tin tức quốc tế và các vấn đề toàn cầu"],
     zh: ["世界动态", "国际新闻与全球时事"],
+    'zh-TW': ["世界動態", "國際新聞與全球時事"],
+    'zh-HK': ["世界動態", "國際新聞與全球時事"],
   },
   "ai-ml": {
     es: ["IA y aprendizaje automático", "Lo último en inteligencia artificial y avances de aprendizaje automático"],
@@ -110,6 +114,8 @@ export const TOPIC_I18N: Record<string, Record<string, [name: string, descriptio
     th: ["เอไอและแมชชีนเลิร์นนิง", "ความก้าวหน้าล่าสุดด้านปัญญาประดิษฐ์และแมชชีนเลิร์นนิง"],
     vi: ["AI và học máy", "Những tiến bộ mới nhất về trí tuệ nhân tạo và học máy"],
     zh: ["人工智能与机器学习", "人工智能与机器学习的最新突破"],
+    'zh-TW': ["人工智慧與機器學習", "人工智慧與機器學習的最新突破"],
+    'zh-HK': ["人工智能與機器學習", "人工智能與機器學習的最新突破"],
   },
   "tech-news": {
     es: ["Noticias tech diarias", "Novedades de Silicon Valley y de la industria tecnológica"],
@@ -144,6 +150,8 @@ export const TOPIC_I18N: Record<string, Record<string, [name: string, descriptio
     th: ["ข่าวเทคโนโลยีรายวัน", "ความเคลื่อนไหวจากซิลิคอนวัลเลย์และวงการเทคโนโลยี"],
     vi: ["Tin công nghệ mỗi ngày", "Cập nhật từ Thung lũng Silicon và ngành công nghệ"],
     zh: ["每日科技新闻", "硅谷动态与科技行业新闻"],
+    'zh-TW': ["每日科技新聞", "矽谷動態與科技行業新聞"],
+    'zh-HK': ["每日科技新聞", "硅谷動態與科技行業新聞"],
   },
   "coding-dev": {
     es: ["Código y café", "Noticias de programación, lanzamientos y cultura de desarrolladores"],
@@ -196,6 +204,8 @@ export const TOPIC_I18N: Record<string, Record<string, [name: string, descriptio
     th: ["ตลาดและการเงิน", "อัปเดตตลาดหุ้นและข่าวการเงิน"],
     vi: ["Thị trường và tài chính", "Cập nhật thị trường chứng khoán và tin tài chính"],
     zh: ["市场与财经", "股市动态与财经新闻"],
+    'zh-TW': ["市場與財經", "股市動態與財經新聞"],
+    'zh-HK': ["市場與財經", "股市動態與財經新聞"],
   },
   "space-nasa": {
     es: ["Espacio y NASA", "Exploración espacial, astronomía y novedades de la NASA"],
@@ -230,6 +240,8 @@ export const TOPIC_I18N: Record<string, Record<string, [name: string, descriptio
     th: ["อวกาศและนาซา", "การสำรวจอวกาศ ดาราศาสตร์ และความเคลื่อนไหวของนาซา"],
     vi: ["Vũ trụ và NASA", "Khám phá vũ trụ, thiên văn học và tin tức từ NASA"],
     zh: ["太空与NASA", "太空探索、天文学与NASA最新动态"],
+    'zh-TW': ["太空與NASA", "太空探索、天文學與NASA最新動態"],
+    'zh-HK': ["太空與NASA", "太空探索、天文學與NASA最新動態"],
   },
   "science-discoveries": {
     es: ["Descubrimientos científicos", "Avances en ciencia e investigación"],
@@ -264,6 +276,8 @@ export const TOPIC_I18N: Record<string, Record<string, [name: string, descriptio
     th: ["การค้นพบทางวิทยาศาสตร์", "ความก้าวหน้าในวิทยาศาสตร์และงานวิจัย"],
     vi: ["Khám phá khoa học", "Những đột phá trong khoa học và nghiên cứu"],
     zh: ["科学新发现", "科学与研究领域的重大突破"],
+    'zh-TW': ["科學新發現", "科學與研究領域的重大突破"],
+    'zh-HK': ["科學新發現", "科學與研究領域的重大突破"],
   },
   "health-wellness": {
     es: ["Salud y bienestar", "Consejos de salud, noticias médicas y tendencias de bienestar"],
@@ -298,6 +312,8 @@ export const TOPIC_I18N: Record<string, Record<string, [name: string, descriptio
     th: ["สุขภาพและความเป็นอยู่ที่ดี", "เคล็ดลับสุขภาพ ข่าวการแพทย์ และเทรนด์การดูแลตัวเอง"],
     vi: ["Sức khỏe và đời sống", "Mẹo sức khỏe, tin y khoa và xu hướng chăm sóc bản thân"],
     zh: ["健康与养生", "健康小贴士、医学新闻与养生趋势"],
+    'zh-TW': ["健康與養生", "健康小貼士、醫學新聞與養生趨勢"],
+    'zh-HK': ["健康與養生", "健康小貼士、醫學新聞與養生趨勢"],
   },
   "gaming": {
     es: ["Noticias de videojuegos", "Noticias de videojuegos, lanzamientos y novedades de la industria"],
@@ -332,6 +348,8 @@ export const TOPIC_I18N: Record<string, Record<string, [name: string, descriptio
     th: ["ข่าวเกม", "ข่าววิดีโอเกม เกมใหม่ และความเคลื่อนไหวของวงการ"],
     vi: ["Tin game", "Tin tức trò chơi điện tử, game mới và ngành công nghiệp game"],
     zh: ["游戏资讯", "电子游戏新闻、新作发布与行业动态"],
+    'zh-TW': ["遊戲資訊", "電子遊戲新聞、新作釋出與行業動態"],
+    'zh-HK': ["遊戲資訊", "電子遊戲新聞、新作發佈與行業動態"],
   },
   "sports-roundup": {
     es: ["Resumen deportivo", "Resultados, mejores momentos y noticias deportivas"],
@@ -366,6 +384,8 @@ export const TOPIC_I18N: Record<string, Record<string, [name: string, descriptio
     th: ["สรุปข่าวกีฬา", "ผลการแข่งขัน ไฮไลต์ และข่าวกีฬา"],
     vi: ["Điểm tin thể thao", "Kết quả, những pha nổi bật và tin thể thao"],
     zh: ["体育综述", "比分、精彩瞬间与体育新闻"],
+    'zh-TW': ["體育綜述", "比分、精彩瞬間與體育新聞"],
+    'zh-HK': ["體育綜述", "比分、精彩瞬間與體育新聞"],
   },
   "eli5": {
     es: ["Explícalo fácil", "Temas complejos explicados de forma sencilla"],
@@ -400,6 +420,8 @@ export const TOPIC_I18N: Record<string, Record<string, [name: string, descriptio
     th: ["อธิบายให้เข้าใจง่าย", "เรื่องซับซ้อนที่อธิบายให้เข้าใจง่าย"],
     vi: ["Giải thích đơn giản", "Những chủ đề phức tạp được giải thích đơn giản"],
     zh: ["通俗易懂", "把复杂的话题讲简单"],
+    'zh-TW': ["通俗易懂", "把複雜的話題講簡單"],
+    'zh-HK': ["通俗易懂", "把複雜的話題講簡單"],
   },
   "simulate-this": {
     es: ["Simula esto", "Personajes históricos reaccionan a las noticias de hoy"],
@@ -434,5 +456,12 @@ export const TOPIC_I18N: Record<string, Record<string, [name: string, descriptio
     th: ["จำลองเหตุการณ์นี้", "บุคคลในประวัติศาสตร์ร่วมแสดงความคิดเห็น"],
     vi: ["Mô phỏng điều này", "Các nhân vật lịch sử phản ứng"],
     zh: ["情景模拟", "历史人物的反应"],
+    'zh-TW': ["情景模擬", "歷史人物的反應"],
+    'zh-HK': ["情景模擬", "歷史人物的反應"],
+  },
+  // The Chinese-language topic: its Simplified name lives on the topic itself (localizedNames.zh); only the Traditional wording is added here.
+  "zhongguo-xinwen": {
+    'zh-TW': ["中國新聞", "中國和亞洲的最新新聞"],
+    'zh-HK': ["中國新聞", "中國和亞洲的最新新聞"],
   },
 };

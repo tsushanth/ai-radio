@@ -16,7 +16,7 @@ data class UiLanguage(val tag: String, val resFolder: String, val nativeName: St
 }
 
 object UiLanguages {
-    /** Every interface language that ships a translation: English (default values/) plus 26 translated res folders. */
+    /** Every interface language that ships a translation: English (default values/) plus 28 translated res folders. */
     val ALL: List<UiLanguage> = listOf(
         UiLanguage("en", "values", "English"),
         UiLanguage("ar", "values-ar", "العربية"),
@@ -44,16 +44,36 @@ object UiLanguages {
         UiLanguage("tr", "values-tr", "Türkçe"),
         UiLanguage("uk", "values-uk", "Українська"),
         UiLanguage("vi", "values-vi", "Tiếng Việt"),
-        UiLanguage("zh-CN", "values-zh-rCN", "中文 (简体)")
+        UiLanguage("zh-CN", "values-zh-rCN", "简体中文"),
+        // Traditional Chinese: Taiwan wording (values-b+zh+Hant carries the same text for Macau and other Hant regions) and Hong Kong wording.
+        UiLanguage("zh-TW", "values-zh-rTW", "繁體中文（台灣）"),
+        UiLanguage("zh-HK", "values-zh-rHK", "繁體中文（香港）")
     )
 
     val ENGLISH: UiLanguage = ALL.first()
+
+    /**
+     * The shipped Chinese interface tag for any Chinese tag: zh-TW, zh-Hant, zh-Hant-TW, zh-MO -> "zh-TW"; zh-HK, zh-Hant-HK -> "zh-HK";
+     * zh, zh-CN, zh-SG, zh-Hans -> "zh-CN" (Simplified, what a bare "zh" always meant). Null when [tag] is not Chinese.
+     */
+    fun chineseTag(tag: String?): String? {
+        val parts = tag.orEmpty().trim().replace('_', '-').lowercase().split('-')
+        if (parts.firstOrNull() != "zh") return null
+        val rest = parts.drop(1)
+        return when {
+            "hans" in rest || "cn" in rest || "sg" in rest -> "zh-CN" // i18n-ok: locale tag
+            "hk" in rest -> "zh-HK" // i18n-ok: locale tag
+            "tw" in rest || "mo" in rest || "hant" in rest -> "zh-TW" // i18n-ok: locale tag
+            else -> "zh-CN" // i18n-ok: locale tag
+        }
+    }
 
     /** Exact tag match ("pt-BR", "zh-CN"); also accepts "pt" / "zh" / "in" style language-only input. Null when there is no translation. */
     fun fromTag(raw: String?): UiLanguage? {
         val t = raw.orEmpty().trim().replace('_', '-')
         if (t.isEmpty()) return null
         ALL.firstOrNull { it.tag.equals(t, ignoreCase = true) }?.let { return it }
+        chineseTag(t)?.let { zh -> return ALL.first { it.tag == zh } } // Script and region decide: Traditional is not Simplified
         val lang = legacy(t.substringBefore('-').lowercase())
         return ALL.firstOrNull { it.language.equals(lang, ignoreCase = true) }
     }
@@ -79,14 +99,27 @@ object UiLanguages {
     /**
      * The interface language a phone with this system language gets when the app is set to "Follow phone": the translation for it,
      * or English when there is none (Android then falls back to the default resources). Pass the full tag when known ("zh-Hant-TW"):
-     * the Chinese translation is Simplified only, so a Traditional Chinese phone gets English, as Android resolves it.
+     * Chinese has three translations (Simplified, Traditional for Taiwan, Traditional for Hong Kong) picked by script and region.
      */
-    fun forDeviceLanguage(deviceTag: String?): UiLanguage {
-        val t = deviceTag.orEmpty().trim().replace('_', '-')
-        val parts = t.split('-')
-        if (parts.firstOrNull().equals("zh", ignoreCase = true) &&
-            parts.drop(1).any { it.equals("Hant", true) || it.equals("TW", true) || it.equals("HK", true) || it.equals("MO", true) }
-        ) return ENGLISH
-        return fromTag(t) ?: ENGLISH
+    fun forDeviceLanguage(deviceTag: String?): UiLanguage = fromTag(deviceTag) ?: ENGLISH
+}
+
+/**
+ * The language to tell the server for text it writes in the listener's language (topic and category names, push notifications).
+ * It is the podcast language code ("es", "zh"...), except that Chinese carries its script: a listener whose app (or phone) is in
+ * Traditional Chinese sends "zh-TW" or "zh-HK" instead of "zh", so the server writes Traditional. Podcast generation, episodes and
+ * topic availability keep using the plain podcast code ("zh"). Old servers only know "zh", so [forRequest] is used only for text.
+ */
+object TextLanguage {
+    /**
+     * @param contentCode the saved podcast language
+     * @param appTag the language set for this app (per-app language), or null for "Follow phone"
+     * @param deviceTag the phone's system language tag
+     */
+    fun forRequest(contentCode: String?, appTag: String?, deviceTag: String?): String {
+        val code = contentCode.orEmpty()
+        if (ContentLanguage.normalize(code) != "zh") return code
+        val ui = UiLanguages.fromTag(appTag) ?: UiLanguages.forDeviceLanguage(deviceTag)
+        return if (ui.tag == "zh-TW" || ui.tag == "zh-HK") ui.tag else code
     }
 }

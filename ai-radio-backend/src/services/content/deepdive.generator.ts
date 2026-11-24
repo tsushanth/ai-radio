@@ -570,12 +570,14 @@ Create an engaging ${targetDurationMinutes}-minute research podcast. Return ONLY
       de: 'German',
       pt: 'Portuguese',
       ja: 'Japanese',
-      zh: 'Chinese (Mandarin)',
+      zh: 'Simplified Chinese (Mandarin)',
+      'zh-TW': 'Traditional Chinese (Taiwan, Mandarin)',
+      'zh-HK': 'Traditional Chinese (Hong Kong)',
       hi: 'Hindi',
       ko: 'Korean',
       it: 'Italian',
     };
-    return languages[code] || 'English';
+    return Object.prototype.hasOwnProperty.call(languages, code) ? languages[code] : 'English';
   }
 }
 

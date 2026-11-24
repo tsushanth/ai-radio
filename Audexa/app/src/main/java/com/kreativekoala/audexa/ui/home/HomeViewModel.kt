@@ -346,7 +346,8 @@ class HomeViewModel @Inject constructor(
             // localized topic names + locale-specific topics (e.g. 日本ニュース
             // instead of "Daily News Brief") — backend applies
             // `localized_names[language]` when given lang=ja.
-            val lang = preferencesManager.preferredLanguage.first()
+            // Chinese carries its script (zh-TW / zh-HK for a Traditional Chinese app) so names and categories come back Traditional.
+            val lang = com.kreativekoala.audexa.util.TextLanguageSource.forRequest(preferencesManager.preferredLanguage.first())
             Log.d(TAG, "Loading topics with lang=$lang, bookmarked=$bookmarked")
             topicRepository.getTopics(lang)
                 .onSuccess { response ->

@@ -40,7 +40,7 @@ class HiddenTopicsViewModel @Inject constructor(
             _uiState.value = _uiState.value.copy(isLoading = true)
 
             // First load all topics, named in the language the user listens in (the server localizes names per lang)
-            val lang = preferencesManager.preferredLanguage.first()
+            val lang = com.kreativekoala.audexa.util.TextLanguageSource.forRequest(preferencesManager.preferredLanguage.first())
             topicRepository.getTopics(lang)
                 .onSuccess { response ->
                     allTopics = response.data?.topics ?: emptyList()

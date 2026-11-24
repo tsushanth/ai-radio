@@ -108,6 +108,12 @@ no single-country flag), `dir` (`ltr` or `rtl`; Arabic is `rtl`), `podcast` (alw
 interface language: ar ms th vi zh-CN and the 14 earlier ones; absent for ca hr no sk sl sr). Codes: `no` is Norwegian Bokmål, `zh` is Simplified
 Chinese (Mandarin), `sr` is written in the Latin script. Only enabled languages are listed; a client must ignore unknown keys.
 
+Traditional Chinese: the podcast language stays `zh` (Simplified station, one flag, one voice pair). zh-TW and zh-HK are accepted only where the server
+writes text in the listener's language: `GET /topics?lang=`, `GET /topics/:id?lang=`, `GET /topics/briefing?lang=` and the `language` of a push
+registration (category names, topic names and descriptions, Daily Brief push, episode-title date locale). They use the same gate and topics as `zh`.
+zh-Hant, zh-Hant-TW and zh-MO normalise to zh-TW; zh-Hant-HK to zh-HK; zh, zh-CN, zh-SG and zh-Hans stay `zh` (Simplified). Episode, generate and
+radio endpoints take the plain `zh`. A Traditional-script podcast (its own episodes) would need a registry entry, a language_flags row and a gate run.
+
 ### GET /api/config/stations (cached 60 s)
 
 ```json

@@ -21,6 +21,8 @@ export const DAILY_BRIEF_PUSH: Record<string, DailyBriefPushCopy> = {
   it: C('☀️ Il tuo riepilogo quotidiano è pronto', 'Il tuo riepilogo personalizzato di {n} min è pronto da ascoltare.', 'Aggiornamento sul riepilogo quotidiano', 'Oggi non siamo riusciti a generare il tuo riepilogo. Tocca per riprovare manualmente.'),
   ja: C('☀️ デイリーブリーフの準備ができました', 'あなた専用の{n}分のブリーフィングを再生できます。', 'デイリーブリーフのお知らせ', '今日のブリーフを生成できませんでした。タップして手動で再試行してください。'),
   zh: C('☀️ 你的每日简报已就绪', '为你定制的{n}分钟简报已准备好，可以收听了。', '每日简报通知', '今天未能生成你的简报。点按即可手动重试。'),
+  'zh-TW': C('☀️ 你的每日簡報已就緒', '為你定製的{n}分鐘簡報已準備好，可以收聽了。', '每日簡報通知', '今天未能生成你的簡報。點按即可手動重試。'),
+  'zh-HK': C('☀️ 你的每日簡報已就緒', '為你定製的{n}分鐘簡報已準備好，可以收聽了。', '每日簡報通知', '今天未能生成你的簡報。點按即可手動重試。'),
   hi: C('☀️ आपका दैनिक सारांश तैयार है', 'आपका {n} मिनट का व्यक्तिगत सारांश सुनने के लिए तैयार है।', 'दैनिक सारांश अपडेट', 'आज हम आपका सारांश तैयार नहीं कर सके। मैन्युअल रूप से आज़माने के लिए टैप करें।'),
   ko: C('☀️ 일일 브리핑이 준비되었어요', '{n}분 분량의 맞춤 브리핑을 지금 들을 수 있어요.', '일일 브리핑 알림', '오늘은 브리핑을 만들지 못했어요. 탭해서 직접 다시 시도해 보세요.'),
   fil: C('☀️ Handa na ang iyong Araw-araw na Buod', 'Handa nang pakinggan ang iyong {n}-minutong buod na para sa iyo.', 'Update sa Araw-araw na Buod', 'Hindi namin nagawa ang iyong buod ngayon. I-tap para subukan nang mano-mano.'),

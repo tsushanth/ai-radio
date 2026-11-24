@@ -12,16 +12,37 @@ import type { TopicCategory, TopicDefinition } from '../../types/topics';
 /** Legacy and regional tags clients send, mapped to the code the tables use. */
 const ALIASES: Record<string, string> = { tl: 'fil', nb: 'no', nn: 'no', in: 'id' };
 
-/** Primary subtag, lower case, aliases applied: "pt-BR" -> "pt", "tl" -> "fil", "zh-Hans" -> "zh", "" -> "en". */
+/**
+ * The language of a piece of server-written text, from whatever tag the client sent. Whitelisted output: a lower-case two or three
+ * letter primary subtag ("pt-BR" -> "pt", "tl" -> "fil", "" -> "en"), except Chinese, which keeps its script because Simplified and
+ * Traditional text are not interchangeable: zh-TW, zh-Hant, zh-MO and zh-Hant-TW -> "zh-TW"; zh-HK and zh-Hant-HK -> "zh-HK";
+ * zh, zh-CN, zh-SG, zh-Hans (and anything else Chinese) -> "zh" (Simplified, the only Chinese older clients ever asked for).
+ */
 export function normalizeLanguage(raw: string | undefined | null): string {
-  const primary = String(raw ?? '').trim().toLowerCase().split(/[-_]/)[0];
+  const parts = String(raw ?? '').trim().toLowerCase().split(/[-_]/);
+  const primary = parts[0];
   if (!/^[a-z]{2,3}$/.test(primary)) return 'en';
+  if (primary === 'zh') {
+    const rest = parts.slice(1);
+    if (rest.includes('hans') || rest.includes('cn') || rest.includes('sg')) return 'zh';
+    if (rest.includes('hk')) return 'zh-HK';
+    if (rest.includes('tw') || rest.includes('mo') || rest.includes('hant')) return 'zh-TW';
+    return 'zh';
+  }
   return ALIASES[primary] ?? primary;
+}
+
+/**
+ * The podcast (content) language behind a text language: "zh-TW" and "zh-HK" -> "zh". Topic availability, episodes and audio are
+ * keyed by this code; only the wording of names, categories, push and dates follows the script variant.
+ */
+export function contentLanguage(raw: string | undefined | null): string {
+  return normalizeLanguage(raw).split('-')[0];
 }
 
 /** Locale for dates in episode titles. The additional languages use the registry's own locale; the built-in ones are listed here. */
 const BUILT_IN_DATE_LOCALES: Record<string, string> = {
-  en: 'en-US', es: 'es-ES', fr: 'fr-FR', de: 'de-DE', it: 'it-IT', pt: 'pt-BR', ko: 'ko-KR', fil: 'fil-PH',
+  en: 'en-US', es: 'es-ES', fr: 'fr-FR', de: 'de-DE', it: 'it-IT', pt: 'pt-BR', ko: 'ko-KR', fil: 'fil-PH', 'zh-TW': 'zh-TW', 'zh-HK': 'zh-HK',
 };
 
 export function dateLocaleFor(language: string | undefined | null): string {

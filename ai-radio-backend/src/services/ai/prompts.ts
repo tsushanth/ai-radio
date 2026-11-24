@@ -112,7 +112,9 @@ const LANGUAGE_NAMES: Record<string, string> = {
   hi: 'Hindi',
   ja: 'Japanese',
   ko: 'Korean',
-  zh: 'Chinese',
+  zh: 'Simplified Chinese',
+  'zh-TW': 'Traditional Chinese (Taiwan)',
+  'zh-HK': 'Traditional Chinese (Hong Kong)',
   ar: 'Arabic',
   ru: 'Russian',
   nl: 'Dutch',
@@ -149,7 +151,8 @@ export function generatePodcastPrompt(context: ScriptGenerationContext): string 
 
   // Get language name from code, default to English
   const languageCode = preferences.language || 'en';
-  const languageName = LANGUAGE_NAMES[languageCode] || 'English';
+  // Own property only: the code can come from the request body, and "constructor" must not resolve to an inherited member.
+  const languageName = Object.prototype.hasOwnProperty.call(LANGUAGE_NAMES, languageCode) ? LANGUAGE_NAMES[languageCode] : 'English';
 
   console.log(`[generatePodcastPrompt] Language code: ${languageCode}, Language name: ${languageName}`);
 

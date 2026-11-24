@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="auth_err_gmail_not_granted">未獲得 Gmail 訪問許可權。請再次點選“連線”，並在系統提示時允許訪問 Gmail。</string>
-    <string name="auth_err_calendar_not_granted">未獲得日曆訪問許可權。請再次點選“連線”，並在系統提示時允許訪問日曆。</string>
-    <string name="auth_err_more_permissions">需要額外的許可權。請重試。</string>
+    <string name="auth_err_gmail_not_granted">未獲得 Gmail 存取權限。請再次點選“連線”，並在系統提示時允許存取 Gmail。</string>
+    <string name="auth_err_calendar_not_granted">未獲得日曆存取權限。請再次點選“連線”，並在系統提示時允許存取日曆。</string>
+    <string name="auth_err_more_permissions">需要額外的權限。請重試。</string>
     <string name="auth_err_gmail_failed">連線 Gmail 失敗。請重試。</string>
     <string name="auth_err_calendar_failed">連線日曆失敗。請重試。</string>
     <string name="auth_err_sign_in_failed">登入失敗</string>

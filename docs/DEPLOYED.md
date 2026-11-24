@@ -3,6 +3,16 @@
 Newest first. Parity rule: whatever runs in production is on `main` (tree compared for the deployed paths).
 
 
+## 2026-11-23 Android 12.13.1 (53) on Google Play production, 20% staged
+
+- Play production track read back after commit: 12.13.1 (53) inProgress at userFraction 0.2, 12.13.0 (52) completed. Not raised above 20%.
+- Built from `main` `071ff3f` (merge of #92 on top of #89 and #90); tag `play/12.13.1-53`. Tree identical to `origin/main`.
+- AAB sha256 `bdbb161eea4b73c0a6189cff492df09e6b78593a0608b42ec0b8fcaaf7154a2c`, signed with the upload key (`jarsigner -verify` ok), manifest versionName 12.13.1. Checks run: `:app:testDebugUnitTest` (179 tests, 0 failures) and `:app:bundleRelease` exit 0.
+- Device check (Pixel 9 Pro, side-by-side `.dev` debug build of the same tree, per-app language, system language untouched): zh-TW and zh-HK show Traditional characters (zh-TW 信箱 / 電臺, zh-HK 郵箱 / 電台), zh-CN still Simplified, es and en unaffected; home, profile, settings, discover and the radio player checked; no FATAL or ANR in logcat. The release AAB itself was not installed.
+- Contents: Traditional Chinese (zh-TW, zh-HK, script fallback `b+zh+Hant`) for the app and its language picker (#89, #90). Server side already live as backend v53.
+- Rollback: halt the rollout in Play Console (Production > Halt rollout).
+
+
 ## 2026-11-24 backend v53 (ai-radio-backend on Fly): Traditional Chinese server text (#89, #90)
 
 - Release: Fly v53 (previous v52, image `registry.fly.io/ai-radio-backend:deployment-01M853983BNSNXZJJGSGCC83AY`), image `registry.fly.io/ai-radio-backend:deployment-01M85HM2DJ09Y0RQBKJV79DE0C`, `flyctl deploy --remote-only` from a clean detached worktree at `origin/main` `5e0af90` (#89 and #90); the `ai-radio-backend/` tree `a62f929` equals `origin/main`. No episode generation was running (last job finished 01:01 UTC, deploy 01:10 UTC; invariant sweep clean). The radio stream runs on Hetzner and was not touched. No secret was set or changed; no new env var.

@@ -17,6 +17,7 @@ from collections import OrderedDict
 from fastapi import APIRouter, Request
 from fastapi.responses import JSONResponse
 
+from pii import redact
 from queue_manager import QueueManager
 from retell_handler import extract_topic_from_user_messages, validate_topic_request
 
@@ -120,8 +121,8 @@ async def calldesk_webhook(request: Request):
         valid, reason = validate_topic_request(topic)
         if valid:
             position = await _queue_manager.add_listener_request(topic, "")
-            logger.info(f"Topic request queued: '{topic}' pos={position} via=calldesk")
+            logger.info(f"Topic request queued: '{redact(topic)}' pos={position} via=calldesk")
         else:
-            logger.info(f"Topic request rejected ({reason}): '{topic}'")
+            logger.info(f"Topic request rejected ({reason}): '{redact(topic)}'")
 
     return {"success": True}

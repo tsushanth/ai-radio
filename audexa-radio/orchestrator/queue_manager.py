@@ -10,10 +10,14 @@ import json
 import logging
 import os
 import time
+import uuid
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Optional
+
+import request_log
+from pii import public_topic_name, redact
 
 logger = logging.getLogger(__name__)
 
@@ -22,6 +26,7 @@ logger = logging.getLogger(__name__)
 class ListenerRequest:
     topic: str
     caller_phone: str = ""
+    request_id: str = field(default_factory=lambda: uuid.uuid4().hex[:12])
     requested_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
 
 
@@ -54,7 +59,8 @@ class QueueManager:
             request = ListenerRequest(topic=topic, caller_phone=caller_phone)
             self._request_queue.append(request)
             position = len(self._request_queue) - 1
-            logger.info(f"Listener request queued at position {position}: '{topic}'")
+            request_log.record("accepted", request.request_id)
+            logger.info(f"Listener request {request.request_id} queued at position {position}: '{redact(topic)}'")
             return position
 
     async def pop_listener_request(self) -> Optional[ListenerRequest]:
@@ -96,7 +102,7 @@ class QueueManager:
         meta = {
             "segment_type": segment_type,
             "priority": priority,
-            "topic_name": topic_name,
+            "topic_name": public_topic_name(topic_name),
             "created_at": datetime.now(timezone.utc).isoformat(),
             "size_bytes": len(audio_bytes),
         }

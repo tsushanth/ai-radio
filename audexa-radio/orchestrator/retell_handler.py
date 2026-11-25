@@ -14,6 +14,7 @@ import time
 from fastapi import APIRouter, Request
 from fastapi.responses import JSONResponse
 
+from pii import contains_personal_info, redact
 from queue_manager import QueueManager
 
 logger = logging.getLogger(__name__)
@@ -98,12 +99,16 @@ def validate_topic_request(topic: str) -> tuple[bool, str]:
     if len(cleaned) > 200:
         return False, "too_long"
 
+    # Every listener sees and hears the topic: no contact details.
+    if contains_personal_info(cleaned):
+        return False, "personal_info"
+
     topic_lower = cleaned.lower()
 
     # Block explicit/harmful content
     for kw in _BLOCKED_KEYWORDS:
         if kw in topic_lower:
-            logger.warning(f"Blocked topic request (inappropriate): '{cleaned}'")
+            logger.warning(f"Blocked topic request (inappropriate): '{redact(cleaned)}'")
             return False, "inappropriate"
 
     # Reject mostly non-alphabetic input (gibberish, random chars)
@@ -152,9 +157,9 @@ async def retell_webhook(request: Request):
                 valid, reason = validate_topic_request(topic)
                 if valid:
                     position = await _queue_manager.add_listener_request(topic, caller_phone)
-                    logger.info(f"Topic request queued: '{topic}' at position {position}")
+                    logger.info(f"Topic request queued: '{redact(topic)}' at position {position}")
                 else:
-                    logger.info(f"Topic request rejected ({reason}): '{topic}'")
+                    logger.info(f"Topic request rejected ({reason}): '{redact(topic)}'")
             else:
                 logger.info("No topic request found in transcript")
 

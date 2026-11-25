@@ -18,6 +18,7 @@ import { requireOperatorSecret, secretMatches, bearerToken } from '../lib/shared
 import { GenerateGuard, callerKey } from '../lib/generateGuard';
 import { llmBudget, isBudgetExceeded } from '../lib/llmBudget';
 import { optionalUser, ownerForNewRow } from '../lib/user-auth';
+import { containsContactDetails } from '../lib/contact-details';
 import { tokenVerifier } from '../lib/user-auth-runtime';
 
 const router = Router();
@@ -120,6 +121,10 @@ router.post('/suggest', suggestIpLimiter, async (req: Request, res: Response) =>
     }
     if (description !== undefined && description !== null && (typeof description !== 'string' || description.trim().length > SUGGEST_DESC_MAX)) {
       res.status(400).json({ success: false, error: `description must be ${SUGGEST_DESC_MAX} characters or fewer` });
+      return;
+    }
+    if (containsContactDetails(name) || (typeof description === 'string' && containsContactDetails(description))) {
+      res.status(400).json({ success: false, error: 'Please leave email addresses and phone numbers out of your suggestion.' });
       return;
     }
     const lang = typeof language === 'string' && /^[a-z]{2,3}(?![a-z])/i.test(language) ? language.match(/^[a-z]{2,3}/i)![0].toLowerCase() : 'en'; // fil must not become fi (Finnish)

@@ -318,3 +318,13 @@ test('a wave 3 language that is off cannot be reached on any route: generate, ep
   });
   assert.equal(gen.calls.length, 0);
 });
+
+test('GET episode says topicOffered false only for a topic that is not made in that new language', async () => {
+  await on('el');
+  await withServer(async (call) => {
+    const refused = await call('GET', '/topics/us-politics/episode?lang=el');
+    assert.equal(refused.status, 200); assert.equal(refused.json.data.topicOffered, false); assert.equal(refused.json.data.episode.status, 'not_generated');
+    assert.equal((await call('GET', '/topics/world-update/episode?lang=el')).json.data.topicOffered, undefined);
+    assert.equal((await call('GET', '/topics/us-politics/episode?lang=en')).json.data.topicOffered, undefined);
+  });
+});

@@ -16,16 +16,18 @@ test('topic list in a new language: empty while off; only the 12 launch topics w
   const store = new MemoryControlStore(NEW_LANGUAGES.map((l) => l.code));
   languageControls.useStore(store);
   const all = [...LAUNCH_TOPICS.map((t) => t.id), 'us-politics', 'coding-dev', 'startups-vc'].map((id) => ({ id, name: id, category: id === 'us-politics' ? 'news' : 'technology', languages: ['all'] }));
-  (topicsService as any).getTopicsList = async (lang: string) => ({ topics: all, categories: [{ id: 'technology', name: 'Technology', count: all.length }, { id: 'news', name: 'News', count: 1 }], _lang: lang });
+  // sports-roundup is tagged for English only in the database; it is still a launch topic and must be listed.
+  (topicsService as any).getAllActiveTopics = async () => all.map((t) => (t.id === 'sports-roundup' ? { ...t, languages: ['en'] } : t));
 
   assert.deepEqual(await topicPodcastGenerator.getTopicsList('cs'), { topics: [], categories: [] });
   await languageControls.setFlag('cs', { enabled: true }, 't');
   const cs = await topicPodcastGenerator.getTopicsList('cs');
   assert.equal(cs.topics.length, 12);
   assert.ok(!cs.topics.some((t) => ['us-politics', 'coding-dev', 'startups-vc'].includes(t.id)));
+  assert.ok(cs.topics.some((t) => t.id === 'sports-roundup'));
   assert.equal(cs.categories.reduce((n, c) => n + c.count, 0), 12);
   assert.equal((await topicPodcastGenerator.getTopicsList('en')).topics.length, all.length);
-  assert.equal((await topicPodcastGenerator.getTopicsList('de')).topics.length, all.length);
+  assert.equal((await topicPodcastGenerator.getTopicsList('de')).topics.length, all.length - 1); // the English-only row
 });
 
 test('episode title date follows the language locale for every language (English only for en)', async () => {

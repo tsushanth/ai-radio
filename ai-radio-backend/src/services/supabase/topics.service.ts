@@ -67,8 +67,12 @@ class TopicsService {
    * Get topics list response (matching the TopicListResponse shape used by routes).
    * Mirrors the logic previously in TopicPodcastGenerator.getTopicsList().
    */
-  async getTopicsList(language: string = 'en'): Promise<TopicListResponse> {
-    const activeTopics = await this.getTopics(language);
+  async getTopicsList(language: string = 'en', offered?: (topicId: string) => boolean): Promise<TopicListResponse> {
+    // With `offered`, the caller's own list decides what is available (the additional podcast languages), not the rows' language
+    // tags: a launch topic tagged for English only was generatable in those languages but never listed.
+    const activeTopics = offered
+      ? (await this.getTopics()).filter(t => offered(t.id)).map(t => ({ ...t, languages: ['all'] }))
+      : await this.getTopics(language);
 
     // Apply localized names/descriptions (row value, then the built-in translation table, then the English base text)
     const localizedTopics = activeTopics.map(topic => ({

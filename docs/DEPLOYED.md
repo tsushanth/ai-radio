@@ -3,6 +3,17 @@
 Newest first. Parity rule: whatever runs in production is on `main` (tree compared for the deployed paths).
 
 
+## 2026-11-25 Android 12.13.2 (54) on Google Play production, 20% staged
+
+- Play production track read back after commit: 12.13.2 (54) inProgress at userFraction 0.2, 12.13.1 (53) completed. Beta, alpha and internal moved to 54 completed (they held 53). Uploaded with the Play edit API. Not raised above 20%.
+- Built from `main` `1f15027` (#98, version bump only on top of `8a6d6c3`); tag `play/12.13.2-54`. Built in a clean detached worktree of exactly that commit; the `paywallkit`, `ratingkit` and `crosspromokit` library modules come from their local checkouts, as before.
+- AAB sha256 `a6fa9d19706508858619754493564223ce5ee40813748847b32cb08776b41239`, signed with the upload key (`jarsigner -verify` ok), manifest 12.13.2 (54), targetSdk 36, Play Billing 8.3.0, no permission added compared with the Play-generated APK of 53.
+- Release note (en-US): "The topic list now updates when you change the podcast language, and topics a language does not offer no longer show Generate. Notification settings no longer mention scheduled briefs."
+- Contents: #96 (reload topics on a podcast language change; no Generate for a topic the language does not offer; fresh Google token before the Daily Brief; no scheduled-brief wording in notification settings).
+- Checks: `:app:testDebugUnitTest` 181 tests, 0 failures; `:app:bundleRelease`. `:app:lintDebug` reports 1 fatal and 11 errors, all in files unchanged since 12.13.1: `SpecifyForegroundServiceType` in `KokoroDownloadWorker.kt` (the merged manifest declares no dataSync foreground service type, so the offline voice download probably crashes on Android 14+ if that path is reachable; not reproduced), `UnsafeOptInUsageError` in `AudioPlaybackService.kt`, `FlowOperatorInvokedInComposition` in `MainActivity.kt`.
+- NOT verified: any device run. The Gmail token refresh for the Daily Brief has never run against a real linked account.
+- Rollback: halt the rollout; 12.13.1 (53) stays completed. Promotion to 100% needs a 24-48 h crash and ANR review first.
+
 ## 2026-11-25 Database: row-level security hardening (Supabase `lxtuvvsrtpoqgikbpasm`)
 
 - Applied to production before this was committed, as migration `018_close_open_policies` (`ai-radio-backend/supabase/migrations/018_close_open_policies.sql`). No deploy, no data change, no secret change.

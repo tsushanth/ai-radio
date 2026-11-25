@@ -3,6 +3,27 @@
 Newest first. Parity rule: whatever runs in production is on `main` (tree compared for the deployed paths).
 
 
+## 2026-11-25 radio v14 (audexa-radio-fly): no contact details in the public feed; upcoming plays from Liquidsoap (#94)
+
+- Release: Fly v14, image `registry.fly.io/audexa-radio-fly:deployment-01M8A01QDW8QB5BCNAE8ETV7K6`, `flyctl deploy . -c fly/fly.toml --dockerfile fly/Dockerfile -a audexa-radio-fly --remote-only --ha=false` from `audexa-radio/` of a clean worktree at `origin/main` `f84e834`; the `audexa-radio/` tree `66d4342` equals `origin/main`. Before the deploy the live files matched the previous `main` byte for byte, there were 0 listeners and no queued request. No secret was set or changed.
+- Data change (18:29 UTC, before the deploy): one listener-request segment whose topic was an email address was published by `/api/status` and `/api/upcoming-plays`. Its two files were moved from `/data/queue/ready/` to `/data/quarantine/pii-2026-11-25/`: segment id `0_1795592289945_listener_request` (`.mp3`, `.json`). Reverse by moving them back. The ready directory would have expired them after 12 h; nothing expires the quarantine copy, so delete it once it is not needed.
+- Verified live: speech on air, `now_playing` names the topic, `/api/upcoming-plays` lists only queued segments with times about one segment apart, a request containing an address answers `personal_info` and neither access log keeps the query string, `/api/request-health` answers.
+- Old Android builds (versionCode 40 and lower) call `178.156.192.31:8081`, a server deleted on 2026-11-07. Nothing here reaches them; only an app update does.
+- Rollback: `flyctl deploy -a audexa-radio-fly --image registry.fly.io/audexa-radio-fly:deployment-01M796529PQV6P0SD6TY73DXCW` (v13).
+
+
+## 2026-11-25 backend v54 (ai-radio-backend): all launch topics listed, topicOffered flag, token cache, suggestion check (#95)
+
+- Release: Fly v54, image `registry.fly.io/ai-radio-backend:deployment-01M8A0AMW2QE70P3ZTKNNYM2Y3`, `flyctl deploy --remote-only` from a clean worktree at `origin/main` `daf3dea`; the `ai-radio-backend/` tree `c36799a` equals `origin/main`. No episode, ask, batch or suggestion job was in flight. No secret was set or changed.
+- Verified live: `/health` 200; `GET /api/topics?lang=ja` and `el` list 12 topics (sports-roundup included); `GET /api/topics/us-politics/episode?lang=el` has `topicOffered: false`; a suggestion containing an address answers 400.
+- Rollback: `flyctl releases rollback 53 -a ai-radio-backend`.
+
+
+## Android: merged, NOT released (next release: 12.13.2, versionCode 54)
+
+- Reload topics on a podcast language change; no Generate for a topic the language does not offer; fresh Google token before the Daily Brief; no scheduled-brief promise in notification settings. Unit tests 181 passed. Not checked on a device: in particular the Gmail token refresh has never run against a real linked account.
+
+
 ## 2026-11-23 Android 12.13.1 (53) on Google Play production, 20% staged
 
 - Play production track read back after commit: 12.13.1 (53) inProgress at userFraction 0.2, 12.13.0 (52) completed. Not raised above 20%.

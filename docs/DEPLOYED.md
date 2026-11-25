@@ -3,6 +3,14 @@
 Newest first. Parity rule: whatever runs in production is on `main` (tree compared for the deployed paths).
 
 
+## 2026-11-25 Database: row-level security hardening (Supabase `lxtuvvsrtpoqgikbpasm`)
+
+- Applied to production before this was committed, as migration `018_close_open_policies` (`ai-radio-backend/supabase/migrations/018_close_open_policies.sql`). No deploy, no data change, no secret change.
+- Five server-only tables lost every client grant and their over-broad policy; client write grants removed from four server-written tables; five database functions are now callable by the server only.
+- Verified with role checks in transactions that were rolled back: client roles refused; public catalogue reads and server access still pass.
+- Reverse: `ai-radio-backend/supabase/rollbacks/018_close_open_policies_down.sql` (restore only the single object that is needed).
+
+
 ## 2026-11-25 radio v14 (audexa-radio-fly): no contact details in the public feed; upcoming plays from Liquidsoap (#94)
 
 - Release: Fly v14, image `registry.fly.io/audexa-radio-fly:deployment-01M8A01QDW8QB5BCNAE8ETV7K6`, `flyctl deploy . -c fly/fly.toml --dockerfile fly/Dockerfile -a audexa-radio-fly --remote-only --ha=false` from `audexa-radio/` of a clean worktree at `origin/main` `f84e834`; the `audexa-radio/` tree `66d4342` equals `origin/main`. Before the deploy the live files matched the previous `main` byte for byte, there were 0 listeners and no queued request. No secret was set or changed.

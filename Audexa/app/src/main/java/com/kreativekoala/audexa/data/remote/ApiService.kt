@@ -267,7 +267,9 @@ data class TopicEpisodeData(
     val episode: TopicEpisode,
     val isNew: Boolean? = null,
     val message: String? = null,
-    val ads: List<AdSegment>? = null
+    val ads: List<AdSegment>? = null,
+    /** False when the server does not make this topic in the requested language. Absent means it does. */
+    val topicOffered: Boolean? = null
 )
 
 @Serializable

@@ -211,7 +211,15 @@ fun TopicDetailScreen(
             }
 
             // Generate/Regenerate Button
-            if (uiState.currentEpisode == null && !uiState.isLoading && !uiState.isGenerating) {
+            if (uiState.currentEpisode == null && !uiState.topicOffered && !uiState.isLoading) {
+                Text(
+                    text = stringResource(R.string.error_language_unavailable),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    textAlign = androidx.compose.ui.text.style.TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth()
+                )
+            } else if (uiState.currentEpisode == null && !uiState.isLoading && !uiState.isGenerating) {
                 Button(
                     onClick = { viewModel.generateEpisode() },
                     modifier = Modifier.fillMaxWidth(),

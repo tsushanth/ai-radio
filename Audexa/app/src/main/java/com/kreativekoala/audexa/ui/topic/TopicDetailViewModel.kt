@@ -56,7 +56,9 @@ data class TopicDetailUiState(
     // Player error for the episode on screen (network trouble), shown with a Retry button
     val playbackError: com.kreativekoala.audexa.service.PlaybackError? = null,
     // One-line, non-error explanation (for example that generation switched to a supported language)
-    val languageNotice: String? = null
+    val languageNotice: String? = null,
+    // False when the server does not make this topic in the selected language: no Generate is offered
+    val topicOffered: Boolean = true
 )
 
 @HiltViewModel
@@ -209,7 +211,8 @@ class TopicDetailViewModel @Inject constructor(
             isPlaying = false,
             ads = emptyList(),
             isPlayingAd = false,
-            currentAd = null
+            currentAd = null,
+            topicOffered = true
         )
         adInsertionPoints = emptyList()
         nextAdIndex = 0
@@ -273,6 +276,7 @@ class TopicDetailViewModel @Inject constructor(
 
         topicRepository.getTopicEpisode(topic.id, language)
             .onSuccess { response ->
+                _uiState.value = _uiState.value.copy(topicOffered = response.data?.topicOffered != false)
                 val episode = response.data?.episode
                 var ads = response.data?.ads ?: emptyList()
 
@@ -545,6 +549,13 @@ class TopicDetailViewModel @Inject constructor(
 
     fun generateEpisode() {
         val topic = _uiState.value.topic ?: return
+        if (!_uiState.value.topicOffered) {
+            // The play button also lands here: say why instead of sending a request the server refuses.
+            _uiState.value = _uiState.value.copy(
+                error = appContext.getString(com.kreativekoala.audexa.R.string.error_language_unavailable)
+            )
+            return
+        }
         val language = generationLanguage()
 
         viewModelScope.launch {
@@ -648,7 +659,8 @@ class TopicDetailViewModel @Inject constructor(
             ads = emptyList(),
             isLoading = true,
             error = null,
-            languageNotice = null
+            languageNotice = null,
+            topicOffered = true
         )
         adInsertionPoints = emptyList()
         nextAdIndex = 0

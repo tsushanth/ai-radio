@@ -36,7 +36,8 @@ class HomeViewModel @Inject constructor(
     private val topicRepository: TopicRepository,
     private val preferencesManager: PreferencesManager,
     private val audioManager: AudioManager,
-    private val radioReminderManager: com.kreativekoala.audexa.service.RadioReminderManager
+    private val radioReminderManager: com.kreativekoala.audexa.service.RadioReminderManager,
+    private val authRepository: com.kreativekoala.audexa.data.repository.AuthRepository
 ) : ViewModel() {
 
     companion object {
@@ -147,6 +148,21 @@ class HomeViewModel @Inject constructor(
         loadCachedEpisode()
         loadData()
         observeAudioState()
+        reloadTopicsOnLanguageChange()
+    }
+
+    /**
+     * The topic list depends on the language (the additional languages offer only some topics). Without this the list from the
+     * previous language stayed on screen until the app restarted, and generating one of its other topics always failed.
+     */
+    private fun reloadTopicsOnLanguageChange() {
+        viewModelScope.launch {
+            preferencesManager.preferredLanguage
+                .map { com.kreativekoala.audexa.util.TextLanguageSource.forRequest(it) }
+                .distinctUntilChanged()
+                .drop(1) // the current language is loaded by init
+                .collect { loadData() }
+        }
     }
 
     /**
@@ -463,6 +479,9 @@ class HomeViewModel @Inject constructor(
             }
 
             _dailyBriefState.value = DailyBriefState.Generating(0)
+
+            // The server's copy of the Google access token lasts an hour: send a fresh one first.
+            authRepository.refreshLinkedGoogleToken()
 
             // Get user's preferred language from settings
             val language = preferencesManager.preferredLanguage.first()

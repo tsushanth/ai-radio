@@ -1,6 +1,7 @@
 package com.kreativekoala.audexa.data.repository
 
 import com.kreativekoala.audexa.R
+import android.accounts.Account
 import android.content.Context
 import android.util.Log
 import com.google.android.gms.auth.GoogleAuthUtil
@@ -14,6 +15,7 @@ import com.kreativekoala.audexa.data.local.PreferencesManager
 import com.kreativekoala.audexa.data.model.User
 import com.kreativekoala.audexa.data.remote.ApiService
 import com.kreativekoala.audexa.data.remote.LinkedAccountOwner
+import com.kreativekoala.audexa.data.remote.LinkedGoogleToken
 import com.kreativekoala.audexa.data.remote.SessionTokenRules
 import dagger.hilt.android.qualifiers.ApplicationContext
 import io.github.jan.supabase.SupabaseClient
@@ -37,9 +39,9 @@ class AuthRepository @Inject constructor(
     companion object {
         private const val TAG = "AuthRepository"
         // Using gmail.modify because that's what the app is verified for in Google Cloud Console
-        private const val GMAIL_MODIFY_SCOPE = "https://www.googleapis.com/auth/gmail.modify"
+        private const val GMAIL_MODIFY_SCOPE = LinkedGoogleToken.GMAIL_MODIFY_SCOPE
         // Calendar read-only scope for Daily Brief
-        private const val CALENDAR_READONLY_SCOPE = "https://www.googleapis.com/auth/calendar.readonly"
+        private const val CALENDAR_READONLY_SCOPE = LinkedGoogleToken.CALENDAR_READONLY_SCOPE
     }
 
     // Basic sign-in client - only requests email and profile
@@ -187,6 +189,46 @@ class AuthRepository @Inject constructor(
         }
 
         Log.d(TAG, "Successfully linked Gmail account")
+    }
+
+    /**
+     * The server only holds the one-hour access token this app sends (no refresh token), so the Daily Brief worked for an hour
+     * after linking and then asked to link again. Call this before generating: access is already granted, so Play services issues
+     * a fresh token without any screen. Never throws: on failure the generation goes ahead as before and the server answers with
+     * its "link again" message.
+     */
+    suspend fun refreshLinkedGoogleToken() {
+        try {
+            if (!preferencesManager.hasLinkedGoogle.first()) return
+            val linked = preferencesManager.linkedEmail.first()?.takeIf { it.isNotBlank() } ?: return
+            val emailOn = preferencesManager.emailEnabled.first()
+            val calendarOn = preferencesManager.calendarEnabled.first()
+            val account = Account(linked, "com.google")
+            val token = withContext(Dispatchers.IO) {
+                LinkedGoogleToken.candidates(emailOn, calendarOn).firstNotNullOfOrNull { scope ->
+                    runCatching {
+                        // A cached token may be minutes from expiry and the server assumes a full hour: drop it first.
+                        GoogleAuthUtil.clearToken(context, GoogleAuthUtil.getToken(context, account, scope))
+                        GoogleAuthUtil.getToken(context, account, scope)
+                    }.onFailure { Log.w(TAG, "No fresh Google token: ${it.javaClass.simpleName}") }.getOrNull()
+                }
+            } ?: return
+            apiService.linkAccount(
+                userId = LinkedAccountOwner.userIdFor(preferencesManager.userEmail.first(), linked),
+                request = com.kreativekoala.audexa.data.remote.LinkAccountRequest(
+                    provider = "google",
+                    email = linked,
+                    accessToken = token,
+                    refreshToken = "",
+                    emailEnabled = emailOn,
+                    calendarEnabled = calendarOn
+                )
+            )
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            Log.w(TAG, "Could not send a fresh Google token: ${e.javaClass.simpleName}")
+        }
     }
 
     /**

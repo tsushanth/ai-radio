@@ -13,10 +13,12 @@ import asyncio
 import logging
 import os
 import random
+import subprocess
 import telnetlib
 import time
 from contextlib import asynccontextmanager
 from pathlib import Path
+from typing import Optional
 
 import uvicorn
 from fastapi import FastAPI
@@ -32,7 +34,10 @@ from email_alerter import (
     seconds_since_last_generation,
 )
 import listener_sampler
+import liquidsoap_state
+from pii import public_topic_name, redact
 from queue_manager import QueueManager
+import request_log
 from retell_handler import router as retell_router
 from retell_handler import set_queue_manager
 from calldesk_handler import router as calldesk_router
@@ -198,7 +203,7 @@ def get_queue_name_for_language(lang: str) -> str:
 
 async def generate_and_queue_listener_request(request) -> bool:
     """Generate a segment for a listener request and add to ready queue."""
-    logger.info(f"Generating listener request: '{request.topic}'")
+    logger.info(f"Generating listener request: '{redact(request.topic)}'")
     try:
         # Listener requests are always in the primary language (English)
         lang = "en"
@@ -216,9 +221,11 @@ async def generate_and_queue_listener_request(request) -> bool:
         push_to_liquidsoap(filepath, queue_name=get_queue_name_for_language(lang))
         push_random_song()
         mark_generation_success()
+        request_log.record("generated", request.request_id)
         return True
     except Exception as e:
-        report_error(e, source="listener_request", context={"topic": request.topic})
+        request_log.record("failed", request.request_id)
+        report_error(e, source="listener_request", context={"topic": redact(request.topic)})
         return False
 
 
@@ -666,42 +673,91 @@ def get_liquidsoap_now_playing(lang: str = "en") -> dict:
         return {"source": "unknown", "remaining_seconds": 0}
 
 
+def _public_segment(seg: dict) -> dict:
+    return {**seg, "topic_name": public_topic_name(seg.get("topic_name", ""))}
+
+
+def read_play_state(lang: str) -> tuple[Optional[dict], list[dict]]:
+    """
+    (speech segment on air or None, speech segments still to play, in play order), as Liquidsoap reports them and safe
+    to publish. Empty when Liquidsoap cannot be asked: the ready directory also holds played segments, so it is no fallback.
+    """
+    if lang not in RADIO_LANGUAGES:
+        return None, []
+    try:
+        on_air, waiting = liquidsoap_state.play_state(config.liquidsoap_host, config.liquidsoap_port, lang)
+    except OSError as e:
+        logger.warning(f"Liquidsoap play state unavailable [{lang}]: {e}")
+        return None, []
+    by_name = {s["filename"]: s for s in queue.list_ready_segments()}
+    current = by_name.get(on_air)
+    return (
+        _public_segment(current) if current else None,
+        [_public_segment(by_name[n]) for n in waiting if n in by_name],
+    )
+
+
+def count_ready_for_language(lang: str) -> int:
+    """Segments on disk for a language (played ones included until they expire)."""
+    names = [s.get("topic_name", "") for s in queue.list_ready_segments()]
+    if lang == "en":
+        return sum(1 for n in names if not any(n.startswith(f"[{l}]") for l in RADIO_LANGUAGES if l != "en"))
+    return sum(1 for n in names if n.startswith(f"[{lang}]"))
+
+
+def _now_playing_with_segment(lang: str, current: Optional[dict]) -> dict:
+    now_playing = get_liquidsoap_now_playing(lang)
+    if current:
+        now_playing.update(
+            source="speech",
+            filename=current["filename"],
+            topic_name=current["topic_name"],
+            segment_type=current.get("segment_type", ""),
+        )
+        now_playing.pop("track", None)
+    elif "topic_name" in now_playing:
+        now_playing["topic_name"] = public_topic_name(now_playing["topic_name"])
+    return now_playing
+
+
 @app.get("/api/status")
 async def status(lang: str = "en"):
-    segments = queue.list_ready_segments()
-    now_playing = get_liquidsoap_now_playing(lang)
-
-    # Per-language queue info from Liquidsoap
-    try:
-        liq_queues = get_liquidsoap_queue_lengths()
-    except Exception:
-        liq_queues = {}
-
-    # Group ready segments by language tag
-    per_lang_segments = {l: [] for l in RADIO_LANGUAGES}
-    for seg in segments:
-        topic_name = seg.get("topic_name", "")
-        matched = False
-        for l in RADIO_LANGUAGES:
-            if topic_name.startswith(f"[{l}]"):
-                per_lang_segments[l].append(seg)
-                matched = True
-                break
-        if not matched:
-            per_lang_segments["en"].append(seg)
-
-    # Return only segments for the requested language
-    lang_segments = per_lang_segments.get(lang, [])
+    current, lang_segments = read_play_state(lang)
+    now_playing = _now_playing_with_segment(lang, current)
 
     return {
         "now_playing": now_playing,
         "ready_queue": lang_segments,
         "request_queue_depth": queue.get_request_queue_depth(),
-        "total_ready": len(lang_segments),
+        "total_ready": count_ready_for_language(lang),
         "buffer_max": config.max_buffer_segments,
         "language": lang,
         "supported_languages": RADIO_LANGUAGES,
     }
+
+
+# Assumed length of a segment whose file cannot be measured.
+SEGMENT_GAP_SECONDS = 420
+_segment_seconds_cache: dict[str, float] = {}
+
+
+def segment_seconds(seg: dict) -> float:
+    """Length of a queued segment (ffprobe, cached per file)."""
+    path = seg.get("filepath", "")
+    if path in _segment_seconds_cache:
+        return _segment_seconds_cache[path]
+    try:
+        out = subprocess.run(
+            ["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", path],
+            capture_output=True, text=True, timeout=5, check=True,
+        )
+        seconds = float(out.stdout.strip())
+    except (OSError, ValueError, subprocess.SubprocessError):
+        return SEGMENT_GAP_SECONDS
+    if len(_segment_seconds_cache) > 500:
+        _segment_seconds_cache.clear()
+    _segment_seconds_cache[path] = seconds
+    return seconds
 
 
 def _listener_history_path() -> str:
@@ -717,44 +773,27 @@ async def listener_history(hours: float = 24):
 
 @app.get("/api/upcoming-plays")
 async def upcoming_plays(lang: str = "en"):
-    """Predicted play times for segments already in the ready queue.
+    """Predicted play times for the segments Liquidsoap still has to play.
 
     Powers client-side "your bookmarked topic is about to play" local
     notifications: app pulls this, matches against the user's bookmarks,
     schedules AlarmManager / UNUserNotificationCenter alarms.
 
-    Time model: now_playing's remaining_seconds + Nth-queued * 420s
-    (~4 min speech segment + ~3 min music interleave). Coarse — drift up
-    to ~minutes as the queue churns or listener requests preempt. Clients
-    should re-poll on app foreground.
-
-    Only returns segments currently in the ready queue (next ~30-60 min);
-    does not predict topics that haven't been enqueued yet.
+    Time model: the current track's remaining seconds, plus the length of each
+    segment queued in front (waiting segments play back to back). Coarse: a
+    jingle or a listener request can move it. Clients should re-poll on app
+    foreground. Segments already played are never listed.
     """
     from datetime import datetime, timedelta, timezone
 
     now = datetime.now(timezone.utc)
-    segments = queue.list_ready_segments()
-    now_playing = get_liquidsoap_now_playing(lang)
+    current, waiting = read_play_state(lang)
+    now_playing = _now_playing_with_segment(lang, current)
     remaining_seconds = float(now_playing.get("remaining_seconds") or 0)
 
-    # Filter to segments tagged for this language. The "en" branch keys off
-    # the absence of the bracket prefix — matches how reconcile + injector
-    # both label segments. Sort by filename (priority + timestamp) so the
-    # play order matches what Liquidsoap will see.
-    if lang == "en":
-        lang_segments = [s for s in segments if not s["topic_name"].startswith("[")]
-    else:
-        marker = f"[{lang}]"
-        lang_segments = [s for s in segments if s["topic_name"].startswith(marker)]
-    lang_segments.sort(key=lambda s: s.get("filename", ""))
-
-    # Each queued speech segment is followed by ~1 random song, so a topic
-    # at queue position N plays roughly (remaining + N * 420s) from now.
-    SEGMENT_GAP_SECONDS = 420
     upcoming = []
-    for i, seg in enumerate(lang_segments):
-        play_time = now + timedelta(seconds=remaining_seconds + i * SEGMENT_GAP_SECONDS)
+    offset = remaining_seconds
+    for i, seg in enumerate(waiting):
         raw_name = seg.get("topic_name", "")
         # Strip the [lang] prefix for non-EN before returning so clients
         # can match against their cached topic catalog directly.
@@ -764,9 +803,10 @@ async def upcoming_plays(lang: str = "en"):
         upcoming.append({
             "topic_name": display_name,
             "segment_type": seg.get("segment_type", ""),
-            "estimated_play_time": play_time.isoformat(),
+            "estimated_play_time": (now + timedelta(seconds=offset)).isoformat(),
             "queue_position": i,
         })
+        offset += segment_seconds(seg)
 
     return {
         "language": lang,
@@ -795,6 +835,13 @@ async def request_topic(topic: str, caller_phone: str = ""):
     }
 
 
+@app.get("/api/request-health")
+async def request_health(hours: float = 24):
+    """Counts of listener requests and their outcomes. No topic text."""
+    summary = await asyncio.to_thread(request_log.summary, max(0.0, min(hours, 24 * 30)) * 3600)
+    return {**summary, "pending_now": queue.get_request_queue_depth()}
+
+
 @app.get("/api/languages")
 async def languages():
     """List supported languages and their stream URLs."""
@@ -814,6 +861,26 @@ async def languages():
     }
 
 
+class _NoListenerTextInAccessLog(logging.Filter):
+    """The topic arrives in the query string; keep it (and anything personal in it) out of the access log."""
+
+    def filter(self, record: logging.LogRecord) -> bool:
+        args = record.args
+        if isinstance(args, tuple) and len(args) == 5 and str(args[2]).startswith("/api/request-topic"):
+            record.args = (args[0], args[1], "/api/request-topic", args[3], args[4])
+        return True
+
+
 if __name__ == "__main__":
     port = int(os.getenv("PORT", "8081"))
-    uvicorn.run(app, host="0.0.0.0", port=port)
+    from uvicorn.config import LOGGING_CONFIG
+
+    uvicorn_logging = {
+        **LOGGING_CONFIG,
+        "filters": {"no_listener_text": {"()": _NoListenerTextInAccessLog}},
+        "handlers": {
+            **LOGGING_CONFIG["handlers"],
+            "access": {**LOGGING_CONFIG["handlers"]["access"], "filters": ["no_listener_text"]},
+        },
+    }
+    uvicorn.run(app, host="0.0.0.0", port=port, log_config=uvicorn_logging)

@@ -4,7 +4,7 @@
  */
 
 import { onDemandLanguages, DailyCap } from '../services/tts/piper-languages';
-import { isNewLanguage } from '../services/languages/registry';
+import { isNewLanguage, isLaunchTopic } from '../services/languages/registry';
 import { localizeTopic } from '../services/languages/localized';
 import { languageControls, type Denied } from '../services/languages/controls';
 import { Router, Request, Response } from 'express';
@@ -18,6 +18,7 @@ import { requireOperatorSecret, secretMatches, bearerToken } from '../lib/shared
 import { GenerateGuard, callerKey } from '../lib/generateGuard';
 import { llmBudget, isBudgetExceeded } from '../lib/llmBudget';
 import { optionalUser, ownerForNewRow } from '../lib/user-auth';
+import { containsContactDetails } from '../lib/contact-details';
 import { tokenVerifier } from '../lib/user-auth-runtime';
 
 const router = Router();
@@ -120,6 +121,10 @@ router.post('/suggest', suggestIpLimiter, async (req: Request, res: Response) =>
     }
     if (description !== undefined && description !== null && (typeof description !== 'string' || description.trim().length > SUGGEST_DESC_MAX)) {
       res.status(400).json({ success: false, error: `description must be ${SUGGEST_DESC_MAX} characters or fewer` });
+      return;
+    }
+    if (containsContactDetails(name) || (typeof description === 'string' && containsContactDetails(description))) {
+      res.status(400).json({ success: false, error: 'Please leave email addresses and phone numbers out of your suggestion.' });
       return;
     }
     const lang = typeof language === 'string' && /^[a-z]{2,3}(?![a-z])/i.test(language) ? language.match(/^[a-z]{2,3}/i)![0].toLowerCase() : 'en'; // fil must not become fi (Finnish)
@@ -452,6 +457,9 @@ router.get('/:topicId/episode', async (req: Request, res: Response) => {
       return;
     }
 
+    // Additive: false tells the app not to offer "Generate" for a topic that is not made in this language.
+    const notOffered = isNewLanguage(language) && !isLaunchTopic(topicId) ? { topicOffered: false as const } : {};
+
     // Fetch-only: return existing episode, never trigger generation
     const today = new Date().toISOString().split('T')[0];
     const episode = await topicPodcastGenerator.getExistingEpisode(topicId, today, language);
@@ -477,6 +485,7 @@ router.get('/:topicId/episode', async (req: Request, res: Response) => {
           isNew: false,
           message: 'Today\'s episode has not been generated yet. It will be available shortly.',
           ads: [],
+          ...notOffered,
         },
       });
       return;
@@ -503,6 +512,7 @@ router.get('/:topicId/episode', async (req: Request, res: Response) => {
             ? 'Episode is currently being generated. Please check back in 30-60 seconds.'
             : `Generation failed: ${episode.error || 'Unknown error'}. Tap regenerate to try again.`,
         ads,
+        ...notOffered,
         ...(episode.status === 'generating' ? generatingHint(language, 'generating') : {}),
       },
     });

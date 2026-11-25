@@ -136,9 +136,10 @@ export class TokenManager {
       // First check in-memory cache
       let record = tokenStore.get(key);
 
-      // If not in memory, check database
-      if (!record && this.supabase) {
-        console.log(`   Not in memory, checking database...`);
+      // Check the database when there is nothing in memory, or only an expired token: the app may have linked a newer one
+      // through another machine.
+      if ((!record || this.isTokenExpired(record.expiresAt)) && this.supabase) {
+        console.log(`   No current token in memory, checking database...`);
 
         const { data, error } = await this.supabase
           .from('linked_accounts')

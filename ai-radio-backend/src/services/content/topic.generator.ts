@@ -686,12 +686,7 @@ Create an engaging ${topic.targetDurationMinutes}-minute podcast covering the mo
     if (isNewLanguage(podcastLanguage)) {
       // Additional languages: nothing is listed while the language is off, and only the 12 launch topics when it is on.
       if (!(await languageControls.isEnabled(podcastLanguage))) return { topics: [], categories: [] };
-      const full = await topicsService.getTopicsList(language);
-      const topics = full.topics.filter(t => isLaunchTopic(t.id));
-      const categories = full.categories
-        .map(c => ({ ...c, count: topics.filter(t => t.category === c.id).length }))
-        .filter(c => c.count > 0);
-      return { topics, categories };
+      return topicsService.getTopicsList(language, isLaunchTopic);
     }
     return topicsService.getTopicsList(language);
   }

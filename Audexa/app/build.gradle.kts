@@ -199,6 +199,7 @@ dependencies {
     // Language tests: real resource resolution per locale, and Compose screens rendered on the JVM.
     testImplementation("org.robolectric:robolectric:4.14.1")
     testImplementation("androidx.test:core:1.6.1")
+    testImplementation("androidx.work:work-testing:2.9.1")
     testImplementation(platform(libs.androidx.compose.bom))
     testImplementation("androidx.compose.ui:ui-test-junit4")
 

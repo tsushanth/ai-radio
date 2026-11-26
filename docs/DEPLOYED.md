@@ -3,6 +3,13 @@
 Newest first. Parity rule: whatever runs in production is on `main` (tree compared for the deployed paths).
 
 
+## Android: merged, NOT released (next release: 12.13.3, versionCode 55)
+
+- On-device voice download no longer crashes the app on Android 14+. 54 and earlier start a `dataSync` foreground service that the manifest does not declare, so turning the on-device voice on crashes the app, and it crashes again each time the pending download restarts. From Android 14 the download now runs as ordinary background work (no progress notification; in-app progress stays); Android 13 and older are unchanged. No new permission, no Play foreground-service declaration needed.
+- Checks: `:app:testDebugUnitTest` 183 tests, 0 failures; `:app:compileReleaseKotlin`; `:app:lintDebug` 0 fatal, 11 errors (10 media3 opt-in markers in `AudioPlaybackService.kt`, 1 `FlowOperatorInvokedInComposition` in `MainActivity.kt`; judged not to be runtime faults, unchanged).
+- Device (Pixel 9 Pro, API 37, side-by-side debug build, download started by a temporary harness, not through the settings screen): before the fix, `IllegalArgumentException` from `SystemForegroundService` and a repeat crash on restart; the fixed build installed over it finished the pending download (86,033,585 bytes) with no crash. The release AAB was not built or installed.
+
+
 ## 2026-11-25 Android 12.13.2 (54) on Google Play production, 20% staged
 
 - Play production track read back after commit: 12.13.2 (54) inProgress at userFraction 0.2, 12.13.1 (53) completed. Beta, alpha and internal moved to 54 completed (they held 53). Uploaded with the Play edit API. Not raised above 20%.

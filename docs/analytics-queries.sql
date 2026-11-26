@@ -1,15 +1,16 @@
--- Audexa product analytics: ready-to-run queries over public.analytics_events.
+-- Audexa product analytics: ready-to-run queries over public.analytics_events (summaries read the view analytics_events_real).
 -- Run in the Supabase SQL editor (service role). Days are UTC. Time ranges are the last 30 days unless stated.
 -- Only meaningful after migration 011 is applied and ANALYTICS_ENABLED is on. Numbers count installs (random per-install ids),
 -- not people: a reinstall, a cleared browser or an opt-out reset creates a new id.
 --
--- Bots / the owner's own devices are not filtered out. If you want to exclude your test installs, add
+-- Summaries read public.analytics_events_real (migration 019): installs that ever sent test_device: true are left out.
+-- Testers whose client does not send the flag (every Android release up to 12.13.2) are still counted. To exclude more installs, add
 --   AND install_id NOT IN (...)
--- to the queries (the id is shown in the app only in debug builds).
+-- To see what is being left out: SELECT count(DISTINCT install_id) FROM public.analytics_events WHERE is_test;
 
 -- 1. Daily active installs, by platform -----------------------------------------------------------------------------------
 SELECT day, platform, count(DISTINCT install_id) AS active_installs
-FROM public.analytics_events
+FROM public.analytics_events_real
 WHERE name = 'app_open' AND day >= current_date - 30
 GROUP BY day, platform
 ORDER BY day DESC, platform;
@@ -18,12 +19,12 @@ ORDER BY day DESC, platform;
 -- "Reached first play" = a first_play_start event from the same install on or after the first app_open day.
 WITH first_open AS (
   SELECT install_id, platform, min(day) AS first_day
-  FROM public.analytics_events
+  FROM public.analytics_events_real
   WHERE name = 'app_open'
   GROUP BY install_id, platform
 ), first_play AS (
   SELECT install_id, min(day) AS play_day
-  FROM public.analytics_events
+  FROM public.analytics_events_real
   WHERE name = 'first_play_start'
   GROUP BY install_id
 )
@@ -47,7 +48,7 @@ SELECT day,
        props->>'language' AS language,
        round(sum((props->>'seconds')::int) / 60.0, 1) AS listener_minutes,
        count(DISTINCT install_id)                     AS listening_installs
-FROM public.analytics_events
+FROM public.analytics_events_real
 WHERE name = 'listen_progress' AND day >= current_date - 30
 GROUP BY day, source, language
 ORDER BY day DESC, listener_minutes DESC;
@@ -55,7 +56,7 @@ ORDER BY day DESC, listener_minutes DESC;
 -- 3b. Average listening per active listening install per day (minutes) -------------------------------------------------------
 SELECT day,
        round(sum((props->>'seconds')::int) / 60.0 / nullif(count(DISTINCT install_id), 0), 1) AS avg_minutes_per_listening_install
-FROM public.analytics_events
+FROM public.analytics_events_real
 WHERE name = 'listen_progress' AND day >= current_date - 30
 GROUP BY day
 ORDER BY day DESC;
@@ -65,11 +66,11 @@ ORDER BY day DESC;
 -- reached D1 / D7 are included: read only cohorts that are at least 1 / 7 days old.
 WITH first_open AS (
   SELECT install_id, min(day) AS first_day
-  FROM public.analytics_events
+  FROM public.analytics_events_real
   WHERE name = 'app_open'
   GROUP BY install_id
 ), opens AS (
-  SELECT DISTINCT install_id, day FROM public.analytics_events WHERE name = 'app_open'
+  SELECT DISTINCT install_id, day FROM public.analytics_events_real WHERE name = 'app_open'
 )
 SELECT f.first_day AS cohort_day,
        count(*)    AS installs,
@@ -91,7 +92,7 @@ SELECT t.topic_id,
        coalesce(l.listening_installs, 0) AS listening_installs
 FROM (
   SELECT props->>'topic_id' AS topic_id, count(*) AS opens, count(DISTINCT install_id) AS open_installs
-  FROM public.analytics_events
+  FROM public.analytics_events_real
   WHERE name = 'topic_open' AND day >= current_date - 30
   GROUP BY 1
 ) t
@@ -99,7 +100,7 @@ LEFT JOIN (
   SELECT props->>'topic_id' AS topic_id,
          round(sum((props->>'seconds')::int) / 60.0, 1) AS listener_minutes,
          count(DISTINCT install_id) AS listening_installs
-  FROM public.analytics_events
+  FROM public.analytics_events_real
   WHERE name = 'listen_progress' AND props ? 'topic_id' AND day >= current_date - 30
   GROUP BY 1
 ) l USING (topic_id)
@@ -108,13 +109,13 @@ LIMIT 25;
 
 -- 6. Languages: current spread and switches ----------------------------------------------------------------------------------
 SELECT props->>'language' AS language, count(DISTINCT install_id) AS installs, round(sum((props->>'seconds')::int) / 60.0, 1) AS listener_minutes
-FROM public.analytics_events
+FROM public.analytics_events_real
 WHERE name = 'listen_progress' AND day >= current_date - 30
 GROUP BY 1
 ORDER BY listener_minutes DESC;
 
 SELECT props->>'from' AS from_language, props->>'language' AS to_language, count(*) AS switches
-FROM public.analytics_events
+FROM public.analytics_events_real
 WHERE name = 'language_change' AND day >= current_date - 30
 GROUP BY 1, 2
 ORDER BY switches DESC;
@@ -127,7 +128,7 @@ SELECT day,
        count(DISTINCT install_id) FILTER (WHERE name = 'topic_generate_requested') AS installs_generating,
        count(*) FILTER (WHERE name = 'topic_suggest_submitted')  AS suggestions_submitted,
        count(DISTINCT install_id) FILTER (WHERE name = 'topic_suggest_submitted') AS installs_suggesting
-FROM public.analytics_events
+FROM public.analytics_events_real
 WHERE name IN ('topic_generate_requested','topic_generate_succeeded','topic_generate_failed','topic_suggest_submitted')
   AND day >= current_date - 30
 GROUP BY day
@@ -135,7 +136,7 @@ ORDER BY day DESC;
 
 -- 7b. Share taps and shown errors -----------------------------------------------------------------------------------------------
 SELECT name, coalesce(props->>'source', props->>'code') AS detail, count(*) AS n, count(DISTINCT install_id) AS installs
-FROM public.analytics_events
+FROM public.analytics_events_real
 WHERE name IN ('share_tap', 'error_shown') AND day >= current_date - 30
 GROUP BY 1, 2
 ORDER BY n DESC;
@@ -143,7 +144,7 @@ ORDER BY n DESC;
 -- 8. Health of the pipeline itself ----------------------------------------------------------------------------------------------
 -- Rows per day and distinct installs: a sudden drop to zero means the kill switch is off, the migration is missing or clients are blocked.
 SELECT received_at::date AS received_day, count(*) AS rows, count(DISTINCT install_id) AS installs, max(received_at) AS last_received
-FROM public.analytics_events
+FROM public.analytics_events_real
 WHERE received_at >= now() - interval '14 days'
 GROUP BY 1
 ORDER BY 1 DESC;

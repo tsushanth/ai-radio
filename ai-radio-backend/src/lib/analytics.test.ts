@@ -69,6 +69,7 @@ test('every allowlisted event name is exactly the agreed list', () => {
   assert.deepEqual([...EVENT_NAMES].sort(), [
     'app_open', 'error_shown', 'first_play_start', 'language_change', 'listen_progress', 'share_tap', 'topic_generate_failed',
     'topic_generate_requested', 'topic_generate_succeeded', 'topic_open', 'topic_suggest_submitted',
+    'home_play_shown', 'home_play_tap', 'home_play_started',
   ].sort());
 });
 
@@ -260,4 +261,33 @@ test('WindowCounter is bounded: random keys cannot grow it past maxKeys', () => 
   const w = new WindowCounter(3600_000, 100);
   for (let i = 0; i < 1000; i++) w.hit(`k${i}`, 1, 10, NOW);
   assert.ok(w.size() <= 100);
+});
+
+// ---- test devices and the home page item ----
+
+test('test_device: stored as is_test only when true', async () => {
+  const marked = await run(batch([listen()], { test_device: true }));
+  assert.equal(marked.status, 202);
+  assert.equal(marked.inserted[0][0].is_test, true);
+  for (const over of [{}, { test_device: false }]) {
+    const r = await run(batch([listen()], over));
+    assert.equal(r.status, 202);
+    assert.equal('is_test' in r.inserted[0][0], false);
+  }
+});
+
+test('test_device: anything but a boolean is refused', async () => {
+  for (const v of ['true', 1, null, {}]) {
+    const r = await run(batch([listen()], { test_device: v }));
+    assert.equal(r.status, 400);
+    assert.equal(r.inserted.length, 0);
+  }
+});
+
+test('home page item events need a known item', () => {
+  for (const name of ['home_play_shown', 'home_play_tap', 'home_play_started']) {
+    assert.equal(validateEvent({ name, props: { item: 'radio' } }).ok, true);
+    assert.equal(validateEvent({ name, props: { item: 'something else' } }).ok, false);
+    assert.equal(validateEvent({ name }).ok, false);
+  }
 });

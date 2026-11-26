@@ -16,7 +16,7 @@ Privacy Control), which deletes the id. Rows are deleted after 180 days. No thir
 
 ## Exactly what is collected
 
-Every request carries: `install_id` (random UUID), `platform` (`android` or `web`), `app_version`, and up to 25 events. Each event
+Every request carries: `install_id` (random UUID), `platform` (`android` or `web`), `app_version`, optionally `test_device` (true or false), and up to 25 events. Each event
 has a name, a small property object, and `ago_s` (how many seconds earlier it happened, used to set the day).
 
 | Event | When | Properties |
@@ -28,13 +28,18 @@ has a name, a small property object, and `ago_s` (how many seconds earlier it ha
 | `topic_generate_requested`, `topic_generate_succeeded`, `topic_generate_failed` | The user generates an episode | `topic_id`, `language`; failed also has `code` (`generate_failed`, `generate_timeout`, `daily_limit`) |
 | `topic_suggest_submitted` | A topic suggestion was sent | `language` only. The suggestion text is NOT in this event (it is stored separately in `topic_requests`, as before) |
 | `language_change` | The user changes language | `language`, `from` |
+| `home_play_shown`, `home_play_tap`, `home_play_started` | Web only, public home page: the tap-to-play item was shown (once per tab session), was tapped, and its audio started | `item` (`radio`) |
 | `share_tap` | The share button is tapped | `source`, optional `language` |
 | `error_shown` | An error is shown to the user | `code`: a short constant such as a player error code name, never a message; player errors (Android) also carry `source`: `stream` (live radio) or `episode` (episode audio) |
 
 `deepdive` is on the server allowlist for the iOS-only Deep Dive feature; neither the Android nor the web client sends it today.
 
 The server stores `received_at`, `install_id`, `platform`, `app_version`, `name`, `props` and `day` (UTC day the event happened) in the
-table `analytics_events`. Nothing else.
+table `analytics_events`, plus `is_test` (true when the request said `test_device: true`). Nothing else.
+
+**Test devices.** A client marks itself as a test device so that summaries leave it out: the web app does so in an automated browser
+(`navigator.webdriver`) or after the page was opened once with `?test_device=1` (`?test_device=0` clears it). No Android release
+sends the flag yet. Summaries and checks read the view `analytics_events_real`, which drops every row of an install that ever sent it.
 
 ## Exactly what is NOT collected
 

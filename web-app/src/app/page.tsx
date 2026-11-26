@@ -6,6 +6,7 @@ import { useAuth } from '@/components/auth/AuthProvider';
 import { playUrl } from '@/lib/playLinks';
 import Link from 'next/link';
 import Script from 'next/script';
+import { HomePlayItem } from '@/components/home/HomePlayItem';
 import {
   Play,
   Headphones,
@@ -82,8 +83,10 @@ export default function LandingPage() {
       </nav>
 
       {/* Hero Section */}
-      <section className="pt-32 pb-20 px-4">
+      <section className="pt-24 pb-20 px-4">
         <div className="max-w-7xl mx-auto text-center">
+          {/* First thing on the page: one tap plays audio (see components/home/HomePlayItem.tsx) */}
+          <HomePlayItem />
           <div className="inline-flex items-center gap-2 px-4 py-2 bg-orange-500/10 border border-orange-500/20 rounded-full text-orange-400 text-sm font-medium mb-8">
             <Sparkles className="w-4 h-4" />
             AI-Powered Audio News

@@ -3,8 +3,9 @@ import assert from 'node:assert/strict';
 import {
   createAnalytics, cleanLang, cleanLocale, cleanTopicId,
   OPT_OUT_KEY, ID_KEY, QUEUE_KEY, FIRST_PLAY_KEY, MAX_BATCH, MAX_QUEUE, CHECKPOINT_MS, MIN_GAP_MS,
-  type StorageLike,
+  type StorageLike, readTestDevice, TEST_DEVICE_KEY,
 } from '../src/lib/analytics.ts';
+import { readFileSync } from 'node:fs';
 
 class MemStorage implements StorageLike {
   m = new Map<string, string>();
@@ -265,4 +266,38 @@ test('sanitisers', () => {
   assert.equal(cleanTopicId('world-update'), 'world-update');
   assert.equal(cleanTopicId('a b'), undefined);
   assert.equal(cleanTopicId('x'.repeat(65)), undefined);
+});
+
+test('a test browser says so on every batch; an ordinary one sends the same request as before', async () => {
+  const storage = new MemStorage();
+  assert.equal(readTestDevice('', storage, false), false);
+  assert.equal(readTestDevice('', storage, true), true, 'automation');
+  assert.equal(readTestDevice('?test_device=1', storage, false), true);
+  assert.equal(storage.getItem(TEST_DEVICE_KEY), '1');
+  assert.equal(readTestDevice('', storage, false), true, 'the mark stays');
+  assert.equal(readTestDevice('?test_device=0', storage, false), false);
+  assert.equal(readTestDevice('', null, false), false);
+
+  const bodies: any[] = [];
+  for (const marked of [true, false]) {
+    const a = createAnalytics({
+      storage: new MemStorage(), now: () => 1_000_000_000_000,
+      send: async (_u, body) => { bodies.push(JSON.parse(body)); return 202; },
+      newId: () => '00000000-0000-4000-8000-000000000001', endpoint: 'x', appVersion: 'web', blocked: () => false,
+      testDevice: () => marked,
+    });
+    a.track('home_play_shown', { item: 'radio' });
+    await a.flush(true);
+  }
+  assert.equal(bodies[0].test_device, true);
+  assert.equal('test_device' in bodies[1], false);
+});
+
+test('the tap-to-play item is the first thing in the home page hero and measures seen, tapped, started', () => {
+  const read = (f: string) => readFileSync(new URL(f, import.meta.url), 'utf8');
+  const page = read('../src/app/page.tsx');
+  assert.ok(page.indexOf('<HomePlayItem />') < page.indexOf('<h1'), 'above the headline');
+  const item = read('../src/components/home/HomePlayItem.tsx');
+  for (const name of ['home_play_shown', 'home_play_tap', 'home_play_started']) assert.ok(item.includes(`'${name}'`), name);
+  assert.ok(item.includes("listenStart({ source: 'radio'"), 'listening time is counted');
 });

@@ -5,7 +5,8 @@
  *  - the only identifier is a random per-install id generated on the device / browser; no email, account id, IP address,
  *    device identifier or advertising id is accepted or stored (the IP is used in memory by the request limiter and never written);
  *  - a small allowlist of event names, each with a typed allowlist of properties; anything else is rejected, not stored;
- *  - batched: clients send a few requests per session, never one per event.
+ *  - batched: clients send a few requests per session, never one per event;
+ *  - a client may mark itself as a test device (`test_device: true`); summaries leave that install out (analytics_events_real).
  *
  * This file is pure (no env import, no database import) so it can be unit-tested: the route wires the database in.
  */
@@ -55,6 +56,8 @@ export const PLATFORMS = ['android', 'web', 'ios'] as const;
 export const LISTEN_SOURCES = ['radio', 'topic', 'deepdive', 'brief'] as const;
 /** Which kind of audio a player error came from: the live radio stream, or an episode. */
 export const ERROR_SOURCES = ['stream', 'episode'] as const;
+/** What the web home page's tap-to-play item plays. */
+export const HOME_ITEMS = ['radio'] as const;
 
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const VERSION_RE = /^[0-9A-Za-z._-]{1,20}$/;
@@ -95,6 +98,10 @@ export const EVENT_SCHEMAS: Record<string, Record<string, PropSpec>> = {
   topic_suggest_submitted: { language: req(str(LANG_RE)) },
   language_change: { language: req(str(LANG_RE)), from: opt(str(LANG_RE)) },
   share_tap: { source: req(oneOf(LISTEN_SOURCES)), topic_id: opt(str(TOPIC_ID_RE)), language: opt(str(LANG_RE)) },
+  // The one tap-to-play item at the top of the public web home page: seen, tapped, audio actually started.
+  home_play_shown: { item: req(oneOf(HOME_ITEMS)) },
+  home_play_tap: { item: req(oneOf(HOME_ITEMS)) },
+  home_play_started: { item: req(oneOf(HOME_ITEMS)) },
   error_shown: { code: req(str(CODE_RE)), source: opt(oneOf(ERROR_SOURCES)) },
 };
 
@@ -114,6 +121,7 @@ export interface AnalyticsRow {
   name: string;
   props: Props;
   day: string; // YYYY-MM-DD (UTC) the event happened
+  is_test?: true; // only set for a client that says it is a test device (the column defaults to false)
 }
 
 export type EventCheck = { ok: true; props: Props; agoS: number } | { ok: false; reason: string };
@@ -158,19 +166,20 @@ export type BatchCheck =
 const utcDay = (ms: number) => new Date(ms).toISOString().slice(0, 10);
 
 /**
- * Validates a whole request body: { install_id, platform, app_version, events: [...] }.
+ * Validates a whole request body: { install_id, platform, app_version, test_device?, events: [...] }.
  * Envelope problems reject the request; individual bad events are dropped and counted (rejected), the good ones are kept.
  */
 export function validateBatch(body: unknown, cfg: Pick<AnalyticsConfig, 'maxEventsPerRequest'>, nowMs: number): BatchCheck {
   if (!isPlainObject(body)) return { ok: false, status: 400, error: 'body must be a JSON object' };
   for (const k of Object.keys(body)) {
-    if (k !== 'install_id' && k !== 'platform' && k !== 'app_version' && k !== 'events') {
+    if (k !== 'install_id' && k !== 'platform' && k !== 'app_version' && k !== 'events' && k !== 'test_device') {
       return { ok: false, status: 400, error: `unknown field ${k.slice(0, 30)}` };
     }
   }
   if (typeof body.install_id !== 'string' || !UUID_RE.test(body.install_id)) return { ok: false, status: 400, error: 'install_id must be a random UUID' };
   if (typeof body.platform !== 'string' || !(PLATFORMS as readonly string[]).includes(body.platform)) return { ok: false, status: 400, error: 'platform not allowed' };
   if (typeof body.app_version !== 'string' || !VERSION_RE.test(body.app_version)) return { ok: false, status: 400, error: 'app_version invalid' };
+  if (body.test_device !== undefined && typeof body.test_device !== 'boolean') return { ok: false, status: 400, error: 'test_device must be true or false' };
   if (!Array.isArray(body.events) || body.events.length === 0) return { ok: false, status: 400, error: 'events must be a non-empty array' };
   if (body.events.length > cfg.maxEventsPerRequest) {
     return { ok: false, status: 413, error: `at most ${cfg.maxEventsPerRequest} events per request` };
@@ -192,6 +201,7 @@ export function validateBatch(body: unknown, cfg: Pick<AnalyticsConfig, 'maxEven
       name: (ev as { name: string }).name,
       props: r.props,
       day: utcDay(nowMs - r.agoS * 1000),
+      ...(body.test_device === true ? { is_test: true as const } : {}),
     });
   }
   return { ok: true, rows, rejected, reasons };

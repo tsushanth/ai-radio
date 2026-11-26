@@ -3,6 +3,18 @@
 Newest first. Parity rule: whatever runs in production is on `main` (tree compared for the deployed paths).
 
 
+## 2026-11-26 web v25 and backend v55: tap-to-play on the home page, test-device flag (#104)
+
+- Database first: migration `019_analytics_test_flag` applied to `lxtuvvsrtpoqgikbpasm` (adds `analytics_events.is_test`, a partial index and the view `analytics_events_real`; additive). Checked: 1268 rows before and in the view; `anon` and `authenticated` cannot read the view.
+- Backend: Fly v55, image `registry.fly.io/ai-radio-backend:deployment-01M8CPWGJR6JZQ3YDHPQYESWXP`, `flyctl deploy --remote-only` from `ai-radio-backend/` of a clean detached worktree at `origin/main` `c83c373`; tree `acccfa4c1fd39bfc684b39cbead5b3830c72f0cf` equals `origin/main`. No episode, ask, batch, suggestion or podcast job in flight.
+- Web: Fly v25, image `registry.fly.io/audexa-web:deployment-01M8CPYF438RDVM2HH0E9R03ZD`, same worktree, `web-app/`; tree `f54858e0325eb4a4cb22a7150f2ee11966032751` equals `origin/main`.
+- `audexa-radio` was not deployed. No secret set or changed.
+- Verified live: a headless browser on audexa.app tapped the item, audio played (about 1.9 s to start, still playing after 34 s), and `home_play_shown`, `home_play_tap`, `home_play_started`, `listen_progress` arrived marked `is_test` and absent from `analytics_events_real`; `test_device: "yes"` answers 400. Backend 503 tests, web 156 tests.
+- NOT verified: iOS Safari, a physical phone.
+- No Android release sends `test_device` yet, so Android testers are still counted.
+- Rollback: web `flyctl deploy -a audexa-web --image registry.fly.io/audexa-web:deployment-01M80NPXX4YAYH7SAHBJRWWDXQ` (roll the web back before the backend); backend `flyctl releases rollback 54 -a ai-radio-backend`; database `ai-radio-backend/supabase/rollbacks/019_analytics_test_flag_down.sql` (after the backend).
+
+
 ## 2026-11-26 radio v15 (audexa-radio-fly): rotate the whole ready pool instead of looping five segments (#102)
 
 - Fault: new segments are made mostly at the four daily orchestrator restarts. Once the play queue drained, reconcile re-queued the newest five each time, so for hours the station looped about 20 minutes of audio (14:00 to 15:40 UTC the same segments came round about every 20 minutes; the log shows the same re-push through 11-25 as well).

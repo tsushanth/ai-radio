@@ -4,7 +4,6 @@ import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
-import android.content.pm.ServiceInfo
 import android.os.Build
 import android.util.Log
 import androidx.core.app.NotificationCompat
@@ -30,9 +29,10 @@ import kotlin.math.max
  * Why a Worker (and not a CoroutineScope on the singleton): a singleton
  * scope dies as soon as the OS reclaims the app process — backgrounding
  * the app, screen-off, network change, low-memory. WorkManager owns its
- * own process lifecycle, runs as a foreground service while the
- * notification is showing, and survives all of those. It also enforces
+ * own process lifecycle and survives all of those. It also enforces
  * the user's "WiFi-only" preference via [androidx.work.Constraints].
+ * A progress notification (foreground service) is shown up to Android 13
+ * only; see [showProgressNotification].
  *
  * Resumable: respects HTTP `Range` so a partial file finishes from where
  * it left off after a crash / kill / network drop.
@@ -57,7 +57,7 @@ class KokoroDownloadWorker(
             return@withContext Result.success()
         }
 
-        setForeground(createForegroundInfo(percent = 0, downloadedMb = 0, totalMb = ESTIMATED_TOTAL_MB))
+        showProgressNotification(percent = 0, downloadedMb = 0, totalMb = ESTIMATED_TOTAL_MB)
 
         val existingBytes = if (partial.exists()) partial.length() else 0L
         Log.i(TAG, "doWork: starting from existingBytes=$existingBytes url=$MODEL_URL")
@@ -118,7 +118,7 @@ class KokoroDownloadWorker(
                             )
                             // Throttle notification updates a little — every
                             // percent is fine, every byte would flood.
-                            setForeground(createForegroundInfo(pct, downloadedMb, totalMb))
+                            showProgressNotification(pct, downloadedMb, totalMb)
                         }
                     }
                 }
@@ -158,6 +158,17 @@ class KokoroDownloadWorker(
 
     // ---- Foreground notification ----------------------------------------------
 
+    /**
+     * Android 14+ crashes the app when a foreground service starts without a type declared in the manifest.
+     * Declaring `dataSync` also needs its permission and a Play Console declaration, so from Android 14 the
+     * download runs as ordinary background work: in-app progress still updates, and if the system stops a
+     * long run, the next one resumes from the partial file.
+     */
+    internal suspend fun showProgressNotification(percent: Int, downloadedMb: Int, totalMb: Int) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) return
+        setForeground(createForegroundInfo(percent, downloadedMb, totalMb))
+    }
+
     private fun createForegroundInfo(percent: Int, downloadedMb: Int, totalMb: Int): ForegroundInfo {
         ensureNotificationChannel()
 
@@ -172,16 +183,7 @@ class KokoroDownloadWorker(
             .setPriority(NotificationCompat.PRIORITY_LOW)
             .build()
 
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-            // Android 14+ requires an explicit foreground service type.
-            ForegroundInfo(
-                NOTIFICATION_ID,
-                notification,
-                ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC
-            )
-        } else {
-            ForegroundInfo(NOTIFICATION_ID, notification)
-        }
+        return ForegroundInfo(NOTIFICATION_ID, notification)
     }
 
     private fun ensureNotificationChannel() {

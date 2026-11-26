@@ -1,6 +1,14 @@
 package com.kreativekoala.audexa.service
 
+import android.app.Service
 import android.content.Intent
+import android.content.pm.ServiceInfo
+import android.os.Build
+import android.util.Log
+import androidx.core.app.NotificationChannelCompat
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
+import androidx.core.app.ServiceCompat
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
@@ -9,6 +17,7 @@ import androidx.media3.datasource.DefaultHttpDataSource
 import androidx.media3.exoplayer.DefaultLoadControl
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.source.DefaultMediaSourceFactory
+import androidx.media3.session.DefaultMediaNotificationProvider
 import androidx.media3.session.MediaSession
 import androidx.media3.session.MediaSessionService
 import dagger.hilt.android.AndroidEntryPoint
@@ -59,6 +68,12 @@ class AudioPlaybackService : MediaSessionService() {
         return mediaSession
     }
 
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        val result = super.onStartCommand(intent, flags, startId)
+        answerIdleMediaButtonStart(this, intent, startId, player?.mediaItemCount ?: 0)
+        return result
+    }
+
     override fun onTaskRemoved(rootIntent: Intent?) {
         val player = mediaSession?.player
         if (player?.playWhenReady != true || player.mediaItemCount == 0) {
@@ -73,5 +88,46 @@ class AudioPlaybackService : MediaSessionService() {
             mediaSession = null
         }
         super.onDestroy()
+    }
+
+    companion object {
+        private const val TAG = "AudioPlaybackService"
+
+        /**
+         * A headset or Bluetooth button, or "play" on a leftover notification, can start this service after the app
+         * process was killed. The start is a foreground-service start, but the new player has nothing to play (there is
+         * no playback resumption), so Media3 never calls startForeground() and Android crashes the app. Answer the start
+         * with the notification Media3 would use, remove it at once and stop.
+         *
+         * @return true when this start was answered here.
+         */
+        @androidx.annotation.OptIn(UnstableApi::class)
+        internal fun answerIdleMediaButtonStart(service: Service, intent: Intent?, startId: Int, mediaItemCount: Int): Boolean {
+            if (intent?.action != Intent.ACTION_MEDIA_BUTTON || mediaItemCount > 0) return false
+            val channelId = DefaultMediaNotificationProvider.DEFAULT_CHANNEL_ID
+            NotificationManagerCompat.from(service).createNotificationChannel(
+                NotificationChannelCompat.Builder(channelId, NotificationManagerCompat.IMPORTANCE_LOW)
+                    .setName(service.getString(DefaultMediaNotificationProvider.DEFAULT_CHANNEL_NAME_RESOURCE_ID))
+                    .build()
+            )
+            val notification = NotificationCompat.Builder(service, channelId)
+                .setSmallIcon(androidx.media3.session.R.drawable.media3_notification_small_icon)
+                .setContentTitle(service.applicationInfo.loadLabel(service.packageManager))
+                .build()
+            try {
+                ServiceCompat.startForeground(
+                    service,
+                    DefaultMediaNotificationProvider.DEFAULT_NOTIFICATION_ID,
+                    notification,
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK else 0,
+                )
+                ServiceCompat.stopForeground(service, ServiceCompat.STOP_FOREGROUND_REMOVE)
+            } catch (e: IllegalStateException) {
+                // Android 12+ refuses a foreground start from the background; then none was owed either.
+                Log.w(TAG, "Could not go foreground for an idle media button start", e)
+            }
+            service.stopSelf(startId)
+            return true
+        }
     }
 }

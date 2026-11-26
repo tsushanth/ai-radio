@@ -30,6 +30,12 @@ Piper has no priority lane. The Audexa client (`orchestrator/piper_client.py`) i
 - NOT replaced on purpose: audexa-heal daemon (it asked Claude via the broker, always answered "escalate"), broker-slot-check,
   Kokoro recycle/watchdog crons, Ollama. Alerting is now: orchestrator email alerts + Fly health check on /healthz.
 
+## Repeats
+New segments are made mostly at the four daily orchestrator restarts, so the station airs fewer new minutes than it plays.
+When the play queue is empty the orchestrator re-queues the segments queued longest ago (the whole ready pool, up to
+`READY_MAX_AGE_HOURS` old, listener requests excluded). `/api/scheduler-health` reports `reair_gap_sec`: how long ago the
+last re-queued segments had been queued before (`null` until something is re-aired). Small values mean a short loop.
+
 ## Content sources (Reddit archive, Exa, feeds, cache)
 Each scheduled segment gets its stories from a per-topic chain (`orchestrator/content_fetcher.py`). A link in the chain counts as
 failed when it yields fewer than 3 usable stories (`SOURCE_MIN_RESULTS`); the next link is then tried.

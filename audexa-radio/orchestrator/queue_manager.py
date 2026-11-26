@@ -168,6 +168,31 @@ class QueueManager:
         path.with_suffix(".json").unlink(missing_ok=True)
         logger.debug(f"Removed played segment: {path.name}")
 
+    # --- Re-airing ---
+    # "Last queued" is the sidecar's mtime: set when written, touched on every push, so it survives a restart.
+    # Retention (prune_expired) reads the mp3's mtime, so re-airing does not keep a segment longer.
+
+    def mark_queued(self, filepath: str):
+        """Remember that a segment was just handed to Liquidsoap."""
+        try:
+            os.utime(Path(filepath).with_suffix(".json"))
+        except OSError:
+            pass
+
+    def last_queued_at(self, filepath: str) -> float:
+        try:
+            return Path(filepath).with_suffix(".json").stat().st_mtime
+        except OSError:
+            return 0.0
+
+    def next_to_reair(self, segments: list[dict], count: int = 5) -> list[dict]:
+        """
+        What to play again once the play queue is empty: the segments queued longest ago, so the whole ready pool
+        rotates. Listener requests are one-offs and only come back when there is nothing else.
+        """
+        pool = [s for s in segments if s.get("segment_type") != "listener_request"] or segments
+        return sorted(pool, key=lambda s: (self.last_queued_at(s["filepath"]), s["filename"]))[:count]
+
     def list_ready_segments(self) -> list[dict]:
         """List all ready segments with metadata."""
         segments = []

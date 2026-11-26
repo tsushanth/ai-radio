@@ -178,6 +178,8 @@ def push_to_liquidsoap(filepath: str, queue_name: str = "speech"):
         tn.write(command.encode())
         response = tn.read_until(b"END", timeout=3)
         tn.close()
+        if queue_name.startswith("speech"):
+            queue.mark_queued(filepath)
         logger.info(f"Pushed to Liquidsoap {queue_name}: {Path(filepath).name}")
         return True
     except Exception as e:
@@ -293,11 +295,17 @@ async def generate_and_queue_scheduled() -> bool:
     return await generate_and_queue_scheduled_for_language("en")
 
 
+# Shortest time since any segment in the last re-push had been queued before; None until something is re-aired.
+# A small value means listeners are hearing a short loop. Published by /api/scheduler-health.
+_last_reair_gap_sec: Optional[int] = None
+
+
 async def reconcile_liquidsoap_queues():
     """
     Periodically check Liquidsoap queues and re-push ready segments
     if a queue is empty. Handles Liquidsoap restarts gracefully.
     """
+    global _last_reair_gap_sec
     while True:
         try:
             await asyncio.sleep(60)
@@ -317,12 +325,18 @@ async def reconcile_liquidsoap_queues():
                     ]
 
                     if lang_segments:
+                        chosen = queue.next_to_reair(lang_segments)
+                        gap = max(0, int(time.time() - max(queue.last_queued_at(s["filepath"]) for s in chosen)))
                         pushed = 0
-                        for seg in lang_segments[-5:]:  # newest, never the oldest
+                        for seg in chosen:
                             if push_to_liquidsoap(seg["filepath"], queue_name=queue_name):
                                 pushed += 1
                         if pushed:
-                            logger.info(f"Reconciled [{lang}]: pushed {pushed} segments to {queue_name}")
+                            _last_reair_gap_sec = gap
+                            logger.info(
+                                f"Reconciled [{lang}]: pushed {pushed} segments to {queue_name} "
+                                f"(each last queued {gap // 60}+ min ago, pool {len(lang_segments)})"
+                            )
 
         except Exception as e:
             logger.debug(f"Reconciliation error: {e}")
@@ -567,6 +581,7 @@ async def scheduler_health():
         "seconds_since_last_generation": None if secs == float("inf") else int(secs),
         "stale_threshold_sec": SCHEDULER_STALE_THRESHOLD_SEC,
         "ready_segments": queue.count_ready_segments(),
+        "reair_gap_sec": _last_reair_gap_sec,
     }
     import json
     return Response(

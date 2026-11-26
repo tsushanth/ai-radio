@@ -26,6 +26,22 @@ export const OPT_OUT_KEY = 'audexa-analytics-optout';
 export const ID_KEY = 'audexa-analytics-id';
 export const QUEUE_KEY = 'audexa-analytics-queue';
 export const FIRST_PLAY_KEY = 'audexa-analytics-first-play';
+export const TEST_DEVICE_KEY = 'audexa-test-device';
+
+/**
+ * Whether this browser is a test device: driven by automation, or marked by opening the site once with ?test_device=1
+ * (?test_device=0 clears the mark).
+ */
+export function readTestDevice(search: string, storage: StorageLike | null, webdriver: boolean): boolean {
+  const asked = new URLSearchParams(search).get('test_device');
+  let marked = asked === '1';
+  try {
+    if (asked === '1') storage?.setItem(TEST_DEVICE_KEY, '1');
+    else if (asked === '0') storage?.removeItem(TEST_DEVICE_KEY);
+    marked = marked || storage?.getItem(TEST_DEVICE_KEY) === '1';
+  } catch { /* storage unusable: only the address bar counts */ }
+  return webdriver || marked;
+}
 
 export type ListenSource = 'radio' | 'topic' | 'deepdive' | 'brief';
 export interface ListenContext {
@@ -36,7 +52,8 @@ export interface ListenContext {
 export type EventName =
   | 'app_open' | 'first_play_start' | 'listen_progress' | 'topic_open'
   | 'topic_generate_requested' | 'topic_generate_succeeded' | 'topic_generate_failed'
-  | 'topic_suggest_submitted' | 'language_change' | 'share_tap' | 'error_shown';
+  | 'topic_suggest_submitted' | 'language_change' | 'share_tap' | 'error_shown'
+  | 'home_play_shown' | 'home_play_tap' | 'home_play_started';
 export type Props = Record<string, string | number>;
 
 export interface StorageLike {
@@ -55,6 +72,8 @@ export interface AnalyticsDeps {
   appVersion: string;
   /** Browser-level "do not track" signals (DNT, GPC) or a development host. */
   blocked: () => boolean;
+  /** An automated or marked test browser: its events are sent with test_device so summaries leave them out. */
+  testDevice?: () => boolean;
 }
 
 interface Queued {
@@ -150,6 +169,8 @@ export function createAnalytics(deps: AnalyticsDeps) {
           install_id: installId(),
           platform: 'web',
           app_version: appVersion,
+          // only ever sent as true, so an ordinary visitor's request is unchanged
+          ...(deps.testDevice?.() ? { test_device: true } : {}),
           events: batch.map((e) => ({ name: e.name, props: e.props, ago_s: Math.max(0, Math.min(MAX_AGO_S, Math.round((now() - e.at) / 1000))) })),
         });
         lastSend = now();
@@ -279,7 +300,10 @@ function get(): Analytics | null {
   if (instance) return instance;
   let storage: StorageLike | null = null;
   try { storage = window.localStorage; } catch { storage = null; }
+  // Read once, now: the address bar loses the parameter at the first navigation.
+  const testDevice = readTestDevice(window.location.search, storage, navigator.webdriver === true);
   instance = createAnalytics({
+    testDevice: () => testDevice,
     storage,
     now: () => Date.now(),
     send: async (url, body) => {

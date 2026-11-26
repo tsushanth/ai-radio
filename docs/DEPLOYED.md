@@ -3,6 +3,16 @@
 Newest first. Parity rule: whatever runs in production is on `main` (tree compared for the deployed paths).
 
 
+## 2026-11-26 radio v15 (audexa-radio-fly): rotate the whole ready pool instead of looping five segments (#102)
+
+- Fault: new segments are made mostly at the four daily orchestrator restarts. Once the play queue drained, reconcile re-queued the newest five each time, so for hours the station looped about 20 minutes of audio (14:00 to 15:40 UTC the same segments came round about every 20 minutes; the log shows the same re-push through 11-25 as well).
+- Release: Fly v15, image `registry.fly.io/audexa-radio-fly:deployment-01M8C8FSH18S1D4Y9VZ2PES8XH`, `flyctl deploy . -c fly/fly.toml --dockerfile fly/Dockerfile -a audexa-radio-fly --remote-only --ha=false` from `audexa-radio/` of a clean detached worktree at `origin/main` `0ce8518`; the `audexa-radio/` tree `43f510c` equals `origin/main`. Before: live files matched the previous `main`, 0 listeners, no pending request. No secret was set or changed.
+- Verified: live files match `origin/main` (30 md5), health check passing, `/stream` 200 within about 40 s of the restart, `reair_gap_sec` present in `/api/scheduler-health`, and the new selection run read-only on the live ready pool picks the segments queued longest ago. NOT verified live: an actual re-air by the new code (the queue was full of new segments after the restart; covered by `tests/test_reair.py`).
+- Deploy cost: the restart's usual 20-segment fill, about $0.02 of script generation.
+- Generation volume is unchanged, so repeats remain: the rotation spreads them over the whole pool (about 3 h) instead of 20 minutes.
+- Rollback: `flyctl deploy -a audexa-radio-fly --image registry.fly.io/audexa-radio-fly:deployment-01M8A01QDW8QB5BCNAE8ETV7K6` (v14).
+
+
 ## Android: merged, NOT released (next release: 12.13.3, versionCode 55)
 
 - On-device voice download no longer crashes the app on Android 14+. 54 and earlier start a `dataSync` foreground service that the manifest does not declare, so turning the on-device voice on crashes the app, and it crashes again each time the pending download restarts. From Android 14 the download now runs as ordinary background work (no progress notification; in-app progress stays); Android 13 and older are unchanged. No new permission, no Play foreground-service declaration needed.

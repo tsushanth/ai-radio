@@ -3,6 +3,17 @@
 Newest first. Parity rule: whatever runs in production is on `main` (tree compared for the deployed paths).
 
 
+## 2026-11-27 (UTC) backend v57 (ai-radio-backend): log privacy; daily brief script parsing (#108)
+
+- Release: Fly v57, image `registry.fly.io/ai-radio-backend:deployment-01M8D9HTS57GB9M0AXK3H5EGVG`, `flyctl deploy --remote-only` from `ai-radio-backend/` of a clean detached worktree at `origin/main` `470df7c`; tree `54814642e203ef132b87e54e0c089f58ce65e83b` equals `origin/main`.
+- Logs: statements print per-process references (`u_...`), counts and lengths instead of addresses, user ids, script text and typed text; every console line and failure report is masked; logged errors keep message, stack and status. `src/lib/log-privacy.test.ts` fails on a new unsafe log statement.
+- Daily brief: the script reply arrives inside a code fence and `JSON.parse` refused it, so the fallback script was served. It now goes through `lib/tolerantJson` (cut-off replies still refused). Using the fallback reports `daily_brief_fallback` to the failure reporter.
+- Before: no batch, topic episode, deep dive, ask or suggestion row in progress; no staged secret. No secret set or changed, no database change. `audexa-radio-fly` and `audexa-web` were not deployed.
+- Verified: type check and 517 tests; two model calls with made-up mail produced full scripts (both replies fenced); the 134 compiled files in the running image match a build of `470df7c`; health, topics and config routes answer 200; a script request for a made-up address answered 401 and its log lines held no address.
+- NOT verified: a daily brief for a real linked mailbox since the deploy. Log lines written before v57 are not removed.
+- Rollback, from `ai-radio-backend/`: `flyctl deploy -a ai-radio-backend --image registry.fly.io/ai-radio-backend:deployment-01M8D8QBCNFQQN7JTPEXH3F2ZH` (v56). It brings both faults back.
+
+
 ## 2026-11-27 (UTC) backend v56 (ai-radio-backend): accept `first_audio` and `stream_fallback` (#106)
 
 - Release: Fly v56, image `registry.fly.io/ai-radio-backend:deployment-01M8D8QBCNFQQN7JTPEXH3F2ZH`, `flyctl deploy --remote-only` from `ai-radio-backend/` of a clean detached worktree at `origin/main` `9dafc82`; tree `c2739c9d208972eface99b0b954c60ebc4ea0a6d` equals `origin/main`.

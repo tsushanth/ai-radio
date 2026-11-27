@@ -100,14 +100,12 @@ function network(ip: string): string {
 }
 
 /**
- * Who an allowance belongs to: a verified session if there is one, otherwise the network address. On Fly the address comes from
- * Fly-Client-IP, which the Fly proxy sets itself. Ids sent in the request are not used. Never logged.
+ * Who an allowance belongs to: a verified session if there is one, otherwise the client address (req.ip, see lib/proxy.ts).
+ * Ids sent in the request are not used. Never logged.
  */
-export function clientKey(req: Pick<Request, 'headers' | 'ip'>, verifiedUserId?: string, env: Record<string, string | undefined> = process.env): string {
+export function clientKey(req: Pick<Request, 'ip'>, verifiedUserId?: string): string {
   if (verifiedUserId) return `u:${verifiedUserId}`;
-  const header = env.FLY_APP_NAME ? req.headers['fly-client-ip'] : undefined;
-  const ip = (typeof header === 'string' && header.trim()) || req.ip || 'unknown';
-  return `ip:${network(ip)}`;
+  return `ip:${network(req.ip || 'unknown')}`;
 }
 
 export function refuseOverLimit(res: Response, now: Date = new Date()): void {

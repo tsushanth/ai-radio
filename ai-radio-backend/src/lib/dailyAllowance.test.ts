@@ -47,13 +47,11 @@ test('limits can be changed by environment', () => {
 });
 
 test('who a count belongs to', () => {
-  const req = (headers: Record<string, string>, ip = '198.51.100.1') => ({ headers, ip }) as never;
-  const fly = { FLY_APP_NAME: 'x' };
-  assert.equal(clientKey(req({ 'fly-client-ip': '203.0.113.7' }), undefined, fly), 'ip:203.0.113.7');
-  assert.equal(clientKey(req({ 'fly-client-ip': '203.0.113.7' }), undefined, {}), 'ip:198.51.100.1', 'the header is only read on Fly');
-  assert.equal(clientKey(req({}, '::ffff:203.0.113.9'), undefined, fly), 'ip:203.0.113.9');
-  const one = clientKey(req({ 'fly-client-ip': '2001:db8:1:2::1' }), undefined, fly);
-  assert.equal(one, clientKey(req({ 'fly-client-ip': '2001:db8:1:2:ffff::9' }), undefined, fly), 'same /64');
-  assert.notEqual(one, clientKey(req({ 'fly-client-ip': '2001:db8:1:3::1' }), undefined, fly));
-  assert.equal(clientKey(req({}), 'user-1', fly), 'u:user-1');
+  const key = (ip: string | undefined, user?: string) => clientKey({ ip } as never, user);
+  assert.equal(key('203.0.113.7'), 'ip:203.0.113.7');
+  assert.equal(key('::ffff:203.0.113.9'), 'ip:203.0.113.9');
+  assert.equal(key('2001:db8:1:2::1'), key('2001:db8:1:2:ffff::9'), 'same /64');
+  assert.notEqual(key('2001:db8:1:2::1'), key('2001:db8:1:3::1'));
+  assert.equal(key(undefined), 'ip:unknown');
+  assert.equal(key('203.0.113.7', 'user-1'), 'u:user-1');
 });

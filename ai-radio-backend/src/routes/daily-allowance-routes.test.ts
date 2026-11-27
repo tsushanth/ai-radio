@@ -7,7 +7,7 @@ import express from 'express';
 Object.assign(process.env, {
   NODE_ENV: 'test', JWT_SECRET: 'x'.repeat(40), SUPABASE_URL: 'https://example.invalid', SUPABASE_SERVICE_KEY: 'test-service-key',
   GOOGLE_CLIENT_ID: 'x', GOOGLE_CLIENT_SECRET: 'x', GOOGLE_REDIRECT_URI: 'https://example.invalid/callback', ANTHROPIC_API_KEY: 'x',
-  PODCAST_RATE_LIMIT_MAX: '1000', FLY_APP_NAME: 'test',
+  PODCAST_RATE_LIMIT_MAX: '1000',
   ALLOWANCE_QA_CLIENT: '1', ALLOWANCE_TELL_ME_MORE_CLIENT: '1', ALLOWANCE_DEEPDIVE_CLIENT: '1', ALLOWANCE_STATION_CLIENT: '1',
 });
 
@@ -39,6 +39,7 @@ test('each on-demand route stops spending at the client allowance', async (t) =>
   (liveStationGenerator as any).generateEpisode = async () => { reached.push('generateEpisode'); await hold; return { ...old, id: 'new', generatedAt: new Date() }; };
 
   const app = express();
+  app.set('trust proxy', 2); // as on Fly (lib/proxy.ts)
   app.use(express.json());
   app.use('/qa', (await import('./qa')).default);
   app.use('/deepdive', (await import('./deepdive')).default);
@@ -49,7 +50,7 @@ test('each on-demand route stops spending at the client allowance', async (t) =>
   t.after(() => server.close());
   const base = `http://127.0.0.1:${(server.address() as AddressInfo).port}`;
   const post = async (path: string, body: unknown, ip = '203.0.113.1') => {
-    const r = await fetch(base + path, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Fly-Client-IP': ip }, body: JSON.stringify(body) });
+    const r = await fetch(base + path, { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-Forwarded-For': `${ip}, 198.51.100.1` }, body: JSON.stringify(body) });
     return { status: r.status, retryAfter: r.headers.get('retry-after'), body: (await r.json()) as any };
   };
 

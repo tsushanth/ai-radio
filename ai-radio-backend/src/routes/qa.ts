@@ -6,8 +6,13 @@
 import { Router, Request, Response } from 'express';
 import { qaGenerator } from '../services/content/qa.generator';
 import { userRef } from '../lib/log-privacy';
+import { requireSelfForAddress } from '../lib/user-auth';
+import { tokenVerifier } from '../lib/user-auth-runtime';
 
 const router = Router();
+
+// A user id that is an email address needs that account's session.
+router.use(requireSelfForAddress(() => tokenVerifier(), (req) => [req.query.userId, req.body?.userId]));
 
 /**
  * POST /api/qa/ask

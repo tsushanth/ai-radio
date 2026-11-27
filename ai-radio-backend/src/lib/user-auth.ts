@@ -100,12 +100,25 @@ export const DEFAULT_LEGACY_ANON_KEYS: readonly string[] = [
   'podcast.job',
   'podcast.episodes',
   'linked-accounts.create',
+  'auth.revoke',
 ];
+
+const switchedOn = (v: string | undefined) => ['on', 'true', '1'].includes((v ?? '').trim().toLowerCase());
+
+/** Notification writes have their own setting, separate from the keys above. */
+export const NOTIFICATION_ANON_KEYS: readonly string[] = ['notifications.register', 'notifications.unregister', 'notifications.settings'];
+
+/** USER_AUTH_STRICT_NOTIFICATIONS=on makes the notification writes require a session. */
+export function notificationAnonKeys(env: Record<string, string | undefined> = process.env): Set<string> {
+  return new Set(switchedOn(env.USER_AUTH_STRICT_NOTIFICATIONS) ? [] : NOTIFICATION_ANON_KEYS);
+}
+
+/** Token-less calls on these keys are logged every time (the others: the first one, then every 50th). */
+const LOG_EVERY_CALL: ReadonlySet<string> = new Set(['podcast.generate-async', 'podcast.script', 'auth.revoke']);
 
 /** Which route keys may still be called without a token. USER_AUTH_STRICT=on (or "true"/"1") turns every legacy window off. */
 export function legacyAnonKeys(env: Record<string, string | undefined> = process.env): Set<string> {
-  const strict = (env.USER_AUTH_STRICT ?? '').trim().toLowerCase();
-  if (strict === 'on' || strict === 'true' || strict === '1') return new Set();
+  if (switchedOn(env.USER_AUTH_STRICT)) return new Set();
   const raw = env.USER_AUTH_LEGACY_ANON;
   if (raw === undefined) return new Set(DEFAULT_LEGACY_ANON_KEYS);
   return new Set(raw.split(',').map((s) => s.trim()).filter(Boolean));
@@ -145,7 +158,7 @@ export function requireUser(getVerifier: () => TokenVerifier, opts: RequireUserO
       if (!hasHeader && (opts.legacyKeys ?? (() => legacyAnonKeys()))().has(opts.key)) {
         const n = (legacyCounts.get(opts.key) ?? 0) + 1;
         legacyCounts.set(opts.key, n);
-        if (n === 1 || n % 50 === 0) {
+        if (n === 1 || n % 50 === 0 || LOG_EVERY_CALL.has(opts.key)) {
           console.warn(`[LegacyAnon] ${req.method} ${opts.key} served without a token (count=${n}); clients must send the session token`);
         }
         res.locals.authUser = null;
@@ -175,6 +188,31 @@ export function requireUser(getVerifier: () => TokenVerifier, opts: RequireUserO
       }
     }
     res.locals.authUser = user;
+    next();
+  };
+}
+
+/**
+ * For routes whose user id is normally a random install id. Released clients never send an email address as that id, so a request
+ * that names an address (in any of the given places) needs that address's own session. Other ids pass through unchanged.
+ */
+export function requireSelfForAddress(getVerifier: () => TokenVerifier, ids: (req: Request) => unknown[]) {
+  return async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    const named = ids(req).filter((v) => v !== undefined && v !== null && (JSON.stringify(v) ?? '').includes('@'));
+    if (named.length === 0) {
+      next();
+      return;
+    }
+    const checked = await optionalUser(getVerifier, req.headers.authorization);
+    if (checked.kind !== 'ok') {
+      res.status(401).json({ success: false, error: 'Unauthorized' });
+      return;
+    }
+    if (!named.every((v) => typeof v === 'string' && sameEmail(checked.user.email, v))) {
+      res.status(403).json({ success: false, error: 'Forbidden' });
+      return;
+    }
+    res.locals.authUser = checked.user;
     next();
   };
 }

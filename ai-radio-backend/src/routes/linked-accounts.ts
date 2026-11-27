@@ -9,11 +9,12 @@ import { tokenManager } from '../services/auth/token.manager';
 import { requireUser } from '../lib/user-auth';
 import { tokenVerifier } from '../lib/user-auth-runtime';
 import { userRef } from '../lib/log-privacy';
+import { requireAccountProof } from '../services/auth/account-proof';
 
 const router = express.Router();
 
-// Caller checks (lib/user-auth.ts). Android 12.10.1 and iOS still POST without a token, so 'create' has a legacy window; reading and
-// deleting linked accounts is called without a token by no mobile client, so those are strict.
+// Caller checks (lib/user-auth.ts). Android 12.10.1 and iOS still POST without a token, so 'create' has a legacy window (such a
+// request must pass services/auth/account-proof.ts). Every other route here needs the owner's session.
 const authUserParam = (key: string) => requireUser(() => tokenVerifier(), { key, target: (req) => req.params.userId });
 // ================================================
 // VALIDATION SCHEMAS
@@ -78,7 +79,7 @@ router.get('/:userId', authUserParam('linked-accounts.list'), async (req: Reques
  * POST /linked-accounts/:userId
  * Create new linked account (store OAuth tokens)
  */
-router.post('/:userId', authUserParam('linked-accounts.create'), async (req: Request, res: Response, next: NextFunction) => {
+router.post('/:userId', authUserParam('linked-accounts.create'), requireAccountProof, async (req: Request, res: Response, next: NextFunction) => {
   try {
     const userId = req.params.userId;
     const validated = createLinkedAccountSchema.parse(req.body);
@@ -146,7 +147,7 @@ router.post('/:userId', authUserParam('linked-accounts.create'), async (req: Req
  * PATCH /linked-accounts/:userId/:accountId
  * Update linked account permissions
  */
-router.patch('/:userId/:accountId', async (req: Request, res: Response, next: NextFunction) => {
+router.patch('/:userId/:accountId', authUserParam('linked-accounts.update'), async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { userId, accountId } = req.params;
     const validated = updatePermissionsSchema.parse(req.body);
@@ -242,7 +243,7 @@ router.delete('/:userId/:accountId', authUserParam('linked-accounts.delete'), as
  * POST /linked-accounts/:userId/:accountId/refresh
  * Refresh OAuth token
  */
-router.post('/:userId/:accountId/refresh', async (req: Request, res: Response, next: NextFunction) => {
+router.post('/:userId/:accountId/refresh', authUserParam('linked-accounts.refresh'), async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { userId, accountId } = req.params;
 

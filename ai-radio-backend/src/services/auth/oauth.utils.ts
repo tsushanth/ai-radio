@@ -59,7 +59,7 @@ class StateManager {
     this.states = new Map();
 
     // Clean up expired states every minute
-    setInterval(() => this.cleanupExpiredStates(), 60 * 1000);
+    setInterval(() => this.cleanupExpiredStates(), 60 * 1000).unref(); // unref: the sweep must not keep the process (or a test run) alive
   }
 
   /**

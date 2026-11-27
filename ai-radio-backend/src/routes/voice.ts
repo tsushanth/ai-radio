@@ -6,9 +6,7 @@
  * GET  /api/voice/:userId              returns { voice_id, has_voice }
  * GET  /api/voice/health               proxies to the OpenVoice host's /health
  *
- * No middleware-based auth: this matches the existing convention in user.ts,
- * topics.ts, etc. — the userId is trusted from the path. Tightening auth is a
- * separate slice across the whole backend.
+ * The per-user routes are operator only; /health is public.
  */
 
 import { Router, Request, Response } from 'express';
@@ -20,8 +18,12 @@ import {
   synthesize,
   health,
 } from '../services/voice-clone/voice-clone.service';
+import { requireOperatorSecret } from '../lib/shared-secret';
 
 const router = Router();
+
+// Operator only: "Authorization: Bearer <BATCH_SECRET>".
+const operatorOnly = requireOperatorSecret();
 
 const supabase = env.SUPABASE_URL && env.SUPABASE_SERVICE_KEY
   ? createClient(env.SUPABASE_URL, env.SUPABASE_SERVICE_KEY)
@@ -44,7 +46,7 @@ router.get('/health', async (_req: Request, res: Response) => {
 });
 
 
-router.get('/:userId', async (req: Request, res: Response) => {
+router.get('/:userId', operatorOnly, async (req: Request, res: Response) => {
   if (!supabase) {
     res.status(503).json({ success: false, error: 'Supabase not configured' });
     return;
@@ -70,6 +72,7 @@ router.get('/:userId', async (req: Request, res: Response) => {
 
 router.post(
   '/:userId/clone',
+  operatorOnly,
   upload.single('audio'),
   async (req: Request, res: Response) => {
     if (!supabase) {
@@ -113,7 +116,7 @@ router.post(
 );
 
 
-router.post('/:userId/synthesize', async (req: Request, res: Response) => {
+router.post('/:userId/synthesize', operatorOnly, async (req: Request, res: Response) => {
   if (!supabase) {
     res.status(503).json({ success: false, error: 'Supabase not configured' });
     return;

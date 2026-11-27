@@ -14,8 +14,15 @@ import {
   parseOAuthCallbackError,
   logOAuthEvent,
 } from '../services/auth/oauth.utils';
+import { requireUser } from '../lib/user-auth';
+import { tokenVerifier } from '../lib/user-auth-runtime';
+import { checkedRedirectUrl } from '../lib/redirect-allow';
+import { authLimiter } from '../middleware/rateLimiter';
 
 const router = express.Router();
+
+// Caller checks: lib/user-auth.ts.
+const ownAccount = (key: string, target: (req: Request) => unknown) => requireUser(() => tokenVerifier(), { key, target });
 
 // ================================================
 // GOOGLE OAUTH FLOW
@@ -27,6 +34,11 @@ const router = express.Router();
  */
 router.get('/oauth/google', async (req: Request, res: Response, next: NextFunction) => {
   try {
+    const redirectUrl = checkedRedirectUrl(req.query.redirect_url);
+    if (redirectUrl === null) {
+      return res.status(400).json({ error: 'invalid_redirect_url', message: 'redirect_url is not allowed' });
+    }
+
     // Generate secure state parameter
     const state = generateState();
 
@@ -47,7 +59,7 @@ router.get('/oauth/google', async (req: Request, res: Response, next: NextFuncti
     // Store state with user context (if authenticated)
     // For initial auth, userId will be stored after callback
     stateManager.store(state, {
-      redirectUrl: req.query.redirect_url as string,
+      redirectUrl,
       metadata: {
         userAgent: req.headers['user-agent'],
         ip: req.ip,
@@ -171,12 +183,17 @@ router.get('/oauth/google/callback', async (req: Request, res: Response, next: N
  */
 router.get('/oauth/microsoft', async (req: Request, res: Response, next: NextFunction) => {
   try {
+    const redirectUrl = checkedRedirectUrl(req.query.redirect_url);
+    if (redirectUrl === null) {
+      return res.status(400).json({ error: 'invalid_redirect_url', message: 'redirect_url is not allowed' });
+    }
+
     // Generate secure state parameter
     const state = generateState();
 
     // Store state with user context
     stateManager.store(state, {
-      redirectUrl: req.query.redirect_url as string,
+      redirectUrl,
       metadata: {
         userAgent: req.headers['user-agent'],
         ip: req.ip,
@@ -294,7 +311,7 @@ router.get('/oauth/microsoft/callback', async (req: Request, res: Response, next
  * POST /auth/refresh
  * Refresh access token
  */
-router.post('/refresh', async (req: Request, res: Response, next: NextFunction) => {
+router.post('/refresh', ownAccount('auth.refresh', (req) => req.body?.userId), async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { provider, userId } = req.body;
 
@@ -351,7 +368,11 @@ router.post('/refresh', async (req: Request, res: Response, next: NextFunction) 
  * DELETE /auth/revoke/:provider
  * Revoke OAuth token and disconnect integration
  */
-router.delete('/revoke/:provider', async (req: Request, res: Response, next: NextFunction) => {
+// Extra per-address limit for calls that carry no session.
+const limitWithoutSession = (req: Request, res: Response, next: NextFunction) =>
+  req.headers.authorization ? next() : authLimiter(req, res, next);
+
+router.delete('/revoke/:provider', limitWithoutSession, ownAccount('auth.revoke', (req) => req.body?.userId), async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { provider } = req.params;
     const { userId } = req.body;
@@ -390,7 +411,7 @@ router.delete('/revoke/:provider', async (req: Request, res: Response, next: Nex
  * GET /auth/status
  * Check OAuth connection status
  */
-router.get('/status', async (req: Request, res: Response, next: NextFunction) => {
+router.get('/status', ownAccount('auth.status', (req) => req.query.userId), async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { userId } = req.query;
 

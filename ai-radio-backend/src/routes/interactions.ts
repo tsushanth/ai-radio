@@ -6,8 +6,13 @@
 import express from 'express';
 import { interactionsService } from '../services/content/interactions.service';
 import type { RecordInteractionRequest, TellMeMoreRequest } from '../types/interactions';
+import { requireSelfForAddress } from '../lib/user-auth';
+import { tokenVerifier } from '../lib/user-auth-runtime';
 
 const router = express.Router();
+
+// A user id that is an email address needs that account's session.
+router.use(requireSelfForAddress(() => tokenVerifier(), (req) => [req.headers['x-user-id']]));
 
 /**
  * POST /interactions/record

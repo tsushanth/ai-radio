@@ -17,6 +17,7 @@ import {
 } from '../types/podcast-errors';
 import { requireUser, sameEmail, type VerifiedUser } from '../lib/user-auth';
 import { tokenVerifier } from '../lib/user-auth-runtime';
+import { userRef } from '../lib/log-privacy';
 
 const router = express.Router();
 
@@ -141,7 +142,7 @@ router.post('/generate-async', authBodyUser('podcast.generate-async'), async (re
     // Validate request body
     const validated = generatePodcastSchema.parse(req.body);
 
-    console.log(`[POST /podcast/generate-async] Starting async generation for: ${validated.user_id}`);
+    console.log(`[POST /podcast/generate-async] Starting async generation for: ${userRef(validated.user_id)}`);
 
     // Check prerequisites first (this is fast)
     const prereqs = await podcastGenerator.validatePrerequisites(validated.user_id);
@@ -323,7 +324,7 @@ router.post('/script', authBodyUser('podcast.script'), async (req: Request, res:
   try {
     const validated = generatePodcastSchema.parse(req.body);
 
-    console.log(`[POST /podcast/script] Script-only generation for: ${validated.user_id}`);
+    console.log(`[POST /podcast/script] Script-only generation for: ${userRef(validated.user_id)}`);
 
     const prereqs = await podcastGenerator.validatePrerequisites(validated.user_id);
     if (!prereqs.valid) {
@@ -419,7 +420,6 @@ router.post('/generate', async (req: Request, res: Response, next: NextFunction)
     // Validate request body
     const validated = generatePodcastSchema.parse(req.body);
 
-    console.log(`[POST /podcast/generate] Raw request preferences:`, JSON.stringify(req.body.preferences));
     console.log(`[POST /podcast/generate] Validated language: ${validated.preferences.language || 'NOT SET - will default to en'}`);
 
     // Check prerequisites
@@ -450,7 +450,7 @@ router.post('/generate', async (req: Request, res: Response, next: NextFunction)
         include_topic_teasers: validated.preferences.include_topics,
         onProgress: async (progress) => {
           // TODO: Send progress via WebSocket or SSE
-          console.log(`[${validated.user_id}] ${progress.progress_percent}%: ${progress.message}`);
+          console.log(`[${userRef(validated.user_id)}] ${progress.progress_percent}%: ${progress.message}`);
         },
       }
     );

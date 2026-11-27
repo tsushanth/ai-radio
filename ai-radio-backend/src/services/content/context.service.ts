@@ -79,7 +79,7 @@ export class ContextService {
     try {
       // Traffic APIs typically require paid subscriptions (Google Maps, TomTom, etc.)
       // For now, return simulated traffic data
-      console.log(`[Traffic] Fetching traffic from ${request.origin} to ${request.destination}`);
+      console.log('[Traffic] Fetching traffic'); // origin and destination are places the user chose: not logged
 
       const traffic = this.getSimulatedTraffic(request);
       return { success: true, data: traffic };

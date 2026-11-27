@@ -5,6 +5,8 @@
 
 import Anthropic from '@anthropic-ai/sdk';
 import { instrumentAnthropic, withDefaultFeature } from '../../lib/llm';
+import { extractJson } from '../../lib/tolerantJson';
+import { reportFailure } from '../../lib/failureReporter';
 import { env } from '../../config/environment';
 import {
   PODCAST_SYSTEM_PROMPT,
@@ -217,14 +219,14 @@ export class ScriptGeneratorService {
         throw new Error('No response from Claude');
       }
 
-      // Parse JSON response with better error handling
-      let parsed: any;
-      try {
-        parsed = JSON.parse(response);
-      } catch (parseError) {
-        console.error('Failed to parse Claude response as JSON:', response.substring(0, 500));
+      // The model often wraps its JSON in a ```json fence despite the instruction. A cut-off reply is refused, not shortened.
+      const extracted = extractJson(response);
+      if (!extracted || extracted.truncated) {
+        // Length and stop reason only: the reply is built from the user's email and must never be logged.
+        console.error(`Failed to parse Claude response as JSON (${response.length} chars, stop_reason ${completion.stop_reason})`);
         throw new Error('Claude returned invalid JSON');
       }
+      const parsed: any = extracted.value;
 
       // Handle multiple possible response formats from Claude
       let segments: ScriptSegment[];
@@ -246,7 +248,7 @@ export class ScriptGeneratorService {
         // Try to find any array property in the response
         const arrayProps = Object.keys(parsed).filter(key => Array.isArray(parsed[key]));
         if (arrayProps.length > 0) {
-          console.log(`Found array property '${arrayProps[0]}' in Claude response, using it`);
+          console.log('Found another array property in Claude response, using it');
           segments = parsed[arrayProps[0]];
         } else if (parsed.speaker && parsed.text) {
           // Claude returned a single segment object instead of an array
@@ -269,12 +271,12 @@ export class ScriptGeneratorService {
               console.log(`Found ${potentialSegments.length} potential segments in nested objects`);
               segments = potentialSegments as ScriptSegment[];
             } else {
-              console.error('Invalid Claude response structure:', JSON.stringify(parsed).substring(0, 500));
+              console.error(`Invalid Claude response structure (${response.length} chars)`);
               throw new Error('Invalid response format from Claude - no valid segment array found');
             }
           }
         } else {
-          console.error('Invalid Claude response structure:', JSON.stringify(parsed).substring(0, 500));
+          console.error(`Invalid Claude response structure (${response.length} chars)`);
           throw new Error('Invalid response format from Claude - no valid segment array found');
         }
       }
@@ -344,7 +346,7 @@ export class ScriptGeneratorService {
         }
 
         if (!normalizedSpeaker || !text) {
-          console.warn(`Segment ${index} missing required fields, speaker: ${speaker}, text length: ${text?.length || 0}`);
+          console.warn(`Segment ${index} missing required fields, has speaker: ${Boolean(speaker)}, text length: ${text?.length || 0}`);
           // Try to salvage the segment
           if (text) {
             normalizedSpeaker = index % 2 === 0 ? 'host1' : 'host2'; // Alternate hosts
@@ -448,6 +450,11 @@ export class ScriptGeneratorService {
    * Creates a simple but functional podcast script from available content
    */
   private generateFallbackScript(input: PodcastGenerationInput): PodcastScript {
+    // A fallback brief is a failed feature even though the request succeeds: alert (counts only, no user data).
+    reportFailure('daily_brief_fallback', new Error('Daily brief: AI script generation failed, the user got the fallback script'), {
+      emails: String(input.emails.length),
+    });
+
     const { emails, calendar_events, user_id, date, preferences } = input;
     const userName = user_id.split('@')[0];
 

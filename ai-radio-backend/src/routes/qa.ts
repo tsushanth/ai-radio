@@ -5,6 +5,7 @@
 
 import { Router, Request, Response } from 'express';
 import { qaGenerator } from '../services/content/qa.generator';
+import { userRef } from '../lib/log-privacy';
 
 const router = Router();
 
@@ -38,7 +39,7 @@ router.post('/ask', async (req: Request, res: Response) => {
       });
     }
 
-    console.log(`[Q&A] Processing question from user ${userId.substring(0, 8)}...`);
+    console.log(`[Q&A] Processing question from user ${userRef(userId)}`);
 
     const result = await qaGenerator.askQuestion({
       question,

@@ -8,6 +8,7 @@ import { z } from 'zod';
 import { tokenManager } from '../services/auth/token.manager';
 import { requireUser } from '../lib/user-auth';
 import { tokenVerifier } from '../lib/user-auth-runtime';
+import { userRef } from '../lib/log-privacy';
 
 const router = express.Router();
 
@@ -58,7 +59,7 @@ router.get('/:userId', authUserParam('linked-accounts.list'), async (req: Reques
       createdAt: new Date().toISOString(),
     }));
 
-    console.log(`Found ${linkedAccounts.length} linked accounts for user ${userId}`);
+    console.log(`Found ${linkedAccounts.length} linked accounts for user ${userRef(userId)}`);
 
     res.json({
       success: true,
@@ -111,8 +112,8 @@ router.post('/:userId', authUserParam('linked-accounts.create'), async (req: Req
       validated.refresh_token || null
     );
 
-    console.log(`Linked account created: ${validated.provider} - ${validated.email}`);
-    console.log(`Token stored for userId: ${userId}`);
+    console.log(`Linked account created: ${validated.provider} - ${userRef(validated.email)}`);
+    console.log(`Token stored for user ${userRef(userId)}`);
 
     res.status(201).json({
       success: true,

@@ -4,6 +4,7 @@
  */
 
 import { env } from '../../config/environment';
+import { userRef } from '../../lib/log-privacy';
 
 interface PushPayload {
   title: string;
@@ -192,7 +193,7 @@ export class PushNotificationService {
 
       const result = await response.json() as { failure?: number; results?: unknown[] };
       if (result.failure && result.failure > 0) {
-        console.error('[Push] FCM delivery failed:', result.results);
+        console.error(`[Push] FCM delivery failed: ${result.failure} message(s)`); // results can carry device tokens
         return false;
       }
 
@@ -247,7 +248,7 @@ export class PushNotificationService {
   ): Promise<boolean> {
     // This would store the token in the database
     // Implementation depends on your database schema
-    console.log(`[Push] Registering ${platform} device for user ${userId}`);
+    console.log(`[Push] Registering ${platform} device for user ${userRef(userId)}`);
 
     // For now, just log - actual implementation would save to Supabase
     return true;
@@ -257,7 +258,7 @@ export class PushNotificationService {
    * Unregister device token
    */
   async unregisterDeviceToken(userId: string, deviceToken: string): Promise<boolean> {
-    console.log(`[Push] Unregistering device for user ${userId}`);
+    console.log(`[Push] Unregistering device for user ${userRef(userId)}`);
     return true;
   }
 }

@@ -32,6 +32,7 @@ import {
   getAudioStatistics,
 } from '../tts/audio.utils';
 import { validateScriptStructure } from '../ai/script.utils';
+import { randomUUID } from 'node:crypto';
 
 /**
  * Job progress callback
@@ -560,7 +561,7 @@ export class PodcastGeneratorService {
       }
     );
 
-    console.log(`Audio uploaded: ${result.url} (${(result.size_bytes / 1024 / 1024).toFixed(2)} MB)`);
+    console.log(`Audio uploaded (${(result.size_bytes / 1024 / 1024).toFixed(2)} MB)`);
 
     return result.url;
   }
@@ -603,9 +604,9 @@ export class PodcastGeneratorService {
     //   .single();
 
     // Return placeholder ID
-    const episodeId = `ep_${Date.now()}_${userId.split('@')[0]}`;
+    const episodeId = `ep_${Date.now()}_${randomUUID().slice(0, 8)}`; // never built from the address: ids get logged
 
-    console.log('Episode saved:', { episodeId, title, duration });
+    console.log('Episode saved:', { episodeId, duration });
 
     return episodeId;
   }

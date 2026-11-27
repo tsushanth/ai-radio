@@ -8,6 +8,7 @@ import { createClient } from '@supabase/supabase-js';
 import { env } from '../config/environment';
 import { dailyBriefScheduler } from '../services/scheduler/daily-brief.scheduler';
 import { languageFromBody, withLanguage } from '../services/languages/localized';
+import { userRef } from '../lib/log-privacy';
 
 const router = express.Router();
 
@@ -78,7 +79,7 @@ router.post('/register', async (req, res) => {
       });
     }
 
-    console.log(`[Notifications] Registered ${platform} device for user ${user_id}`);
+    console.log(`[Notifications] Registered ${platform} device for user ${userRef(user_id)}`);
 
     res.json({
       success: true,
@@ -279,7 +280,7 @@ router.post('/trigger/:userId', async (req, res) => {
   try {
     const userId = req.params.userId;
 
-    console.log(`[Notifications] Manual trigger for user: ${userId}`);
+    console.log(`[Notifications] Manual trigger for user: ${userRef(userId)}`);
 
     const result = await dailyBriefScheduler.triggerForUser(userId);
 

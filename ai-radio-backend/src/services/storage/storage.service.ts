@@ -145,7 +145,7 @@ export class StorageService {
     }
 
     try {
-      console.log(`📤 Uploading to ${bucket}/${path}...`);
+      console.log(`📤 Uploading ${buffer.length} B to ${bucket}...`); // the path can start with the user's address
 
       const { data, error } = await this.supabase.storage
         .from(bucket)
@@ -248,7 +248,7 @@ export class StorageService {
     const bucketName = bucket || this.DEFAULT_BUCKET;
 
     if (!this.supabase) {
-      console.log(`Mock delete: ${bucketName}/${path}`);
+      console.log(`Mock delete: 1 file from ${bucketName}`);
       return;
     }
 
@@ -392,7 +392,7 @@ export class StorageService {
     bucket: string
   ): UploadResult {
     const sizeMB = (buffer.length / 1024 / 1024).toFixed(2);
-    console.log(`Mock upload: ${bucket}/${path} (${sizeMB} MB)`);
+    console.log(`Mock upload: ${bucket} (${sizeMB} MB)`);
 
     return {
       url: `https://storage.example.com/${bucket}/${path}`,

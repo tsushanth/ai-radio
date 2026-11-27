@@ -3,6 +3,7 @@
  * Updated: 2025-01-21 - Service key refresh
  */
 
+import './lib/log-privacy-install'; // first: masks addresses and tokens in every later console line
 import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';

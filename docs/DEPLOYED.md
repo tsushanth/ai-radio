@@ -3,6 +3,17 @@
 Newest first. Parity rule: whatever runs in production is on `main` (tree compared for the deployed paths).
 
 
+## 2026-11-27 (UTC) backend v58 (ai-radio-backend): route access rules (#110)
+
+- Release: Fly v58, image `registry.fly.io/ai-radio-backend:deployment-01M8DDWE77RG2TVSJAKZGE3KKX`, `flyctl deploy --remote-only` from `ai-radio-backend/` of a clean detached worktree at `origin/main` `375e138`; tree `3970736e18f8d85479f15a757be2e856dd2d14fd` equals `origin/main`.
+- Access rules per route are in `src/lib/user-auth.ts` and checked by `src/routes/route-access.test.ts`. Operator routes use the existing `BATCH_SECRET`.
+- Optional settings, all unset: `USER_AUTH_STRICT`, `USER_AUTH_STRICT_NOTIFICATIONS`, `USER_AUTH_LEGACY_ANON`, `OAUTH_REDIRECT_ORIGINS` (extra web origins for the browser sign-in return address), `LINK_ACCOUNT_PROOF` (`off` turns off the provider check on account linking if it ever refuses real users; look for `[AccountProof]` in the logs).
+- Before: no batch, topic episode, deep dive, ask or suggestion job in progress; no staged secret. No secret set or changed, no database change. `audexa-radio-fly` and `audexa-web` were not deployed.
+- Verified: type check and 565 tests; the 136 compiled files in the running image match a build of `375e138`; requests naming a made-up address answered as in the contract test; health, topics, config, voices and ask routes answer 200; radio `/stream` 200 before and after; audexa.app 200.
+- NOT verified: a real released app linking an account or generating a Daily Brief since the deploy. `GET /api/voice/health` answers 503 (that route and its upstream were not changed here).
+- Rollback, from `ai-radio-backend/`: `flyctl deploy -a ai-radio-backend --image registry.fly.io/ai-radio-backend:deployment-01M8D9HTS57GB9M0AXK3H5EGVG` (v57).
+
+
 ## 2026-11-27 (UTC) backend v57 (ai-radio-backend): log privacy; daily brief script parsing (#108)
 
 - Release: Fly v57, image `registry.fly.io/ai-radio-backend:deployment-01M8D9HTS57GB9M0AXK3H5EGVG`, `flyctl deploy --remote-only` from `ai-radio-backend/` of a clean detached worktree at `origin/main` `470df7c`; tree `54814642e203ef132b87e54e0c089f58ce65e83b` equals `origin/main`.

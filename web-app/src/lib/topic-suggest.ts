@@ -1,5 +1,5 @@
 // "Suggest a topic": POST /api/topics/suggest { topicName, language, description? } (ai-radio-backend/src/routes/topics.ts).
-// Same body Android sends (SuggestTopicRequest). No user id or email is sent. The backend stores the request and, when its
+// Same body Android sends (SuggestTopicRequest). The body names no user; a signed-in user's session token goes with it. The backend stores the request and, when its
 // topic-suggest job is switched on, reviews it and adds the topics that pass. The limits below keep one browser from flooding it.
 // They are client-side courtesy limits; the backend also caps suggestions per IP per day.
 import { apiClient } from './api/client.ts';
@@ -58,9 +58,10 @@ export interface SuggestResult {
 }
 
 /** Sends a validated suggestion. Throws (with the server's message) on any non-2xx or network failure. */
-export async function submitSuggestion(body: { topicName: string; language: string; description?: string }): Promise<SuggestResult> {
+export async function submitSuggestion(body: { topicName: string; language: string; description?: string }, userEmail?: string | null): Promise<SuggestResult> {
   const res = await apiClient<{ success: boolean; data?: { requestId?: string; status?: string } }>('/topics/suggest', {
     method: 'POST',
+    asUser: userEmail,
     body: JSON.stringify(body),
   });
   if (res && res.success === false) throw new Error('Failed to submit suggestion');

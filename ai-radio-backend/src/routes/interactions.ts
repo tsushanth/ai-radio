@@ -8,6 +8,7 @@ import { interactionsService } from '../services/content/interactions.service';
 import type { RecordInteractionRequest, TellMeMoreRequest } from '../types/interactions';
 import { requireSelfForAddress } from '../lib/user-auth';
 import { tokenVerifier } from '../lib/user-auth-runtime';
+import { clientKey, dailyAllowance, refuseOverLimit } from '../lib/dailyAllowance';
 
 const router = express.Router();
 
@@ -58,6 +59,8 @@ router.post('/tell-me-more', async (req, res) => {
         error: 'Missing required fields: context_type, context_id',
       });
     }
+
+    if (!dailyAllowance.take('tell_me_more', clientKey(req, res.locals.authUser?.id)).allowed) return refuseOverLimit(res);
 
     const result = await interactionsService.generateExpansion(userId, request);
     res.json(result);

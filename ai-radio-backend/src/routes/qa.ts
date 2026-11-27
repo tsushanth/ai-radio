@@ -8,6 +8,7 @@ import { qaGenerator } from '../services/content/qa.generator';
 import { userRef } from '../lib/log-privacy';
 import { requireSelfForAddress } from '../lib/user-auth';
 import { tokenVerifier } from '../lib/user-auth-runtime';
+import { clientKey, dailyAllowance, refuseOverLimit } from '../lib/dailyAllowance';
 
 const router = Router();
 
@@ -43,6 +44,8 @@ router.post('/ask', async (req: Request, res: Response) => {
         error: 'User ID is required',
       });
     }
+
+    if (!dailyAllowance.take('qa', clientKey(req, res.locals.authUser?.id)).allowed) return refuseOverLimit(res);
 
     console.log(`[Q&A] Processing question from user ${userRef(userId)}`);
 

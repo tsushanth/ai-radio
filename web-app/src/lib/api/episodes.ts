@@ -108,9 +108,10 @@ export async function fetchTopicEpisode(topicId: string, language: string = 'en'
  * `force` regenerates even if one exists. Non-English forced regeneration would bypass the backend's daily cap for on-demand
  * languages, so callers only force English.
  */
-export async function generateTopicEpisode(topicId: string, language: string = 'en', force: boolean = false): Promise<Episode> {
+export async function generateTopicEpisode(topicId: string, language: string = 'en', force: boolean = false, userEmail?: string | null): Promise<Episode> {
   const response = await apiClient<TopicEpisodeResponse>(`/topics/${topicId}/generate`, {
     method: 'POST',
+    asUser: userEmail,
     body: JSON.stringify({ forceRegenerate: force, language: apiLang(language) }),
   });
   const episode = unwrapTopicEpisode<Episode>(response.data);
@@ -141,12 +142,13 @@ export async function getLinkedAccounts(userId: string): Promise<{ linkedAccount
 }
 
 export async function getAuthStatus(userId: string): Promise<{ google: { connected: boolean }; microsoft: { connected: boolean } }> {
-  return apiClient(`/auth/status?userId=${encodeURIComponent(userId)}`);
+  return apiClient(`/auth/status?userId=${encodeURIComponent(userId)}`, { asUser: userId });
 }
 
 export async function disconnectAccount(userId: string, provider: string): Promise<void> {
   return apiClient(`/auth/revoke/${provider}`, {
     method: 'DELETE',
+    asUser: userId,
     body: JSON.stringify({ userId }),
   });
 }

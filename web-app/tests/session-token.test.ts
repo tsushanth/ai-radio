@@ -2,7 +2,10 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { bearerTokenFor, setSessionProvider } from '../src/lib/api/session-token.ts';
 import { apiClient } from '../src/lib/api/client.ts';
-import { getEpisodes, getJobStatus, generateEpisode, getLinkedAccounts } from '../src/lib/api/episodes.ts';
+import { getEpisodes, getJobStatus, generateEpisode, getLinkedAccounts, getAuthStatus, disconnectAccount, generateTopicEpisode } from '../src/lib/api/episodes.ts';
+import { submitSuggestion } from '../src/lib/topic-suggest.ts';
+import { readdirSync, readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { deleteRemoteAccount } from '../src/lib/account.ts';
 
 type Seen = { url: string; method?: string; auth: string | null };
@@ -114,4 +117,41 @@ test('an Authorization header set by the caller wins', async () => {
     m.restore();
     setSessionProvider(null);
   }
+});
+
+test('disconnect, connection status, topic generation and suggestions send the token too', async () => {
+  setSessionProvider(session('me@example.com'));
+  const m = mockFetch(() => json(200, { success: true, data: { id: 'e1', status: 'completed', audioUrl: 'https://example.invalid/a.mp3' } }));
+  try {
+    await getAuthStatus('me@example.com');
+    await disconnectAccount('me@example.com', 'google');
+    await generateTopicEpisode('ai-ml', 'en', false, 'me@example.com');
+    await submitSuggestion({ topicName: 'Chess', language: 'en' }, 'me@example.com');
+    assert.deepEqual(m.calls.map((c) => c.auth), Array(4).fill('Bearer tok-1'));
+    assert.equal(m.calls[1].method, 'DELETE');
+    assert.ok(m.calls[1].url.endsWith('/auth/revoke/google'));
+    m.calls.length = 0;
+    await disconnectAccount('guest@audexa.app', 'google');
+    await generateTopicEpisode('ai-ml', 'en', false, 'guest@audexa.app');
+    await submitSuggestion({ topicName: 'Chess', language: 'en' });
+    assert.deepEqual(m.calls.map((c) => c.auth), [null, null, null]);
+  } finally {
+    m.restore();
+    setSessionProvider(null);
+  }
+});
+
+test('every backend request to a route that takes a token sets asUser', () => {
+  const takesToken = /apiClient(?:<[^()]*>)?\(\s*[`'](\/(?:podcast\/(?:generate-async|script|job|episodes)|linked-accounts|auth\/(?:status|revoke|refresh)|notifications\/(?:register|unregister|settings)|user\/|topics\/(?:suggest|\$\{topicId\}\/generate)))/g;
+  const files = (dir: string): string[] => readdirSync(dir, { withFileTypes: true }).flatMap((e) => (e.isDirectory() ? files(join(dir, e.name)) : /\.tsx?$/.test(e.name) ? [join(dir, e.name)] : []));
+  let seen = 0;
+  for (const file of files(new URL('../src', import.meta.url).pathname)) {
+    const text = readFileSync(file, 'utf8');
+    for (const match of text.matchAll(takesToken)) {
+      seen++;
+      const call = text.slice(match.index, text.indexOf(';', match.index + match[0].length));
+      assert.ok(call.includes('asUser'), `${file}: ${match[1]}`);
+    }
+  }
+  assert.ok(seen >= 8, `found ${seen} calls`);
 });

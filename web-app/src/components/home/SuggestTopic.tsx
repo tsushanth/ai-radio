@@ -19,7 +19,7 @@ function readHistory(): unknown {
 
 /** Discover-tab card: "Suggest a topic" form (same request Android sends). */
 export function SuggestTopic() {
-  const { preferences } = useAuth();
+  const { user, preferences } = useAuth();
   const [open, setOpen] = useState(false);
   const [topicName, setTopicName] = useState('');
   const [description, setDescription] = useState('');
@@ -39,7 +39,7 @@ export function SuggestTopic() {
 
     setBusy(true);
     try {
-      await submitSuggestion(checked.body);
+      await submitSuggestion(checked.body, user?.email);
       localStorage.setItem(SUGGEST_HISTORY_KEY, JSON.stringify([...recentSuggestions(readHistory(), now), now]));
       track('topic_suggest_submitted', { language: cleanLang(checked.body.language) }); // never the text
       setSent(true);

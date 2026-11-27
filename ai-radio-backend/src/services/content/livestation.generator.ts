@@ -7,6 +7,7 @@ import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import Anthropic from '@anthropic-ai/sdk';
 import { instrumentAnthropic, withFeature } from '../../lib/llm';
 import { env } from '../../config/environment';
+import { AllowanceReached } from '../../lib/dailyAllowance';
 import { openaiTTS, type VoiceConfig } from '../tts/openai.tts';
 import { concatenateBuffers } from '../tts/audio.utils';
 import type {
@@ -239,10 +240,25 @@ export class LiveStationGenerator {
     return { station, recentEpisodes };
   }
 
+  private readonly pending = new Map<string, Promise<LiveStationEpisode>>();
+
+  /**
+   * Joins the generation already running for this station, or starts one if `allow` agrees (asked only when a new one would
+   * start). Null when it does not.
+   */
+  generateWithin(station: LiveStation, allow: () => boolean): Promise<LiveStationEpisode | null> {
+    const running = this.pending.get(station.id);
+    if (running) return running;
+    if (!allow()) return Promise.resolve(null);
+    const run = this.generateEpisode(station).finally(() => this.pending.delete(station.id));
+    this.pending.set(station.id, run);
+    return run;
+  }
+
   /**
    * Tune into a live station - returns current content or generates new
    */
-  async tuneIn(stationId: string): Promise<LiveStationTuneInResponse> {
+  async tuneIn(stationId: string, allow: () => boolean): Promise<LiveStationTuneInResponse> {
     // Get station
     const detail = await this.getStationDetail(stationId);
     if (!detail) {
@@ -256,7 +272,8 @@ export class LiveStationGenerator {
     if (!episode || this.isEpisodeExpired(episode, station.refreshIntervalMinutes)) {
       // Generate new episode
       console.log(`[LiveStation] Generating new episode for ${station.name}`);
-      episode = await this.generateEpisode(station);
+      episode = (await this.generateWithin(station, allow)) ?? episode;
+      if (!episode) throw new AllowanceReached();
     }
 
     // Increment listener count
@@ -275,7 +292,7 @@ export class LiveStationGenerator {
   /**
    * Generate a new episode for a station
    */
-  async generateEpisode(station: LiveStation): Promise<LiveStationEpisode> {
+  private async generateEpisode(station: LiveStation): Promise<LiveStationEpisode> {
     const episodeId = `${station.id}-${Date.now()}`;
 
     console.log(`[LiveStation] Starting generation for ${station.name}`);

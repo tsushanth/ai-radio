@@ -26,7 +26,8 @@ import type {
   RSSFeedMetadata,
 } from '../../types/customsource';
 
-const MAX_SOURCE_BYTES = 10_000_000;
+// Long-running podcast feeds reach about 21 MB.
+const MAX_SOURCE_BYTES = 25_000_000;
 const MAX_ITEMS = 50;
 const MAX_ITEM_CHARS = 200_000;
 

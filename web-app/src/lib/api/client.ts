@@ -7,8 +7,9 @@ interface RequestOptions extends RequestInit {
   params?: Record<string, string>;
   /**
    * The user this call acts for (the email in the URL or body). When that user has a signed-in session its token is sent as
-   * "Authorization: Bearer"; with none (guest, signed out) the call goes out unchanged. Set it on the routes that take a token:
-   * podcast generate/job/episodes, linked-accounts, DELETE user.
+   * "Authorization: Bearer"; with none (guest, signed out) the call goes out unchanged. Set it on every route that takes a token:
+   * podcast generate-async/job/episodes, linked-accounts, auth status/revoke, topic generate/suggest, DELETE user. A new call to
+   * any other such route (podcast/script, auth refresh, notifications, user) must set it too; tests/session-token.test.ts lists them.
    */
   asUser?: string | null;
 }

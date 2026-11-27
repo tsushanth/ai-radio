@@ -56,7 +56,7 @@ export default function TopicDetailPage() {
   const params = useParams();
   const router = useRouter();
   const { topics } = useTopics();
-  const { preferences, toggleBookmark } = useAuth();
+  const { user, preferences, toggleBookmark } = useAuth();
 
   const [topic, setTopic] = useState<Topic | null>(null);
   const [currentEpisode, setCurrentEpisode] = useState<Episode | null>(null);
@@ -158,7 +158,7 @@ export default function TopicDetailPage() {
     try {
       // Only English is force-regenerated (as before); other languages are generated once a day and served from the backend's cache
       const force = lang === 'en';
-      const placeholder = await generateTopicEpisode(topicId, lang, force);
+      const placeholder = await generateTopicEpisode(topicId, lang, force, user?.email);
       // A forced run returns the OLD completed episode while the new one builds, so only trust a completed answer when not forcing
       if (!force && placeholder.status === 'completed' && placeholder.audioUrl) {
         if (currentEpisode && currentEpisode.id !== placeholder.id) setPreviousEpisodes((prev) => [currentEpisode, ...prev]);
@@ -180,7 +180,7 @@ export default function TopicDetailPage() {
     } finally {
       if (aliveRef.current) setIsGenerating(false);
     }
-  }, [topicId, analyticsTopicId, episodeLang, currentEpisode, waitAndShow]);
+  }, [topicId, analyticsTopicId, episodeLang, currentEpisode, waitAndShow, user?.email]);
 
   if (!topic) {
     return (

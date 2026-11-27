@@ -12,6 +12,7 @@ import { userRef } from '../lib/log-privacy';
 import { randomUUID } from 'node:crypto';
 import { requireSelfForAddress } from '../lib/user-auth';
 import { tokenVerifier } from '../lib/user-auth-runtime';
+import { clientKey, dailyAllowance, refuseOverLimit } from '../lib/dailyAllowance';
 
 const router = Router();
 
@@ -119,6 +120,12 @@ router.post('/generate', podcastLimiter, async (req: Request, res: Response) => 
           error: 'Server is generating other deep dives right now. Please try again in a couple of minutes.',
           retryAfterSeconds: 120,
         });
+      return;
+    }
+
+    // Counted last, so a duplicate or busy answer uses nothing.
+    if (!dailyAllowance.take('deepdive', clientKey(req, res.locals.authUser?.id)).allowed) {
+      refuseOverLimit(res);
       return;
     }
 

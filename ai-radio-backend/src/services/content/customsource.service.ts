@@ -7,6 +7,8 @@ import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import Anthropic from '@anthropic-ai/sdk';
 import { instrumentAnthropic, withFeature } from '../../lib/llm';
 import { env } from '../../config/environment';
+import { publicFetch } from '../../lib/publicFetch';
+import { dailyAllowance } from '../../lib/dailyAllowance';
 import type {
   CustomSource,
   CustomSourceItem,
@@ -23,6 +25,10 @@ import type {
   RSSFeedItem,
   RSSFeedMetadata,
 } from '../../types/customsource';
+
+const MAX_SOURCE_BYTES = 10_000_000;
+const MAX_ITEMS = 50;
+const MAX_ITEM_CHARS = 200_000;
 
 export class CustomSourceService {
   private supabase: SupabaseClient | null = null;
@@ -69,7 +75,7 @@ export class CustomSourceService {
 
       if (sourceType === 'website') {
         // Try to fetch website
-        const response = await fetch(url, { method: 'HEAD' });
+        const response = await this.fetchSource(url, 'HEAD');
         return {
           isValid: response.ok,
           sourceType,
@@ -395,11 +401,26 @@ export class CustomSourceService {
 
   // ============ Private Methods ============
 
+  /** Every request to a source address goes through here (see lib/publicFetch.ts). Callers get one message for any failure. */
+  private async fetchSource(url: string, method: 'GET' | 'HEAD' = 'GET'): Promise<Response> {
+    try {
+      return await publicFetch(url, {
+        method,
+        timeoutMs: 10_000,
+        maxBytes: MAX_SOURCE_BYTES,
+        headers: { 'User-Agent': 'Mozilla/5.0 (compatible; AudexaBot/1.0)', Accept: 'application/rss+xml, application/xml, text/xml, text/html;q=0.9, */*;q=0.8' },
+      });
+    } catch (error) {
+      console.warn(`[CustomSource] Fetch failed (${error instanceof Error ? error.name : 'error'})`);
+      throw new Error('Could not fetch this address');
+    }
+  }
+
   /**
    * Fetch RSS feed metadata
    */
   private async fetchRSSFeed(url: string): Promise<RSSFeedMetadata> {
-    const response = await fetch(url);
+    const response = await this.fetchSource(url);
     if (!response.ok) {
       throw new Error('Failed to fetch RSS feed');
     }
@@ -420,7 +441,7 @@ export class CustomSourceService {
    * Fetch and save RSS items
    */
   private async fetchAndSaveRSSItems(source: CustomSource): Promise<number> {
-    const response = await fetch(source.url);
+    const response = await this.fetchSource(source.url);
     if (!response.ok) {
       throw new Error('Failed to fetch RSS feed');
     }
@@ -430,7 +451,7 @@ export class CustomSourceService {
 
     let newCount = 0;
 
-    for (const item of items.slice(0, 50)) {
+    for (const item of items.slice(0, MAX_ITEMS)) {
       // Max 50 items
       const itemId = `item-${source.id}-${this.hashString(item.guid || item.link)}`;
 
@@ -495,13 +516,8 @@ export class CustomSourceService {
   private parseRSSItems(xml: string): RSSFeedItem[] {
     const items: RSSFeedItem[] = [];
 
-    // Simple regex-based parsing (in production, use a proper XML parser)
-    const itemRegex = /<item>([\s\S]*?)<\/item>|<entry>([\s\S]*?)<\/entry>/g;
-    let match;
-
-    while ((match = itemRegex.exec(xml)) !== null) {
-      const itemXml = match[1] || match[2];
-
+    // Simple tag scanning (in production, use a proper XML parser)
+    for (const itemXml of this.itemBlocks(xml)) {
       const title = this.extractXmlValue(itemXml, 'title');
       const link =
         this.extractXmlValue(itemXml, 'link') ||
@@ -535,11 +551,33 @@ export class CustomSourceService {
     return items;
   }
 
+  /** The text inside each of the first MAX_ITEMS <item> or <entry> elements, in one pass over the document. */
+  private itemBlocks(xml: string): string[] {
+    const blocks: string[] = [];
+    const open = /<(item|entry)>/g;
+    const unclosed = new Set<string>();
+    let match: RegExpExecArray | null;
+    while (blocks.length < MAX_ITEMS && (match = open.exec(xml)) !== null) {
+      const tag = match[1];
+      if (unclosed.has(tag)) continue;
+      const end = xml.indexOf(`</${tag}>`, open.lastIndex);
+      if (end < 0) {
+        unclosed.add(tag);
+        continue;
+      }
+      blocks.push(xml.slice(open.lastIndex, Math.min(end, open.lastIndex + MAX_ITEM_CHARS)));
+      open.lastIndex = end;
+    }
+    return blocks;
+  }
+
   /**
    * Summarize content using GPT
    */
   private async summarizeContent(content: string): Promise<string> {
     if (!content || content.length < 100) return content;
+    // Over the daily allowance the item keeps the start of its own text.
+    if (!dailyAllowance.take('source_summary', 'all').allowed) return content.substring(0, 200);
 
     try {
       const response = await withFeature('custom_source', () => this.anthropic.messages.create({
@@ -689,14 +727,25 @@ export class CustomSourceService {
     return match?.[1] || match?.[2] || match?.[3] || 'YouTube Channel';
   }
 
+  /** The first <tag> that holds either a CDATA section or plain text. Linear in the length of the item. */
   private extractXmlValue(xml: string, tag: string): string | undefined {
-    const regex = new RegExp(`<${tag}[^>]*><!\\[CDATA\\[([\\s\\S]*?)\\]\\]></${tag}>|<${tag}[^>]*>([^<]*)</${tag}>`, 'i');
-    const match = xml.match(regex);
-    return match?.[1] || match?.[2];
+    const open = new RegExp(`<${tag}[^<>]*>`, 'gi');
+    const lower = xml.toLowerCase();
+    const close = `</${tag.toLowerCase()}>`;
+    while (open.exec(xml) !== null) {
+      const start = open.lastIndex;
+      if (xml.startsWith('<![CDATA[', start)) {
+        const end = lower.indexOf(`]]>${close}`, start + 9);
+        return end < 0 ? undefined : xml.slice(start + 9, end) || undefined;
+      }
+      const next = xml.indexOf('<', start);
+      if (next >= 0 && lower.startsWith(close, next)) return xml.slice(start, next) || undefined;
+    }
+    return undefined;
   }
 
   private extractXmlAttribute(xml: string, tag: string, attr: string): string | undefined {
-    const regex = new RegExp(`<${tag}[^>]*${attr}="([^"]*)"`, 'i');
+    const regex = new RegExp(`<${tag}[^<>]*${attr}="([^"]*)"`, 'i');
     const match = xml.match(regex);
     return match?.[1];
   }
@@ -711,7 +760,7 @@ export class CustomSourceService {
   }
 
   private stripHtml(html: string): string {
-    return html.replace(/<[^>]*>/g, '').trim();
+    return html.replace(/<[^<>]*>/g, '').trim();
   }
 
   private hashString(str: string): string {

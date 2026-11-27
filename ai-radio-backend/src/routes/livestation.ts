@@ -5,8 +5,11 @@
 
 import { Router, Request, Response } from 'express';
 import { liveStationGenerator } from '../services/content/livestation.generator';
+import { AllowanceReached, clientKey, dailyAllowance, refuseOverLimit } from '../lib/dailyAllowance';
 
 const router = Router();
+
+const mayGenerate = (req: Request) => () => dailyAllowance.take('station', clientKey(req)).allowed;
 
 /**
  * GET /api/livestation
@@ -69,13 +72,14 @@ router.post('/:stationId/tune-in', async (req: Request, res: Response) => {
 
     console.log(`[LiveStation] Tuning into station: ${stationId}`);
 
-    const result = await liveStationGenerator.tuneIn(stationId);
+    const result = await liveStationGenerator.tuneIn(stationId, mayGenerate(req));
 
     res.json({
       success: true,
       data: result,
     });
   } catch (error) {
+    if (error instanceof AllowanceReached) return refuseOverLimit(res);
     console.error('[LiveStation] Failed to tune in:', error);
     res.status(500).json({
       success: false,
@@ -102,14 +106,17 @@ router.post('/:stationId/refresh', async (req: Request, res: Response) => {
 
     console.log(`[LiveStation] Force refreshing station: ${stationId}`);
 
-    const episode = await liveStationGenerator.generateEpisode(detail.station);
+    const fresh = await liveStationGenerator.generateWithin(detail.station, mayGenerate(req));
+    // Over the daily allowance the latest episode is served, so the player keeps working.
+    const episode = fresh ?? detail.station.currentEpisode;
+    if (!episode) return refuseOverLimit(res);
 
     res.json({
       success: true,
       data: {
         station: { ...detail.station, currentEpisode: episode },
         episode,
-        message: 'Station refreshed successfully',
+        message: fresh ? 'Station refreshed successfully' : 'Showing the latest update',
       },
     });
   } catch (error) {

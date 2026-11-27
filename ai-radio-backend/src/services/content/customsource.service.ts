@@ -157,7 +157,7 @@ export class CustomSourceService {
       await this.saveSource(source);
     }
 
-    console.log(`[CustomSource] Added source: ${source.name} (${sourceType})`);
+    console.log(`[CustomSource] Added source: ${source.id} (${sourceType})`);
 
     return {
       source,
@@ -244,7 +244,7 @@ export class CustomSourceService {
 
     const { source } = detail;
 
-    console.log(`[CustomSource] Refreshing ${source.name}...`);
+    console.log(`[CustomSource] Refreshing ${source.id}...`);
 
     let newItemCount = 0;
 

@@ -9,6 +9,7 @@ import type { StoredOAuthToken } from '../../types/oauth';
 import { gmailAuthService } from './gmail.auth';
 import { outlookAuthService } from './outlook.auth';
 import { env } from '../../config/environment';
+import { userRef } from '../../lib/log-privacy';
 
 // In-memory token storage (fallback when Supabase unavailable)
 interface TokenRecord {
@@ -74,7 +75,7 @@ export class TokenManager {
       createdAt: new Date(),
     };
     tokenStore.set(key, record);
-    console.log(`✅ Token stored in memory: ${key} (${email})`);
+    console.log(`✅ Token stored in memory: ${userRef(userId)} ${provider}`);
 
     // Also store in Supabase if available
     if (this.supabase) {
@@ -99,7 +100,7 @@ export class TokenManager {
         if (error) {
           console.error('❌ Failed to store token in database:', error.message);
         } else {
-          console.log(`✅ Token stored in database: ${userId} / ${provider}`);
+          console.log(`✅ Token stored in database: ${userRef(userId)} / ${provider}`);
         }
       } catch (dbError) {
         console.error('❌ Database error storing token:', dbError);
@@ -130,8 +131,7 @@ export class TokenManager {
     try {
       const key = `${userId}:${provider}`;
 
-      console.log(`Retrieving token for user ${userId} provider ${provider}`);
-      console.log(`   Memory store has ${tokenStore.size} tokens: [${Array.from(tokenStore.keys()).join(', ')}]`);
+      console.log(`Retrieving token for user ${userRef(userId)} provider ${provider}`);
 
       // First check in-memory cache
       let record = tokenStore.get(key);
@@ -155,7 +155,7 @@ export class TokenManager {
             console.log(`   No token found in database`);
           }
         } else if (data) {
-          console.log(`   Found token in database for ${data.oauth_email}`);
+          console.log(`   Found token in database`);
 
           // Convert database record to TokenRecord
           record = {
@@ -175,11 +175,11 @@ export class TokenManager {
       }
 
       if (!record) {
-        console.log(`   No token found for key: ${key}`);
+        console.log(`   No token found for ${userRef(userId)} ${provider}`);
         return null;
       }
 
-      console.log(`   Found token for ${record.email}, expires: ${record.expiresAt.toISOString()}`);
+      console.log(`   Found token, expires: ${record.expiresAt.toISOString()}`);
 
       // Convert to StoredOAuthToken format
       const token: StoredOAuthToken = {
@@ -264,7 +264,7 @@ export class TokenManager {
           createdAt: new Date(),
         };
         tokenStore.set(key, record);
-        console.log(`✅ Token created in memory: ${key}`);
+        console.log(`✅ Token created in memory: ${userRef(userId)} ${token.provider}`);
       }
 
       // Upsert to database if available
@@ -289,11 +289,11 @@ export class TokenManager {
         if (error) {
           console.error('❌ Failed to upsert token in database:', error.message);
         } else {
-          console.log(`✅ Token stored in database: ${userId} / ${token.provider}`);
+          console.log(`✅ Token stored in database: ${userRef(userId)} / ${token.provider}`);
         }
       }
 
-      console.log(`Token stored for user ${userId} provider ${token.provider}`);
+      console.log(`Token stored for user ${userRef(userId)} provider ${token.provider}`);
     } catch (error) {
       console.error('Failed to store token:', error);
       throw new Error(`Failed to store OAuth token: ${error instanceof Error ? error.message : 'Unknown error'}`);
@@ -308,7 +308,7 @@ export class TokenManager {
       // Get the token first
       const token = await this.getToken(userId, provider);
       if (!token) {
-        console.warn(`No token found for user ${userId} provider ${provider}`);
+        console.warn(`No token found for user ${userRef(userId)} provider ${provider}`);
         return;
       }
 
@@ -340,7 +340,7 @@ export class TokenManager {
         }
       }
 
-      console.log(`Token revoked for user ${userId} provider ${provider}`);
+      console.log(`Token revoked for user ${userRef(userId)} provider ${provider}`);
     } catch (error) {
       console.error('Failed to revoke token:', error);
       throw new Error(`Failed to revoke OAuth token: ${error instanceof Error ? error.message : 'Unknown error'}`);

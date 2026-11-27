@@ -5,6 +5,7 @@
 
 import { Router, Request, Response } from 'express';
 import { customSourceService } from '../services/content/customsource.service';
+import { userRef } from '../lib/log-privacy';
 
 const router = Router();
 
@@ -53,7 +54,7 @@ router.post('/', async (req: Request, res: Response) => {
       });
     }
 
-    console.log(`[CustomSource] Adding source for user ${userId.substring(0, 8)}...`);
+    console.log(`[CustomSource] Adding source for user ${userRef(userId)}`);
 
     const result = await customSourceService.addSource({
       url,

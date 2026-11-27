@@ -5,6 +5,7 @@
 
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { env } from '../../config/environment';
+import { userRef } from '../../lib/log-privacy';
 
 export class SubscriptionService {
   private supabase: SupabaseClient | null = null;
@@ -114,7 +115,7 @@ export class SubscriptionService {
         return false;
       }
 
-      console.log(`[SubscriptionService] Updated ${userId} to ${status}`);
+      console.log(`[SubscriptionService] Updated ${userRef(userId)} to ${status}`);
       return true;
     } catch (error) {
       console.error('[SubscriptionService] Error updating status:', error);

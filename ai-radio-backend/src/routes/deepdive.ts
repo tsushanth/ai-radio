@@ -8,6 +8,8 @@ import { createClient } from '@supabase/supabase-js';
 import { deepDiveGenerator } from '../services/content/deepdive.generator';
 import { podcastLimiter } from '../middleware/rateLimiter';
 import { env } from '../config/environment';
+import { userRef } from '../lib/log-privacy';
+import { randomUUID } from 'node:crypto';
 
 const router = Router();
 
@@ -91,7 +93,7 @@ router.post('/generate', podcastLimiter, async (req: Request, res: Response) => 
       console.warn('[DeepDive] in-flight check failed (continuing):', inflightErr.message);
     } else if (inflightRows && inflightRows.length > 0) {
       const existing = inflightRows[0];
-      console.log(`[DeepDive] Reject duplicate: user ${userId} already has ${existing.id} in ${existing.status}`);
+      console.log(`[DeepDive] Reject duplicate: user ${userRef(userId)} already has ${existing.id} in ${existing.status}`);
       res.status(409).json({
         success: false,
         error: 'You already have a deep dive in progress. Please wait for it to finish.',
@@ -115,12 +117,12 @@ router.post('/generate', podcastLimiter, async (req: Request, res: Response) => 
       return;
     }
 
-    console.log(`[DeepDive] Generate request: "${query.substring(0, 50)}..." (user: ${userId}, slot ${inFlightDeepDives + 1}/${MAX_CONCURRENT_DEEPDIVES})`);
+    console.log(`[DeepDive] Generate request: query ${query.length} chars (user: ${userRef(userId)}, slot ${inFlightDeepDives + 1}/${MAX_CONCURRENT_DEEPDIVES})`);
 
     // Fire-and-forget: generation takes 5-10 min which exceeds Fly's HTTP edge
     // idle timeout. Return immediately with a pending stub; frontend polls
     // /deepdive/history (or /deepdive/:id) to pick up the completed episode.
-    const pendingEpisodeId = `dd-${userId.substring(0, 8)}-${Date.now()}`;
+    const pendingEpisodeId = `dd-${randomUUID().slice(0, 8)}-${Date.now()}`;
 
     inFlightDeepDives += 1;
     deepDiveGenerator
@@ -132,7 +134,7 @@ router.post('/generate', podcastLimiter, async (req: Request, res: Response) => 
         format: outputFormat,
       })
       .then(() => {
-        console.log(`[DeepDive] Background generation complete for "${query.substring(0, 50)}..."`);
+        console.log(`[DeepDive] Background generation complete (query ${query.length} chars)`);
       })
       .catch(error => {
         console.error('[DeepDive] Background generation error:', error);

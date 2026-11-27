@@ -6,6 +6,8 @@
  * Never pass user content (transcripts, topic text, emails) as message or context: counts, reason codes and sources only.
  * Template: ~/Documents/GitHub/app-failure-reporter/node/failureReporter.ts.tmpl (env is read per call so tests can toggle it).
  */
+import { redact } from './log-privacy';
+
 const DEFAULT_ENDPOINT = 'https://app-failure-reporter.t-sushanth.workers.dev/v1/report';
 
 type Kind = 'crash' | 'failure' | 'backend_error';
@@ -29,9 +31,9 @@ async function post(kind: Kind, flow: string, err: unknown, context: Record<stri
         kind,
         platform: 'backend',
         version: process.env.FLY_IMAGE_REF || process.env.npm_package_version || 'unknown',
-        flow,
-        message: e.message || e.name,
-        stack: e.stack ?? '',
+        flow: redact(flow), // a route path can contain an address
+        message: redact(e.message || e.name),
+        stack: redact(e.stack ?? ''),
         context,
       }),
       signal: AbortSignal.timeout(timeoutMs),

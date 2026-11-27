@@ -4,6 +4,7 @@
  */
 
 import crypto from 'crypto';
+import { userRef } from '../../lib/log-privacy';
 
 /**
  * Generate a cryptographically secure random state parameter
@@ -318,6 +319,7 @@ export function logOAuthEvent(
     timestamp: new Date().toISOString(),
     event,
     ...data,
+    ...(data.userId ? { userId: userRef(data.userId) } : {}),
   };
 
   // TODO: Send to proper logging service (e.g., Cloud Logging)

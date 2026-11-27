@@ -11,6 +11,7 @@ import { podcastGenerator } from '../podcast/podcast.generator';
 import { pushNotificationService } from '../notifications/push.service';
 import { dailyBriefPush } from '../languages/localized';
 import type { UserPreferences } from '../../types/database';
+import { userRef } from '../../lib/log-privacy';
 
 interface ScheduledUser {
   user_id: string;
@@ -185,7 +186,7 @@ export class DailyBriefScheduler {
   private async generateForUserUnlabelled(user: ScheduledUser): Promise<GenerationResult> {
     const today = new Date().toISOString().split('T')[0];
 
-    console.log(`[Scheduler] Generating brief for user: ${user.user_id}`);
+    console.log(`[Scheduler] Generating brief for user: ${userRef(user.user_id)}`);
 
     try {
       // Delete previous day's audio to save storage
@@ -198,7 +199,7 @@ export class DailyBriefScheduler {
         {
           date: today,
           onProgress: (progress) => {
-            console.log(`[Scheduler] ${user.user_id}: ${progress.progress_percent}% - ${progress.message}`);
+            console.log(`[Scheduler] ${userRef(user.user_id)}: ${progress.progress_percent}% - ${progress.message}`);
           },
         }
       );
@@ -211,7 +212,7 @@ export class DailyBriefScheduler {
         await this.sendReadyNotification(user, result.duration_seconds);
       }
 
-      console.log(`[Scheduler] ✅ Generated brief for ${user.user_id}`);
+      console.log(`[Scheduler] ✅ Generated brief for ${userRef(user.user_id)}`);
 
       return {
         userId: user.user_id,
@@ -221,7 +222,7 @@ export class DailyBriefScheduler {
       };
 
     } catch (error) {
-      console.error(`[Scheduler] ❌ Failed for ${user.user_id}:`, error);
+      console.error(`[Scheduler] ❌ Failed for ${userRef(user.user_id)}:`, error);
 
       // Send failure notification
       if (user.device_tokens.length > 0) {
@@ -254,7 +255,7 @@ export class DailyBriefScheduler {
 
       if (!oldEpisodes || oldEpisodes.length === 0) return;
 
-      console.log(`[Scheduler] Cleaning up ${oldEpisodes.length} old episodes for ${userId}`);
+      console.log(`[Scheduler] Cleaning up ${oldEpisodes.length} old episodes for ${userRef(userId)}`);
 
       for (const episode of oldEpisodes) {
         // Delete audio from storage

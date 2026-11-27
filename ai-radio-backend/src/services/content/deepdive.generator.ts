@@ -19,6 +19,7 @@ import type {
   ResearchResult,
 } from '../../types/deepdive';
 import type { PodcastScript, ScriptSegment } from '../../types/database';
+import { randomUUID } from 'node:crypto';
 
 export class DeepDiveGenerator {
   private supabase: SupabaseClient | null = null;
@@ -78,9 +79,9 @@ export class DeepDiveGenerator {
     }
 
     // Create episode ID
-    const episodeId = `dd-${userId.substring(0, 8)}-${Date.now()}`;
+    const episodeId = `dd-${randomUUID().slice(0, 8)}-${Date.now()}`;
 
-    console.log(`[DeepDive] Starting generation for query: "${query.substring(0, 50)}..." (${language})`);
+    console.log(`[DeepDive] Starting generation ${episodeId}: query ${query.length} chars (${language})`);
 
     // Create initial episode record
     const episode: DeepDiveEpisode = {
@@ -139,7 +140,7 @@ export class DeepDiveGenerator {
 
         await this.saveEpisode(episode);
 
-        console.log(`[DeepDive] Script-only generation complete: ${episode.title} (estimated ${estimatedDuration}s of on-device audio)`);
+        console.log(`[DeepDive] Script-only generation complete: ${episode.id} (estimated ${estimatedDuration}s of on-device audio)`);
 
         return {
           episode,
@@ -176,7 +177,7 @@ export class DeepDiveGenerator {
 
       await this.saveEpisode(episode);
 
-      console.log(`[DeepDive] Generation complete: ${episode.title} (${totalDuration}s)`);
+      console.log(`[DeepDive] Generation complete: ${episode.id} (${totalDuration}s)`);
 
       return {
         episode,

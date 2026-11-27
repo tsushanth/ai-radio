@@ -76,7 +76,7 @@ export class QAGenerator {
       throw new Error('Question must be 500 characters or less');
     }
 
-    console.log(`[Q&A] Processing question: "${question.substring(0, 50)}..."`);
+    console.log(`[Q&A] Processing question (${question.length} chars)`);
 
     // Get or create session
     let session: QASession;

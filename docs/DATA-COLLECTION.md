@@ -30,6 +30,8 @@ has a name, a small property object, and `ago_s` (how many seconds earlier it ha
 | `language_change` | The user changes language | `language`, `from` |
 | `home_play_shown`, `home_play_tap`, `home_play_started` | Web only, public home page: the tap-to-play item was shown (once per tab session), was tapped, and its audio started | `item` (`radio`) |
 | `share_tap` | The share button is tapped | `source`, optional `language` |
+| `first_audio` | Android only: audio was asked for, and it started, failed or was given up | `source`, `language`, `outcome` (`ok`, `error`, `abandoned`), `ms` (wait in tenths of a second, at most 600000), `origin` (`user`, or `fallback` for an episode the app started because the stream was slow), `topic_id` (topics only) |
+| `stream_fallback` | Android only: the live stream gave no sound for 8 seconds, or failed before any | `outcome` (`episode_started`, `none_ready`, `user_back` when the listener returned to the stream), `reason` (`slow`, `error`), `language`, `topic_id` |
 | `error_shown` | An error is shown to the user | `code`: a short constant such as a player error code name, never a message; player errors (Android) also carry `source`: `stream` (live radio) or `episode` (episode audio) |
 
 `deepdive` is on the server allowlist for the iOS-only Deep Dive feature; neither the Android nor the web client sends it today.
@@ -94,7 +96,7 @@ Declare these (the app's other, existing declarations stay as they are):
 
 | Play category | Data type | Collected | Shared | Optional | Purpose |
 |---|---|---|---|---|---|
-| App activity | App interactions (topics opened, listening time, plays, generate / suggest / share taps) | Yes | No | Yes, users can turn it off in Profile | Analytics |
+| App activity | App interactions (topics opened, listening time, plays and how long audio took to start, generate / suggest / share taps) | Yes | No | Yes, users can turn it off in Profile | Analytics |
 | App info and performance | Diagnostics (the `error_shown` code and, for player errors, whether it was the radio stream or an episode) | Yes | No | Yes (same switch) | Analytics |
 | Device or other IDs | Random app-generated install id | Yes (see note) | No | Yes (same switch) | Analytics |
 

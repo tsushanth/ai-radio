@@ -386,4 +386,6 @@
     <string name="kokoro_err_rename">Could not save the downloaded file</string>
     <string name="kokoro_err_unknown">Unknown error</string>
     <string name="kokoro_err_download">Download failed</string>
+    <string name="radio_slow_playing_episode">The live stream is slow, so we started an episode that is ready: %1$s</string>
+    <string name="radio_back_to_live">Back to live radio</string>
 </resources>

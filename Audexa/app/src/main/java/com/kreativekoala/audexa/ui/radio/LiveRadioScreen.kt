@@ -64,6 +64,7 @@ fun LiveRadioScreen(
     val isPlaying by viewModel.isPlaying.collectAsState()
     val isBuffering by viewModel.isBuffering.collectAsState()
     val playbackError by viewModel.playbackError.collectAsState()
+    val fallbackEpisode by viewModel.fallbackEpisode.collectAsState()
     val chatMessages by viewModel.chatMessages.collectAsState()
     val moderationError by viewModel.moderationError.collectAsState()
     val nowPlaying by viewModel.nowPlaying.collectAsState()
@@ -115,7 +116,7 @@ fun LiveRadioScreen(
     }
 
     LaunchedEffect(Unit) {
-        viewModel.startStream()
+        viewModel.onScreenShown()
         viewModel.connectChat()
         viewModel.startQueuePolling()
     }
@@ -298,9 +299,27 @@ fun LiveRadioScreen(
                         fontSize = 13.sp,
                         modifier = Modifier.padding(horizontal = 24.dp)
                     )
-                    TextButton(onClick = { viewModel.startStream() }) {
+                    TextButton(onClick = { viewModel.retry() }) {
                         Text(
                             text = androidx.compose.ui.res.stringResource(com.kreativekoala.audexa.R.string.retry),
+                            color = Color.White
+                        )
+                    }
+                }
+
+                fallbackEpisode?.let { episode ->
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(
+                        text = androidx.compose.ui.res.stringResource(
+                            com.kreativekoala.audexa.R.string.radio_slow_playing_episode, episode.title
+                        ),
+                        color = Color.White,
+                        fontSize = 13.sp,
+                        modifier = Modifier.padding(horizontal = 24.dp)
+                    )
+                    TextButton(onClick = { viewModel.backToLive() }) {
+                        Text(
+                            text = androidx.compose.ui.res.stringResource(com.kreativekoala.audexa.R.string.radio_back_to_live),
                             color = Color.White
                         )
                     }

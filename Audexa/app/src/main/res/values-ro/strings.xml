@@ -385,4 +385,6 @@
     <string name="kokoro_err_rename">Fișierul descărcat nu a putut fi salvat</string>
     <string name="kokoro_err_unknown">Eroare necunoscută</string>
     <string name="kokoro_err_download">Descărcarea a eșuat</string>
+    <string name="radio_slow_playing_episode">Transmisiunea live se încarcă greu, așa că am pornit un episod deja pregătit: %1$s</string>
+    <string name="radio_back_to_live">Înapoi la radio live</string>
 </resources>

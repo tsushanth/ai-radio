@@ -386,4 +386,6 @@
     <string name="kokoro_err_rename">Не вдалося зберегти завантажений файл</string>
     <string name="kokoro_err_unknown">Невідома помилка</string>
     <string name="kokoro_err_download">Не вдалося завантажити</string>
+    <string name="radio_slow_playing_episode">Прямий ефір завантажується повільно, тому ми увімкнули готовий випуск: %1$s</string>
+    <string name="radio_back_to_live">Повернутися до прямого ефіру</string>
 </resources>

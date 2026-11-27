@@ -384,4 +384,6 @@
     <string name="kokoro_err_rename">Hindi ma-save ang na-download na file</string>
     <string name="kokoro_err_unknown">Hindi kilalang error</string>
     <string name="kokoro_err_download">Nabigo ang pag-download</string>
+    <string name="radio_slow_playing_episode">Mabagal ang live stream, kaya nagpatugtog kami ng episode na handa na: %1$s</string>
+    <string name="radio_back_to_live">Bumalik sa live na radyo</string>
 </resources>

@@ -384,5 +384,7 @@
     <string name="kokoro_err_rename">डाउनलोड की गई फ़ाइल सहेजी नहीं जा सकी</string>
     <string name="kokoro_err_unknown">अज्ञात त्रुटि</string>
     <string name="kokoro_err_download">डाउनलोड विफल रहा</string>
+    <string name="radio_slow_playing_episode">लाइव स्ट्रीम धीमी है, इसलिए हमने एक तैयार एपिसोड चला दिया है: %1$s</string>
+    <string name="radio_back_to_live">लाइव रेडियो पर वापस जाएँ</string>
 </resources>
 

@@ -56,6 +56,10 @@ interface ApiService {
     @GET("topics")
     suspend fun getTopics(@Query("lang") language: String = "en"): TopicsResponse
     
+    /** The newest generated topic podcasts. Raw body: TopicRepository reads only the topic ids. */
+    @GET("topics/briefing")
+    suspend fun getTopicBriefing(@Query("lang") language: String = "en"): Response<ResponseBody>
+
     @GET("topics/{topicId}")
     suspend fun getTopic(@Path("topicId") topicId: String): TopicResponse
     

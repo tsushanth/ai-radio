@@ -384,4 +384,6 @@
     <string name="kokoro_err_rename">A letöltött fájlt nem sikerült menteni</string>
     <string name="kokoro_err_unknown">Ismeretlen hiba</string>
     <string name="kokoro_err_download">A letöltés sikertelen</string>
+    <string name="radio_slow_playing_episode">Az élő adás lassú, ezért elindítottunk egy kész epizódot: %1$s</string>
+    <string name="radio_back_to_live">Vissza az élő rádióhoz</string>
 </resources>

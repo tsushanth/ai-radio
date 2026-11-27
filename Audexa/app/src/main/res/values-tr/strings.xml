@@ -384,4 +384,6 @@
     <string name="kokoro_err_rename">İndirilen dosya kaydedilemedi</string>
     <string name="kokoro_err_unknown">Bilinmeyen hata</string>
     <string name="kokoro_err_download">İndirme başarısız</string>
+    <string name="radio_slow_playing_episode">Canlı yayın yavaş, bu yüzden hazır bir bölüm başlattık: %1$s</string>
+    <string name="radio_back_to_live">Canlı radyoya dön</string>
 </resources>

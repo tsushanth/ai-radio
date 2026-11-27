@@ -384,4 +384,6 @@
     <string name="kokoro_err_rename">Den nedladdade filen kunde inte sparas</string>
     <string name="kokoro_err_unknown">Okänt fel</string>
     <string name="kokoro_err_download">Nedladdningen misslyckades</string>
+    <string name="radio_slow_playing_episode">Livesändningen är långsam, så vi startade ett avsnitt som är klart: %1$s</string>
+    <string name="radio_back_to_live">Tillbaka till liveradion</string>
 </resources>

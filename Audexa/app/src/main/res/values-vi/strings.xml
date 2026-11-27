@@ -383,4 +383,6 @@
     <string name="kokoro_err_rename">Không thể lưu tệp đã tải xuống</string>
     <string name="kokoro_err_unknown">Lỗi không xác định</string>
     <string name="kokoro_err_download">Tải xuống thất bại</string>
+    <string name="radio_slow_playing_episode">Luồng trực tiếp đang chậm nên chúng tôi đã phát một tập có sẵn: %1$s</string>
+    <string name="radio_back_to_live">Quay lại đài trực tiếp</string>
 </resources>

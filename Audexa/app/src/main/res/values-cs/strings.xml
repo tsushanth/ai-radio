@@ -386,4 +386,6 @@
     <string name="kokoro_err_rename">Staženou položku se nepodařilo uložit</string>
     <string name="kokoro_err_unknown">Neznámá chyba</string>
     <string name="kokoro_err_download">Stažení se nezdařilo</string>
+    <string name="radio_slow_playing_episode">Živé vysílání je pomalé, proto jsme spustili hotovou epizodu: %1$s</string>
+    <string name="radio_back_to_live">Zpět na živé rádio</string>
 </resources>

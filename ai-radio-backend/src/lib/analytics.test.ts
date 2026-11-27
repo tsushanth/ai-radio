@@ -70,6 +70,7 @@ test('every allowlisted event name is exactly the agreed list', () => {
     'app_open', 'error_shown', 'first_play_start', 'language_change', 'listen_progress', 'share_tap', 'topic_generate_failed',
     'topic_generate_requested', 'topic_generate_succeeded', 'topic_open', 'topic_suggest_submitted',
     'home_play_shown', 'home_play_tap', 'home_play_started',
+    'first_audio', 'stream_fallback',
   ].sort());
 });
 
@@ -132,6 +133,31 @@ test('rejects unknown names, unknown props, wrong types and bad shapes', () => {
 test('props values of prototype names cannot bypass the schema', () => {
   assert.equal(validateEvent({ name: 'topic_open', props: { topic_id: 'ai-ml', constructor: 'x' } }).ok, false);
   assert.equal(validateEvent({ name: 'topic_open', props: JSON.parse('{"topic_id":"ai-ml","__proto__":{"x":1}}') }).ok, false);
+});
+
+test('first_audio and stream_fallback: what the Android app sends passes, anything else does not', () => {
+  const ok: unknown[] = [
+    { name: 'first_audio', props: { source: 'radio', language: 'en', outcome: 'ok', ms: 1900, origin: 'user' } },
+    { name: 'first_audio', props: { source: 'topic', language: 'es', outcome: 'abandoned', ms: 0, origin: 'fallback', topic_id: 'ai-ml' } },
+    { name: 'first_audio', props: { source: 'brief', language: 'en', outcome: 'error', ms: 600000 } },
+    { name: 'stream_fallback', props: { outcome: 'episode_started', reason: 'slow', language: 'en', topic_id: 'world-update' } },
+    { name: 'stream_fallback', props: { outcome: 'none_ready', reason: 'error', language: 'fr' } },
+    { name: 'stream_fallback', props: { outcome: 'user_back', language: 'en' } },
+  ];
+  for (const e of ok) assert.equal(validateEvent(e).ok, true, JSON.stringify(e));
+  const start = { source: 'radio', language: 'en', outcome: 'ok', ms: 100 };
+  const bad: unknown[] = [
+    { name: 'first_audio', props: { ...start, ms: 150 } },
+    { name: 'first_audio', props: { ...start, ms: -100 } },
+    { name: 'first_audio', props: { ...start, ms: 600100 } },
+    { name: 'first_audio', props: { ...start, ms: '100' } },
+    { name: 'first_audio', props: { ...start, outcome: 'slow' } },
+    { name: 'first_audio', props: { source: 'radio', language: 'en', outcome: 'ok' } },
+    { name: 'first_audio', props: { ...start, url: 'https://example.com' } },
+    { name: 'stream_fallback', props: { outcome: 'episode_started' } },
+    { name: 'stream_fallback', props: { outcome: 'other', language: 'en' } },
+  ];
+  for (const e of bad) assert.equal(validateEvent(e).ok, false, JSON.stringify(e));
 });
 
 // ---- envelope ----

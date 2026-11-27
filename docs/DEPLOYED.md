@@ -79,17 +79,17 @@ Newest first. Parity rule: whatever runs in production is on `main` (tree compar
 - Rollback: `flyctl deploy -a audexa-radio-fly --image registry.fly.io/audexa-radio-fly:deployment-01M8A01QDW8QB5BCNAE8ETV7K6` (v14).
 
 
-## Android: merged, NOT released (next release: 12.13.3, versionCode 55)
+## 2026-11-27 Android 12.13.3 (55) on Google Play production, 20% staged (replaces the 20% rollout of 54)
 
-- Every start of audio now sends `first_audio` (time to first audio, ok / error / abandoned).
-- Live radio with no sound after 8 s (or failing before any sound) starts a finished episode instead: the listener's saved topics first, then the newest ones. The radio screen says so and offers "Back to live radio"; leaving the screen keeps the episode playing. Event `stream_fallback`.
-- The backend accepts both event names since v56 (above), so the release no longer waits for a server deploy. Nothing else changes for older clients. `:app:testDebugUnitTest` and the backend analytics tests pass. No device run.
-- On-device voice download no longer crashes the app on Android 14+. 54 and earlier start a `dataSync` foreground service that the manifest does not declare, so turning the on-device voice on crashes the app, and it crashes again each time the pending download restarts. From Android 14 the download now runs as ordinary background work (no progress notification; in-app progress stays); Android 13 and older are unchanged. No new permission, no Play foreground-service declaration needed.
-- A media button that starts the playback service with nothing to play no longer crashes the app (`startForegroundService() did not then call Service.startForeground()`, reported once from 12.13.1 on Android 11, 2026-11-25 18:29 UTC; the code is the same in 54). Cause reproduced on an Android 11 emulator: play, pause, process killed, headset play button. Media3 1.3.1 has no playback resumption here and never goes foreground. The service now answers such a start and stops. Pressing the button still does not resume playback.
-- Checks for that: before the fix the crash on Android 11 (headset button) and Android 14 (the same intent sent by a temporary harness); after it no crash on either, and play/pause with headset keys still works. `:app:testDebugUnitTest` 192 tests, 0 failures (9 new runs); `:app:compileReleaseKotlin`; `:app:lintDebug` still 11 errors. Not tested on a physical device or the Infinix model.
-- Checks: `:app:testDebugUnitTest` 183 tests, 0 failures; `:app:compileReleaseKotlin`; `:app:lintDebug` 0 fatal, 11 errors (10 media3 opt-in markers in `AudioPlaybackService.kt`, 1 `FlowOperatorInvokedInComposition` in `MainActivity.kt`; judged not to be runtime faults, unchanged).
-- Device (Pixel 9 Pro, API 37, side-by-side debug build, download started by a temporary harness, not through the settings screen): before the fix, `IllegalArgumentException` from `SystemForegroundService` and a repeat crash on restart; the fixed build installed over it finished the pending download (86,033,585 bytes) with no crash. The release AAB was not built or installed.
-
+- Owner approved on 27 November. Play read back after commit (11:28 PT): production 12.13.3 (55) inProgress at userFraction 0.2, 12.13.1 (53) completed. Beta, alpha and internal moved to 55 completed (they held 54). Uploaded with the Play edit API. Not raised above 20%.
+- Built from `main` `9ccb4d0` (#119, version bump only on top of `6ed2b2c`); tag `play/12.13.3-55`. AAB sha256 `ae625df7d77e803ce51b5eb048f25855b6108c1f23647cddd4e8eb88631f6d82`, upload-key signature (`jarsigner -verify` ok), targetSdk 36, R8 off, no permission added compared with the Play-installed 54.
+- Release note (en-US): "Fixed a crash when turning on the on-device voice on Android 14 and newer. Fixed a crash when pressing a headset play button after the app had closed. If live radio is slow to start, a ready episode now plays instead, with a button to go back to live radio."
+- Contents: #100 (voice download crash on Android 14+), #101 (media button crash on an idle service), #106 (`first_audio` event; ready episode when live radio is slow).
+- Why: 54 was built before #100 and #101; on 25 to 27 November Play showed crash reports for both on 53.
+- Checks: `:app:testDebugUnitTest` 208 tests, 0 failures; `:app:lintDebug` 0 fatal, 11 errors (same as before). Release bundle on Android 14 and 11 emulators (debug-signed universal APK, no Play services): cold start, voice download killed mid-way and resumed, media keys, media button with the app dead, normal radio, stalled stream fallback and "Back to live radio"; no crash, and 54 reproduced both crashes. Pixel 9 Pro (API 37) with a side-by-side debuggable build, not the release AAB: the same checks passed.
+- NOT verified: the app as Play delivers it, a 54 to 55 update of a Play install, a real headset, `stream_fallback` with reason `error`, sign-in, purchases, other Android versions.
+- Open, not blockers: during a fallback the screen still shows the LIVE badge and the live "NOW" item, and the message says "slow" even when the stream returned an error.
+- Rollback: halt the rollout; 12.13.1 (53) stays completed. Promotion to 100% needs a 24-48 h crash and ANR review first.
 
 ## 2026-11-25 Android 12.13.2 (54) on Google Play production, 20% staged
 

@@ -385,4 +385,6 @@
     <string name="kokoro_err_rename">Não foi possível salvar o arquivo baixado</string>
     <string name="kokoro_err_unknown">Erro desconhecido</string>
     <string name="kokoro_err_download">Falha no download</string>
+    <string name="radio_slow_playing_episode">A transmissão ao vivo está lenta, então começamos um episódio que já está pronto: %1$s</string>
+    <string name="radio_back_to_live">Voltar à rádio ao vivo</string>
 </resources>

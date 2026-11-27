@@ -384,4 +384,6 @@
     <string name="kokoro_err_rename">Ladattua tiedostoa ei voitu tallentaa</string>
     <string name="kokoro_err_unknown">Tuntematon virhe</string>
     <string name="kokoro_err_download">Lataus epäonnistui</string>
+    <string name="radio_slow_playing_episode">Suora lähetys on hidas, joten aloitimme valmiin jakson: %1$s</string>
+    <string name="radio_back_to_live">Takaisin suoraan radioon</string>
 </resources>

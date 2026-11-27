@@ -8,8 +8,22 @@ import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.kreativekoala.audexa.analytics.Analytics
+import com.kreativekoala.audexa.analytics.AnalyticsEngine
 import com.kreativekoala.audexa.billing.BillingManager
+import com.kreativekoala.audexa.data.local.PreferencesManager
+import com.kreativekoala.audexa.data.model.TopicEpisode
+import com.kreativekoala.audexa.data.repository.TopicRepository
 import com.kreativekoala.audexa.service.AudioManager
+import com.kreativekoala.audexa.service.SlowStreamFallback
+import com.kreativekoala.audexa.service.StartStatus
+import com.kreativekoala.audexa.util.LiveShare
+import com.kreativekoala.audexa.util.TextLanguageSource
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -82,6 +96,8 @@ class LiveRadioViewModel @Inject constructor(
     private val audioManager: AudioManager,
     private val billingManager: BillingManager,
     val supabase: SupabaseClient,
+    private val topicRepository: TopicRepository,
+    private val preferencesManager: PreferencesManager,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -141,25 +157,92 @@ class LiveRadioViewModel @Inject constructor(
         "kill yourself", "rape", "porn", "hentai", "nude"
     )
 
-    fun startStream() {
+    // The episode started in place of a slow stream; it counts only while it is what the player holds.
+    private val _fallback = MutableStateFlow<TopicEpisode?>(null)
+    val fallbackEpisode: StateFlow<TopicEpisode?> =
+        combine(_fallback, audioManager.currentEpisodeId) { episode, playingId -> episode?.takeIf { it.id == playingId } }
+            .stateIn(viewModelScope, SharingStarted.Eagerly, null)
+    private var fallbackJob: Job? = null
+
+    private val onFallback: Boolean
+        get() = _fallback.value?.let { it.id == audioManager.currentEpisodeId.value } == true
+
+    /** The screen appeared. A fallback episode that is already on is not interrupted (the screen can be redrawn). */
+    fun onScreenShown() {
+        if (!onFallback) startStream()
+    }
+
+    fun startStream(allowFallback: Boolean = true) {
+        fallbackJob?.cancel()
+        _fallback.value = null
         audioManager.play(
             id = "audexa-radio-${streamUrl.hashCode()}",
             title = stationName,
             description = appContext.getString(R.string.radio_tagline),
             audioUrl = streamUrl
         )
+        if (allowFallback) watchForSlowStream()
     }
 
-    fun togglePlayback() {
-        if (audioManager.isPlaying.value) {
-            audioManager.pause()
-        } else {
-            startStream()
+    private fun watchForSlowStream() {
+        val token = audioManager.startAttempt.value.token
+        val radioLanguage = LiveShare.languageFromStreamUrl(streamUrl)
+        fallbackJob = viewModelScope.launch {
+            val decision = SlowStreamFallback.watch(
+                audioManager.startAttempt.map { if (it.token == token) it.status else StartStatus.GONE }
+            ) {
+                topicRepository.findReadyEpisode(
+                    TextLanguageSource.forRequest(radioLanguage),
+                    preferencesManager.bookmarkedTopics.first()
+                )
+            } ?: return@launch
+            // Never cut off audio that is playing.
+            if (audioManager.isPlaying.value) return@launch
+
+            val episode = decision.episode
+            trackFallback(
+                if (episode == null) "none_ready" else "episode_started",
+                episode?.topicId,
+                decision.reason.code
+            )
+            if (episode == null) return@launch
+            _fallback.value = episode
+            audioManager.play(episode, fallback = true)
         }
     }
 
+    private fun trackFallback(outcome: String, topicId: String?, reason: String? = null) {
+        val props = HashMap<String, Any>()
+        props["outcome"] = outcome
+        props["language"] = AnalyticsEngine.cleanLang(LiveShare.languageFromStreamUrl(streamUrl))
+        reason?.let { props["reason"] = it }
+        AnalyticsEngine.cleanTopicId(topicId)?.let { props["topic_id"] = it }
+        Analytics.track("stream_fallback", props)
+    }
+
+    /** "Back to live radio": the listener's choice, so the stream is given all the time it needs. */
+    fun backToLive() {
+        trackFallback("user_back", _fallback.value?.topicId)
+        startStream(allowFallback = false)
+    }
+
+    /** The Retry button under a playback error. */
+    fun retry() {
+        if (onFallback) audioManager.retry() else startStream()
+    }
+
+    fun togglePlayback() {
+        when {
+            onFallback -> audioManager.togglePlayPause()
+            audioManager.isPlaying.value -> audioManager.pause()
+            else -> startStream()
+        }
+    }
+
+    /** Leaving the radio screen stops the radio. A fallback episode is an ordinary episode and keeps playing. */
     fun stopStream() {
-        audioManager.pause()
+        fallbackJob?.cancel()
+        if (!onFallback) audioManager.pause()
     }
 
     // ----------- Chat -----------

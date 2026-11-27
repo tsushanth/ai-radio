@@ -4,6 +4,7 @@ import android.content.ComponentName
 import android.content.Context
 import android.os.Handler
 import android.os.Looper
+import android.os.SystemClock
 import android.util.Log
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
@@ -15,6 +16,7 @@ import com.google.common.util.concurrent.ListenableFuture
 import com.google.common.util.concurrent.MoreExecutors
 import com.kreativekoala.audexa.analytics.Analytics
 import com.kreativekoala.audexa.analytics.AnalyticsEngine
+import com.kreativekoala.audexa.analytics.FirstAudioTimer
 import com.kreativekoala.audexa.analytics.ListenContext
 import com.kreativekoala.audexa.data.model.Episode
 import com.kreativekoala.audexa.data.model.TopicEpisode
@@ -102,6 +104,22 @@ class AudioManager @Inject constructor(
     // What is playing, for anonymous listening stats (see analytics/Analytics.kt). Counted only while audio really plays.
     private var listenContext: ListenContext? = null
 
+    // Time to first audio of the latest play() (the `first_audio` event) and where that request stands.
+    private val firstAudio = FirstAudioTimer({ SystemClock.elapsedRealtime() }) { Analytics.track("first_audio", it) }
+    private val _startAttempt = MutableStateFlow(StartAttempt(0, StartStatus.GONE))
+    val startAttempt: StateFlow<StartAttempt> = _startAttempt.asStateFlow()
+
+    private fun settleStart(from: Set<StartStatus>, to: StartStatus) {
+        val attempt = _startAttempt.value
+        if (attempt.status in from) _startAttempt.value = attempt.copy(status = to)
+    }
+
+    /** The listener (or the system) stopped waiting before any sound. */
+    private fun abandonStart() {
+        firstAudio.abandoned()
+        settleStart(setOf(StartStatus.WAITING, StartStatus.FAILED), StartStatus.GONE)
+    }
+
     // Position save callback (set by ViewModel)
     var onPositionSave: ((episodeId: String, positionMs: Long) -> Unit)? = null
 
@@ -125,6 +143,8 @@ class AudioManager @Inject constructor(
                         "Playback error", message = "Playback failed: ${error.errorCodeName}",
                         context = mapOf("code" to error.errorCodeName, "source" to source)
                     )
+                    firstAudio.failed()
+                    settleStart(setOf(StartStatus.WAITING), StartStatus.FAILED)
                     // `source` (stream | episode) separates the live radio from episode audio. Only errors the user sees are counted.
                     Analytics.track("error_shown", mapOf("code" to code, "source" to source))
                     _isBuffering.value = false
@@ -138,8 +158,17 @@ class AudioManager @Inject constructor(
             if (isPlaying) {
                 retryTracker.reset()
                 _playbackError.value = null
+                firstAudio.started()
+                settleStart(setOf(StartStatus.WAITING, StartStatus.FAILED), StartStatus.PLAYING)
             }
             if (isPlaying) listenContext?.let { Analytics.listenStart(it) } else Analytics.listenStop()
+        }
+
+        override fun onPlayWhenReadyChanged(playWhenReady: Boolean, reason: Int) {
+            // Paused from the notification, a headset or unplugging headphones: not only through pause() below.
+            val byListener = reason == Player.PLAY_WHEN_READY_CHANGE_REASON_USER_REQUEST ||
+                reason == Player.PLAY_WHEN_READY_CHANGE_REASON_AUDIO_BECOMING_NOISY
+            if (!playWhenReady && byListener && mediaController?.playWhenReady == false) abandonStart()
         }
 
         override fun onPlaybackStateChanged(playbackState: Int) {
@@ -196,7 +225,8 @@ class AudioManager @Inject constructor(
         )
     }
 
-    fun play(topicEpisode: TopicEpisode) {
+    /** [fallback]: started by the app because the live stream was slow. */
+    fun play(topicEpisode: TopicEpisode, fallback: Boolean = false) {
         val audioUrl = topicEpisode.audioUrl ?: return
         _currentShowId.value = topicEpisode.topicId
         play(
@@ -206,14 +236,15 @@ class AudioManager @Inject constructor(
             audioUrl = audioUrl,
             source = "topic",
             topicId = topicEpisode.topicId,
-            language = topicEpisode.language
+            language = topicEpisode.language,
+            fallback = fallback
         )
     }
 
     /** [source] is radio | topic | brief for anonymous listening stats; when omitted it is guessed from the id (radio) or brief. */
     fun play(
         id: String, title: String, description: String, audioUrl: String,
-        source: String? = null, topicId: String? = null, language: String? = null
+        source: String? = null, topicId: String? = null, language: String? = null, fallback: Boolean = false
     ) {
         // Save position of previous episode before switching
         saveCurrentPosition()
@@ -228,6 +259,8 @@ class AudioManager @Inject constructor(
             ),
             topicId = if (src == "topic") topicId else null
         )
+        listenContext?.let { firstAudio.start(it, fallback) }
+        _startAttempt.value = StartAttempt(_startAttempt.value.token + 1, StartStatus.WAITING)
 
         Log.d(TAG, "Playing: $title ($audioUrl)")
 
@@ -269,6 +302,7 @@ class AudioManager @Inject constructor(
 
     fun pause() {
         saveCurrentPosition()
+        abandonStart()
         cancelAutoRetry()
         mediaController?.pause()
     }
@@ -421,6 +455,7 @@ class AudioManager @Inject constructor(
         saveCurrentPosition()
         Analytics.listenStop()
         listenContext = null
+        abandonStart()
         clearPlaybackError()
         mediaController?.stop()
         _currentEpisodeId.value = null

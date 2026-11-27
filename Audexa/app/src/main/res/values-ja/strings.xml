@@ -383,4 +383,6 @@
     <string name="kokoro_err_rename">ダウンロードしたファイルを保存できませんでした</string>
     <string name="kokoro_err_unknown">不明なエラー</string>
     <string name="kokoro_err_download">ダウンロードに失敗しました</string>
+    <string name="radio_slow_playing_episode">ライブ配信の読み込みに時間がかかるため、用意できているエピソードを再生しました：%1$s</string>
+    <string name="radio_back_to_live">ライブラジオに戻る</string>
 </resources>

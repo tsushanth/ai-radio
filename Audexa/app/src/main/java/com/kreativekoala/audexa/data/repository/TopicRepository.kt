@@ -7,6 +7,8 @@ import com.kreativekoala.audexa.data.remote.*
 // Both packages declare a TopicCategory (an enum in data.model, the API category in data.remote): the API one is meant here.
 import com.kreativekoala.audexa.data.remote.TopicCategory
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.currentCoroutineContext
+import kotlinx.coroutines.ensureActive
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import javax.inject.Inject
@@ -191,6 +193,28 @@ class TopicRepository @Inject constructor(
         limit: Int = 7
     ): Result<TopicEpisodesResponse> = runCatching {
         apiService.getTopicEpisodes(topicId, language, limit)
+    }
+
+    /**
+     * An episode that can start now (nothing is generated): the listener's saved topics first, then the topics with the
+     * newest podcasts. Null when none of those has a finished episode in [language].
+     */
+    suspend fun findReadyEpisode(language: String, saved: Set<String>): TopicEpisode? {
+        val candidates = ReadyEpisode.candidates(saved, newestTopicIds(language), cachedTopics.orEmpty().map { it.id })
+        for (topicId in candidates) {
+            currentCoroutineContext().ensureActive()
+            val episodes = getTopicEpisodes(topicId, language, 3).getOrNull()?.data?.episodes.orEmpty()
+            ReadyEpisode.firstPlayable(episodes)?.let { return it }
+        }
+        return null
+    }
+
+    private suspend fun newestTopicIds(language: String): List<String> = try {
+        ReadyEpisode.briefingTopicIds(apiService.getTopicBriefing(language).body()?.string().orEmpty())
+    } catch (e: kotlinx.coroutines.CancellationException) {
+        throw e
+    } catch (e: Exception) {
+        emptyList()
     }
 
     // Ad tracking (fire-and-forget, errors are silently logged)

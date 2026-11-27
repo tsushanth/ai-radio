@@ -383,4 +383,6 @@
     <string name="kokoro_err_rename">Fail yang dimuat turun tidak dapat disimpan</string>
     <string name="kokoro_err_unknown">Ralat tidak diketahui</string>
     <string name="kokoro_err_download">Muat turun gagal</string>
+    <string name="radio_slow_playing_episode">Strim langsung perlahan, jadi kami memainkan episod yang sudah sedia: %1$s</string>
+    <string name="radio_back_to_live">Kembali ke radio langsung</string>
 </resources>

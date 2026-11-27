@@ -384,4 +384,6 @@
     <string name="kokoro_err_rename">Het gedownloade bestand kon niet worden opgeslagen</string>
     <string name="kokoro_err_unknown">Onbekende fout</string>
     <string name="kokoro_err_download">Download mislukt</string>
+    <string name="radio_slow_playing_episode">De livestream is traag, daarom hebben we een aflevering gestart die klaarstaat: %1$s</string>
+    <string name="radio_back_to_live">Terug naar liveradio</string>
 </resources>

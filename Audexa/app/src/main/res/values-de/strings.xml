@@ -384,4 +384,6 @@
     <string name="kokoro_err_rename">Die heruntergeladene Datei konnte nicht gespeichert werden</string>
     <string name="kokoro_err_unknown">Unbekannter Fehler</string>
     <string name="kokoro_err_download">Download fehlgeschlagen</string>
+    <string name="radio_slow_playing_episode">Der Livestream ist langsam, daher haben wir eine fertige Folge gestartet: %1$s</string>
+    <string name="radio_back_to_live">Zurück zum Live-Radio</string>
 </resources>

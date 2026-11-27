@@ -58,6 +58,12 @@ export const LISTEN_SOURCES = ['radio', 'topic', 'deepdive', 'brief'] as const;
 export const ERROR_SOURCES = ['stream', 'episode'] as const;
 /** What the web home page's tap-to-play item plays. */
 export const HOME_ITEMS = ['radio'] as const;
+/** How a wait for first audio ended, and who asked for that audio (`fallback`: the app, because the stream was slow). */
+export const START_OUTCOMES = ['ok', 'error', 'abandoned'] as const;
+export const START_ORIGINS = ['user', 'fallback'] as const;
+/** A slow stream: an episode was started, none was ready, or the listener went back to the stream. */
+export const FALLBACK_OUTCOMES = ['episode_started', 'none_ready', 'user_back'] as const;
+export const FALLBACK_REASONS = ['slow', 'error'] as const;
 
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const VERSION_RE = /^[0-9A-Za-z._-]{1,20}$/;
@@ -79,6 +85,10 @@ export const LISTEN_BUCKET_SECONDS = 30;
 export const LISTEN_MAX_SECONDS = 3600;
 const seconds = (v: unknown) =>
   typeof v === 'number' && Number.isInteger(v) && v >= LISTEN_BUCKET_SECONDS && v <= LISTEN_MAX_SECONDS && v % LISTEN_BUCKET_SECONDS === 0;
+
+/** Time to first audio in milliseconds, in tenths of a second, at most 10 minutes. */
+export const START_MAX_MS = 600_000;
+const startMs = (v: unknown) => typeof v === 'number' && Number.isInteger(v) && v >= 0 && v <= START_MAX_MS && v % 100 === 0;
 
 /** Event name -> allowed props. A prop not listed here, or of the wrong type/shape, makes the event invalid. */
 export const EVENT_SCHEMAS: Record<string, Record<string, PropSpec>> = {
@@ -103,6 +113,20 @@ export const EVENT_SCHEMAS: Record<string, Record<string, PropSpec>> = {
   home_play_tap: { item: req(oneOf(HOME_ITEMS)) },
   home_play_started: { item: req(oneOf(HOME_ITEMS)) },
   error_shown: { code: req(str(CODE_RE)), source: opt(oneOf(ERROR_SOURCES)) },
+  first_audio: {
+    source: req(oneOf(LISTEN_SOURCES)),
+    language: req(str(LANG_RE)),
+    outcome: req(oneOf(START_OUTCOMES)),
+    ms: req(startMs),
+    origin: opt(oneOf(START_ORIGINS)),
+    topic_id: opt(str(TOPIC_ID_RE)),
+  },
+  stream_fallback: {
+    outcome: req(oneOf(FALLBACK_OUTCOMES)),
+    language: req(str(LANG_RE)),
+    reason: opt(oneOf(FALLBACK_REASONS)),
+    topic_id: opt(str(TOPIC_ID_RE)),
+  },
 };
 
 export const EVENT_NAMES = Object.keys(EVENT_SCHEMAS);

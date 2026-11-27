@@ -383,4 +383,6 @@
     <string name="kokoro_err_rename">Tidak dapat menyimpan file yang diunduh</string>
     <string name="kokoro_err_unknown">Kesalahan tidak dikenal</string>
     <string name="kokoro_err_download">Unduhan gagal</string>
+    <string name="radio_slow_playing_episode">Siaran langsung lambat, jadi kami memutar episode yang sudah siap: %1$s</string>
+    <string name="radio_back_to_live">Kembali ke radio langsung</string>
 </resources>

@@ -384,4 +384,6 @@
     <string name="kokoro_err_rename">Δεν ήταν δυνατή η αποθήκευση του αρχείου που λήφθηκε</string>
     <string name="kokoro_err_unknown">Άγνωστο σφάλμα</string>
     <string name="kokoro_err_download">Η λήψη απέτυχε</string>
+    <string name="radio_slow_playing_episode">Η ζωντανή μετάδοση αργεί, γι’ αυτό ξεκινήσαμε ένα έτοιμο επεισόδιο: %1$s</string>
+    <string name="radio_back_to_live">Επιστροφή στο ζωντανό ραδιόφωνο</string>
 </resources>

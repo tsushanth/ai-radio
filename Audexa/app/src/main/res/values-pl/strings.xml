@@ -386,4 +386,6 @@
     <string name="kokoro_err_rename">Nie udało się zapisać pobranego pliku</string>
     <string name="kokoro_err_unknown">Nieznany błąd</string>
     <string name="kokoro_err_download">Pobieranie nie powiodło się</string>
+    <string name="radio_slow_playing_episode">Transmisja na żywo wczytuje się powoli, więc włączyliśmy gotowy odcinek: %1$s</string>
+    <string name="radio_back_to_live">Wróć do radia na żywo</string>
 </resources>

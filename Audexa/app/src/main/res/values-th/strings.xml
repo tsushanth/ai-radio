@@ -383,4 +383,6 @@
     <string name="kokoro_err_rename">ไม่สามารถบันทึกไฟล์ที่ดาวน์โหลดได้</string>
     <string name="kokoro_err_unknown">ข้อผิดพลาดที่ไม่ทราบสาเหตุ</string>
     <string name="kokoro_err_download">ดาวน์โหลดไม่สำเร็จ</string>
+    <string name="radio_slow_playing_episode">สตรีมสดโหลดช้า เราจึงเล่นตอนที่พร้อมแล้วแทน: %1$s</string>
+    <string name="radio_back_to_live">กลับไปที่วิทยุสด</string>
 </resources>

@@ -383,4 +383,6 @@
     <string name="kokoro_err_rename">无法保存已下载的文件</string>
     <string name="kokoro_err_unknown">未知错误</string>
     <string name="kokoro_err_download">下载失败</string>
+    <string name="radio_slow_playing_episode">直播加载较慢，我们先播放一集已准备好的节目：%1$s</string>
+    <string name="radio_back_to_live">返回直播电台</string>
 </resources>

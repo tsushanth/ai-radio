@@ -385,4 +385,6 @@
     <string name="kokoro_err_rename">Impossible d\'enregistrer le fichier téléchargé</string>
     <string name="kokoro_err_unknown">Erreur inconnue</string>
     <string name="kokoro_err_download">Échec du téléchargement</string>
+    <string name="radio_slow_playing_episode">Le direct est lent, nous avons donc lancé un épisode déjà prêt : %1$s</string>
+    <string name="radio_back_to_live">Revenir à la radio en direct</string>
 </resources>

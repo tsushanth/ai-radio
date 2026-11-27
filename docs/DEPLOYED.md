@@ -3,6 +3,15 @@
 Newest first. Parity rule: whatever runs in production is on `main` (tree compared for the deployed paths).
 
 
+## 2026-11-27 (UTC) backend v62 and v61: request limits counted per client address (#115, #116)
+
+- Release: Fly v62, image `registry.fly.io/ai-radio-backend:deployment-01M8DFW3K63Q55YWVA7NVPT9V6`, `flyctl deploy --remote-only` from `ai-radio-backend/` of a clean detached worktree at `origin/main` `0cf7fcf`; tree `090113d62126e8e798bb5f35ce4527cc20db5b4c` equals `origin/main`. v61 (`deployment-01M8DFQM50DQPWM5SZZVW6BNJY`, `0b533c6`) had the first of the two changes.
+- Express now reads the client address two entries from the end of `X-Forwarded-For` on Fly (`src/lib/proxy.ts`). Until v60, callers on the same network family were counted together by the general limit (100 per 15 minutes), the deep dive limit (5 per 15 minutes), the per-address topic suggestion and topic generation allowances and the other per-address limits. Each client now has its own count. The daily allowances of v60 use the same address.
+- Before: no batch, topic episode, deep dive, ask or suggestion row in progress. No secret set or changed, no database change. Web and radio were not deployed.
+- Verified: type check and 581 tests; the 139 compiled files in the running image match a build of `0cf7fcf`; live, two different client addresses have separate counts and values sent in `X-Forwarded-For` do not start a new count; the deployed routes, run in a separate process on the machine with generators replaced (no model call), applied the per-client and combined daily allowances; source validation, health, config, topics, voices, ask and station routes as before; radio `/stream` 200.
+- Rollback, from `ai-radio-backend/`: to the v60 behaviour `flyctl deploy -a ai-radio-backend --image registry.fly.io/ai-radio-backend:deployment-01M8DFC6E4WZ0TZV11KY5HYXRN`; to before today's source and allowance changes use the v58 image below.
+
+
 ## 2026-11-27 (UTC) backend v60 and v59, web v26: source fetching, daily on-demand allowances, web session token (#112, #113)
 
 - Backend: Fly v60, image `registry.fly.io/ai-radio-backend:deployment-01M8DFC6E4WZ0TZV11KY5HYXRN`, `flyctl deploy --remote-only` from `ai-radio-backend/` of a clean detached worktree at `origin/main` `ddecf93`; tree `c46c2ac20f12a196ab262192b993202e9a106519` equals `origin/main`. v59 (`deployment-01M8DF461GRXEKBAPXWKYH2JTW`, `e18c0e9`) differed only in the source size limit (10 MB).

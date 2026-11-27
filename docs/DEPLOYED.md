@@ -3,6 +3,16 @@
 Newest first. Parity rule: whatever runs in production is on `main` (tree compared for the deployed paths).
 
 
+## 2026-11-27 (UTC) backend v56 (ai-radio-backend): accept `first_audio` and `stream_fallback` (#106)
+
+- Release: Fly v56, image `registry.fly.io/ai-radio-backend:deployment-01M8D8QBCNFQQN7JTPEXH3F2ZH`, `flyctl deploy --remote-only` from `ai-radio-backend/` of a clean detached worktree at `origin/main` `9dafc82`; tree `c2739c9d208972eface99b0b954c60ebc4ea0a6d` equals `origin/main`.
+- Only change from v55: `src/lib/analytics.ts` (two event names and their properties). Before the deploy, the compiled files in the running v55 image matched a build of `9dafc82` except `lib/analytics.js` (132 files, same `package-lock.json`); after it all 132 match.
+- Before: no episode, batch, deep dive, ask, suggestion or podcast row in progress; no staged secret. No secret set or changed, no database change. `audexa-radio-fly` (the live stream) and `audexa-web` were not deployed.
+- Verified: backend type check and 504 tests; `/health`, `/api/topics?lang=en`, `/api/config`, `/api/config/languages` answer 200; `POST /api/events` with deliberately incomplete events answers 400 naming the missing property for both new names (an unknown name still answers "event name not allowed"), so nothing was stored; in the running image `validateBatch` accepts four complete examples of the two events (no database call); `/stream` 200 before and after.
+- NOT verified: a stored row of either event (no released app sends them yet).
+- Rollback, from `ai-radio-backend/`: `flyctl deploy -a ai-radio-backend --image registry.fly.io/ai-radio-backend:deployment-01M8CPWGJR6JZQ3YDHPQYESWXP` (v55). `flyctl releases rollback`, written in older entries, does not exist in flyctl 0.5.10: use the older release's image the same way.
+
+
 ## 2026-11-26 web v25 and backend v55: tap-to-play on the home page, test-device flag (#104)
 
 - Database first: migration `019_analytics_test_flag` applied to `lxtuvvsrtpoqgikbpasm` (adds `analytics_events.is_test`, a partial index and the view `analytics_events_real`; additive). Checked: 1268 rows before and in the view; `anon` and `authenticated` cannot read the view.
@@ -29,7 +39,7 @@ Newest first. Parity rule: whatever runs in production is on `main` (tree compar
 
 - Every start of audio now sends `first_audio` (time to first audio, ok / error / abandoned).
 - Live radio with no sound after 8 s (or failing before any sound) starts a finished episode instead: the listener's saved topics first, then the newest ones. The radio screen says so and offers "Back to live radio"; leaving the screen keeps the episode playing. Event `stream_fallback`.
-- BACKEND NOT DEPLOYED: `/api/events` must be deployed with these two event names (`ai-radio-backend/src/lib/analytics.ts`) before the release, otherwise the server drops them. Nothing else changes for older clients. `:app:testDebugUnitTest` and the backend analytics tests pass. No device run.
+- The backend accepts both event names since v56 (above), so the release no longer waits for a server deploy. Nothing else changes for older clients. `:app:testDebugUnitTest` and the backend analytics tests pass. No device run.
 - On-device voice download no longer crashes the app on Android 14+. 54 and earlier start a `dataSync` foreground service that the manifest does not declare, so turning the on-device voice on crashes the app, and it crashes again each time the pending download restarts. From Android 14 the download now runs as ordinary background work (no progress notification; in-app progress stays); Android 13 and older are unchanged. No new permission, no Play foreground-service declaration needed.
 - A media button that starts the playback service with nothing to play no longer crashes the app (`startForegroundService() did not then call Service.startForeground()`, reported once from 12.13.1 on Android 11, 2026-11-25 18:29 UTC; the code is the same in 54). Cause reproduced on an Android 11 emulator: play, pause, process killed, headset play button. Media3 1.3.1 has no playback resumption here and never goes foreground. The service now answers such a start and stops. Pressing the button still does not resume playback.
 - Checks for that: before the fix the crash on Android 11 (headset button) and Android 14 (the same intent sent by a temporary harness); after it no crash on either, and play/pause with headset keys still works. `:app:testDebugUnitTest` 192 tests, 0 failures (9 new runs); `:app:compileReleaseKotlin`; `:app:lintDebug` still 11 errors. Not tested on a physical device or the Infinix model.

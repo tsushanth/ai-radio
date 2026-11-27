@@ -15,6 +15,7 @@ import { reportServerErrors } from './lib/monitoring';
 import { topicSuggestScheduler } from './services/scheduler/topic-suggest.scheduler';
 import { startInvariantSweep } from './services/monitoring/invariant-sweep';
 import { startAnalyticsRetention } from './routes/events';
+import { trustedProxyHops } from './lib/proxy';
 
 // Import middleware
 import { errorHandler, notFoundHandler } from './middleware/errorHandler';
@@ -26,10 +27,8 @@ import routes from './routes';
 // Initialize Express app
 const app = express();
 
-// Trust proxy (required for Cloud Run behind load balancer)
-// Use 1 to trust only the first proxy hop (Cloud Run's load balancer)
-// This fixes the express-rate-limit security warning about permissive trust proxy
-app.set('trust proxy', 1);
+// The client address comes from X-Forwarded-For; the request limits are counted per client address (see lib/proxy.ts)
+app.set('trust proxy', trustedProxyHops());
 
 // Security middleware
 app.use(helmet());

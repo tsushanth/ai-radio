@@ -16,10 +16,10 @@ export type Feature = 'deepdive' | 'qa' | 'tell_me_more' | 'station' | 'source_s
 export interface Allowance { perClient: number; global: number; cents: number }
 
 export const ALLOWANCES: Readonly<Record<Feature, Allowance>> = {
-  deepdive: { perClient: 15, global: 25, cents: 10 },
+  deepdive: { perClient: 15, global: 20, cents: 10 },
   qa: { perClient: 20, global: 60, cents: 2.5 },
   tell_me_more: { perClient: 20, global: 60, cents: 2 },
-  station: { perClient: 12, global: 40, cents: 6 },
+  station: { perClient: 12, global: 30, cents: 6 },
   source_summary: { perClient: 100, global: 100, cents: 0.2 },
 };
 export const TOTAL_DAILY_CENTS = 200;

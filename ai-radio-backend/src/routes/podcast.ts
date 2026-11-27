@@ -17,6 +17,7 @@ import {
 } from '../types/podcast-errors';
 import { requireUser, sameEmail, type VerifiedUser } from '../lib/user-auth';
 import { tokenVerifier } from '../lib/user-auth-runtime';
+import { requireOperatorSecret } from '../lib/shared-secret';
 import { userRef } from '../lib/log-privacy';
 
 const router = express.Router();
@@ -87,6 +88,8 @@ function generateJobId(): string {
 // Caller checks (lib/user-auth.ts). Shipped clients still call these without a token, so the first four have a legacy window.
 const authBodyUser = (key: string) =>
   requireUser(() => tokenVerifier(), { key, target: (req) => (req.body as { user_id?: unknown } | undefined)?.user_id });
+// Operator only: "Authorization: Bearer <BATCH_SECRET>".
+const operatorOnly = requireOperatorSecret();
 
 // ================================================
 // VALIDATION SCHEMAS
@@ -415,7 +418,7 @@ router.post('/script', authBodyUser('podcast.script'), async (req: Request, res:
  * POST /podcast/generate
  * Generate a new podcast episode (synchronous - kept for backwards compatibility)
  */
-router.post('/generate', async (req: Request, res: Response, next: NextFunction) => {
+router.post('/generate', operatorOnly, async (req: Request, res: Response, next: NextFunction) => {
   try {
     // Validate request body
     const validated = generatePodcastSchema.parse(req.body);
@@ -526,7 +529,7 @@ router.post('/generate', async (req: Request, res: Response, next: NextFunction)
  * POST /podcast/estimate
  * Estimate generation cost
  */
-router.post('/estimate', async (req: Request, res: Response, next: NextFunction) => {
+router.post('/estimate', operatorOnly, async (req: Request, res: Response, next: NextFunction) => {
   try {
     const validated = estimateCostSchema.parse(req.body);
 
@@ -564,7 +567,7 @@ router.post('/estimate', async (req: Request, res: Response, next: NextFunction)
  * POST /podcast/validate
  * Validate prerequisites for generation
  */
-router.post('/validate', async (req: Request, res: Response, next: NextFunction) => {
+router.post('/validate', operatorOnly, async (req: Request, res: Response, next: NextFunction) => {
   try {
     const validated = validatePrerequisitesSchema.parse(req.body);
 
@@ -595,7 +598,7 @@ router.post('/validate', async (req: Request, res: Response, next: NextFunction)
  * POST /podcast/scheduled/:userId
  * Generate scheduled podcast for user
  */
-router.post('/scheduled/:userId', async (req: Request, res: Response, next: NextFunction) => {
+router.post('/scheduled/:userId', operatorOnly, async (req: Request, res: Response, next: NextFunction) => {
   try {
     const userId = req.params.userId;
 
@@ -632,7 +635,7 @@ router.post('/scheduled/:userId', async (req: Request, res: Response, next: Next
  * GET /podcast/stats
  * Get generation statistics
  */
-router.get('/stats', async (req: Request, res: Response, next: NextFunction) => {
+router.get('/stats', operatorOnly, async (req: Request, res: Response, next: NextFunction) => {
   try {
     const startDate = req.query.start_date
       ? new Date(req.query.start_date as string)

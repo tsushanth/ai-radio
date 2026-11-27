@@ -54,6 +54,8 @@ async function load(): Promise<Mods> {
   tokenManager.storeTokenFromLinkedAccount = async (userId: string, provider: string) => {
     stored.push({ userId, provider });
   };
+  // token-less link requests ask the provider whose token they carry (routes/route-access.test.ts covers that check)
+  (await import('../services/auth/account-proof')).setTokenOwnerLookupForTests(async () => ({ kind: 'ok', addresses: [ME] }));
   return {
     podcastRouter: (await import('./podcast')).default,
     linkedRouter: (await import('./linked-accounts')).default,

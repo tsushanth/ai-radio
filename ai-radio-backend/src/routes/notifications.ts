@@ -9,8 +9,19 @@ import { env } from '../config/environment';
 import { dailyBriefScheduler } from '../services/scheduler/daily-brief.scheduler';
 import { languageFromBody, withLanguage } from '../services/languages/localized';
 import { userRef } from '../lib/log-privacy';
+import { notificationAnonKeys, requireSelf, requireUser } from '../lib/user-auth';
+import { tokenVerifier } from '../lib/user-auth-runtime';
+import { requireOperatorSecret } from '../lib/shared-secret';
 
 const router = express.Router();
+
+// Caller checks: lib/user-auth.ts.
+const writeFor = (key: string) =>
+  requireUser(() => tokenVerifier(), {
+    key,
+    target: (req) => (req.body as { user_id?: unknown } | undefined)?.user_id,
+    legacyKeys: () => notificationAnonKeys(),
+  });
 
 // Initialize Supabase
 const supabase = env.SUPABASE_URL && env.SUPABASE_SERVICE_KEY
@@ -21,7 +32,7 @@ const supabase = env.SUPABASE_URL && env.SUPABASE_SERVICE_KEY
  * POST /notifications/register
  * Register device token for push notifications
  */
-router.post('/register', async (req, res) => {
+router.post('/register', writeFor('notifications.register'), async (req, res) => {
   try {
     const { user_id, device_token, platform } = req.body;
     const language = languageFromBody(req.body.language);
@@ -99,7 +110,7 @@ router.post('/register', async (req, res) => {
  * DELETE /notifications/unregister
  * Unregister device token
  */
-router.delete('/unregister', async (req, res) => {
+router.delete('/unregister', writeFor('notifications.unregister'), async (req, res) => {
   try {
     const { user_id, device_token } = req.body;
 
@@ -153,7 +164,7 @@ router.delete('/unregister', async (req, res) => {
  * POST /notifications/settings
  * Update notification settings for user
  */
-router.post('/settings', async (req, res) => {
+router.post('/settings', writeFor('notifications.settings'), async (req, res) => {
   try {
     const {
       user_id,
@@ -228,7 +239,7 @@ router.post('/settings', async (req, res) => {
  * GET /notifications/settings/:userId
  * Get notification settings for user
  */
-router.get('/settings/:userId', async (req, res) => {
+router.get('/settings/:userId', requireSelf(() => tokenVerifier()), async (req, res) => {
   try {
     const userId = req.params.userId;
 
@@ -274,9 +285,9 @@ router.get('/settings/:userId', async (req, res) => {
 
 /**
  * POST /notifications/trigger/:userId
- * Manually trigger daily brief generation for a user (admin/testing)
+ * Manually trigger daily brief generation for a user. Operator only (Bearer BATCH_SECRET).
  */
-router.post('/trigger/:userId', async (req, res) => {
+router.post('/trigger/:userId', requireOperatorSecret(), async (req, res) => {
   try {
     const userId = req.params.userId;
 

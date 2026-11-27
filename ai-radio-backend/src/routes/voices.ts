@@ -12,6 +12,7 @@ import {
   type TTSProvider,
 } from '../services/tts/tts.provider';
 import { elevenLabsTTS } from '../services/tts/elevenlabs.tts';
+import { requireOperatorSecret } from '../lib/shared-secret';
 
 const router = Router();
 
@@ -233,7 +234,7 @@ router.post('/clone', async (req: Request, res: Response) => {
  * GET /api/voices/usage
  * Get ElevenLabs subscription/usage info
  */
-router.get('/usage/elevenlabs', async (req: Request, res: Response) => {
+router.get('/usage/elevenlabs', requireOperatorSecret(), async (req: Request, res: Response) => {
   try {
     const info = await elevenLabsTTS.getSubscriptionInfo();
 

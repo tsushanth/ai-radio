@@ -13,6 +13,9 @@ import { purgeJobsForUser } from './podcast';
 
 const router = express.Router();
 
+/** Every route here needs the session of the account in the URL. */
+const ownerOnly = requireSelf(() => tokenVerifier());
+
 // ================================================
 // VALIDATION SCHEMAS
 // ================================================
@@ -40,7 +43,7 @@ const updateProfileSchema = z.object({
  * GET /user/:userId
  * Get user profile
  */
-router.get('/:userId', async (req: Request, res: Response, next: NextFunction) => {
+router.get('/:userId', ownerOnly, async (req: Request, res: Response, next: NextFunction) => {
   try {
     const userId = req.params.userId;
 
@@ -91,7 +94,7 @@ router.get('/:userId', async (req: Request, res: Response, next: NextFunction) =
  * PUT /user/:userId
  * Update user profile
  */
-router.put('/:userId', async (req: Request, res: Response, next: NextFunction) => {
+router.put('/:userId', ownerOnly, async (req: Request, res: Response, next: NextFunction) => {
   try {
     const userId = req.params.userId;
     const validated = updateProfileSchema.parse(req.body);
@@ -137,7 +140,7 @@ router.put('/:userId', async (req: Request, res: Response, next: NextFunction) =
  * GET /user/:userId/preferences
  * Get user preferences
  */
-router.get('/:userId/preferences', async (req: Request, res: Response, next: NextFunction) => {
+router.get('/:userId/preferences', ownerOnly, async (req: Request, res: Response, next: NextFunction) => {
   try {
     const userId = req.params.userId;
 
@@ -173,7 +176,7 @@ router.get('/:userId/preferences', async (req: Request, res: Response, next: Nex
  * PUT /user/:userId/preferences
  * Update user preferences
  */
-router.put('/:userId/preferences', async (req: Request, res: Response, next: NextFunction) => {
+router.put('/:userId/preferences', ownerOnly, async (req: Request, res: Response, next: NextFunction) => {
   try {
     const userId = req.params.userId;
     const validated = updatePreferencesSchema.parse(req.body);
@@ -279,7 +282,7 @@ router.delete('/:userId', requireSelf(() => tokenVerifier()), async (req: Reques
  * GET /user/:userId/stats
  * Get user statistics
  */
-router.get('/:userId/stats', async (req: Request, res: Response, next: NextFunction) => {
+router.get('/:userId/stats', ownerOnly, async (req: Request, res: Response, next: NextFunction) => {
   try {
     const userId = req.params.userId;
 

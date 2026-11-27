@@ -3,6 +3,19 @@
 Newest first. Parity rule: whatever runs in production is on `main` (tree compared for the deployed paths).
 
 
+## 2026-11-27 (UTC) backend v60 and v59, web v26: source fetching, daily on-demand allowances, web session token (#112, #113)
+
+- Backend: Fly v60, image `registry.fly.io/ai-radio-backend:deployment-01M8DFC6E4WZ0TZV11KY5HYXRN`, `flyctl deploy --remote-only` from `ai-radio-backend/` of a clean detached worktree at `origin/main` `ddecf93`; tree `c46c2ac20f12a196ab262192b993202e9a106519` equals `origin/main`. v59 (`deployment-01M8DF461GRXEKBAPXWKYH2JTW`, `e18c0e9`) differed only in the source size limit (10 MB).
+- Web: Fly v26, image `registry.fly.io/audexa-web:deployment-01M8DF9FQ08P71T2SPP0792YWY`, same kind of worktree at `e18c0e9`, `web-app/`; tree `4d23c6547cf639a2383e36238d846f8b44055293` equals `origin/main`.
+- Source addresses (`/api/sources`): public http and https destinations only, 10 s per request, 3 redirects, 25 MB (`src/lib/publicFetch.ts`).
+- Daily allowances, per UTC day (`src/lib/dailyAllowance.ts`), per client / all clients: deep dive 15 / 20, question 20 / 60, tell me more 20 / 60, station generation 12 / 30, source summaries 100; combined estimate 200 US cents. Over it: 429 with `Retry-After`; a station serves its latest episode; a summary is the start of the item. A shared limit reports `daily_allowance_reached`. Settings `ALLOWANCE_*` are all unset. Counts are per machine and reset on restart; the model budget in `llmBudget.ts` is unchanged.
+- Web sends the session token on connection status, disconnect, topic generation and topic suggestions as well as the routes that already did. The web app has no user sign-in, so visitors have no session token.
+- Before: no batch, topic episode, deep dive, ask or suggestion row in progress; no staged secret. No secret set or changed, no database change. `audexa-radio-fly` was not deployed. `USER_AUTH_STRICT` and `USER_AUTH_LEGACY_ANON` unchanged (unset).
+- Verified: backend type check, build and 580 tests; web type check, build and 158 tests; the 138 compiled files in the running v60 image match a build of `ddecf93`; live source validation refused non-public addresses (also through a redirect) and accepted public feeds, one of 21 MB; the deployed routes, run in a separate process on the machine with generators replaced, applied the per-client and combined limits; a headless browser on audexa.app (all outside requests answered locally) showed the token sent with a made-up session and not without; health, config, topics, voices, ask and station routes 200; radio `/stream` 200 before and after.
+- NOT verified: a limit reached on the live server process itself; a released iOS app; a station generation. A question answer and a tell-me-more text from the model do not parse today (the reply arrives in a code fence; `qa.generator.ts` and `interactions.service.ts` are unchanged here).
+- Rollback: backend, from `ai-radio-backend/`: `flyctl deploy -a ai-radio-backend --image registry.fly.io/ai-radio-backend:deployment-01M8DDWE77RG2TVSJAKZGE3KKX` (v58); web, from `web-app/`: `flyctl deploy -a audexa-web --image registry.fly.io/audexa-web:deployment-01M8CPYF438RDVM2HH0E9R03ZD` (v25). Either can be rolled back alone.
+
+
 ## 2026-11-27 (UTC) backend v58 (ai-radio-backend): route access rules (#110)
 
 - Release: Fly v58, image `registry.fly.io/ai-radio-backend:deployment-01M8DDWE77RG2TVSJAKZGE3KKX`, `flyctl deploy --remote-only` from `ai-radio-backend/` of a clean detached worktree at `origin/main` `375e138`; tree `3970736e18f8d85479f15a757be2e856dd2d14fd` equals `origin/main`.
